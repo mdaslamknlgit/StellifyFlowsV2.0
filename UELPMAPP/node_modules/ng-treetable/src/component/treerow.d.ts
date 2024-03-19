@@ -1,0 +1,24 @@
+/**
+ * Created by andrew.yang on 3/22/2017.
+ */
+import { OnInit, SimpleChanges } from "@angular/core";
+import { TreeNode } from "./model";
+import { TreeTable } from "./treetable";
+export declare class UITreeRow implements OnInit {
+    treeTable: TreeTable;
+    node: TreeNode;
+    parentNode: TreeNode;
+    level: number;
+    labelExpand: string;
+    labelCollapse: string;
+    constructor(treeTable: TreeTable);
+    ngOnInit(): void;
+    ngOnChanges(changes: SimpleChanges): void;
+    toggle(event: Event): void;
+    isLeaf(): boolean;
+    isSelected(): boolean;
+    onRowClick(event: MouseEvent): void;
+    onRowRightClick(event: MouseEvent): void;
+    onRowTouchEnd(): void;
+    resolveFieldData(data: any, field: string): any;
+}

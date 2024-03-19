@@ -1,0 +1,1445 @@
+import { Component, ContentChild, ContentChildren, Directive, EventEmitter, Inject, Input, NgModule, Output, Renderer2, TemplateRef, ViewContainerRef, forwardRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+class Header {
+}
+Header.decorators = [
+    { type: Component, args: [{
+                selector: 'ay-header',
+                template: '<ng-content></ng-content>'
+            },] },
+];
+/** @nocollapse */
+Header.ctorParameters = () => [];
+class Footer {
+}
+Footer.decorators = [
+    { type: Component, args: [{
+                selector: 'ay-footer',
+                template: '<ng-content></ng-content>'
+            },] },
+];
+/** @nocollapse */
+Footer.ctorParameters = () => [];
+class PrimeTemplate {
+    /**
+     * @param {?} template
+     */
+    constructor(template) {
+        this.template = template;
+    }
+    /**
+     * @return {?}
+     */
+    getType() {
+        if (this.type) {
+            console.log('Defining a pTemplate with type property is deprecated use pTemplate="type" instead.');
+            return this.type;
+        }
+        else {
+            return this.name;
+        }
+    }
+}
+PrimeTemplate.decorators = [
+    { type: Directive, args: [{
+                selector: '[pTemplate]',
+                host: {}
+            },] },
+];
+/** @nocollapse */
+PrimeTemplate.ctorParameters = () => [
+    { type: TemplateRef, },
+];
+PrimeTemplate.propDecorators = {
+    "type": [{ type: Input },],
+    "name": [{ type: Input, args: ['pTemplate',] },],
+};
+class TemplateWrapper {
+    /**
+     * @param {?} viewContainer
+     */
+    constructor(viewContainer) {
+        this.viewContainer = viewContainer;
+    }
+    /**
+     * @return {?}
+     */
+    ngOnInit() {
+        this.view = this.viewContainer.createEmbeddedView(this.templateRef, {
+            '\$implicit': this.item,
+            'index': this.index
+        });
+    }
+    /**
+     * @return {?}
+     */
+    ngOnDestroy() {
+        this.view.destroy();
+    }
+}
+TemplateWrapper.decorators = [
+    { type: Directive, args: [{
+                selector: '[pTemplateWrapper]'
+            },] },
+];
+/** @nocollapse */
+TemplateWrapper.ctorParameters = () => [
+    { type: ViewContainerRef, },
+];
+TemplateWrapper.propDecorators = {
+    "item": [{ type: Input },],
+    "index": [{ type: Input },],
+    "templateRef": [{ type: Input, args: ['pTemplateWrapper',] },],
+};
+class Column {
+    constructor() {
+        this.sortFunction = new EventEmitter();
+    }
+    /**
+     * @return {?}
+     */
+    ngAfterContentInit() {
+        this.templates.forEach((item) => {
+            switch (item.getType()) {
+                case 'header':
+                    this.headerTemplate = item.template;
+                    break;
+                case 'body':
+                    this.bodyTemplate = item.template;
+                    break;
+                case 'footer':
+                    this.footerTemplate = item.template;
+                    break;
+                case 'filter':
+                    this.filterTemplate = item.template;
+                    break;
+                case 'editor':
+                    this.editorTemplate = item.template;
+                    break;
+                default:
+                    this.bodyTemplate = item.template;
+                    break;
+            }
+        });
+    }
+}
+Column.decorators = [
+    { type: Component, args: [{
+                selector: 'ay-column',
+                template: ``
+            },] },
+];
+/** @nocollapse */
+Column.ctorParameters = () => [];
+Column.propDecorators = {
+    "field": [{ type: Input },],
+    "sortField": [{ type: Input },],
+    "header": [{ type: Input },],
+    "footer": [{ type: Input },],
+    "sortable": [{ type: Input },],
+    "editable": [{ type: Input },],
+    "filter": [{ type: Input },],
+    "filterMatchMode": [{ type: Input },],
+    "rowspan": [{ type: Input },],
+    "colspan": [{ type: Input },],
+    "style": [{ type: Input },],
+    "styleClass": [{ type: Input },],
+    "hidden": [{ type: Input },],
+    "expander": [{ type: Input },],
+    "selectionMode": [{ type: Input },],
+    "filterPlaceholder": [{ type: Input },],
+    "frozen": [{ type: Input },],
+    "sortFunction": [{ type: Output },],
+    "templates": [{ type: ContentChildren, args: [PrimeTemplate,] },],
+    "template": [{ type: ContentChild, args: [TemplateRef,] },],
+};
+class Row {
+}
+Row.decorators = [
+    { type: Component, args: [{
+                selector: 'ay-row',
+                template: ``
+            },] },
+];
+/** @nocollapse */
+Row.ctorParameters = () => [];
+Row.propDecorators = {
+    "columns": [{ type: ContentChildren, args: [Column,] },],
+};
+class HeaderColumnGroup {
+}
+HeaderColumnGroup.decorators = [
+    { type: Component, args: [{
+                selector: 'ay-headerColumnGroup',
+                template: ``
+            },] },
+];
+/** @nocollapse */
+HeaderColumnGroup.ctorParameters = () => [];
+HeaderColumnGroup.propDecorators = {
+    "rows": [{ type: ContentChildren, args: [Row,] },],
+};
+class FooterColumnGroup {
+}
+FooterColumnGroup.decorators = [
+    { type: Component, args: [{
+                selector: 'ay-footerColumnGroup',
+                template: ``
+            },] },
+];
+/** @nocollapse */
+FooterColumnGroup.ctorParameters = () => [];
+FooterColumnGroup.propDecorators = {
+    "rows": [{ type: ContentChildren, args: [Row,] },],
+};
+class ColumnBodyTemplateLoader {
+    /**
+     * @param {?} viewContainer
+     */
+    constructor(viewContainer) {
+        this.viewContainer = viewContainer;
+    }
+    /**
+     * @return {?}
+     */
+    ngOnInit() {
+        this.view = this.viewContainer.createEmbeddedView(this.column.bodyTemplate, {
+            '\$implicit': this.column,
+            'rowData': this.rowData,
+            'rowIndex': this.rowIndex
+        });
+    }
+    /**
+     * @return {?}
+     */
+    ngOnDestroy() {
+        this.view.destroy();
+    }
+}
+ColumnBodyTemplateLoader.decorators = [
+    { type: Component, args: [{
+                selector: 'ay-columnBodyTemplateLoader',
+                template: ``
+            },] },
+];
+/** @nocollapse */
+ColumnBodyTemplateLoader.ctorParameters = () => [
+    { type: ViewContainerRef, },
+];
+ColumnBodyTemplateLoader.propDecorators = {
+    "column": [{ type: Input },],
+    "rowData": [{ type: Input },],
+    "rowIndex": [{ type: Input },],
+};
+class ColumnHeaderTemplateLoader {
+    /**
+     * @param {?} viewContainer
+     */
+    constructor(viewContainer) {
+        this.viewContainer = viewContainer;
+    }
+    /**
+     * @return {?}
+     */
+    ngOnInit() {
+        this.view = this.viewContainer.createEmbeddedView(this.column.headerTemplate, {
+            '\$implicit': this.column
+        });
+    }
+    /**
+     * @return {?}
+     */
+    ngOnDestroy() {
+        this.view.destroy();
+    }
+}
+ColumnHeaderTemplateLoader.decorators = [
+    { type: Component, args: [{
+                selector: 'ay-columnHeaderTemplateLoader',
+                template: ``
+            },] },
+];
+/** @nocollapse */
+ColumnHeaderTemplateLoader.ctorParameters = () => [
+    { type: ViewContainerRef, },
+];
+ColumnHeaderTemplateLoader.propDecorators = {
+    "column": [{ type: Input },],
+};
+class ColumnFooterTemplateLoader {
+    /**
+     * @param {?} viewContainer
+     */
+    constructor(viewContainer) {
+        this.viewContainer = viewContainer;
+    }
+    /**
+     * @return {?}
+     */
+    ngOnInit() {
+        this.view = this.viewContainer.createEmbeddedView(this.column.footerTemplate, {
+            '\$implicit': this.column
+        });
+    }
+    /**
+     * @return {?}
+     */
+    ngOnDestroy() {
+        this.view.destroy();
+    }
+}
+ColumnFooterTemplateLoader.decorators = [
+    { type: Component, args: [{
+                selector: 'ay-columnFooterTemplateLoader',
+                template: ``
+            },] },
+];
+/** @nocollapse */
+ColumnFooterTemplateLoader.ctorParameters = () => [
+    { type: ViewContainerRef, },
+];
+ColumnFooterTemplateLoader.propDecorators = {
+    "column": [{ type: Input },],
+};
+class ColumnFilterTemplateLoader {
+    /**
+     * @param {?} viewContainer
+     */
+    constructor(viewContainer) {
+        this.viewContainer = viewContainer;
+    }
+    /**
+     * @return {?}
+     */
+    ngOnInit() {
+        this.view = this.viewContainer.createEmbeddedView(this.column.filterTemplate, {
+            '\$implicit': this.column
+        });
+    }
+    /**
+     * @return {?}
+     */
+    ngOnDestroy() {
+        this.view.destroy();
+    }
+}
+ColumnFilterTemplateLoader.decorators = [
+    { type: Component, args: [{
+                selector: 'ay-columnFilterTemplateLoader',
+                template: ``
+            },] },
+];
+/** @nocollapse */
+ColumnFilterTemplateLoader.ctorParameters = () => [
+    { type: ViewContainerRef, },
+];
+ColumnFilterTemplateLoader.propDecorators = {
+    "column": [{ type: Input },],
+};
+class ColumnEditorTemplateLoader {
+    /**
+     * @param {?} viewContainer
+     */
+    constructor(viewContainer) {
+        this.viewContainer = viewContainer;
+    }
+    /**
+     * @return {?}
+     */
+    ngOnInit() {
+        this.view = this.viewContainer.createEmbeddedView(this.column.editorTemplate, {
+            '\$implicit': this.column,
+            'rowData': this.rowData
+        });
+    }
+    /**
+     * @return {?}
+     */
+    ngOnDestroy() {
+        this.view.destroy();
+    }
+}
+ColumnEditorTemplateLoader.decorators = [
+    { type: Component, args: [{
+                selector: 'ay-columnEditorTemplateLoader',
+                template: ``
+            },] },
+];
+/** @nocollapse */
+ColumnEditorTemplateLoader.ctorParameters = () => [
+    { type: ViewContainerRef, },
+];
+ColumnEditorTemplateLoader.propDecorators = {
+    "column": [{ type: Input },],
+    "rowData": [{ type: Input },],
+};
+class TemplateLoader {
+    /**
+     * @param {?} viewContainer
+     */
+    constructor(viewContainer) {
+        this.viewContainer = viewContainer;
+    }
+    /**
+     * @return {?}
+     */
+    ngOnInit() {
+        if (this.template) {
+            this.view = this.viewContainer.createEmbeddedView(this.template, {
+                '\$implicit': this.data
+            });
+        }
+    }
+    /**
+     * @return {?}
+     */
+    ngOnDestroy() {
+        if (this.view)
+            this.view.destroy();
+    }
+}
+TemplateLoader.decorators = [
+    { type: Component, args: [{
+                selector: 'ay-templateLoader',
+                template: ``
+            },] },
+];
+/** @nocollapse */
+TemplateLoader.ctorParameters = () => [
+    { type: ViewContainerRef, },
+];
+TemplateLoader.propDecorators = {
+    "template": [{ type: Input },],
+    "data": [{ type: Input },],
+};
+class TreeSharedModule {
+}
+TreeSharedModule.decorators = [
+    { type: NgModule, args: [{
+                imports: [CommonModule],
+                exports: [Header, Footer, Column, TemplateWrapper, ColumnHeaderTemplateLoader, ColumnBodyTemplateLoader, ColumnFooterTemplateLoader, ColumnFilterTemplateLoader, PrimeTemplate, TemplateLoader, Row, HeaderColumnGroup, FooterColumnGroup, ColumnEditorTemplateLoader],
+                declarations: [Header, Footer, Column, TemplateWrapper, ColumnHeaderTemplateLoader, ColumnBodyTemplateLoader, ColumnFooterTemplateLoader, ColumnFilterTemplateLoader, PrimeTemplate, TemplateLoader, Row, HeaderColumnGroup, FooterColumnGroup, ColumnEditorTemplateLoader]
+            },] },
+];
+/** @nocollapse */
+TreeSharedModule.ctorParameters = () => [];
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+class UITreeRow {
+    /**
+     * @param {?} treeTable
+     */
+    constructor(treeTable) {
+        this.treeTable = treeTable;
+        this.level = 0;
+        this.labelExpand = "Expand";
+        this.labelCollapse = "Collapse";
+    }
+    /**
+     * @return {?}
+     */
+    ngOnInit() {
+        this.node.parent = this.parentNode;
+    }
+    /**
+     * @param {?} changes
+     * @return {?}
+     */
+    ngOnChanges(changes) {
+        if (changes['node'] && this.node) {
+        }
+    }
+    /**
+     * @param {?} event
+     * @return {?}
+     */
+    toggle(event) {
+        if (this.node.expanded)
+            this.treeTable.onNodeCollapse.emit({ originalEvent: event, node: this.node });
+        else
+            this.treeTable.onNodeExpand.emit({ originalEvent: event, node: this.node });
+        this.node.expanded = !this.node.expanded;
+        event.preventDefault();
+    }
+    /**
+     * @return {?}
+     */
+    isLeaf() {
+        return this.node.leaf == false ? false : !(this.node.children && this.node.children.length);
+    }
+    /**
+     * @return {?}
+     */
+    isSelected() {
+        return this.treeTable.isSelected(this.node);
+    }
+    /**
+     * @param {?} event
+     * @return {?}
+     */
+    onRowClick(event) {
+        this.treeTable.onRowClick(event, this.node);
+    }
+    /**
+     * @param {?} event
+     * @return {?}
+     */
+    onRowRightClick(event) {
+        this.treeTable.onRowRightClick(event, this.node);
+    }
+    /**
+     * @return {?}
+     */
+    onRowTouchEnd() {
+        this.treeTable.onRowTouchEnd();
+    }
+    /**
+     * @param {?} data
+     * @param {?} field
+     * @return {?}
+     */
+    resolveFieldData(data, field) {
+        if (data && field) {
+            if (field.indexOf('.') == -1) {
+                return data[field];
+            }
+            else {
+                let /** @type {?} */ fields = field.split('.');
+                let /** @type {?} */ value = data;
+                for (var /** @type {?} */ i = 0, /** @type {?} */ len = fields.length; i < len; ++i) {
+                    value = value[fields[i]];
+                }
+                return value;
+            }
+        }
+        else {
+            return null;
+        }
+    }
+}
+UITreeRow.decorators = [
+    { type: Component, args: [{
+                selector: '[pTreeRow]',
+                template: `
+        <div *ngIf="treeTable.isFiltered(node)" class="ui-treetable-row" [class]="treeTable.getRowStyleClass(node)"
+            [ngClass]="{'ui-state-highlight':isSelected() ,'ui-treetable-row-selectable':treeTable.selectionMode && node.selectable !== false}">
+            <td *ngFor="let col of treeTable.columns; let i=index" [ngStyle]="col.style" [class]="col.styleClass" 
+            [style.display]="col.hidden ? 'none' : 'table-cell'"
+            (click)="onRowClick($event)" (touchend)="onRowTouchEnd()" (contextmenu)="onRowRightClick($event)">
+                <a href="#" *ngIf="i==0" class="ui-treetable-toggler fa fa-fw ui-c" [ngClass]="{'fa-caret-down':node.expanded,'fa-caret-right':!node.expanded}"
+                    [ngStyle]="{'margin-left':level*16 + 'px','visibility': isLeaf() ? 'hidden' : 'visible'}"
+                    (click)="toggle($event)"
+                    [title]="node.expanded ? labelCollapse : labelExpand">
+                </a>
+                <div class="ui-chkbox ui-treetable-checkbox" *ngIf="treeTable.selectionMode == 'checkbox' && i==0">
+                    <div class="ui-chkbox-box ui-widget ui-corner-all ui-state-default">
+                        <span class="ui-chkbox-icon ui-c fa" 
+                            [ngClass]="{'fa-check':isSelected(),'fa-minus':node.partialSelected}"></span>
+                    </div>
+                </div>
+                <span *ngIf="!col.template">{{resolveFieldData(node.data,col.field)}}</span>
+                <ay-columnBodyTemplateLoader [column]="col" [rowData]="node" *ngIf="col.template"></ay-columnBodyTemplateLoader>
+            </td>
+        </div>
+        <div *ngIf="node.children && node.expanded" class="ui-treetable-row" style="display:table-row;white-space: nowrap">
+            <td [attr.colspan]="treeTable.shownColumns().length" class="ui-treetable-child-table-container">
+                <table>
+                    <tbody pTreeRow *ngFor="let childNode of node.children" [node]="childNode" [level]="level+1" [labelExpand]="labelExpand" [labelCollapse]="labelCollapse" [parentNode]="node"></tbody>
+                </table>
+            </td>
+        </div>
+    `
+            },] },
+];
+/** @nocollapse */
+UITreeRow.ctorParameters = () => [
+    { type: TreeTable, decorators: [{ type: Inject, args: [forwardRef(() => TreeTable),] },] },
+];
+UITreeRow.propDecorators = {
+    "node": [{ type: Input },],
+    "parentNode": [{ type: Input },],
+    "level": [{ type: Input },],
+    "labelExpand": [{ type: Input },],
+    "labelCollapse": [{ type: Input },],
+};
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+class Paginator {
+    constructor() {
+        this.pageLinkSize = 5;
+        this.onPageChange = new EventEmitter();
+        this._totalRecords = 0;
+        this._first = 0;
+        this._rows = 0;
+    }
+    /**
+     * @return {?}
+     */
+    get totalRecords() {
+        return this._totalRecords;
+    }
+    /**
+     * @param {?} val
+     * @return {?}
+     */
+    set totalRecords(val) {
+        this._totalRecords = val;
+        this.updatePageLinks();
+    }
+    /**
+     * @return {?}
+     */
+    get first() {
+        return this._first;
+    }
+    /**
+     * @param {?} val
+     * @return {?}
+     */
+    set first(val) {
+        this._first = val;
+        this.updatePageLinks();
+    }
+    /**
+     * @return {?}
+     */
+    get rows() {
+        return this._rows;
+    }
+    /**
+     * @param {?} val
+     * @return {?}
+     */
+    set rows(val) {
+        this._rows = val;
+        this.updatePageLinks();
+    }
+    /**
+     * @return {?}
+     */
+    isFirstPage() {
+        return this.getPage() === 0;
+    }
+    /**
+     * @return {?}
+     */
+    isLastPage() {
+        return this.getPage() === this.getPageCount() - 1;
+    }
+    /**
+     * @return {?}
+     */
+    getPageCount() {
+        return Math.ceil(this.totalRecords / this.rows) || 1;
+    }
+    /**
+     * @return {?}
+     */
+    calculatePageLinkBoundaries() {
+        let /** @type {?} */ numberOfPages = this.getPageCount(), /** @type {?} */
+        visiblePages = Math.min(this.pageLinkSize, numberOfPages);
+        //calculate range, keep current in middle if necessary
+        let /** @type {?} */ start = Math.max(0, Math.ceil(this.getPage() - ((visiblePages) / 2))), /** @type {?} */
+        end = Math.min(numberOfPages - 1, start + visiblePages - 1);
+        //check when approaching to last page
+        var /** @type {?} */ delta = this.pageLinkSize - (end - start + 1);
+        start = Math.max(0, start - delta);
+        return [start, end];
+    }
+    /**
+     * @return {?}
+     */
+    updatePageLinks() {
+        this.pageLinks = [];
+        let /** @type {?} */ boundaries = this.calculatePageLinkBoundaries(), /** @type {?} */
+        start = boundaries[0], /** @type {?} */
+        end = boundaries[1];
+        for (let /** @type {?} */ i = start; i <= end; i++) {
+            this.pageLinks.push(i + 1);
+        }
+    }
+    /**
+     * @param {?} p
+     * @param {?} event
+     * @return {?}
+     */
+    changePage(p, event) {
+        var /** @type {?} */ pc = this.getPageCount();
+        if (p >= 0 && p < pc) {
+            this.first = this.rows * p;
+            var /** @type {?} */ state = {
+                page: p,
+                first: this.first,
+                rows: this.rows,
+                pageCount: pc
+            };
+            this.updatePageLinks();
+            this.onPageChange.emit(state);
+        }
+        if (event) {
+            event.preventDefault();
+        }
+    }
+    /**
+     * @return {?}
+     */
+    getPage() {
+        return Math.floor(this.first / this.rows);
+    }
+    /**
+     * @param {?} event
+     * @return {?}
+     */
+    changePageToFirst(event) {
+        this.changePage(0, event);
+    }
+    /**
+     * @param {?} event
+     * @return {?}
+     */
+    changePageToPrev(event) {
+        this.changePage(this.getPage() - 1, event);
+    }
+    /**
+     * @param {?} event
+     * @return {?}
+     */
+    changePageToNext(event) {
+        this.changePage(this.getPage() + 1, event);
+    }
+    /**
+     * @param {?} event
+     * @return {?}
+     */
+    changePageToLast(event) {
+        this.changePage(this.getPageCount() - 1, event);
+    }
+    /**
+     * @param {?} event
+     * @return {?}
+     */
+    onRppChange(event) {
+        this.rows = this.rowsPerPageOptions[event.target.selectedIndex];
+        this.changePageToFirst(event);
+    }
+}
+Paginator.decorators = [
+    { type: Component, args: [{
+                selector: 'ay-paginator',
+                template: `
+        <div [class]="styleClass" [ngStyle]="style" [ngClass]="'ui-paginator ui-widget ui-widget-header ui-unselectable-text'">
+            <a href="#" class="ui-paginator-first ui-paginator-element ui-state-default ui-corner-all"
+                    (click)="changePageToFirst($event)" [ngClass]="{'ui-state-disabled':isFirstPage()}" [tabindex]="isFirstPage() ? -1 : null">
+                <span class="fa fa-step-backward"></span>
+            </a>
+            <a href="#" class="ui-paginator-prev ui-paginator-element ui-state-default ui-corner-all"
+                    (click)="changePageToPrev($event)" [ngClass]="{'ui-state-disabled':isFirstPage()}" [tabindex]="isFirstPage() ? -1 : null">
+                <span class="fa fa-backward"></span>
+            </a>
+            <span class="ui-paginator-pages">
+                <a href="#" *ngFor="let pageLink of pageLinks" class="ui-paginator-page ui-paginator-element ui-state-default ui-corner-all"
+                    (click)="changePage(pageLink - 1, $event)" [ngClass]="{'ui-state-active': (pageLink-1 == getPage())}">{{pageLink}}</a>
+            </span>
+            <a href="#" class="ui-paginator-next ui-paginator-element ui-state-default ui-corner-all"
+                    (click)="changePageToNext($event)" [ngClass]="{'ui-state-disabled':isLastPage()}" [tabindex]="isLastPage() ? -1 : null">
+                <span class="fa fa-forward"></span>
+            </a>
+            <a href="#" class="ui-paginator-last ui-paginator-element ui-state-default ui-corner-all"
+                    (click)="changePageToLast($event)" [ngClass]="{'ui-state-disabled':isLastPage()}" [tabindex]="isLastPage() ? -1 : null">
+                <span class="fa fa-step-forward"></span>
+            </a>
+            <select class="ui-paginator-rpp-options ui-widget ui-state-default" *ngIf="rowsPerPageOptions" (change)="onRppChange($event)">
+                <option *ngFor="let opt of rowsPerPageOptions" [value]="opt" [selected]="rows == opt">{{opt}}</option>
+            </select>
+        </div>
+    `
+            },] },
+];
+/** @nocollapse */
+Paginator.ctorParameters = () => [];
+Paginator.propDecorators = {
+    "pageLinkSize": [{ type: Input },],
+    "onPageChange": [{ type: Output },],
+    "style": [{ type: Input },],
+    "styleClass": [{ type: Input },],
+    "rowsPerPageOptions": [{ type: Input },],
+    "totalRecords": [{ type: Input },],
+    "first": [{ type: Input },],
+    "rows": [{ type: Input },],
+};
+class PaginatorModule {
+}
+PaginatorModule.decorators = [
+    { type: NgModule, args: [{
+                imports: [CommonModule],
+                exports: [Paginator],
+                declarations: [Paginator]
+            },] },
+];
+/** @nocollapse */
+PaginatorModule.ctorParameters = () => [];
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+class TreeTable {
+    /**
+     * @param {?} renderer
+     */
+    constructor(renderer) {
+        this.renderer = renderer;
+        this.pageLinks = 5;
+        this.first = 0;
+        this.labelExpand = "Expand";
+        this.labelCollapse = "Collapse";
+        this.metaKeySelection = true;
+        this.filterDelay = 300;
+        this.selectionChange = new EventEmitter();
+        this.onNodeSelect = new EventEmitter();
+        this.onNodeUnselect = new EventEmitter();
+        this.onNodeExpand = new EventEmitter();
+        this.onNodeCollapse = new EventEmitter();
+        this.onContextMenuSelect = new EventEmitter();
+        this.onLazyLoad = new EventEmitter();
+        this.filterConstraints = {
+            /**
+             * @param {?} value
+             * @param {?} filter
+             * @return {?}
+             */
+            startsWith(value, filter) {
+                if (filter === undefined || filter === null || filter.trim() === '') {
+                    return true;
+                }
+                if (value === undefined || value === null) {
+                    return false;
+                }
+                let /** @type {?} */ filterValue = filter.toString().toLowerCase();
+                return value.toString().toLowerCase().slice(0, filterValue.length) === filterValue;
+            },
+            /**
+             * @param {?} value
+             * @param {?} filter
+             * @return {?}
+             */
+            contains(value, filter) {
+                if (filter === undefined || filter === null || (typeof filter === 'string' && filter.trim() === '')) {
+                    return true;
+                }
+                if (value === undefined || value === null) {
+                    return false;
+                }
+                return value.toString().toLowerCase().indexOf(filter.toLowerCase()) !== -1;
+            },
+            /**
+             * @param {?} value
+             * @param {?} filter
+             * @return {?}
+             */
+            endsWith(value, filter) {
+                if (filter === undefined || filter === null || filter.trim() === '') {
+                    return true;
+                }
+                if (value === undefined || value === null) {
+                    return false;
+                }
+                let /** @type {?} */ filterValue = filter.toString().toLowerCase();
+                return value.toString().toLowerCase().indexOf(filterValue, value.toString().length - filterValue.length) !== -1;
+            },
+            /**
+             * @param {?} value
+             * @param {?} filter
+             * @return {?}
+             */
+            equals(value, filter) {
+                if (filter === undefined || filter === null || (typeof filter === 'string' && filter.trim() === '')) {
+                    return true;
+                }
+                if (value === undefined || value === null) {
+                    return false;
+                }
+                return value.toString().toLowerCase() == filter.toString().toLowerCase();
+            },
+            /**
+             * @param {?} value
+             * @param {?} filter
+             * @return {?}
+             */
+            in(value, filter) {
+                if (filter === undefined || filter === null || filter.length === 0) {
+                    return true;
+                }
+                if (value === undefined || value === null) {
+                    return false;
+                }
+                for (let /** @type {?} */ i = 0; i < filter.length; i++) {
+                    if (filter[i] === value)
+                        return true;
+                }
+                return false;
+            }
+        };
+    }
+    /**
+     * @param {?} event
+     * @param {?} node
+     * @return {?}
+     */
+    onRowClick(event, node) {
+        let /** @type {?} */ eventTarget = (/** @type {?} */ (event.target));
+        if (eventTarget.className && eventTarget.className.indexOf('ui-treetable-toggler') === 0) {
+            return;
+        }
+        else if (this.selectionMode) {
+            if (node.selectable === false) {
+                return;
+            }
+            let /** @type {?} */ metaSelection = this.rowTouched ? false : this.metaKeySelection;
+            let /** @type {?} */ index = this.findIndexInSelection(node);
+            let /** @type {?} */ selected = (index >= 0);
+            if (this.isCheckboxSelectionMode()) {
+                if (selected) {
+                    this.propagateSelectionDown(node, false);
+                    if (node.parent) {
+                        this.propagateSelectionUp(node.parent, false);
+                    }
+                    this.selectionChange.emit(this.selection);
+                    this.onNodeUnselect.emit({ originalEvent: event, node: node });
+                }
+                else {
+                    this.propagateSelectionDown(node, true);
+                    if (node.parent) {
+                        this.propagateSelectionUp(node.parent, true);
+                    }
+                    this.selectionChange.emit(this.selection);
+                    this.onNodeSelect.emit({ originalEvent: event, node: node });
+                }
+            }
+            else {
+                if (metaSelection) {
+                    let /** @type {?} */ metaKey = (event.metaKey || event.ctrlKey);
+                    if (selected && metaKey) {
+                        if (this.isSingleSelectionMode()) {
+                            this.selectionChange.emit(null);
+                        }
+                        else {
+                            this.selection.splice(index, 1);
+                            this.selectionChange.emit(this.selection);
+                        }
+                        this.onNodeUnselect.emit({ originalEvent: event, node: node });
+                    }
+                    else {
+                        if (this.isSingleSelectionMode()) {
+                            this.selectionChange.emit(node);
+                        }
+                        else if (this.isMultipleSelectionMode()) {
+                            this.selection = (!metaKey) ? [] : this.selection || [];
+                            this.selection.push(node);
+                            this.selectionChange.emit(this.selection);
+                        }
+                        this.onNodeSelect.emit({ originalEvent: event, node: node });
+                    }
+                }
+                else {
+                    if (this.isSingleSelectionMode()) {
+                        if (selected) {
+                            this.selection = null;
+                            this.onNodeUnselect.emit({ originalEvent: event, node: node });
+                        }
+                        else {
+                            this.selection = node;
+                            this.onNodeSelect.emit({ originalEvent: event, node: node });
+                        }
+                    }
+                    else {
+                        if (selected) {
+                            this.selection.splice(index, 1);
+                            this.onNodeUnselect.emit({ originalEvent: event, node: node });
+                        }
+                        else {
+                            this.selection = this.selection || [];
+                            this.selection.push(node);
+                            this.onNodeSelect.emit({ originalEvent: event, node: node });
+                        }
+                    }
+                    this.selectionChange.emit(this.selection);
+                }
+            }
+        }
+        this.rowTouched = false;
+    }
+    /**
+     * @return {?}
+     */
+    onRowTouchEnd() {
+        this.rowTouched = true;
+    }
+    /**
+     * @param {?} event
+     * @param {?} node
+     * @return {?}
+     */
+    onRowRightClick(event, node) {
+        if (this.contextMenu) {
+            let /** @type {?} */ index = this.findIndexInSelection(node);
+            let /** @type {?} */ selected = (index >= 0);
+            if (!selected) {
+                if (this.isSingleSelectionMode()) {
+                    this.selection = node;
+                }
+                else if (this.isMultipleSelectionMode()) {
+                    this.selection = [];
+                    this.selection.push(node);
+                    this.selectionChange.emit(this.selection);
+                }
+                this.selectionChange.emit(this.selection);
+            }
+            this.contextMenu.show(event);
+            this.onContextMenuSelect.emit({ originalEvent: event, node: node });
+        }
+    }
+    /**
+     * @param {?} node
+     * @return {?}
+     */
+    findIndexInSelection(node) {
+        let /** @type {?} */ index = -1;
+        if (this.selectionMode && this.selection) {
+            if (this.isSingleSelectionMode()) {
+                index = (this.selection == node) ? 0 : -1;
+            }
+            else {
+                for (let /** @type {?} */ i = 0; i < this.selection.length; i++) {
+                    if (this.selection[i] == node) {
+                        index = i;
+                        break;
+                    }
+                }
+            }
+        }
+        return index;
+    }
+    /**
+     * @param {?} node
+     * @param {?} select
+     * @return {?}
+     */
+    propagateSelectionUp(node, select) {
+        if (node.children && node.children.length) {
+            let /** @type {?} */ selectedCount = 0;
+            let /** @type {?} */ childPartialSelected = false;
+            for (let /** @type {?} */ child of node.children) {
+                if (this.isSelected(child)) {
+                    selectedCount++;
+                }
+                else if (child.partialSelected) {
+                    childPartialSelected = true;
+                }
+            }
+            if (select && selectedCount == node.children.length) {
+                this.selection = this.selection || [];
+                this.selection.push(node);
+                node.partialSelected = false;
+            }
+            else {
+                if (!select) {
+                    let /** @type {?} */ index = this.findIndexInSelection(node);
+                    if (index >= 0) {
+                        this.selection.splice(index, 1);
+                    }
+                }
+                if (childPartialSelected || selectedCount > 0 && selectedCount != node.children.length)
+                    node.partialSelected = true;
+                else
+                    node.partialSelected = false;
+            }
+        }
+        let /** @type {?} */ parent = node.parent;
+        if (parent) {
+            this.propagateSelectionUp(parent, select);
+        }
+    }
+    /**
+     * @param {?} node
+     * @param {?} select
+     * @return {?}
+     */
+    propagateSelectionDown(node, select) {
+        let /** @type {?} */ index = this.findIndexInSelection(node);
+        if (select && index == -1) {
+            this.selection = this.selection || [];
+            this.selection.push(node);
+        }
+        else if (!select && index > -1) {
+            this.selection.splice(index, 1);
+        }
+        node.partialSelected = false;
+        if (node.children && node.children.length) {
+            for (let /** @type {?} */ child of node.children) {
+                this.propagateSelectionDown(child, select);
+            }
+        }
+    }
+    /**
+     * @param {?} node
+     * @return {?}
+     */
+    isSelected(node) {
+        return this.findIndexInSelection(node) != -1;
+    }
+    /**
+     * @return {?}
+     */
+    isSingleSelectionMode() {
+        return this.selectionMode && this.selectionMode == 'single';
+    }
+    /**
+     * @return {?}
+     */
+    isMultipleSelectionMode() {
+        return this.selectionMode && this.selectionMode == 'multiple';
+    }
+    /**
+     * @return {?}
+     */
+    isCheckboxSelectionMode() {
+        return this.selectionMode && this.selectionMode == 'checkbox';
+    }
+    /**
+     * @param {?} rowData
+     * @return {?}
+     */
+    getRowStyleClass(rowData) {
+        let /** @type {?} */ styleClass = '';
+        if (this.rowStyleClass) {
+            let /** @type {?} */ rowClass = this.rowStyleClass.call(this, rowData);
+            if (rowClass) {
+                styleClass += ' ' + rowClass;
+            }
+        }
+        return styleClass;
+    }
+    /**
+     * @return {?}
+     */
+    hasFooter() {
+        if (this.columns) {
+            let /** @type {?} */ columnsArr = this.columns.toArray();
+            for (let /** @type {?} */ i = 0; i < columnsArr.length; i++) {
+                if (columnsArr[i].footer) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    /**
+     * @return {?}
+     */
+    ngOnInit() {
+        if (this.immutable)
+            this.handleDataChange();
+    }
+    /**
+     * @return {?}
+     */
+    ngAfterViewInit() {
+        if (this.globalFilter && this.value) {
+            this.globalFilterFunction = this.renderer.listen(this.globalFilter, 'keyup', () => {
+                this.filterTimeout = setTimeout(() => {
+                    this.filter();
+                    this.filterTimeout = null;
+                }, this.filterDelay);
+            });
+        }
+    }
+    /**
+     * @param {?} changes
+     * @return {?}
+     */
+    ngOnChanges(changes) {
+        if (changes['value'] && this.value && !this.immutable) {
+            this.handleDataChange();
+        }
+    }
+    /**
+     * @return {?}
+     */
+    shownColumns() {
+        return this.columns.filter(col => !col.hidden);
+    }
+    /**
+     * @return {?}
+     */
+    handleDataChange() {
+        if (this.paginator) {
+            this.updatePaginator();
+        }
+        this.updateDataToRender(this.filteredValue || this.value);
+    }
+    /**
+     * @return {?}
+     */
+    updatePaginator() {
+        this.totalRecords = this.lazy ? this.totalRecords : (this.value ? this.value.length : 0);
+        if (this.totalRecords && this.first >= this.totalRecords) {
+            let /** @type {?} */ numberOfPages = Math.ceil(this.totalRecords / this.rows);
+            this.first = Math.max((numberOfPages - 1) * this.rows, 0);
+        }
+    }
+    /**
+     * @param {?} event
+     * @return {?}
+     */
+    paginate(event) {
+        this.first = event.first;
+        this.rows = event.rows;
+        if (this.lazy) {
+            this.stopFilterPropagation = true;
+        }
+        else {
+            this.updateDataToRender(this.filteredValue || this.value);
+        }
+    }
+    /**
+     * @param {?} datasource
+     * @return {?}
+     */
+    updateDataToRender(datasource) {
+        if ((this.paginator || this.virtualScroll) && datasource) {
+            this.dataToRender = [];
+            let /** @type {?} */ startIndex = this.lazy ? 0 : this.first;
+            let /** @type {?} */ endIndex = this.virtualScroll ? this.first + this.rows * 2 : startIndex + this.rows;
+            for (let /** @type {?} */ i = startIndex; i < endIndex; i++) {
+                if (i >= datasource.length) {
+                    break;
+                }
+                this.dataToRender.push(datasource[i]);
+            }
+        }
+        else {
+            this.dataToRender = datasource;
+        }
+        this.loading = false;
+    }
+    /**
+     * @param {?} object
+     * @return {?}
+     */
+    filterFields(object) {
+        let /** @type {?} */ res = false;
+        this.columns.toArray().map(col => {
+            if (!res && object[col.field]) {
+                res = object[col.field].toString().toLowerCase().includes(this.globalFilter.value.toString().toLowerCase());
+            }
+        });
+        return res;
+    }
+    /**
+     * @param {?} children
+     * @param {?} parent
+     * @return {?}
+     */
+    filterChildren(children, parent) {
+        let /** @type {?} */ res = false;
+        if (children) {
+            children.map(child => {
+                let /** @type {?} */ _fields = this.filterFields(child.data);
+                let /** @type {?} */ _children = this.filterChildren(child.children, child);
+                res = _fields || _children || res;
+            });
+            parent.expanded = res;
+        }
+        return res;
+    }
+    /**
+     * @param {?} node
+     * @return {?}
+     */
+    isFiltered(node) {
+        if (this.globalFilter) {
+            return this.filterFields(node.data) || this.filterChildren(node.children, node);
+        }
+        else {
+            return true;
+        }
+    }
+    /**
+     * @return {?}
+     */
+    filter() {
+        this.first = 0;
+        this.filteredValue = this.value.filter(val => {
+            return this.filterFields(val.data) || this.filterChildren(val.children, val);
+        });
+        if (this.paginator) {
+            this.totalRecords = this.filteredValue ? this.filteredValue.length : this.value ? this.value.length : 0;
+        }
+        this.updateDataToRender(this.filteredValue || this.value);
+    }
+    /**
+     * @param {?} data
+     * @param {?} field
+     * @return {?}
+     */
+    resolveFieldData(data, field) {
+        if (data && field) {
+            if (field.indexOf('.') == -1) {
+                return data[field];
+            }
+            else {
+                let /** @type {?} */ fields = field.split('.');
+                let /** @type {?} */ value = data;
+                for (let /** @type {?} */ i = 0, /** @type {?} */ len = fields.length; i < len; ++i) {
+                    if (value == null) {
+                        return null;
+                    }
+                    value = value[fields[i]];
+                }
+                return value;
+            }
+        }
+        else {
+            return null;
+        }
+    }
+    /**
+     * @return {?}
+     */
+    ngOnDestroy() {
+        //remove event listener
+        if (this.globalFilterFunction) {
+            this.globalFilterFunction();
+        }
+    }
+}
+TreeTable.decorators = [
+    { type: Component, args: [{
+                selector: 'ay-treeTable',
+                template: `
+        <div [ngClass]="'ui-treetable ui-widget'" [ngStyle]="style" [class]="styleClass">
+            <div class="ui-treetable-header ui-widget-header" *ngIf="header">
+                <ng-content select="ay-header"></ng-content>
+            </div>
+            <div class="ui-treetable-tablewrapper">
+                <table class="ui-widget-content" [class]="tableStyleClass" [ngStyle]="tableStyle">
+                    <thead>
+                    <tr class="ui-state-default">
+                        <th #headerCell *ngFor="let col of columns" [ngStyle]="col.style" [class]="col.styleClass"
+                            [ngClass]="'ui-state-default ui-unselectable-text'"
+                            [style.display]="col.hidden ? 'none' : 'table-cell'">
+                            <span class="ui-column-title" *ngIf="!col.headerTemplate">{{col.header}}</span>
+                            <span class="ui-column-title" *ngIf="col.headerTemplate">
+                                    <ay-columnHeaderTemplateLoader [column]="col"></ay-columnHeaderTemplateLoader>
+                                </span>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tfoot *ngIf="hasFooter()">
+                    <tr>
+                        <td *ngFor="let col of columns" [ngStyle]="col.style" [class]="col.styleClass"
+                            [ngClass]="{'ui-state-default':true}">
+                            <span class="ui-column-footer" *ngIf="!col.footerTemplate">{{col.footer}}</span>
+                            <span class="ui-column-footer" *ngIf="col.footerTemplate">
+                                    <ay-columnFooterTemplateLoader [column]="col"></ay-columnFooterTemplateLoader>
+                                </span>
+                        </td>
+                    </tr>
+                    </tfoot>
+                    <tbody pTreeRow *ngFor="let node of dataToRender;let odd = odd;let even=even"
+                           [node]="node" [level]="0"
+                           [labelExpand]="labelExpand" [labelCollapse]="labelCollapse"
+                           class="ui-widget-content"
+                           [ngClass]="{'ui-treetable-even':even,'ui-treetable-odd':odd}"
+                    ></tbody>
+                </table>
+            </div>
+            <ay-paginator [rows]="rows" [first]="first" [totalRecords]="totalRecords" [pageLinkSize]="pageLinks"
+                          styleClass="ui-paginator-bottom"
+                          (onPageChange)="paginate($event)" [rowsPerPageOptions]="rowsPerPageOptions"
+                          *ngIf="paginator"></ay-paginator>
+            <div class="ui-treetable-footer ui-widget-header" *ngIf="footer">
+                <ng-content select="ay-footer"></ng-content>
+            </div>
+        </div>
+    `
+            },] },
+];
+/** @nocollapse */
+TreeTable.ctorParameters = () => [
+    { type: Renderer2, },
+];
+TreeTable.propDecorators = {
+    "paginator": [{ type: Input },],
+    "rows": [{ type: Input },],
+    "totalRecords": [{ type: Input },],
+    "pageLinks": [{ type: Input },],
+    "rowsPerPageOptions": [{ type: Input },],
+    "first": [{ type: Input },],
+    "lazy": [{ type: Input },],
+    "virtualScroll": [{ type: Input },],
+    "value": [{ type: Input },],
+    "selectionMode": [{ type: Input },],
+    "selection": [{ type: Input },],
+    "style": [{ type: Input },],
+    "styleClass": [{ type: Input },],
+    "labelExpand": [{ type: Input },],
+    "labelCollapse": [{ type: Input },],
+    "metaKeySelection": [{ type: Input },],
+    "contextMenu": [{ type: Input },],
+    "globalFilter": [{ type: Input },],
+    "filterDelay": [{ type: Input },],
+    "immutable": [{ type: Input },],
+    "rowStyleClass": [{ type: Input },],
+    "tableStyle": [{ type: Input },],
+    "tableStyleClass": [{ type: Input },],
+    "selectionChange": [{ type: Output },],
+    "onNodeSelect": [{ type: Output },],
+    "onNodeUnselect": [{ type: Output },],
+    "onNodeExpand": [{ type: Output },],
+    "onNodeCollapse": [{ type: Output },],
+    "onContextMenuSelect": [{ type: Output },],
+    "onLazyLoad": [{ type: Output },],
+    "header": [{ type: ContentChild, args: [Header,] },],
+    "footer": [{ type: ContentChild, args: [Footer,] },],
+    "columns": [{ type: ContentChildren, args: [Column,] },],
+};
+class TreeTableModule {
+}
+TreeTableModule.decorators = [
+    { type: NgModule, args: [{
+                imports: [CommonModule, TreeSharedModule, PaginatorModule],
+                exports: [TreeTable, TreeSharedModule, PaginatorModule],
+                declarations: [TreeTable, UITreeRow]
+            },] },
+];
+/** @nocollapse */
+TreeTableModule.ctorParameters = () => [];
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+/**
+ * Generated bundle index. Do not edit.
+ */
+
+export { TreeTableModule, Paginator as ɵq, PaginatorModule as ɵr, Column as ɵf, ColumnBodyTemplateLoader as ɵj, ColumnEditorTemplateLoader as ɵn, ColumnFilterTemplateLoader as ɵm, ColumnFooterTemplateLoader as ɵl, ColumnHeaderTemplateLoader as ɵk, Footer as ɵc, FooterColumnGroup as ɵi, Header as ɵb, HeaderColumnGroup as ɵh, PrimeTemplate as ɵd, Row as ɵg, TemplateLoader as ɵo, TemplateWrapper as ɵe, TreeSharedModule as ɵp, UITreeRow as ɵs, TreeTable as ɵa };
+//# sourceMappingURL=ng-treetable.js.map
