@@ -1,0 +1,36 @@
+<style>
+  :host /deep/ .ui-dialog .ui-dialog-content {
+    overflow: inherit !important;
+  }
+
+  :host /deep/ .ui-dialog {
+    top: 100px !important;
+    min-width: 430px !important;
+  }
+</style>
+<p-dialog (onHide)="onPopUpHide()" [style]="{'width': '450px' }" [modal]="true" [(visible)]="showVoidPopUp">
+  <p-header>
+    <span>Reasons For Rejection</span>
+  </p-header>
+  <div>
+    <form [formGroup]="rejectForm">
+      <div style='margin-top:2%'>
+        <div>
+          <label class="form-label">Reasons</label>
+          <textarea rows="2" cols="40" class="form-control" formControlName="Reasons"></textarea>
+        </div>
+        <div
+          *ngIf="rejectForm.get('Reasons') && rejectForm.get('Reasons').errors!=null && rejectForm.get('Reasons').touched==true">
+          <span class="errorMessage" *ngIf="rejectForm.get('Reasons').errors.required"> Reasons is Required </span>
+        </div>
+      </div>
+    </form>
+  </div>
+  <p-footer>
+    <div>
+      <button type="button" class="btn" (click)="rejectRecord()">Ok</button>
+      &nbsp;&nbsp;
+      <button type="button" class="btn" (click)="showVoidPopUp=false">Cancel</button>
+    </div>
+  </p-footer>
+</p-dialog>

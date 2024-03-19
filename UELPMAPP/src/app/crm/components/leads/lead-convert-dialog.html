@@ -1,0 +1,350 @@
+
+<button class="close" mat-button (click)="onNoClick($event)">Close</button>
+<!-- <button mat-icon-button class="close-button" [mat-dialog-close]="true">
+  <mat-icon class="close-icon" color="warn">close</mat-icon>
+</button> -->
+
+<h1 mat-dialog-title>{{data.HeaderTitle}} ..</h1>
+<div mat-dialog-content>
+  <div id="divReportingManager" class="ReportingMang">
+    <!-- (ngSubmit)="onSubmitLeadQualifyform(data.LeadQualifyForm.value,$event)"  -->
+    <form [formGroup]="data.LeadQualifyForm" (ngSubmit)="onConvertNewSubmit(data.LeadQualifyForm.value,$event)" 
+    #MyLeadQualifyForm style="width: 90%;margin-top: 10px;margin-left:26px !important;">
+
+    <div class="row">
+      <div class="col-12">
+        <div class="form-group text-right btn-list">
+          <button type="submit" class="btn btn-save">
+            <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+    
+          <button type="button" (click)="onNoClick($event)" class="btn btn-cancel">
+            <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+        </div>
+      </div>
+    </div>
+
+
+     <mat-tab-group  class="demo-tab-group">
+      <mat-tab label="Lead Conversion">
+        <div class="demo-tab-content">
+          <!-- Accounts Details Starts Here -->
+          <br>
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6" style="font-weight: bolder;">
+              Account {{AccountDisabled}} -- {{AccountShow}}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="form-group row">
+                <div class="custom-control custom-radio">
+                  <!-- <label class="custom-control-label">Create New</label>              -->
+                  <input id="CreateNewAccountYES" type="radio" (change)="OnAccountSelectChange($event)" 
+                  class="custom-control-input" value="YES" name="CreateNewAccount" 
+                  formControlName="CreateNewAccount">
+                  <label class="custom-control-label" for="CreateNewAccountYES">Create New</label>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="form-group row">
+                <div class="custom-control custom-radio">
+                  <!-- <label class="custom-control-label">Choose Existing</label> -->
+                  
+                    <input id="CreateNewAccountNO" type="radio" (change)="OnAccountSelectChange($event)"
+                    class="custom-control-input" value="NO" name="CreateNewAccount" 
+                    formControlName="CreateNewAccount">
+                    <label class="custom-control-label" for="CreateNewAccountNO">Choose Existing</label>
+                    
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Account Name
+                    <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                    <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                      
+                      <input id="AccountName" #AccountName formControlName="AccountName" placeholder="Account Name" 
+                      tabindex="3" class="form-control" required />
+
+                      <!-- <div *ngIf="data.LeadQualifyForm.get('FirstName') && data.LeadQualifyForm.get('FirstName').errors!=null &&data.LeadQualifyForm.get('FirstName').touched==true">
+                        <span class="errorMessage" *ngIf="data.LeadQualifyForm.get('FirstName').errors.required">
+                          First Name is required</span>
+                      </div> -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="form-group row">
+                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Choose Existing
+                  <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                  <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                    <!-- <label>{{data.LeadQualifyForm.get('AccountId').value}}</label> -->
+                    <!-- <input id="AccountId" #AccountId formControlName="AccountName" placeholder="Account Search" 
+                    tabindex="3" class="form-control" required /> -->
+                    <!-- [disabled]="!AccountDisabled" -->
+                    <select (change)="OnAccountChange($event)" formControlName="AccountId" 
+                    *ngIf="AccountShow"
+                    class="form-control">
+                        <option [ngValue]="undefined">--Select--</option>
+                        <option  *ngFor="let record of data.AccountsDomainItemList" value={{record.AccountId}}>
+                            {{ record.AccountName }}
+                    </select>
+                  </div>
+              </div>
+            </div>
+
+          
+          </div> 
+          <hr style="margin-top: 0px;" />
+          <!-- Accounts Details Ends Here -->
+
+          
+          <!-- Contact Details Starts Here -->
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6" style="font-weight: bolder;">
+              Contact
+            </div>
+          </div>
+        
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="form-group row">
+                <div class="custom-control custom-radio">
+                  <input id="CreateNewContactYES" type="radio" class="custom-control-input" 
+                  (change)="OnContactSelectChange($event)" value="YES" name="CreateNewContact" 
+                  formControlName="CreateNewContact">
+                  <label class="custom-control-label" for="CreateNewContactYES">Create New</label>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="form-group row">
+                <div class="custom-control custom-radio">
+                  <!-- <label class="custom-control-label">Choose Existing</label> -->
+                    <input id="CreateNewContactNO" type="radio" class="custom-control-input" 
+                    (change)="OnContactSelectChange($event)" value="NO" name="CreateNewContact" 
+                    formControlName="CreateNewContact">
+                    <label class="custom-control-label" for="CreateNewContactNO">Choose Existing</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Contact Name
+                    <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                    <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                      <input id="ContactName" #ContactName formControlName="ContactName" placeholder="Contact Name" 
+                      tabindex="3" class="form-control" required />
+
+                      <!-- <div *ngIf="data.LeadQualifyForm.get('FirstName') && data.LeadQualifyForm.get('FirstName').errors!=null &&data.LeadQualifyForm.get('FirstName').touched==true">
+                        <span class="errorMessage" *ngIf="data.LeadQualifyForm.get('FirstName').errors.required">
+                          First Name is required</span>
+                      </div> -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="form-group row">
+                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Choose Existing Contact
+                  <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                  <div class="autoComplete col-xl-8 col-sm-6 col-6">              
+
+                    <!-- <label>{{data.LeadQualifyForm.get('ContactId').value}}</label> -->
+                    <select (change)="OnContactChange($event)" formControlName="ContactId" 
+                    class="form-control" *ngIf="AccountShow">
+                        <option [ngValue]="undefined">--Select--</option>
+                        <option *ngFor="let record of ContactsLists" value={{record.Id}}>
+                            {{ record.FirstName }} {{record.LastName}}
+                    </select>
+                  </div>
+              </div>
+            </div>
+
+          
+          </div> 
+          <hr style="margin-top: 0px;" />
+          <!-- Contact Details Ends Here -->
+
+          <!-- Opportunity Details Starts Here -->
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6" style="font-weight: bolder;">
+              Opportunity
+            </div>
+          </div>
+        
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="form-group row">
+                <div class="custom-control custom-radio">
+                  <!-- <label class="custom-control-label">Create New</label>              -->
+                  <input id="CreateOpportunityYES" type="radio" class="custom-control-input" value="YES" name="CreateOpportunity" 
+                  formControlName="CreateOpportunity" readonly disabled>
+                  <label class="custom-control-label" for="CreateOpportunityYES">Create New</label>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="form-group row">
+                <div class="custom-control custom-radio">
+                  <!-- <label class="custom-control-label">Choose Existing</label> -->
+                    <!-- <input id="CreateOpportunityNo" type="radio" class="custom-control-input" value="NO" name="CreateOpportunity" 
+                    formControlName="CreateOpportunity" readonly disabled>
+                    <label class="custom-control-label" for="CreateOpportunityNo">Choose Existing</label> -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Opportunity Name
+                    <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                    <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                      <input id="OpportunityName" #OpportunityName formControlName="OpportunityName" 
+                      placeholder="Opportunity Name" 
+                      tabindex="3" class="form-control" required />
+
+                      <!-- <div *ngIf="data.LeadQualifyForm.get('FirstName') && data.LeadQualifyForm.get('FirstName').errors!=null &&data.LeadQualifyForm.get('FirstName').touched==true">
+                        <span class="errorMessage" *ngIf="data.LeadQualifyForm.get('FirstName').errors.required">
+                          First Name is required</span>
+                      </div> -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="form-group row">
+                <!-- <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Choose Existing 
+                  </label> -->
+                  <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                    <!-- <input id="OpportunityId" #OpportunityId formControlName="OpportunityId" placeholder="Account Search" 
+                    tabindex="3" class="form-control" readonly disabled /> -->
+
+                    <!-- <div *ngIf="data.LeadQualifyForm.get('FirstName') && data.LeadQualifyForm.get('FirstName').errors!=null &&data.LeadQualifyForm.get('FirstName').touched==true">
+                      <span class="errorMessage" *ngIf="data.LeadQualifyForm.get('FirstName').errors.required">
+                        First Name is required</span>
+                    </div> -->
+                  </div>
+              </div>
+            </div>
+
+          
+          </div> 
+
+          <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+
+
+              <label class="container"> 
+                <input type="checkbox" id="DontCreateOpportunity" name="DontCreateOpportunity" 
+                formControlName="DontCreateOpportunity"  data-md-icheck 
+                  (change)="OnCanCreateOpportunitySelect($event)"/>
+                  Don't create an opportunity upon conversion
+                
+                  <span class="checkmark"></span>
+                </label>
+
+              <!-- <input id="CanCreateOpportunity" name="CanCreateOpportunity" 
+              type="checkbox" (change)="OnCanCreateOpportunitySelect($event)" 
+                  class="custom-control-input" value="YES"  
+                  formControlName="CanCreateOpportunity"> -->
+            </div>
+          </div>
+          <!-- Opportunity Details Ends Here -->
+          <hr style="margin-top: 0px;" />
+        </div>
+      </mat-tab>
+      
+      <mat-tab label="Details">
+        <!-- Lead Details Starts Here -->
+        <br>
+        <div class="row">
+          
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            
+            <div class="form-group row">
+              <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Total Amount
+                <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                  <input id="TotalAmount" #TotalAmount formControlName="TotalAmount" placeholder="Total Amount" 
+                  tabindex="3" class="form-control" required />
+  
+                  <div *ngIf="data.LeadQualifyForm.get('TotalAmount') && data.LeadQualifyForm.get('TotalAmount').errors!=null &&data.LeadQualifyForm.get('TotalAmount').touched==true">
+                    <span class="errorMessage" *ngIf="data.LeadQualifyForm.get('TotalAmount').errors.required">
+                      Total Amount is required</span>
+                  </div>
+                </div>
+            </div>
+          </div>
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="form-group row">
+              <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Upfront or Advance
+                <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                  <input id="UpfrontOrAdvance" #UpfrontOrAdvance formControlName="UpfrontOrAdvance" placeholder="Upfront or Advance" 
+                  tabindex="3" class="form-control" required />
+  
+                  <div *ngIf="data.LeadQualifyForm.get('UpfrontOrAdvance') && data.LeadQualifyForm.get('UpfrontOrAdvance').errors!=null &&data.LeadQualifyForm.get('UpfrontOrAdvance').touched==true">
+                    <span class="errorMessage" *ngIf="data.LeadQualifyForm.get('UpfrontOrAdvance').errors.required">
+                      Upfront or Advance is required</span>
+                  </div>
+                </div>
+            </div>
+          </div>
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="form-group row">
+              <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">PO Number
+                <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                  <input id="PoNumber" #UpfrontOrAdvance formControlName="PoNumber" placeholder="PO Number" 
+                  tabindex="3" class="form-control" required />
+  
+                  <div *ngIf="data.LeadQualifyForm.get('PoNumber') && data.LeadQualifyForm.get('PoNumber').errors!=null &&data.LeadQualifyForm.get('PoNumber').touched==true">
+                    <span class="errorMessage" *ngIf="data.LeadQualifyForm.get('PoNumber').errors.required">
+                      PO Number is required</span>
+                  </div>
+                </div>
+            </div>
+          </div>
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="form-group row">
+              <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Balance
+                <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                  <input id="Balance" #UpfrontOrAdvance formControlName="Balance" placeholder="Balance" 
+                  tabindex="3" class="form-control" required />
+  
+                  <div *ngIf="data.LeadQualifyForm.get('Balance') && data.LeadQualifyForm.get('Balance').errors!=null &&data.LeadQualifyForm.get('Balance').touched==true">
+                    <span class="errorMessage" *ngIf="data.LeadQualifyForm.get('Balance').errors.required">
+                      Balance is required</span>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+        <!-- Lead Details End Here -->
+      </mat-tab>
+      
+    </mat-tab-group>
+
+    </form>
+   
+  </div>
+
+</div>
+<!-- <div mat-dialog-actions style="text-align: center;display:block !important;">
+  <button class="btn btn-cancel" (click)="data.SaveClick='NO';onNoClick($event)">Cancel</button>
+ 
+  <button class="btn btn-save" type="submit"
+  (click)="data.SaveClick='YES';YesConvertNewClick($event,data.LeadQualifyForm.value)" 
+  *ngIf="data.Type==null" [mat-dialog-close]="MyListID" cdkFocusInitial>Convert</button>
+  <button class="btn btn-save" type="submit">Convert</button>
+
+</div> -->

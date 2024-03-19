@@ -1,0 +1,13 @@
+<div class="wrapper">
+  <div class="notes-logo"><img alt="logo" height="70px" src="../assets/images/logo.jpg">
+    <!-- <h4>Property <br> Management </h4> -->
+  </div>
+  <h2>Release Notes</h2>
+  <div *ngFor="let obj of releaseNotes">
+    <h3> Build Version V {{obj.Version}} Released on ({{obj.ReleasedDate}})</h3>
+    <ul *ngFor="let changes of obj.Changes">
+      <li>{{changes}}</li>
+    </ul>
+  </div>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500" rel="stylesheet">
+</div>

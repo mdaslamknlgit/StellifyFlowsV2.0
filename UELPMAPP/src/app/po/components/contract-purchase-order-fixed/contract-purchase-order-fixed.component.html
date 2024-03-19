@@ -1,0 +1,340 @@
+<!-- <div class="container-fluid">
+    <div class="row">
+    <div  #rightPanel class="rightPanel col-lg-12 col-md-12">
+            <div>
+                <form [formGroup]="contractPurchaseOrderForm" class="form-horizontal">
+                    <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+                        <div class="row fullScreenLabel">
+                            <div class="col-12">
+                                <h3 class="item-heading" style="float:none;">Purchase Order Creation</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Contract Name</label>                               
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                       <input type="text" formControlName="ContractName" class="form-control">
+                                       <div *ngIf="contractPurchaseOrderForm.get('ContractName') && contractPurchaseOrderForm.get('ContractName').errors!=null && contractPurchaseOrderForm.get('ContractName').touched==true">
+                                            <span class="errorMessage" *ngIf="contractPurchaseOrderForm.get('ContractName').errors.required">Contract Name is required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row" *ngIf="hidetext">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Contract Signed On</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text">{{ selectedPODetails.ContractSignedDate|DisplayDateFormat }}</label>
+                                        <div class="input-group" *ngIf="hideinput">
+                                            <input class="form-control" formControlName="ContractSignedDate" (click)="onDatePickerFocus(ContractSignedDatePicker)" ngbDatepicker
+                                                #ContractSignedDatePicker="ngbDatepicker">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary" (click)="ContractSignedDatePicker.toggle()" type="button">
+                                                    <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="contractPurchaseOrderForm.get('ContractSignedDate') && contractPurchaseOrderForm.get('ContractSignedDate').errors!=null && contractPurchaseOrderForm.get('ContractSignedDate').touched==true">
+                                            <span class="errorMessage" *ngIf="contractPurchaseOrderForm.get('ContractSignedDate').errors.required">Contract Signed Date is required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Provider</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text" *ngIf="hidetext&&selectedPODetails.Provider!=null">{{ selectedPODetails.Provider.Name }}</label>
+                                        <input formControlName="Provider" type="text" *ngIf="hideinput" class="form-control" [inputFormatter]="supplierInputFormater"
+                                            (selectItem)="onSupplierChange($event)" [ngbTypeahead]="supplierSearch" [resultTemplate]="supplierTemplate"
+                                        />
+                                        <div *ngIf="contractPurchaseOrderForm.get('Provider') && contractPurchaseOrderForm.get('Provider').errors!=null && contractPurchaseOrderForm.get('Provider').touched==true">
+                                            <span class="errorMessage" *ngIf="contractPurchaseOrderForm.get('Provider').errors.required">Provider is required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Start Date</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text" *ngIf="hidetext">{{ selectedPODetails.StartDate|DisplayDateFormat }}</label>
+                                        <div class="input-group" *ngIf="hideinput">
+                                            <input class="form-control" formControlName="StartDate" (click)="onDatePickerFocus(startDatePicker)" ngbDatepicker
+                                                #startDatePicker="ngbDatepicker">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary" (click)="startDatePicker.toggle()" type="button">
+                                                    <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Total Contract Sum</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text" *ngIf="hidetext">{{ selectedPODetails.TotalContractSum }}</label>
+                                        <input type="number" formControlName="TotalContractSum" *ngIf="hideinput" class="form-control"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group row" *ngIf="hidetext">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Contract PO Number</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text">{{ selectedPODetails.PurchaseOrderCode }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row" *ngIf="hidetext">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Created Date</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text">{{ selectedPODetails.CreatedDate|DisplayDateFormat }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Billing Frequency</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text" *ngIf="hidetext">{{ selectedPODetails.BillingFrequency }}</label>
+                                        <select formControlName="BillingFrequencyId" *ngIf="hideinput" class="form-control">
+                                            <option [ngValue]="undefined">--Select--</option>
+                                            <option *ngFor="let record of billingFrequenceTypes" value={{record.FrequencyId}}>
+                                                {{record.FrequencyName}}
+                                        </select>
+                                        <div *ngIf="contractPurchaseOrderForm.get('BillingFrequencyId') && contractPurchaseOrderForm.get('BillingFrequencyId').errors!=null &&contractPurchaseOrderForm.get('BillingFrequencyId').touched==true">
+                                            <span class="errorMessage" *ngIf="contractPurchaseOrderForm.get('BillingFrequencyId').errors.required">Billing Frequency is required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">End Date</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text" *ngIf="hidetext">{{ selectedPODetails.EndDate|DisplayDateFormat }}</label>
+                                        <div class="input-group" *ngIf="hideinput">
+                                            <input class="form-control" formControlName="EndDate" (click)="onDatePickerFocus(endDateDatePicker)" ngbDatepicker
+                                                #endDateDatePicker="ngbDatepicker">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary" (click)="endDateDatePicker.toggle()" type="button">
+                                                    <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Per Quarter</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <input type="number" formControlName="PerQuarter" *ngIf="hideinput" class="form-control"/>
+                                        <label class="col-form-label form-text" *ngIf="hidetext">{{ selectedPODetails.PerQuarter }}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 engineers-assigned" style="padding:0px;">
+                            <fieldset *ngIf="hideinput" formArrayName="ContractPurchaseOrderItems">
+                                <div style="text-align: center;">
+                                    <span class="errorMessage" *ngIf="showGridErrorMessage &&(selectedPODetails.ContractPurchaseOrderItems==undefined|| selectedPODetails.ContractPurchaseOrderItems.length==0)">
+                                        Please enter purchase order items
+                                    </span>
+                                </div>
+                                <p-table [columns]="gridColumns" (sortFunction)="customSort($event)" [customSort]="true" sortMode="single" [value]="contractPurchaseOrderForm.controls.ContractPurchaseOrderItems.controls">
+                                    <ng-template pTemplate="colgroup" let-columns>
+                                        <colgroup>
+                                            <col style="width:5%;">
+                                            <col style="width:25%;">
+                                            <col style="width:30%;">
+                                            <col style="width:20%;">
+                                            <col style="width:20%;">
+                                        </colgroup>
+                                    </ng-template>
+                                    <ng-template pTemplate="header" let-columns>
+                                        <tr>
+                                            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                                {{col.header}}
+
+                                                <span *ngIf="(col.field=='Unitprice'||col.field=='ItemTotal')&&selectedPODetails.CurrencySymbol!=null">
+                                                    &nbsp; ( {{ selectedPODetails.CurrencySymbol }} )
+                                                </span>
+                                                <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                            </th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                        <tr *ngIf="hideinput" [formGroupName]="i">
+                                            <td>
+                                                {{ i + 1 }}
+                                            </td>
+                                            <td>
+                                                <textarea formControlName="Description" autoresize type="text" class="form-control">
+                                                </textarea>
+                                            </td>
+                                            <td>
+                                                <input type="text" formControlName="ExpenseCategory" class="form-control">
+                                            </td>
+                                            <td>
+                                                <input type="number" style="text-align: right;" class="form-control" (change)="calculateTotalPrice($event)" formControlName="ContractAmount"
+                                                />
+                                            </td>
+                                            <td>
+                                                <div style="float:left;width:60%;">
+                                                    <input type="number" style="text-align: right;" class="form-control" (change)="calculateTotalPrice($event)" formControlName="PaymentEvaluation"
+                                                    />
+                                                </div>
+                                                <div class="gridIconsStyle">
+                                                    <i class="fa fa-trash gridRemoveIcon" (click)="removeGridItem(i)" aria-hidden="true"></i>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                                <div *ngIf="hideinput">
+                                    <input type="number" [(ngModel)]="linesToAdd" [ngModelOptions]="{standalone: true}" class="form-control linesToAdd">
+                                    <button type="submit" (click)="addGridItem(linesToAdd)" class="addLine">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Line
+                                    </button>
+                                </div>
+                            </fieldset>
+                            <p-table *ngIf="hidetext" [columns]="gridColumns" (sortFunction)="customSort($event)" [customSort]="true" sortMode="single"
+                                [value]="selectedPODetails.ContractPurchaseOrderItems">
+                                <ng-template pTemplate="colgroup" let-columns>
+                                    <colgroup>
+                                        <col style="width:5%;">
+                                        <col style="width:25%;">
+                                        <col style="width:30%;">
+                                        <col style="width:20%;">
+                                        <col style="width:20%;">
+                                    </colgroup>
+                                </ng-template>
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                            {{col.header}}
+
+                                            <span *ngIf="(col.field=='Unitprice'||col.field=='ItemTotal')&&selectedPODetails.CurrencySymbol!=null">
+                                                &nbsp; ( {{ selectedPODetails.CurrencySymbol }} )
+                                            </span>
+                                            <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                    <tr>
+                                        <td>
+                                            {{ i + 1 }}
+                                        </td>
+                                        <td>
+                                            <span class="descriptionStyle" [innerHtml]="rowData.Description|TextAreaContentDisplay"></span> 
+                                        </td>
+                                        <td>
+                                            {{ rowData.ExpenseCategory }}
+                                        </td>
+                                        <td>
+                                            {{ rowData.ContractAmount|number:'1.2-4' }}
+                                        </td>
+                                        <td align="right">
+                                            {{ rowData.PaymentEvaluation|number:'1.2-4' }}
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                            <div class="row">
+                                <div class="col-9">
+                                    <div class="row" style="margin-top:3em;">
+                                        <div class="col-12">
+                                            <h4 class="form-heading">Attachments</h4>
+                                        </div>
+                                        <div class="col-12 attachments" *ngIf="selectedPODetails!=undefined">
+                                            <ul>
+                                                <li *ngFor="let data of selectedPODetails.Attachments;let i=index">
+                                                    <span>
+                                                        <span class="displayFileName">
+                                                            {{ data.FileName }}
+                                                        </span>
+                                                        <a style="color:black;" *ngIf="hidetext" href="{{apiEndPoint}}/PurchaseOrderFileDownload?AttachmentId={{ data.AttachmentId }}&AttachmentTypeId={{ data.AttachmentTypeId }}&FileName={{data.FileName}}&RecordId={{data.RecordId}}">
+                                                            <i class="fa fa-download"></i>
+                                                        </a>
+                                                        &nbsp;&nbsp;
+                                                        <i *ngIf="hideinput" (click)="attachmentDelete(i)" class="fa fa-trash">
+                                                        </i>
+                                                    </span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-12" *ngIf="hideinput">
+                                            <div class="col-12">
+                                                <input type="file" multiple (change)="onFileUploadChange($event)" name="file">
+                                            </div>
+                                            <div class="col-12">
+                                                <ul class="fileList">
+                                                    <li *ngFor="let data of uploadedFiles;let i = index">
+                                                        <span>
+                                                            <span class="fileName">
+                                                                {{ data.name }}
+                                                            </span>
+                                                            <i class="fa fa-close" (click)="onFileClose(i)"></i>
+                                                        </span>
+                                                        <br>
+                                                        <span class="fileSize">{{ data.size/1024 }} KB</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <table class="table table-subtotal" style="float:right;">
+                                        <tr>
+                                            <td class="nowrap" width="50%" align="right">Sub Total</td>
+                                            <td align="right" *ngIf="hideinput">{{ selectedPODetails.CurrencySymbol }} {{ ( contractPurchaseOrderForm.get('SubTotal').value
+                                                )|number:'1.2-4' }}</td>
+                                            <td align="right" *ngIf="hidetext">{{ selectedPODetails.CurrencySymbol }} {{ ( selectedPODetails.SubTotal)|number:'1.2-4'
+                                                }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="nowrap" align="right">Discount</td>
+                                            <td *ngIf="hideinput">
+                                                <input type="number" style="text-align: right;" (change)="calculateTotalPrice($event)"
+                                                    formControlName="Discount" class="form-control">
+                                            </td>
+                                            <td *ngIf="hidetext" align="right">{{ selectedPODetails.CurrencySymbol }} {{ (selectedPODetails.Discount)|number:'1.2-4'
+                                                }}</td>
+                                        </tr>
+                                    </table>
+                                    <div style="clear: both;">
+                                        <table class="table table-totalamount" style="float:right;border: inherit">
+                                            <tr>
+                                                <td class="nowrap" width="50%" align="right">Total</td>
+                                                <td *ngIf="hideinput" align="right">{{ selectedPODetails.CurrencySymbol }} {{ (contractPurchaseOrderForm.get('TotalAmount').value)|number:'1.2-4'
+                                                    }}</td>
+                                                <td *ngIf="hidetext" align="right">{{ selectedPODetails.CurrencySymbol }} {{ (selectedPODetails.TotalAmount)|number:'1.2-4'
+                                                    }}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group text-right btn-list">
+                                <button type="submit" (click)="saveRecord()" class="btn btn-save" *ngIf="hideinput">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+                                <button type="submit" (click)="cancelRecord()" class="btn btn-cancel" *ngIf="hideinput">
+                                    <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                                <button type="submit" (click)="editRecord()" class="btn btn-edit" *ngIf="hidetext">
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                                <button type="submit" (click)="deleteRecord()" class="btn btn-delete" *ngIf="hidetext">
+                                    <i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+    </div>
+        
+    </div>
+</div>
+
+<ng-template #itemMasterTemplate let-r="result" let-t="term">
+    {{ r.ItemName }}
+</ng-template>
+
+<ng-template #supplierTemplate let-r="result" let-t="term">
+    {{ r.SupplierName }}
+</ng-template> -->

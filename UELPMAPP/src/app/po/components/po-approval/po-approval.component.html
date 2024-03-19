@@ -1,0 +1,68 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+            <div class="flexrow space-between align-center">
+                <h3 class="item-heading"> Purchase Order Approval a</h3>
+                <div>
+                    <!-- <button class="btn btn-transparent" (clickOutside)="onClickedOutside($event)" (click)="split()">
+                        {{showfilterstext}} </button> -->
+                    <img style="display: none;" src="../assets/images/grid1.png" (click)="showFullScreen()">
+                    <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+                        <button class="btn customdropdown btn-transparent"
+                            style="background:none;border:none;padding:0px;" id="dropdownBasic1" ngbDropdownToggle>
+                            <i class="fa-solid fa-bars"></i>
+                        </button>
+                        <div ngbDropdownMenu aria-labelledby="dropdownBasic1"
+                            *ngIf="(printPermission && showPrintButton)||viewLogPermission">
+                            <!-- <button class="dropdown-item"  (click)="onPDFPrint()">Print</button> -->
+                            <button class="dropdown-item" *ngIf="viewLogPermission" (click)="displayLogPopUp()">View
+                                Log</button>
+                            <!-- <button class="dropdown-item">Email</button> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </div>
+    </div>
+    <!-- <p>Edit Form Starts Here {{IsList}}</p> -->
+    <!-- Edit Form Starts Here -->
+    <p>Edit Form Starts Here</p>
+    <p> Results : {{selectedPurchaseOrderId}} -- {{selectedPurchaseOrderTypeId}} </p>
+    <div class="row">
+        <!-- left col end here-->
+        <div #rightPanel class="rightPanel col-lg-12 col-md-12" [class.expand-rightcol]="leftSection">
+            <div *ngIf="purchaseOrdersList.length >0">
+                <app-standard-purchase-order [remarks]='remarks' (updateStatus)="updateStatus($event)"
+                    [isApprovalPage]="isApprovalPage" [selectedPoId]='selectedPurchaseOrderId'
+                    (readListView)="readListView($event)"
+                    *ngIf="selectedPurchaseOrderTypeId == purchaseOrderType.InventoryPo"></app-standard-purchase-order>
+                
+                    <app-asset-purchase-order [remarks]='remarks' (updateStatus)="updateStatus($event)"
+                    [isApprovalPage]="isApprovalPage" [selectedPoId]='selectedPurchaseOrderId'
+                    (readListView)="readListView($event)"
+                    *ngIf="selectedPurchaseOrderTypeId == purchaseOrderType.FixedAssetPo"></app-asset-purchase-order>
+                
+                    <app-contract-purchase-order [remarks]='remarks' (updateStatus)="updateStatus($event)"
+                    [isApprovalPage]="isApprovalPage" [selectedPoId]='selectedPurchaseOrderId'
+                    (readListView)="readListView($event)"
+                    *ngIf="selectedPurchaseOrderTypeId ==purchaseOrderType.ContractPoFixed ||selectedPurchaseOrderTypeId == purchaseOrderType.ContractPoVariable "></app-contract-purchase-order>
+                
+                    
+                <app-expense-purchase-order [remarks]='remarks' (updateStatus)="updateStatus($event)"
+                    [isApprovalPage]="isApprovalPage" [selectedPoId]='selectedPurchaseOrderId'
+                    (readListView)="readListView($event)"
+                    *ngIf="selectedPurchaseOrderTypeId == purchaseOrderType.ExpensePo"></app-expense-purchase-order>
+            </div>
+        </div>
+        <!-- left col end here-->
+    </div>
+    <p>Edit Form Ends Here</p>
+    <!-- Edit Form Ends Here -->
+
+</div>
+<ng-template #supplierTemplate let-r="result" let-t="term">
+    {{ r.SupplierName }}
+</ng-template>
+<app-auditlog *ngIf="showLogPopUp" (hideLogPopUp)="hideLogPopUp($event)" [DocumentId]="selectedPurchaseOrderId"
+    [DocumentNumber]="purchaseOrderSearchKey" [PageName]="selectedPurchaseOrderTypeId" [DocType]="'PO'"
+    [showLogPopUp]="showLogPopUp"></app-auditlog>

@@ -1,0 +1,607 @@
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-6 col-sm-12 padding-null tittlediv">
+            <h3 class="item-heading"> <img src="../assets/images/icon1.png"> {{moduleHeading}} </h3>
+        </div>
+        <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+            <img src="../assets/images/add-new.png" (click)="addRecord()" *ngIf="hideText&&isApprovalPage==false">
+            <img src="../assets/images/grid1.png" (click)="showFullScreen()">
+            <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+                <button class="btn btn-outline-primary" style="background:none;border:none;padding:0px;" id="dropdownBasic1" ngbDropdownToggle>
+                    <img src="../assets/images/grid2.png"> 
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">                     
+                  <button class="dropdown-item" (click)="onPrintPDF()">Print</button>                    
+                </div>
+            </div>
+            
+        </div>  
+</div>
+<div class="row">
+    <div class='col-lg-3 col-md-4 leftdiv' [class.collapse-leftcol]="leftsection">
+        <div class="left-section">
+            <div class="filter-section" ngbDropdown #myDrop="ngbDropdown">
+                <div class="left-search">
+                    <input type="text"  [(ngModel)]="goodsReturnedNotesSearchKey" placeholder="Search requests..." (keyup)="onSearchInputChange($event)"
+                     class="search-filter">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                    <div class="filter-popup" *ngIf="initDone" ngbDropdownMenu aria-labelledby="dropdownManual" (click)="$event.stopPropagation(); myDrop.open();">
+    
+                        <form [formGroup]="grtFilterInfoForm" class="form-horizontal">
+                            <div class="form-group row">
+                                <label class="col-form-label col-6 form-label">GRT Code</label>
+                                <div  class="col-6">
+
+                                    <input  type="text" #grtCode formControlName="GRTCode" class="form-control">
+
+                                </div>
+                            </div>
+
+                            <!-- <div class="form-group row">
+                                <label class="col-form-label col-6 form-label">Supplier</label>
+                                <div class="col-6">
+                                        <input formControlName="SupplierCategory" type="text" class="form-control" [inputFormatter]="supplierInputFormater"
+                                        [ngbTypeahead]="supplierSearch" [resultTemplate]="supplierTemplate" />
+                                </div>
+                            </div> -->
+
+                            <!-- <div class="form-group row">
+                                <label class="col-form-label col-6 form-label">Invoice Code</label>
+                                <div  class="col-6">
+                                    <input  type="text" formControlName="InvoiceCode" class="form-control">
+                                </div>
+                            </div> -->
+
+                            <div class="form-group row">
+                                <div class="col-12 error">
+                                    {{filterMessage}}
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+
+                                <div class="col-12" style="text-align: right">
+                                    <button type="submit" (click)="filterData()" class="btn btn-save">
+                                        <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                    <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                        <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                    <!-- start filter code -->
+                    <div class="filter-icon">
+                        <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                            <i class="fa fa-filter" aria-hidden="true"></i>
+                        </button>
+                    </div>
+
+                    <div  class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+                        <i class="fa fa-undo" aria-hidden="true"></i>
+                    </div>
+
+
+
+                <!-- <div  class="filter-icon">
+                    <i class="fa fa-filter" aria-hidden="true"></i>
+                </div> -->
+            </div>
+            <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="filter-scroll" style="width:100%; float:left;">
+                    <table class="table">
+                    <tr [class.activerow]="record.GoodsReturnNoteId==selectedGRNDetails.GoodsReturnNoteId" (click)="onRecordSelection(record.GoodsReturnNoteId)" 
+                    *ngFor="let record of goodsReturnedNotesList">
+                        <td>
+                            <h5 class="sub-heading">{{ record.IsDocumentApproved==2 ? record.GRTCode:record.DraftCode }}</h5><br>
+                            <label class="label-text">DO Number</label> :
+                            <label class="label-value">{{ record.SupplierDoNumber  }}</label><br>
+                            <!-- <label class="label-text">Status</label> :
+                            <label class="label-value">{{ record.IsDocumentApproved==1?'Draft':'Completed' }}</label><br> -->
+                            <label class="label-text">Remarks</label> :
+                            <label class="label-value">{{ record.GRNRemarks }}</label>
+                        </td>
+                    </tr>
+                </table>
+                <div *ngIf="goodsReturnedNotesList.length==0" class="col-12 listErrorMessage">
+                    {{errorMessage}}
+                </div> 
+                <ngb-pagination [maxSize]="5" *ngIf="goodsReturnedNotesList.length>0" (pageChange)="pageChange($event)" 
+                  [collectionSize]="goodsReturnedNotesPagerConfig.TotalRecords" class="d-flex justify-content-center" [pageSize]="goodsReturnedNotesPagerConfig.RecordsToFetch" [page]="1" [boundaryLinks]="true"></ngb-pagination>
+            </div>
+        </div>
+        <div class="split-line" (click)="splite()"></div>
+    </div>  
+    <!-- left col end here-->
+    <div #rightPanel class="rightPanel col-lg-9 col-md-8"  [class.expand-rightcol]="rightsection">
+        <div>
+            <form [ngClass]="{'hideRightPanel':(goodsReturnedNotesList.length==0 && hideText==true)}"  [formGroup]="goodsReturnedNotesForm" class="form-horizontal">
+                <div class="row fullScreenLabel">
+                    <div class="col-12">
+                        <h3 class="item-heading" style="float:none;">Goods Return Notes</h3>
+                    </div>
+                </div>     
+                <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">                   
+                    <div class="row" *ngIf="hideText && selectedGRNDetails.GoodsReturnNoteId >0">
+                        <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">GRT Code</label>
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text">{{ selectedGRNDetails.Status==2 ? selectedGRNDetails.GRTCode:selectedGRNDetails.DraftCode }}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group row" *ngIf="hideText">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Requestor</label>
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text">{{ selectedGRNDetails.RequestedByUserName }}</label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">DO Number<i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                                </label>
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label *ngIf="hideText" class="col-form-label form-text">{{ selectedGRNDetails.SupplierDoNumber }}</label>                                   
+                                    <input *ngIf="hideInput" type="text" formControlName="GRN" class="form-control show" [inputFormatter]="donumberInputFormater"
+                                    [ngbTypeahead]="donumberSearch" (selectItem)="poSelection($event)" [resultTemplate]="donumberTemplate">
+                                </div>
+                            </div>                               
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier Name</label>
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text" *ngIf="selectedGRNDetails.Supplier!=null">{{ selectedGRNDetails.Supplier.SupplierName }}</label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier Address</label>
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text" *ngIf="selectedGRNDetails.Supplier!=null">{{ selectedGRNDetails.Supplier.BillingAddress1 }}</label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Delivery Address</label>
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text">{{ selectedGRNDetails.DeliveryAddress }}</label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Fax</label>
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text" *ngIf="selectedGRNDetails.Supplier!=null">{{ selectedGRNDetails.Supplier.ShippingFax }}</label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Currency Type</label>
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text">{{ selectedGRNDetails.CurrencyCode }}</label>
+                                </div>
+                            </div>                           
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group row" *ngIf="hideText">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Designation</label>
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text">{{ selectedGRNDetails.Designation }}</label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">PO Number</label>
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text">{{ selectedGRNDetails.PurchaseOrderCode }}</label>   
+                                </div>
+                            </div>
+                            <div class="form-group row" >
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Date</label>
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text">{{ selectedGRNDetails.CreatedDate|DisplayDateFormat }}</label>
+                                </div>
+                            </div>
+                            <div class="form-group row" *ngIf="hideText">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Status</label>
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text">{{ selectedGRNDetails.Status==1?'Draft':'Completed' }}</label>
+                                </div>
+                            </div>
+                            <!-- <div *ngIf="hideText" class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">WorkFlow Status</label>
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label *ngIf="selectedGRNDetails.WorkFlowStatus!=''&&selectedGRNDetails.WorkFlowStatus!=null" class="col-form-label form-text">{{ selectedGRNDetails.WorkFlowStatus }}&nbsp;
+                                        <span *ngIf="selectedGRNDetails.CurrentApproverUserName!=''&&selectedGRNDetails.CurrentApproverUserName!=null">[{{ selectedGRNDetails.CurrentApproverUserName }}]</span>
+                                    </label>
+                                </div>
+                            </div> -->
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">PO Type</label>
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text">{{ selectedGRNDetails.PurchaseOrderType }}</label>   
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Cost of Service</label>
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text">{{ selectedGRNDetails.CostOfService }}</label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Department</label>
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text">{{ selectedGRNDetails.Location }}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 engineers-assigned" style="padding:0px;">
+                        <fieldset *ngIf="hideInput" formArrayName="ItemsList">
+                            <div style="text-align: center;">
+                                <!-- <span class="errorMessage" *ngIf="showGridErrorMessage &&(selectedGRNDetails.ItemsList==undefined|| selectedGRNDetails.ItemsList.length==0)">
+                                    Please enter purchase order items
+                                </span> -->
+                                <span class="errorMessage" *ngIf="showGridErrorMessage1">
+                                    Please enter atleast one Item RTN Quantity
+                                </span>
+                            </div>
+                            <p-table [columns]="gridColumns" (sortFunction)="customSort($event)" [customSort]="true" sortMode="single" [value]="goodsReturnedNotesForm.controls.ItemsList.controls">
+                                <ng-template pTemplate="emptymessage">
+                                    <tr>
+                                        <td colspan="8" style='text-align: center;'>
+                                            <b>{{ gridNoMessageToDisplay }}</b>
+                                        </td> 
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="colgroup" let-columns>
+                                    <colgroup>
+                                        <col style="width:5%;">
+                                        <col style="width:5%;">
+                                        <col style="width:15%;">
+                                        <col style="width:15%;">
+                                        <col style="width:10%;">
+                                        <col style="width:10%;">
+                                        <col style="width:10%;">
+                                        <col style="width:10%;">
+                                        <!-- <col *ngIf="goodsReturnedNotesForm.get('POTypeId').value==1" style="width:10%;"> -->
+                                        <!-- <col *ngIf="goodsReturnedNotesForm.get('POTypeId').value==2" style="width:5%;">
+                                        <col *ngIf="goodsReturnedNotesForm.get('POTypeId').value==2" style="width:5%">  -->
+                                    </colgroup>
+                                </ng-template>
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        <ng-template ngFor let-data [ngForOf]="columns" let-i="index">
+                                            <th  [pSortableColumn]="data.field">
+                                                {{data.header}}
+                                                <span *ngIf="(data.field=='Unitprice'||data.field=='ItemTotal')&&selectedGRNDetails.CurrencySymbol!=null">
+                                                    &nbsp;
+                                                    ( {{ selectedGRNDetails.CurrencySymbol }} )
+                                                </span>
+                                                <p-sortIcon [field]="data.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                            </th>
+                                        </ng-template>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                    <tr *ngIf="hideInput" [formGroupName]="i">
+                                        <td>
+                                            {{  i + 1 }}
+                                        </td>
+                                        <td>
+                                            {{ goodsReturnedNotesForm.get('ItemsList').controls[i].get('ItemType').value }}
+                                        </td>
+                                        <td *ngIf="(goodsReturnedNotesForm.get('ItemsList').controls[i].get('TypeId').value === 1
+                                                    )">
+                                            {{ goodsReturnedNotesForm.get('ItemsList').controls[i].get('Item')==null?"":goodsReturnedNotesForm.get('ItemsList').controls[i].get('Item').value.ItemName  }}
+                                        </td>
+                                        <td *ngIf="goodsReturnedNotesForm.get('ItemsList').controls[i].get('TypeId').value === 2 || goodsReturnedNotesForm.get('ItemsList').controls[i].get('TypeId').value == null">
+                                            {{ goodsReturnedNotesForm.get('ItemsList').controls[i].get('Service').value.Code  }}
+                                        </td>
+                                     
+                                        <td *ngIf="(goodsReturnedNotesForm.get('ItemsList').controls[i].get('TypeId').value === 1
+                                        && goodsReturnedNotesForm.get('POTypeId').value!= 3)">
+                                            {{ goodsReturnedNotesForm.get('ItemsList').controls[i].get('ItemDescription')==null?"":goodsReturnedNotesForm.get('ItemsList').controls[i].get('ItemDescription').value }}
+                                        </td>
+                                        <td *ngIf="goodsReturnedNotesForm.get('ItemsList').controls[i].get('TypeId').value === 2 || goodsReturnedNotesForm.get('ItemsList').controls[i].get('TypeId').value == null">
+                                            {{ goodsReturnedNotesForm.get('ItemsList').controls[i].get('Service').value.Description }}
+                                        </td>
+                                        <td>
+                                            {{ goodsReturnedNotesForm.get('ItemsList').controls[i].get('MeasurementUnitCode')==null?"":goodsReturnedNotesForm.get('ItemsList').controls[i].get('MeasurementUnitCode').value }}
+                                        </td>
+                                        <td>
+                                            {{ goodsReturnedNotesForm.get('ItemsList').controls[i].get('OriginalQty')==null?0:goodsReturnedNotesForm.get('ItemsList').controls[i].get('OriginalQty').value }}
+                                        </td>
+                                        <td>
+                                             {{ goodsReturnedNotesForm.get('ItemsList').controls[i].get('TotalReceivedQty')==null?0:goodsReturnedNotesForm.get('ItemsList').controls[i].get('TotalReceivedQty').value }}
+                                        </td>                                       
+                                        <td>
+                                            <span class="errorMessage"  *ngIf="goodsReturnedNotesForm.get('ItemsList').controls[i].get('RTNQty')!=null &&
+                                                         goodsReturnedNotesForm.get('ItemsList').controls[i].get('RTNQty').errors!=null ">                 
+                                                <span *ngIf="goodsReturnedNotesForm.get('ItemsList').controls[i].get('RTNQty').errors.qtyerror1">
+                                                        RTN Quantity cannot be greater than Required Quantity
+                                                </span> 
+                                                <span *ngIf="goodsReturnedNotesForm.get('ItemsList').controls[i].get('RTNQty').errors.qtyerror2">
+                                                    RTN Quantity cannot be greater than Received Quantity
+                                                </span>                                             
+                                                <span *ngIf="goodsReturnedNotesForm.get('ItemsList').controls[i].get('RTNQty').errors.required">
+                                                      RTN Quantity is required
+                                                </span>
+                                            </span>
+                                            <input type="number" min="0" (keydown)=restrictMinus($event) (change)="rtnQtyChange(goodsReturnedNotesForm.get('ItemsList').controls[i])"
+                                             style="text-align: right;" class="form-control"  formControlName="RTNQty" />
+                                        </td>
+                                        <!-- <td *ngIf="goodsReturnedNotesForm.get('POTypeId').value==2">
+                                            <button class="btn btn-save" (click)="addAssetDetails(content,i)">
+                                                Add Assets
+                                            </button>
+                                        </td> -->
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </fieldset>
+                        <p-table *ngIf="hideText" [columns]="gridColumns" (sortFunction)="customSort($event)" [customSort]="true" sortMode="single" [value]="selectedGRNDetails.ItemsList">
+                            <ng-template pTemplate="emptymessage">
+                                    <tr>
+                                        <td colspan="8" style='text-align: center;'>
+                                            <b>{{ gridNoMessageToDisplay }}</b>
+                                        </td> 
+                                    </tr>
+                            </ng-template>
+                            <ng-template pTemplate="colgroup" let-columns>
+                                <colgroup>
+                                    <col style="width:5%;">
+                                    <col style="width:5%;">
+                                    <col style="width:20%;">
+                                    <col style="width:15%;">
+                                    <col style="width:10%;">
+                                    <col style="width:10%;">
+                                    <col style="width:10%;">
+                                    <col style="width:10%;">
+                                </colgroup>
+                            </ng-template>
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <ng-template ngFor let-data [ngForOf]="columns" let-i="index">
+                                        <th *ngIf="data.field!='Add'"  [pSortableColumn]="data.field">
+                                   <!-- <th *ngFor="let col of columns" [pSortableColumn]="col.field"> -->
+                                        {{data.header}}
+                                        <span *ngIf="(data.field=='Unitprice'||data.field=='ItemTotal')&&selectedGRNDetails.CurrencySymbol!=null">
+                                            &nbsp;
+                                            ( {{ selectedGRNDetails.CurrencySymbol }} )
+                                        </span>
+                                        <p-sortIcon [field]="data.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                      </th>
+                                    </ng-template>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                <tr>
+                                    <td>
+                                        {{  i + 1 }}
+                                    </td>
+                                    <td>
+                                        {{ rowData.ItemType }}
+                                    </td>
+                                    <td *ngIf="rowData.TypeId === 1">
+                                        {{ rowData.Item==null?"":rowData.Item.ItemName }}
+                                    </td>
+                                    <td *ngIf="rowData.TypeId === 2 || rowData.TypeId === null">
+                                        {{ rowData.Service.Code }}
+                                    </td>                                      
+                                    <td *ngIf="rowData.TypeId === 1">
+                                        <span class="descriptionStyle" [innerHtml]="rowData.ItemDescription|TextAreaContentDisplay"></span>
+                                    </td>
+                                    <td *ngIf="rowData.TypeId === 2 || rowData.TypeId === null">
+                                        <span class="descriptionStyle" [innerHtml]="rowData.Service.Description|TextAreaContentDisplay"></span>
+                                    </td> 
+                                    <td>
+                                        {{ rowData.MeasurementUnitCode }}
+                                    </td>
+                                    <td>
+                                        {{ rowData.OriginalQty  }}
+                                    </td>
+                                    <td>
+                                        {{ rowData.TotalReceivedQty  }}
+                                    </td>
+                                    <td>
+                                        {{ rowData.RTNQty  }}
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        <div class="row">
+                            <div class="col-5">
+                                 <div class="row" style="margin-top:3em;">
+                                    <div class="col-12"><h4 class="form-heading">Remarks</h4></div>
+                                    <div class="col-12">    
+                                        <span class="descriptionStyle"  *ngIf="hideText" showmore [value]="selectedGRNDetails.GRNRemarks"></span>
+                                        <textarea *ngIf="hideInput"  class="descriptionStyle" class="form-control" formControlName="GRNRemarks"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:3em;">
+                                    <div class="col-12"><h4 class="form-heading">Delivery Terms</h4></div>
+                                    <div class="col-12">    
+                                        <span class="descriptionStyle" showmore [value]="selectedGRNDetails.DeliveryTerm"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-4">
+                                <div class="row" style="margin-top:3em;">
+                                        <div class="col-12"><h4 class="form-heading">Attachments</h4></div>
+                                        <div class="col-12 attachments" *ngIf="selectedGRNDetails!=undefined">
+                                            <ul>
+                                                <li *ngFor="let data of selectedGRNDetails.Attachments;let i=index">
+                                                    <span>
+                                                        <span class="displayFileName">
+                                                            {{ data.FileName }}
+                                                        </span>
+                                                        <a style="color:black;"  href="{{apiEndPoint}}/PurchaseOrderFileDownload?AttachmentId={{ data.AttachmentId }}&AttachmentTypeId={{ data.AttachmentTypeId }}&FileName={{data.FileName}}&RecordId={{data.RecordId}}">
+                                                            <i class="fa fa-download"></i>
+                                                        </a>
+                                                    </span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+          
+                 </div>
+                 <div *ngIf="requestType=='request'" class="form-group text-right btn-list">
+                    <button type="submit" (click)="saveRecord(1)" class="btn btn-save" *ngIf="hideInput">
+                            <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+                        <button type="submit" (click)="submit()" class="btn btn-approve" *ngIf="hideInput">
+                            <i class="fa fa-check" aria-hidden="true"></i> Submit</button>
+
+                    <!-- <button type="submit" *ngIf="((selectedGRNDetails|DisableButton)==false)" (click)="saveRecord('send')" class="btn btn-approve"  [disabled]="selectedGRNDetails|DisableButton">
+                        <i class="fa fa-check" aria-hidden="true"></i> Send for Approval
+                    </button> -->
+                    <button type="submit" (click)="cancelRecord()" class="btn btn-cancel" *ngIf="hideInput">
+                            <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                    <button type="submit" (click)="editRecord()" class="btn btn-edit" *ngIf="hideText&&((selectedGRNDetails|DisableButton)==false)"  [disabled]="selectedGRNDetails|DisableButton">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                    <!-- <button type="submit" (click)="deleteRecord()" class="btn btn-delete" *ngIf="hideText&&((selectedGRNDetails|DisableButton)==false)" [disabled]="selectedGRNDetails|DisableButton">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button> -->
+                </div>
+                <div *ngIf="requestType=='approval'" class="form-group text-right btn-list">
+                    <button type="submit" (click)="updateStatus(workFlowStatus.Approved)"   class="btn btn-approve"><i class="fa fa-check"  aria-hidden="true"></i>Approve</button>
+                    <button type="submit" (click)="updateStatus(workFlowStatus.Rejected)"  class="btn btn-delete"><i class="fa fa-ban" aria-hidden="true"></i> Reject</button>        
+                </div>         
+
+
+            </form>
+        </div>
+        <p-confirmDialog></p-confirmDialog>
+        <p-dialog  [contentStyle]="{'max-width':'1200px'}" header="Title" [modal]="true" [(visible)]="showAssetsDialog">
+                <form [formGroup]="assetItemsForm">
+                   <fieldset  formArrayName="Assets">  
+                    <div class="ui-fluid"> 
+                        <p-table  [columns]="assetGridColumns" sortMode="single" [value]="assetItemsForm.get('Assets')['controls']">
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                    <td colspan="9" style='text-align: center;'>
+                                        <b>{{ gridNoMessageToDisplay }}</b>
+                                    </td> 
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="colgroup" let-columns>
+                                <colgroup>
+                                    <col  *ngFor="let col of columns" [style.width]="col.width">
+                                </colgroup>
+                            </ng-template>
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                        {{col.header}}
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                <tr [formGroupName]="i">  
+                                    <td>
+                                        <input type="text" class="form-control" formControlName="SerialNumber">
+                                    </td>
+                                    <td>
+                                       {{  rowData.get('Asset').value.AssetName  }}                                   
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            <input class="form-control" formControlName="PurchasedDate"  ngbDatepicker #d="ngbDatepicker">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+                                                <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" formControlName="ManufacturedBy">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" formControlName="Warranty">
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            <input class="form-control" formControlName="PurchasedDate"  ngbDatepicker #d1="ngbDatepicker">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary" (click)="d1.toggle()" type="button">
+                                                <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                    </fieldset>
+                </form>
+                <p-footer>
+                    <button (click)="addItems()" class="btn btn-save">Ok</button>
+                </p-footer>
+        </p-dialog> 
+    </div>
+</div>
+</div>
+
+<ng-template #poTemplate let-r="result" let-i="index" let-t="term">          
+<table class="autoCompleteTable" style="width: 99%;" >
+    <thead *ngIf='r.index==0'>
+        <tr>
+            <th  style="width: 20%">
+                PO Number
+            </th>
+            <th  style="width: 25%">
+                Requestor
+            </th>
+            <th  style="width: 20%">
+                Total
+            </th>
+            <th  style="width: 20%">
+                Date
+            </th>
+        </tr>             
+    </thead>          
+    <tr>
+        <td style="width: 20%">{{ r.PurchaseOrderCode }}</td>
+        <td style="width: 25%; white-space: pre-wrap; word-wrap: break-word; ">{{ r.FirstName }}</td>                    
+        <td style="width: 20%">{{ r.TotalAmount }}</td>                 
+        <td style="width: 20%">{{ r.CreatedDate |DisplayDateFormat }}</td>   
+    </tr>
+</table>
+</ng-template>
+
+
+<ng-template #userTemplate let-r="result" let-t="term">
+{{ r.FirstName }}
+</ng-template>
+
+<!-- <ng-template #donumberTemplate let-r="result" let-t="term">
+{{ r.SupplierDoNumber }}
+</ng-template> -->
+
+<ng-template #donumberTemplate let-r="result" let-i="index" let-t="term">          
+    <table class="autoCompleteTable" style="width: 99%;" >
+        <thead *ngIf='r.index==0'>
+            <tr>
+                <th  style="width: 40%">
+                    GRN Code
+                </th>
+                <th  style="width: 40%">
+                    Do Number
+                </th>
+            </tr>             
+        </thead>          
+        <tr>
+            <td style="width: 40%">{{ r.GRNCode  }}</td>
+            <td style="width: 40%; white-space: pre-wrap; word-wrap: break-word; ">{{ r.SupplierDoNumber }}</td>  
+        </tr>
+    </table>
+</ng-template>
+
+

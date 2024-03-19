@@ -1,0 +1,217 @@
+<div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12 col-sm-12 padding-null tittlediv">
+              <div class="flexrow space-between align-center"> 
+            <h3 class="item-heading">Inventory Listing </h3>     
+            <p> {{isDisplayMode}} --{{newPermission}} </p>   
+            <div style="text-align: right;flex:auto;">
+                <input #file style="visibility: hidden;width:0px" type="file" accept="xlsx/*"
+                    (click)="file.value = null" (change)="uploadFile($event)">
+                <button class="btn btn-save ng-star-inserted" *ngIf="importPermission" #upload 
+                (click)="file.click()"><i class="fa-solid fa-file-import"></i>Import Items </button>
+
+                <button class="btn btn-save ng-star-inserted" style="margin-right: 20px;" type="button" 
+                 (click)="ClickNewItem($event)"  *ngIf="isDisplayMode!=false && newPermission">
+                    <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> New</button>
+
+                    <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+                        <button class="btn customdropdown btn-transparent " style="background:none;border:none;padding:0px;" id="dropdownBasic1" ngbDropdownToggle>
+                          <i   class="fa-solid fa-bars"></i>
+                        </button>
+                        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                          <button class="dropdown-item" (click)="ExportAsExcel($event)">Export</button>        
+                        </div>
+                      </div>
+            </div>
+            <hr style="margin-top: 0px;" />
+        </div>
+          </div>
+        </div>
+        <div class="row">
+            <div #rightPanel class="rightPanel col-lg-12 col-md-12" [class.expand-rightcol]="rightSection">
+                      <div class="row fullScreenLabel">
+                          <div class="col-12">
+                              <h3 class="item-heading" style="float:none;">Inventory Listing</h3>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-12">
+                              <div ngbDropdown #myDrop="ngbDropdown" class="form-group table-search1">
+                                  <div class="table-search-input">
+                                      <input class="search-filter" [(ngModel)]="searchKey" (keyup)="onSearch($event)" placeholder="Search requests..." type="text">
+                                      <i aria-hidden="true" class="fa fa-search"></i>
+                                  </div>
+
+                                   <div class="filter-popup" *ngIf="showFilterPopUp" ngbDropdownMenu aria-labelledby="dropdownManual" (click)="$event.stopPropagation();">
+                                      <form [formGroup]="itemListingFilterForm" class="form-horizontal">
+                                          <div class="form-group row">
+                                              <label class="col-form-label col-6 form-label">Item Name</label>
+                                              <div  class="col-6">
+                                                <input type="text" #itemName formControlName="ItemName"  class="form-control" [inputFormatter]="itemNameInputFormater" [ngbTypeahead]="itemNameSearch"
+                                                [resultTemplate]="itemNameTemplate" />
+                                              </div>
+                                          </div>
+                                          <div class="form-group row">
+                                            <label class="col-form-label col-6 form-label">Item Category</label>
+                                            <div  class="col-6">
+                                                <input formControlName="ItemCategory" type="text" class="form-control" [inputFormatter]="itemCategoryInputFormater" [ngbTypeahead]="itemCategorySearch"
+                                                [resultTemplate]="itemCategoryTemplate" />
+                                            </div>
+                                          </div>
+
+                                            <div class="form-group row">
+                                                <label class="col-form-label col-6 form-label">Item Type</label>
+                                                <div  class="col-6">
+                                                    <input formControlName="ItemType" type="text" class="form-control" [inputFormatter]="itemTypeInputFormater" [ngbTypeahead]="itemTypeSearch"
+                                                    [resultTemplate]="itemTypeTemplate" />
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label class="col-form-label col-6 form-label">Department</label>
+                                                <div  class="col-6">
+                                                    <input formControlName="Department" type="text" class="form-control" [inputFormatter]="departmentInputFormater" [ngbTypeahead]="departmentSearch"
+                                                    [resultTemplate]="departmentTemplate" /> 
+                                                </div>
+                                            </div>   
+
+                                          <div class="form-group row">
+                                              <div class="col-12 error">
+                                                  {{filterMessage}}
+                                              </div>
+                                          </div>
+                                          <div class="form-group row">
+                                              <div class="col-12" style="text-align: right">
+                                                  <button type="submit" (click)="filterData()" class="btn btn-save">
+                                                      <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                                  <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                                      <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+                                              </div>
+                                          </div>
+                                      </form>
+                                  </div>
+                                <div style="float:left;margin:0px 0px 0px 16px;" class="filter-icon">
+                                    <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                                        <i class="fa fa-filter" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <div style="float:left;margin:0px;" class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+                                    <i class="fa fa-undo" aria-hidden="true"></i>
+                                </div>                     
+                               
+                              </div>
+                          </div>
+                      </div>
+              <!-- </form> -->
+              <div class="table-responsive" [ngStyle]="{'max-width.px': screenWidth}">
+                  <div class="col-12" style="padding:0px;">
+                 
+                    <p-table [columns]="gridColumns"   (onLazyLoad)="onLazyLoad($event)" [customSort]="true"
+                        [scrollable]="true" [scrollHeight]="'calc(100vh - 400px)'" scrollWidth="100%"
+                        [lazy]="true" [value]="itemslisting" [paginator]="true" sortMode="single" 
+                        [rows]="inventoryListingRegisterPagerConfig.RecordsToFetch"
+                        [totalRecords]="inventoryListingRegisterPagerConfig.TotalRecords"  [responsive]="true">
+                        <ng-template pTemplate="emptymessage" >
+                            <tr>
+                                <td colspan="15" style='text-align: center;'>
+                                    <b>{{ gridNoMessageToDisplay }}</b>
+                                </td> 
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="colgroup" let-columns>
+                            <colgroup>
+                                <col  *ngFor="let col of columns" [style.width]="col.width">
+                            </colgroup>
+                        </ng-template>
+                        <ng-template pTemplate="header" let-columns>
+                            <tr>
+                                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                    {{col.header}}
+                                    <p-sortIcon *ngIf="col.field=='ItemMasterCode'" [field]="col.field"  ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                </th>
+                                <!-- <th>Action</th> -->
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                            <tr>
+                                <td>
+                                    {{ i + 1 }}
+                                </td>
+                                <td>
+                                    {{ rowData.ItemMasterCode }}
+                                </td>
+                                <td>
+                                    {{ rowData.Name }}
+                                </td>
+                                <td>
+                                    {{ rowData.LocationName }}
+                                </td>            
+                                <td>
+                                    {{rowData.ItemTypeName}}
+                                </td>                   
+                                <td>
+                                    {{ rowData.ItemCategoryName }}
+                                </td>
+                                <td>
+                                    {{rowData.Manufacturer}}
+                                </td>
+                                <td>
+                                    {{rowData.Brand}}
+                                </td>
+                                <td>
+                                    {{rowData.UOMName}}
+                                </td>                              
+                                <td>
+                                    {{ rowData.ExpiryDate | date:"yyyy/MM/dd" }}
+                                </td>
+                                <td>
+                                    {{ rowData.StatusName }}
+                                </td>
+                                <td>
+                                    {{rowData.OpeningStockValue}}
+                                </td>
+                                <td>
+                                    {{ rowData.LowAlertQuantity }}
+                                </td>
+                                <td >
+                                    {{ rowData.ReOrderLevel }}
+                                </td>
+                                <td [ngStyle]="{'background-color':cellColour(rowData.LowAlertQuantity,rowData.ReOrderLevel,rowData.StockInhand )}">                                    
+                                        {{ rowData.StockInhand }}                                        
+                                </td>     
+                                <td style="width: 50PX;" class="aligncenter">
+                                    <button type="button" class="btn" (click)="EditItem(rowData.ItemMasterID,$event)">
+                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    </button>
+                                </td>                       
+                            </tr>
+                         
+                        </ng-template>
+                    </p-table>
+                  </div>
+              </div>
+            </div>
+          <!-- left col end here-->
+        </div>
+      </div>
+
+
+
+    <ng-template #departmentTemplate let-r="result" let-t="term">
+            {{ r.Name }}
+    </ng-template>
+
+    <ng-template #itemNameTemplate let-r="result" let-t="term">
+            {{ r.Name }}
+    </ng-template>
+
+    <ng-template #itemCategoryTemplate let-r="result" let-t="term">
+            {{ r.Name }}
+    </ng-template>
+
+    <ng-template #itemTypeTemplate let-r="result" let-t="term">
+            {{ r.Name }}
+    </ng-template>
+      
+      

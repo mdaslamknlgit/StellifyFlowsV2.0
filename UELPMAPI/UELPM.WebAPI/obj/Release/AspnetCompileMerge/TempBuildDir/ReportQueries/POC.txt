@@ -1,0 +1,88 @@
+﻿SELECT * FROM
+(SELECT entity.CompanyId,CPO.LocationID,entity.companyname  
+                   AS  
+                   Entity,  
+                   Format (cpo.createddate, 'dd-MM-yyyy')  
+                   AS  
+                   Date,  
+                   Isnull(cponumber, '')  
+                   AS  
+                   POCNumber,  
+                   wp.processname  
+                   AS  
+                   POCType,  
+                   cpo.contractname,  
+                   wfstatus.statustext  
+                   AS  
+                   Status,  
+                   s.suppliername,  
+                   s.suppliercode,  
+                   (SELECT Cast(Sum(amount) AS DECIMAL(18, 2))  
+                    FROM   contractpurchaseorderitems cpoi  
+                    WHERE  cpoi.cpoid = cpo.cpoid)  
+                   AS  
+                   POCAmountBefGST,  
+                   (SELECT totalamount  
+                    FROM   contractpurchaseorder  
+                    WHERE  cpoid = cpo.mastercpoid)  
+                   AS  
+                   POCAmountWithGST,  
+                   bf.frequencytext  
+                   AS  
+                   BillingFrequency,  
+                   Concat(requester.firstname, requester.lastname)  
+                   AS  
+                   Requstor,  
+                   L.NAME  
+                   AS  
+                   dept,  
+                   ss.servicename  
+                   AS  
+                   TypeOfService,  
+                   cr.NAME  
+                   AS  
+                   Currency,  
+                   Concat((SELECT Cast(Datediff(month, CPO.startdate,  
+                                       CPO.enddate)  
+                                       AS  
+                                       FLOAT)  
+                                  - (  
+                                                 Datepart(dd, CPO.startdate) *  
+                                                 1.0  
+                                                 - 1.0  
+                                    ) /  
+                                    Day(  
+                                                 Eomonth(CPO.startdate)) + (  
+                                                 ( Datepart(dd, CPO.enddate) *  
+                                                   1.0  
+                                                 ) /  
+                                                 Day(  
+                                                 Eomonth(CPO.enddate)) )),  
+                   ' Months')  
+                   AS  
+                   PaymentTerms,  
+                   Isnull(CPO.cporemarks, '')  
+                   AS  
+                   Remarks  ,
+                   CPO.ismasterpo,
+                   cpo.workflowstatusid,
+                   requester.userid
+            FROM   contractpurchaseorder AS cpo  
+                   INNER JOIN supplier AS s  
+                           ON cpo.supplierid = s.supplierid  
+                   INNER JOIN billingfrequency AS bf  
+                           ON cpo.billingfrequencyid = bf.frequencyid  
+                   INNER JOIN workflowprocess AS wp  
+                           ON cpo.potypeid = wp.processid  
+                   INNER JOIN workflowstatus AS wfstatus  
+                           ON cpo.workflowstatusid = wfstatus.workflowstatusid  
+                   INNER JOIN userprofile AS requester  
+                           ON requester.userid = cpo.createdby  
+                   INNER JOIN company AS entity  
+                           ON cpo.companyid = entity.companyid  
+                   INNER JOIN location AS l  
+                           ON cpo.locationid = l.locationid  
+                   INNER JOIN supplierservices AS ss  
+                           ON cpo.servicetype = ss.supplierserviceid  
+                   INNER JOIN currencies AS cr  
+                           ON cpo.currencyid = cr.id) AS T1

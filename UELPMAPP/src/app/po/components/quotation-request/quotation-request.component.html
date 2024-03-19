@@ -1,0 +1,632 @@
+<div class="container-fluid">
+        <div class="row">
+        <div class="col-md-6 col-sm-12 padding-null tittlediv">
+        <h3 class="item-heading"> <img src="../assets/images/icon1.png"> Purchase order > Quotation Request</h3>
+        </div>
+        <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+            <img src="../assets/images/add-new.png" (click)="addRecord()" *ngIf="hidetext">
+           <img src="../assets/images/grid1.png" (click)="showFullScreen()">
+            <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+                <button class="btn btn-outline-primary" style="background:none;border:none;padding:0px;" id="dropdownBasic1" ngbDropdownToggle>
+                    <img src="../assets/images/grid2.png"> 
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                  <!-- <button class="dropdown-item">Request From Other Suppliers</button> -->
+                  <button class="dropdown-item" (click)="onPrintScreen($event)">Print</button>
+                  <button class="dropdown-item" (click)="sendMailtoSuppliers()">Email</button>
+                  <!-- <button class="dropdown-item">Export</button> -->
+                </div>
+            </div>
+            
+        </div>
+    </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-4 leftdiv" [CustomSpinner]="showLeftPanelLoadingIcon" [class.collapse-leftcol]="leftsection">
+                <div class="left-section">
+                    <div class="filter-section" ngbDropdown #myDrop="ngbDropdown">
+                        
+                        <div class="left-search">
+                            <input type="text" [(ngModel)]="quotationRequestSearchKey" placeholder="Search requests..." (keyup)="onSearchInputChange($event)"
+                                class="search-filter">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                            <!-- (click)="onSearchClick()"  ngbDropdownMenu -->
+    
+                            <div class="filter-popup" *ngIf="initDone" ngbDropdownMenu aria-labelledby="dropdownManual" (click)="$event.stopPropagation(); myDrop.open();">
+    
+                                <form [formGroup]="qrFilterInfoForm" class="form-horizontal">
+    
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-6 form-label">QR Code</label>
+                                        <div  class="col-6">
+    
+                                            <input  type="text" #qrCode formControlName="QRCode" class="form-control">
+    
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-6 form-label">POR Code</label>
+                                        <div  class="col-6">    
+                                            <input  type="text" formControlName="PORCode" class="form-control">    
+                                        </div>
+                                    </div>
+
+    
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-6 form-label">Supplier</label>
+                                        <div class="col-6">
+    
+                                                <input formControlName="SupplierCategory" type="text" class="form-control" [inputFormatter]="supplierCategoryInputFormater"
+                                                [ngbTypeahead]="supplierCategorySearch" [resultTemplate]="supplierTemplate" />
+                                        </div>
+                                    </div>
+    
+                                    <div class="form-group row">
+                                        <div class="col-12 error">
+                                            {{filterMessage}}
+                                        </div>
+                                    </div>
+    
+                                    <div class="form-group row">
+    
+                                        <div class="col-12" style="text-align: right">
+                                            <button type="submit" (click)="filterData()" class="btn btn-save">
+                                                <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                            <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                                <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+    
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                       
+                        <!-- start filter code -->
+                        <div class="filter-icon">
+                            <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                                <i class="fa fa-filter" aria-hidden="true"></i>
+                            </button>
+                        </div>
+    
+                        <div class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+                            <i class="fa fa-undo" aria-hidden="true"></i>
+                        </div>
+    
+                        
+                        <!-- end filter code -->
+    
+    
+                        <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="filter-scroll" style="width:100%; float:left;">
+                            <table class="table">
+                                <tr [class.activerow]="record.QuotationRequestId==selectedQuotationRequestDetails.QuotationRequestId" (click)="onRecordSelection(record.QuotationRequestId)" *ngFor="let record of QuotationRequestList">
+                                    <td>                    
+                                    <h5 class="sub-heading">{{ record.QuotationRequestCode }}</h5>
+                                        <!-- <label class="label-text">POR Request No.</label> :<label class="label-value" >{{ record.IsDocumentApproved ? record.PurchaseOrderRequestCode:record.DraftCode }}</label> -->
+                                        <label class="label-text">POR Request No.</label> :<label class="label-value" >{{ (record.WorkFlowStatusId!=workFlowStatus.Draft) ? record.PurchaseOrderRequestCode:record.DraftCode }}</label>
+                                        <label class="label-text">Supplier</label> :<label class="label-value" >{{ record.SupplierName }}</label> 
+                                    </td>
+                                </tr>
+                            </table>                           
+                            <div *ngIf="QuotationRequestList.length==0" class="col-12 error listErrorMessage">
+                                {{errorMessage}}
+                            </div>                          
+                            <ngb-pagination [maxSize]="5" *ngIf="QuotationRequestList.length > 0" (pageChange)="pageChange($event)" [collectionSize]="quotationRequestPagerConfig.TotalRecords" class="d-flex justify-content-center" [pageSize]="quotationRequestPagerConfig.RecordsToFetch" [page]="1" [boundaryLinks]="true"></ngb-pagination>
+                        </div>
+                    </div>
+                </div>
+                <div class="split-line" (click)="split()"></div>
+            </div>
+         <!-- left col end here-->
+      
+          <div  #rightPanel [CustomSpinner]="showRightPanelLoadingIcon" class="rightPanel col-lg-9 col-md-8" [class.expand-rightcol]="rightsection">
+      
+              <div>
+                  <form  [formGroup]="quotationForm" class="form-horizontal">
+                  <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="rightcol-scrroll">
+                  <div class="row fullScreenLabel">
+                      <div class="col-12">
+                          <h3 class="item-heading" style="float:none;">Quotation Request</h3>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-sm-6">
+                            <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">POR Request NO.<i class="fa fa-star mandatory-icon" *ngIf="!hidetext" aria-hidden="true"></i></label>  
+                                    <div class="autoComplete3 quotationReqAutoComplete col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text" *ngIf="selectedQuotationRequestDetails.QuotationRequestId!=null">
+                                            {{ (selectedQuotationRequestDetails.PurchaseOrderRequest.WorkFlowStatusId!=workFlowStatus.Draft)?  selectedQuotationRequestDetails.PurchaseOrderRequest.PurchaseOrderRequestCode:selectedQuotationRequestDetails.PurchaseOrderRequest.DraftCode }}</label>
+                                        <input appAutofocus formControlName="PORequest" type="text" 
+                                                *ngIf="hideinput&&selectedQuotationRequestDetails.QuotationRequestId==null"  class="show form-control" 
+                                                [inputFormatter]="porInputFormater" (selectItem)="onPORChange($event)"
+                                                [ngbTypeahead]="porSearch"  [resultTemplate]="PORTemplate"/>
+                                        <div *ngIf="hideinput&&quotationForm.get('PORequest') && quotationForm.get('PORequest').errors!=null&& quotationForm.get('PORequest').touched==true">
+                                            <span class="errorMessage"  *ngIf="quotationForm.get('PORequest').errors.required">PO Request No. is required</span>
+                                        </div> 
+                                    </div>      
+                                </div>
+                          <div class="form-group row" *ngIf="hidetext">
+                              <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Requestor</label>  
+                              <div class="col-xl-8 col-sm-6 col-6">
+                              <label class="col-form-label form-text" >{{ selectedQuotationRequestDetails.PurchaseOrderRequest.RequestedByUserName }}</label>
+                              </div>
+                          </div>
+                          <div class="form-group row" *ngIf="hidetext">      
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Designation</label>  
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                      <label class="col-form-label form-text" *ngIf="selectedQuotationRequestDetails.PurchaseOrderRequest!=null">
+                                          {{ selectedQuotationRequestDetails.PurchaseOrderRequest.Designation }}</label>
+                                </div>
+                            </div>
+                         
+                          <div class="form-group row">
+                              <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier Type</label>  
+                              <div class="col-xl-8 col-sm-6 col-6" >
+                                  <label class="col-form-label form-text" *ngIf="selectedQuotationRequestDetails.PurchaseOrderRequest!=null">{{ 
+                                      selectedQuotationRequestDetails.PurchaseOrderRequest.Supplier.SupplierTypeID==1?"UEL Related Supplier":"External Supplier"          
+                                  }}</label>                              
+                              </div>         
+                          </div>
+                          
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Currency Type</label>  
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text" *ngIf="selectedQuotationRequestDetails.PurchaseOrderRequest!=null">
+                                        {{ selectedQuotationRequestDetails.PurchaseOrderRequest.CurrencyCode }}</label>                           
+                                </div>      
+                            </div>
+                          <div class="form-group row">
+                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">GST Required</label>  
+                            <div  class="col-xl-8 col-sm-6 col-6">
+                                <label class="col-form-label form-text" *ngIf="selectedQuotationRequestDetails.PurchaseOrderRequest!=null">
+                                    {{ selectedQuotationRequestDetails.PurchaseOrderRequest.IsGstRequired==true?'Yes':'No' }}</label> 
+                            </div>      
+                        </div>                 
+                      </div>
+                      <div class="col-sm-6">
+                            <div class="form-group row" *ngIf="hidetext">      
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Request No.</label>  
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                <label class="col-form-label form-text" >{{ selectedQuotationRequestDetails.QuotationRequestCode }}</label>
+                                </div>
+                            </div>
+                            <div class="form-group row" *ngIf="hidetext">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Created Date</label>  
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text" >{{ selectedQuotationRequestDetails.PurchaseOrderRequest.CreatedDate|DisplayDateFormat }}</label>   
+                                </div>      
+                            </div>
+                          
+                        
+                          <div class="form-group row">
+                              <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Cost of Service</label>  
+                              <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text" *ngIf="selectedQuotationRequestDetails.PurchaseOrderRequest!=null">
+                                        {{ selectedQuotationRequestDetails.PurchaseOrderRequest.CostOfService }}</label>                                 
+                              </div>      
+                          </div>
+                          <div class="form-group row">
+                              <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Department</label>  
+                              <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text" *ngIf="selectedQuotationRequestDetails.PurchaseOrderRequest!=null">
+                                        {{ selectedQuotationRequestDetails.PurchaseOrderRequest.Location }}</label>                                 
+                              </div>      
+                          </div>
+                          <div class="form-group row">
+                              <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Expected Delivery</label>  
+                              <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text" *ngIf="selectedQuotationRequestDetails.PurchaseOrderRequest!=null">
+                                        {{ selectedQuotationRequestDetails.PurchaseOrderRequest.ExpectedDeliveryDate|DisplayDateFormat }}</label>
+                                
+                              </div>      
+                          </div>
+                          <div class="form-group row" style="visibility: hidden">
+                              <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Status</label>  
+                              <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text" *ngIf="selectedQuotationRequestDetails.PurchaseOrderRequest!=null">
+                                        {{ selectedQuotationRequestDetails.PurchaseOrderRequest.PurchaseOrderStatusText }}</label>    
+                              </div>      
+                          </div>                        
+                      </div>
+                  </div>     
+                  <div class="col-12 engineers-assigned" style="padding:0px;">  
+                            <!-- Start VendorReferences -->
+                            <div class="row" style="margin-top:2em;">
+                                <div class="col-12">
+                                    <h4 class="form-heading">Quotation Details</h4>
+                                </div>
+                                <div class="col-12">
+                                    <fieldset *ngIf="hideinput" formArrayName="QuotationVendorItems">
+                                        <div style="text-align: center;">
+                                            <span class="errorMessage" *ngIf="showGridVendorErrorMessage &&(selectedQuotationRequestDetails.QuotationVendorItems==undefined|| selectedQuotationRequestDetails.QuotationVendorItems.length==0)">
+                                                Please enter Quotation Details
+                                            </span>
+                                        </div>
+                                        <p-table [columns]="gridVendorColumns" selectionMode="single" (sortFunction)="customSort($event)" [customSort]="true" sortMode="single" [value]="quotationForm.controls.QuotationVendorItems.controls">
+                                            <ng-template pTemplate="colgroup" let-columns>
+                                                <colgroup>
+                                                   
+                                                    <col style="width:5%;">
+                                                    <col style="width:18%;">
+                                                    <col style="width:18%">
+                                                    <col style="width:15%">
+                                                    <col style="width:15%;">
+                                                    <col style="width:10%;">
+                                                    <col style="width:15%;">
+                                                    <col style="width:15%;">
+                                                    <col style="width:5%">
+                                                   
+                                                   
+                                                </colgroup>
+                                            </ng-template>
+                                            <ng-template pTemplate="header" let-columns>
+                                                <tr>
+                                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                                        {{col.header}}
+                                                        <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                                    </th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                                <tr *ngIf="hideinput" [formGroupName]="i">
+                                                    <td>
+                                                        {{ i + 1 }}
+                                                    </td>
+                                                    <td>
+                                                        <input formControlName="QuotationSupplier" type="text" class="form-control" [inputFormatter]="supplierInputFormater" [ngbTypeahead]="supplierItemSearch"
+                                                            (click)="onQuotationItemSupplierClick(i)" [resultTemplate]="supplierTemplate" (selectItem)="supplierSelection($event,i)" />
+                                                                                                              
+                                                    </td>
+                                                    <td>  
+                                                        {{quotationForm.get('QuotationVendorItems').controls[i].get('SupplierEmail').value }}
+                                                
+                                                    </td>   
+                                                    <td>
+                                                        {{quotationForm.get('QuotationVendorItems').controls[i].get('BillingTelephone').value }}
+                                                    </td>   
+                                                    <td>
+                                                        <input type="number" min="0" (keydown)=restrictMinus($event) style="text-align: right;" class="form-control" formControlName="QuotatedAmount" />
+                                                    </td>
+                                                    <td> 
+                                                        {{quotationForm.get('QuotationVendorItems').controls[i].get('IsMailSent').value == true? "Yes":"No" }}
+                                                    </td>
+                                                    <td>
+                                                        <div class="col-12 attachments"  *ngIf="selectedQuotationRequestDetails!=undefined">
+                                                            <ul>
+                                                                <li *ngFor="let data of selectedQuotationRequestDetails.QuotationAttachment;let k=index">
+                                                                    <span *ngIf="data.RowId==i">
+                                                                        <span>
+                                                                            <span class="displayFileName">
+                                                                                {{ data.FileName }}
+                                                                            </span>
+                                                                            <a style="color:black;" *ngIf="hidetext" href="{{apiEndPoint}}/PurchaseOrderRequestQuotationFileDownload?QuotationAttachmentId={{ data.QuotationAttachmentId }}&QuotationRequestId={{ data.QuotationRequestId }}&FileName={{data.FileName}}&QuotationId={{data.QuotationId}}&RowId={{data.RowId}}">
+                                                                                <i class="fa fa-download"></i>
+                                                                            </a>
+                                                                            &nbsp;&nbsp;
+                                                                            <i *ngIf="hideinput" (click)="quotationAttachmentDelete(k)" class="fa fa-trash">
+
+                                                                            </i>
+                                                                        </span>
+                                                                    </span>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <div class="col-12" *ngIf="hideinput">
+                                                            <ul class="fileList">
+                                                                <ng-container *ngFor="let data of vendoruploadedFiles;let j = index">
+                                                                    <li *ngIf="data.RowIndex==i">
+                                                                        <span>
+                                                                            <span>
+                                                                                <span class="fileName">
+                                                                                    {{ data.File.name }}
+                                                                                </span>
+                                                                                <i class="fa fa-close" (click)="onVendorFileClose(i)"></i>
+                                                                            </span>
+                                                                            <br>
+                                                                            <span class="fileSize">{{ data.File.size/1024 }} KB</span>
+                                                                        </span>
+                                                                    </li>
+                                                                </ng-container>
+
+                                                            </ul>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div style="float:left;width:40%;">
+                                                            <button type="file" (click)="fileInput.click();selectedFileRowIndex=(i)" style="text-align:center">
+                                                                <i aria-hidden="true"></i> Choose
+                                                            </button>
+                                                        </div>
+                                                        <div class="gridIconsStyle">
+                                                            <i class="fa fa-trash gridRemoveIcon" (click)="removeVendorGridItem(i)" aria-hidden="true"></i>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="gridIconsStyle">
+                                                            <input type="checkbox" formControlName="IsSelected" (change) = "SelectQuotaion($event,i)">
+                                                        </div>
+
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                        <div *ngIf="hideinput">
+                                            <input type="number" [(ngModel)]="linesToAdd1" [ngModelOptions]="{standalone: true}" class="form-control linesToAdd">
+                                            <button type="submit" (click)="addVendorGridItem(linesToAdd1)" class="addLine">
+                                                <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Line
+                                            </button>
+                                        </div>
+                                    </fieldset>
+                                    <p-table *ngIf="hidetext" [columns]="gridVendorColumns" (sortFunction)="customSort($event)" [customSort]="true" sortMode="single"
+                                        [value]="selectedQuotationRequestDetails.QuotationVendorItems">
+                                        <ng-template pTemplate="colgroup" let-columns>
+                                            <colgroup>
+                                                
+                                                <col style="width:5%;">
+                                                <col style="width:18%;">
+                                                <col style="width:18%">
+                                                <col style="width:15%">
+                                                <col style="width:15%;">
+                                                <col style="width:10%;">
+                                                <col style="width:15%;">
+                                                <col style="width:15%;">
+                                                <col style="width:5%">
+                                            </colgroup>
+                                        </ng-template>
+                                        <ng-template pTemplate="header" let-columns>
+                                            <tr>
+                                                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                                    {{col.header}}
+                                                    <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                                </th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                            <tr [class.rowselected]="rowData.IsSelected== true" >
+                                                <td>
+                                                    {{ i + 1 }}
+                                                </td>
+                                                <td>
+                                                    {{ rowData.QuotationSupplier.SupplierName }}
+                                                </td>
+                                                <td>
+                                                    {{ rowData.SupplierEmail }}
+                                                </td>   
+                                                <td>
+                                                    {{ rowData.BillingTelephone }}
+                                                </td>  
+                                                <td>
+                                                    {{ rowData.QuotatedAmount }}
+                                                </td>
+                                                <td>
+                                                    {{ rowData.IsMailSent== true? "Yes":"No" }}
+                                                </td>
+                                                <td >
+                                                    <div class="col-12 attachments" *ngIf="selectedQuotationRequestDetails!=undefined">
+                                                        <ul>
+                                                            <li *ngFor="let data of selectedQuotationRequestDetails.QuotationAttachment;let k=index">
+                                                                <span *ngIf="data.RowId==i">
+                                                                    <span>
+                                                                        <span class="displayFileName">
+                                                                            {{ data.FileName }}
+                                                                        </span>
+                                                                        <a style="color:black;" *ngIf="hidetext" href="{{apiEndPoint}}/PurchaseOrderRequestQuotationFileDownload?QuotationAttachmentId={{ data.QuotationAttachmentId }}&QuotationRequestId={{ data.QuotationRequestId }}&FileName={{data.FileName}}&QuotationId={{data.QuotationId}}&RowId={{data.RowId}}">
+                                                                            <i class="fa fa-download"></i>
+                                                                        </a>
+                                                                        &nbsp;&nbsp;
+                                                                        <i *ngIf="hideinput" (click)="attachmentDelete(i)" class="fa fa-trash">
+                                                                        </i>
+                                                                    </span>
+                                                                </span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div style="float:left;width:60%;text-align: right;">
+                                                    </div>
+                                                    <div class="gridIconsStyle" *ngIf="hideinput==true" >
+                                                        <i class="fa fa-edit gridEditIcon" (click)="editGridItem(i)" aria-hidden="true"></i>
+                                                        &nbsp;&nbsp;&nbsp;
+                                                        <i class="fa fa-trash gridRemoveIcon" (click)="removeGridItem(i)" aria-hidden="true"></i>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                  <div class="gridIconsStyle">
+                                                      
+                                                 </div>
+
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                </div>
+                            </div>
+
+                            <!-- END VendorReferences -->
+
+                    
+                     <div class="row"style="margin-top:2em;" >
+                            <div class="col-12">
+                                    <h4 class="form-heading">Items Details</h4>
+                                </div>
+                                <div class="col-12">
+                        <p-table   [columns]="gridColumns" (sortFunction)="customSort($event)" [customSort]="true" sortMode="single" [value]="selectedQuotationRequestDetails.PurchaseOrderRequestItems">
+        
+                            <ng-template pTemplate="emptymessage">
+                                        <tr>
+                                            <td colspan="5" style='text-align: center;'>
+                                                <b>{{ gridNoMessageToDisplay }}</b>
+                                            </td> 
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="colgroup" let-columns>
+                                    <colgroup>
+                                        <col style="width:7%;">
+                                        <col style="width:22%;">
+                                        <col style="width:30%;">
+                                        <col style="width:20%;">
+                                        <col style="width:20%;">
+                                    </colgroup>
+                                </ng-template>
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr >
+                                        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                            {{col.header}}                                        
+                                            <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                        <tr>
+                                            <td>
+                                                {{  i + 1 }}
+                                            </td>
+                                            <td>
+                                                <span *ngIf="rowData.Item!=null">{{ rowData.Item.ItemName }}</span>
+                                                <span *ngIf="rowData.Asset!=null">{{ rowData.Asset.AssetName }}</span>
+                                                <span *ngIf="rowData.Expense!=null">{{ rowData.Expense.ExpensesDetail }}</span>
+                                            </td>
+                                            <td>
+                                                <span class="descriptionStyle" [innerHtml]="rowData.ItemDescription|TextAreaContentDisplay"></span>
+                                            </td>
+                                            <td>
+                                                {{ rowData.MeasurementUnitCode  }}
+                                            </td>
+                                            <td align="right">
+                                                {{ rowData.ItemQty  }}
+                                            </td>
+                                        </tr>
+                                </ng-template>
+                        </p-table>
+                        </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-sm-5">
+                                <!-- <div class="row" style="margin-top:3em;">
+                                        <div class="col-12"><h4 class="form-heading">Justifications</h4></div>  
+                                        <div class="col-12" *ngIf="selectedQuotationRequestDetails.PurchaseOrderRequest!=null">
+                                            <span class="descriptionStyle" showmore [value]="selectedQuotationRequestDetails.PurchaseOrderRequest.Justifications"></span>
+                                        </div>   
+                                    </div> -->
+                                <div class="row" style="margin-top:3em;">
+                                        <div class="col-12 row">
+                                            <div class="col-5">
+                                                <h4 class="form-heading">Payment Terms</h4>
+                                            </div>
+                                        </div>                                        
+                                        <div class="col-12" style="margin-top:1em;" *ngIf="selectedQuotationRequestDetails.PurchaseOrderRequest!=null">
+                                            <span class="descriptionStyle" showmore [value]="selectedQuotationRequestDetails.PurchaseOrderRequest.PaymentTerms"  ></span> 
+                                        </div> 
+                                    </div>
+                              <div class="row" style="margin-top:3em;">
+                                  <div class="col-12"><h4 class="form-heading">Instructions to vendor</h4></div>
+                                  <div class="col-12" *ngIf="selectedQuotationRequestDetails.PurchaseOrderRequest!=null">
+                                      <span class="descriptionStyle" showmore [value]="selectedQuotationRequestDetails.PurchaseOrderRequest.Instructions" ></span> 
+                                  </div>   
+                              </div>                              
+                              <div class="row" style="margin-top:3em;">
+                                  <div class="col-12"><h4 class="form-heading">Delivery Terms</h4></div>  
+                                  <div class="col-12" *ngIf="selectedQuotationRequestDetails.PurchaseOrderRequest!=null">
+                                      <span class="descriptionStyle" showmore [value]="selectedQuotationRequestDetails.PurchaseOrderRequest.DeliveryTerm"></span>
+                                  </div>   
+                              </div>
+                          </div>
+                          <div class="col-sm-4">
+                                <div class="row" style="margin-top:3em;">
+                                        <div class="col-12"><h4 class="form-heading">Attachments</h4></div>
+                                        <div class="col-12 attachments" *ngIf="selectedQuotationRequestDetails!=undefined">
+                                            <ul>
+                                                <li *ngFor="let data of selectedQuotationRequestDetails.Attachments;let i=index">
+                                                    <span>
+                                                        <span class="displayFileName">
+                                                            {{ data.FileName }}
+                                                        </span>
+                                                        <a style="color:black;"  href="{{apiEndPoint}}/PurchaseOrderRequestFileDownload?AttachmentId={{ data.AttachmentId }}&AttachmentTypeId={{ data.AttachmentTypeId }}&FileName={{data.FileName}}&RecordId={{data.RecordId}}">
+                                                            <i class="fa fa-download"></i>
+                                                        </a>
+                                                    </span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                </div>
+                                <div class="row" style="margin-top:3em;">
+                                    <div class="col-12">
+                                        <h4 class="form-heading">Remarks</h4>
+                                    </div>
+                                    <div class="col-12">
+                                        <textarea *ngIf="hideinput" class="form-control" autoresize formControlName="Remarks">
+                            </textarea>
+                            <div *ngIf="hideinput&&quotationForm.get('Remarks') && quotationForm.get('Remarks').errors!=null">
+                                <span class="errorMessage"  *ngIf="quotationForm.get('Remarks').errors.required">Remarks required when there are less than 3 quotation requests</span>
+                            </div> 
+                                        <span class="descriptionStyle" showmore [value]="selectedQuotationRequestDetails.Remarks" *ngIf="hidetext"></span>
+                                    </div>
+                                </div>
+                            </div>
+                      </div>
+      
+                  </div>
+                  <!-- <div style="clear: both;"></div> -->
+      
+                  </div>
+                  <div class="row">
+                      <div class="col-12">
+                            <div class="form-group text-right btn-list">
+                                    <button type="submit" (click)="saveRecord()" class="btn btn-save" *ngIf="hideinput">
+                                        <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+                                    <button type="submit" (click)="cancelRecord()" class="btn btn-cancel" *ngIf="hideinput">
+                                        <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                                    <button type="submit" [disabled]= selectedQuotationRequestDetails.PurchaseOrderRequest|DisableButton (click)="editRecord()" class="btn btn-edit" *ngIf="hidetext">
+                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                                    <!-- <button type="submit" [disabled]= selectedQuotationRequestDetails.PurchaseOrderRequest|DisableButton (click)="deleteRecord()" class="btn btn-delete" *ngIf="hidetext">
+                                        <i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button> -->
+                                </div>
+                  </div>
+                  </div>   
+                  </form>
+              </div>
+              <p-confirmDialog></p-confirmDialog>
+          </div><!-- left col end here-->
+        </div>
+    
+      
+      <ng-template #itemMasterTemplate let-r="result" let-t="term">
+              {{ r.ItemName }}
+      </ng-template>
+      
+      <ng-template #supplierTemplate let-r="result" let-t="term">
+          {{ r.SupplierName }}
+      </ng-template>
+      
+      <input type="file" style='display:none;' #fileInput multiple (change)="onFileVendorUploadChange($event)" name="file">
+
+    
+      <ng-template #PORTemplate let-r="result" let-i="index" let-t="term">          
+            <table class="autoCompleteTable" style="width: 99%;" >
+                <thead *ngIf='r.index==0'>
+                    <tr>
+                        <th  style="width: 30%">
+                            POR Code
+                        </th>
+                        <th  style="width: 30%">
+                            Requestor
+                        </th>
+                        <th  style="width: 20%">
+                            Total
+                        </th>
+                        <th  style="width: 20%">
+                            Date
+                        </th>
+                    </tr>             
+                </thead>          
+                <tr>
+                    <td style="width: 30%">{{ (r.WorkFlowStatusId!=workFlowStatus.Draft)==true?  r.PurchaseOrderRequestCode:r.DraftCode  }}</td>
+                    <td style="width: 30%; white-space: pre-wrap; word-wrap: break-word; ">{{ r.FirstName }}</td>                    
+                    <td style="width: 20%">{{ r.TotalAmount }}</td>                 
+                    <td style="width: 20%">{{ r.CreatedDate |DisplayDateFormat }}</td>   
+                </tr>
+            </table>
+        </ng-template>
+
+                
+         

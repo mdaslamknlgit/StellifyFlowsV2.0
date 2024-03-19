@@ -1,0 +1,107 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12 col-sm-12 padding-null tittlediv" style="padding-right:26px !important;">
+      <div class="flexrow space-between align-center">
+      <h3 class="item-heading"> Vendors Export </h3>
+ 
+      <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+
+        <button class="btn btn-save ng-star-inserted" type="button" (click)="exportVendorsById()">
+          <i class="fa-solid fa-file-export" ria-hidden="true" aria-hidden="true"></i> Export</button>
+          
+        <!-- <button class="btn customdropdown btn-transparent" style="background:none;border:none;padding:0px;" id="dropdownBasic1"
+          ngbDropdownToggle>
+          <i  class="fa-solid fa-bars"></i>
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+          <button class="dropdown-item" (click)="exportVendorsById()">Export</button>
+        </div> -->
+      </div>
+
+    </div>
+    </div>
+  </div>
+  <div class="row">
+    <div #rightPanel class="rightPanel" class="col-lg-12 col-md-12" [class.expand-rightcol]="rightSection">
+
+     
+      <!-- </form> -->
+       
+        <div class="col-12"  >
+          <div class="respnsive-table" style="overflow: hidden;"> 
+            <!-- <p-table #PurchaseOrderListTable dataKey="DraftCode" [rowHover]="true" [filterDelay]="0"
+            [globalFilterFields]="['DraftCode', 'SupplierName']" [columns]="PurchaseOrdersListsCols"
+            [value]="purchaseOrdersList" [rows]="1" [scrollable]="true"
+            [scrollHeight]="'calc(100vh - 400px)'" scrollWidth="100%" [virtualRowHeight]="30"
+            [virtualScroll]="true" sortMode="multiple" responsiveLayout="scroll"
+            [rowsPerPageOptions]="[10,25,50,75,100]"> -->
+           
+           
+           
+            <p-table [columns]="gridColumns" [rowHover]="true" [scrollable]="true" scrollHeight="auto" 
+            [scrollHeight]="'calc(100vh - 200px)'" scrollWidth="100%" [virtualRowHeight]="30"
+            (sortFunction)="customSort($event)" [customSort]="true" [lazy]="true"
+            (onLazyLoad)="onLazyLoad($event)"  
+            [totalRecords]="vendorPagerConfig.TotalRecords"  sortMode="single" [value]="vendorList"
+            [(selection)]="selectedVendor">
+
+
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="12" style='text-align: center;'>
+                  <b>{{ gridNoMessageToDisplay }}</b>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="colgroup" let-columns>
+              <colgroup>
+                <col *ngFor="let col of columns" [style.width]="col.width">
+              </colgroup>
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                  {{col.header}}
+                </th>
+                <th style="width: 10%">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+              <tr>
+                <td>
+                  {{ i + 1 }}
+                </td>
+                <td>
+                  {{ rowData.VendorId }}
+                </td>
+                <td>
+                  {{ rowData.IDGRP }}
+                </td>
+                <td>
+                  {{ rowData.VendName }}   
+                </td>
+                <td>
+                  {{ rowData.CodeTaxGRP}}
+                </td>
+                <td>
+                  {{ rowData.TaxClass1}}
+                </td>
+                <td style="width: 10%">
+                  <p-tableCheckbox [value]="rowData">
+
+                  </p-tableCheckbox>
+
+                </td>
+
+              </tr>
+            </ng-template>
+          </p-table>
+          </div>
+        </div>
+      
+    </div>
+    <!-- left col end here-->
+  </div>
+</div>

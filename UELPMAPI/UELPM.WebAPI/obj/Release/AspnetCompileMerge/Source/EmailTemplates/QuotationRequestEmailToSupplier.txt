@@ -1,0 +1,44 @@
+﻿<html >
+<head>
+    <title>New Quotation Request Mail</title>
+</head>
+<body >
+<div  style="font-family:tahoma;font-size:14px">
+Dear $$SupplierName,
+<br/> <br/> 
+<div style="font-size:13px;">Find here with new quotation request details.</div>  
+<br/>
+<div><b>Quotation request details are given below,</b> </div>  
+<br/> 
+<table border="1" cellpadding="5" cellspacing="0">
+<tr>
+<th style="color:#2672ec;">Quotation Number</th>
+<th style="color:#2672ec;">Purchase Order Number</th>
+<th style="color:#2672ec;">Type</th>
+<th style="color:#2672ec;">Request From</th>
+<th style="color:#2672ec;">Delivery Date</th>
+</tr>
+<tr>
+<td>$$QuotationNumber</td>
+<td>$$PurchaseOrderNumber</td>
+<td>$$PurchaseOrderType</td>
+<td>$$CompanyName</td>
+<td>$$DeliveryDate</td>
+</tr>
+</table>
+ <br/> 
+<div style="font-size:13px;">For more details, please find here with attached pdf document. <br/>
+</div> 
+<br/>
+Best regards,
+<br/> 
+$$Sender
+<br/> 
+$$RequesterEmail
+<br/>
+Company: <b>$$CompanyName<b>
+</div>
+</div>
+</body>
+</html>
+

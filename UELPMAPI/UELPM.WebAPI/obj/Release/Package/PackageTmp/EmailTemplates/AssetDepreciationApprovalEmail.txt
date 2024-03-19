@@ -1,0 +1,32 @@
+﻿<html >
+<head>
+
+    <title>Asset Depreciation Approval Confirmation</title>
+</head>
+<body >
+<div  style="font-family:tahoma;font-size:14px">
+Dear $$Name,
+<br/> <br/> 
+<div style="font-size:13px;">$$MailTitle Number: $$AssetDepreciationId is $$PreviousApproverStatus .</div>  
+<br/>
+<div><b>$$MailSubTitle details are given below,</b> </div>  
+<br/> 
+<table border="1" cellpadding="5" cellspacing="0">
+	<tr>
+	   <th style="color:#2672ec;">Department</th>
+	   <th style="color:#2672ec;">WorkFlow Status</th>
+	</tr>
+	<tr>
+		<td>$$Location</td>
+		<td>$$Status</td>
+	</tr>
+</table>
+<br/> 
+<br/>
+Best regards,
+<br/> 
+$$Sender
+</div>
+</div>
+</body>
+</html>

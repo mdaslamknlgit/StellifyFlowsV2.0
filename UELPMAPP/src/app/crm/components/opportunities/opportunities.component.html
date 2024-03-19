@@ -1,0 +1,485 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12 col-sm-12 padding-null tittlediv">
+      <div class="flexrow space-between align-center">
+        <h3 class="item-heading"> Opportunities - Form {{OppId}} </h3>
+        <!-- <p>
+          {{OppId}} == {{IsSummaryExpand}} -- {{IsDetailsExpand}}  --  {{IsProductsExpand}} -- {{AccountId}} -- {{ContactId}}
+        </p> -->
+        <div>
+         <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickBack($event)">
+            <i class="fa fa-arrow-left" ria-hidden="true" aria-hidden="true"></i> Back</button>
+
+            &nbsp;&nbsp;
+            <!-- <button class="btn btn-save ng-star-inserted" type="button" (click)="AddOpportunityProduct($event)">
+                <i class="fa fa-check" aria-hidden="true"></i> Product</button> -->
+        </div>
+      </div>
+      <hr style="margin-top: 0px;" />
+    </div>
+  </div>
+
+  <div class="row">
+    <div #rightPanel [CustomSpinner]="showLoadingIcon" style='background: white' class="rightPanel1 col-lg-12 col-md-12"
+        [class.expand-rightcol]="rightsection">
+        <!-- <div class="fullScreenLabel">
+            <app-header></app-header>
+        </div> -->
+        <div>
+            <form (ngSubmit)="onSubmit(OpportunityForm.value,myPanel,$event)" [formGroup]="OpportunityForm" class="form-horizontal">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group text-right btn-list">
+                                <button type="submit" class="btn btn-save">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+                
+                                <button type="submit" (click)="ClickBack($event)" class="btn btn-cancel" *ngIf="hideInput">
+                                    <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                    <mat-accordion [multi]="true">
+                        <mat-expansion-panel [expanded]="IsSummaryExpand" [disabled]="IsSummaryDisable" #myPanel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Summary
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-xl-2 col-md-2 col-sm-4 form-label">Opportunity Name
+                                                <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i></label>
+                                            <div class="autoComplete col-xl-10 col-md-10 col-sm-8">
+                                                <input id="OppTopic" #OppTopic formControlName="OppTopic" placeholder="Topic" tabindex="1" *ngIf="hideInput"
+                                                    class="form-control" required />
+                                            
+                                                <div
+                                                    *ngIf="OpportunityForm.get('OppTopic') && OpportunityForm.get('OppTopic').errors!=null &&OpportunityForm.get('OppTopic').touched==true">
+                                                    <span class="errorMessage" *ngIf="OpportunityForm.get('OppTopic').errors.required">
+                                                        Opportunity Name is required</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Account
+                                                <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                                                Selected Value {{selectedAccountContact}}
+                                            </label>
+                                            <div class="col-xl-8 col-sm-6 col-6">
+                                                <div>
+                                                    <!-- <select id="AccountId" #AccountId (change)="OnAccountChange($event)" tabindex="2" formControlName="AccountId" 
+                                                    class="form-control">
+                                                        <option [ngValue]="undefined">--Select--</option>
+                                                        <option *ngFor="let record of AccountsDomainItemList" value={{record.Id}}>
+                                                            {{ record.AccountName }}
+                                                    </select> -->
+                                                            <!-- <ng-select [items]="accountscontacts" bindLabel="contactname" bindValue="Id" groupBy="account"
+                                                                 (change)="onSelectAccountContact($event)" formControlName="AccountId">
+                                                                 </ng-select> -->
+                                                            <ng-select id="AccountId" #AccountId [items]="ContactsAccountsList" bindLabel="ContactName" bindValue="AccountId" groupBy="AccountName"
+                                                                (change)="onSelectAccountContact($event)" formControlName="AccountId">
+                                                            </ng-select>
+
+                                                    <div
+                                                        *ngIf="OpportunityForm.get('AccountId') && OpportunityForm.get('AccountId').errors!=null &&OpportunityForm.get('AccountId').touched==true">
+                                                        <span class="errorMessage" *ngIf="OpportunityForm.get('AccountId').errors.required">
+                                                            Account is required</span>
+                                                    </div>
+                                                   
+                                                </div>
+                                            </div>
+                                        </div>    
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Opportunity Sales Stage
+                                                <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                                            </label>
+                                            <div class="col-xl-8 col-sm-6 col-6">
+                                                <div>
+                                                    <select id="ProbabilityId" #ProbabilityId (change)="OnAccountChange($event)"
+                                                     formControlName="ProbabilityId" tabindex="4"
+                                                    class="form-control">
+                                                        <option [ngValue]="undefined">--Select--</option>
+                                                        <option *ngFor="let record of ProbabilityDomainItemList" value={{record.Id}}>
+                                                            {{ record.Name }}
+                                                    </select>
+
+                                                <div
+                                                    *ngIf="OpportunityForm.get('ProbabilityId') && OpportunityForm.get('ProbabilityId').errors!=null &&OpportunityForm.get('ProbabilityId').touched==true">
+                                                    <span class="errorMessage" *ngIf="OpportunityForm.get('ProbabilityId').errors.required">
+                                                        Opportunity Sales Stage is required</span>
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>   
+
+                         
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Estimated Close Date</label>
+                                            <div class="col-xl-8 col-sm-6 col-6">
+                                                <div class="input-group">
+                                                    <input id="EstCloseDate" #EstCloseDate class="form-control" formControlName="EstCloseDate"
+                                                        (click)="onDatePickerFocus(EstCloseDatePicker,$event)" tabindex="3" ngbDatepicker
+                                                        #EstCloseDatePicker="ngbDatepicker">
+
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-outline-secondary"
+                                                            (click)="EstCloseDatePicker.toggle()" type="button">
+                                                            <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                                        </button>
+                                                    </div>
+
+                                                </div>
+                                                <div
+                                                    *ngIf="OpportunityForm.get('EstCloseDate') && OpportunityForm.get('EstCloseDate').errors!=null &&OpportunityForm.get('EstCloseDate').touched==true">
+                                                    <span class="errorMessage" *ngIf="OpportunityForm.get('EstCloseDate').errors.required">
+                                                        Estimated Close Date is required</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Estimated Revenue</label>
+                                            <div class="col-xl-8 col-sm-6 col-6">
+                                                <!-- <label class="col-form-label form-text"
+                                                    *ngIf="hideText&&selectedPODetails.Supplier!=null">{{
+                                                    selectedPODetails.Supplier.BillingFax }}</label> -->
+                                                <input formControlName="EstRevenue" placeholder="Estimated Revenue" tabindex="5" *ngIf="hideInput"
+                                                    class="form-control" />
+                                            </div>
+                                        </div> 
+                                        <!-- <div class="form-group row">
+                                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Website</label>
+                                            <div class="col-xl-8 col-sm-6 col-6">
+                                                <input formControlName="Website" placeholder="Website" tabindex="3" *ngIf="hideInput"
+                                                    class="form-control" />
+                                            </div>
+                                        </div>   -->
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-xl-2 col-md-2 col-sm-4 form-label">Description</label>
+                                            <div class="autoComplete col-xl-10 col-md-10 col-sm-8">
+                                                <textarea id="OppDesc" #OppDesc formControlName="OppDesc" rows="4" tabindex="6"
+                                                class="form-control"></textarea>
+
+                                            <!-- <div *ngIf="OpportunityForm.get('OppTopic') && OpportunityForm.get('OppTopic').errors!=null &&OpportunityForm.get('OppTopic').touched==true">
+                                                <span class="errorMessage" *ngIf="OpportunityForm.get('OppTopic').errors.required">
+                                                    Topic is required</span>
+                                            </div> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </mat-expansion-panel>
+                
+                        <mat-expansion-panel [expanded]="IsDetailsExpand" [disabled]="IsDetailsDisable">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <div class="col-md-6">
+                                        Details
+                                    </div>
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                      <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Select Currency</label>
+                                      <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                                      
+                                        <select (change)="OnCurrencyChange($event)" formControlName="CurId"
+                                        tabindex="10"  class="form-control" tabindex="11">
+                                          <option [ngValue]="undefined">--None--</option>
+                                          <option *ngFor="let list of CurrencyList" value={{list.Id}}>
+                                            {{ list.Name }}
+                                        </select>
+                                      </div>
+                                    </div>
+
+
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Actual Revenue</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <input formControlName="ActualRevenue" placeholder="Actual Revenue" tabindex="3" *ngIf="hideInput"
+                                                class="form-control" />
+                                        </div>
+                                    </div> 
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Opportunity Owner</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <input formControlName="OpportunityOwner" placeholder="Opportunity Owner" tabindex="3" *ngIf="hideInput"
+                                                class="form-control" readonly />
+                                        </div>
+                                    </div> 
+                                </div>
+                               
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Originating lead</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <input formControlName="OriginatingLead" placeholder="Originating lead" tabindex="3" *ngIf="hideInput"
+                                                class="form-control" />
+                                        </div>
+                                    </div> 
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Opportunity Created Date</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <input formControlName="CreatedDate" placeholder="Opportunity Created Date" tabindex="3" *ngIf="hideInput"
+                                                class="form-control" readonly />
+                                        </div>
+                                    </div> 
+                                </div>
+                            </div> 
+                
+                        </mat-expansion-panel>
+                        <!-- <div style="clear: both;"></div> -->
+                        <mat-expansion-panel [expanded]="IsProductsExpand" [disabled]="IsProductsDisable">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <div class="col-md-6">
+                                        Products
+                                    </div>
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="row">
+                                <div class="col-lg-12 col-md-6 col-sm-12" style="text-align: right;padding-bottom:10px;">
+                                    <button class="btn btn-save ng-star-inserted" style="margin-right: 20px;" type="button" 
+                                    (click)="ClickAddProducts($event)">
+                                      <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> New</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <p>Grid Starts Here</p>
+                                <div class="col-md-12">
+                                    <p>List Products -- {{SelectedOppProducts}} === {{SelectedOppProductName}} </p>
+                                    <p-table #OpportunityProductListsTable
+                                        [globalFilterFields]="['ProductCode','ProductName','ProductDescription','ProductIsActive','CreatedDate']"
+                                        [columns]="OpportunityProductsListsCols" selectionMode="single | multiple" [value]="OpportunityProductsLists"
+                                        [rows]="OpportunityProductsListsPagerConfig.RecordsToFetch" [scrollable]="true" [scrollHeight]="'calc(100vh - 400px)'"
+                                        scrollWidth="70%" [virtualRowHeight]="30" [virtualScroll]="true" [(selection)]="selectedItemsOpp"
+                                        (sortFunction)="CustomSortOppProducts($event)" [customSort]="true" responsiveLayout="scroll" [paginator]="false"
+                                        (onRowSelect)="onOppProductRowSelect($event)" (onRowUnselect)="onOppProductRowUnselect($event)"
+                                        [rowsPerPageOptions]="[5,10,15,25,50,75,100]">
+                                        <ng-template pTemplate="header" let-columns>
+                                            <tr style="height: 40px;">
+                                                <th style="width: 30px;">
+                                                    <p-tableHeaderCheckbox (click)="onOppProductRowUnselect($event)">
+                                                    </p-tableHeaderCheckbox>
+                                                </th>
+                                                <th style="width: 100px;" pSortableColumn="ProductCode">Product Code <p-sortIcon
+                                                        field="ProductCode"></p-sortIcon></th>
+                                                <th style="width: 200px;" pSortableColumn="ProductName">Product Name <p-sortIcon
+                                                        field="ProductName"></p-sortIcon></th>
+                                                <th style="width: 300px;" pSortableColumn="ProductDescription">Product Description <p-sortIcon
+                                                        field="ProductDescription"></p-sortIcon></th>
+                                                <!-- <th style="width: 100px;" pSortableColumn="ProductIsActive">Is Active <p-sortIcon
+                                                        field="ProductIsActive"></p-sortIcon></th> -->
+                                                <th style="width: 100px;" pSortableColumn="CreatedDate">Created On <p-sortIcon
+                                                        field="CreatedDate"></p-sortIcon></th>
+                                                <th style="width: 50px;">Action</th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-value let-people let-rowData let-columns let-i="rowIndex">
+                                            <tr style="height:30px" [pSelectableRow]="OpportunityProductsLists">
+                                                <td style="width: 30px;">
+                                                    <p-tableCheckbox [value]="people"></p-tableCheckbox>
+                                                </td>
+                                    
+                                                <td style="width: 100px;">{{value.ProductCode}}</td>
+                                                <td style="width: 200px;">{{value.ProductName}}</td>
+                                                <td style="width: 300px;">{{value.ProductDescription }}</td>
+                                                <!-- <td style="width: 100px;">{{value.ProductIsActive }}</td> -->
+                                                <td style="width: 100px;">{{value.CreatedDate | date: 'yyyy-MM-dd'}}</td>
+                                                <td style="width: 50PX;" class="aligncenter">
+                                                    <button type="button" class="btn" (click)="DeleteOpportunityProduct(value.OpportunityId,value.OpportunityProductId,$event)">
+                                                        <i class="fa fa-remove" aria-hidden="true"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                    
+                                        </ng-template>
+                                        <ng-template pTemplate="emptymessage" let-columns>
+                                            <tr>
+                                                <td [attr.colspan]="OpportunityProductsLists.length">
+                                                    No records found
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                    
+                                    </p-table>
+                                    <div *ngIf="OpportunityProductsLists.length==0">
+                                        <div class="col-12 error errorMessage">
+                                            <p class="errorMessage">
+                                                {{filterMessage}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div style="clear: both;"></div>
+                                    <ngb-pagination *ngIf="OpportunityProductsLists.length>0" (pageChange)="ProductsListPageChange($event)" style="z-index: auto;"
+                                        [collectionSize]="OpportunityProductsListsPagerConfig.TotalRecords" class="d-flex justify-content-center"
+                                        [pageSize]="OpportunityProductsListsPagerConfig.RecordsToFetch" [maxSize]="5" [(page)]="currentPage" [boundaryLinks]="true">
+                                        <ng-template ngbPaginationPages let-page let-pages="pages">
+                                            10 of 100
+                                        </ng-template>
+                                    </ngb-pagination>
+                                </div>
+                            </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+
+                    <br>
+                    <br>
+                    <hr/>
+                </div>
+
+            </form>
+            <p-confirmDialog></p-confirmDialog>
+           
+        </div>
+    </div>
+    <!-- left col end here-->
+  </div>
+
+</div>
+
+<p-dialog [modal]="true" [(visible)]="ShowProductsPopUp" width="800">
+    <p-header> Select Products </p-header>
+    <div>
+      <div class="row">
+        <div class="col-md-12">
+            <p>List Products -- {{SelectedProducts}} === {{SelectedProductName}} </p>
+            <p-table #ProductListsTable
+                [globalFilterFields]="['ProductCode','ProductName','ProductDescription','ProductIsActive','CreatedDate']"
+                [columns]="ProductsListsCols" selectionMode="single | multiple" [value]="ProductsLists"
+                [rows]="this.ProductsListsPagerConfig.RecordsToFetch" [scrollable]="true" [scrollHeight]="'calc(100vh - 400px)'"
+                scrollWidth="70%" [virtualRowHeight]="30" [virtualScroll]="true" [(selection)]="selectedItems"
+                (sortFunction)="CustomSortProductsList($event)" [customSort]="true" responsiveLayout="scroll" [paginator]="false"
+                (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
+                [rowsPerPageOptions]="[5,10,15,25,50,75,100]">
+                <ng-template pTemplate="header" let-columns>
+                    <tr style="height: 40px;">
+                        <th style="width: 36px;">
+                            <p-tableHeaderCheckbox (click)="onRowUnselect($event)">
+                            </p-tableHeaderCheckbox>
+                        </th>
+                        <th style="width: 100px;" pSortableColumn="ProductCode">Product Code <p-sortIcon
+                                field="ProductCode"></p-sortIcon></th>
+                        <th style="width: 100px;" pSortableColumn="ProductName">Product Name <p-sortIcon
+                                field="ProductName"></p-sortIcon></th>
+                        <th style="width: 100px;" pSortableColumn="ProductDescription">Product Description <p-sortIcon
+                                field="ProductDescription"></p-sortIcon></th>
+                        <!-- <th style="width: 100px;" pSortableColumn="ProductIsActive">Is Active <p-sortIcon
+                                field="ProductIsActive"></p-sortIcon></th> -->
+                        <th style="width: 100px;" pSortableColumn="CreatedDate">Created On <p-sortIcon
+                                field="CreatedDate"></p-sortIcon></th>
+                        <!-- <th style="width: 50px;">Action</th> -->
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-value let-people let-rowData let-columns let-i="rowIndex">
+                    <tr style="height:30px" [pSelectableRow]="ProductsLists">
+                        <td style="width: 36px;">
+                            <p-tableCheckbox [value]="people"></p-tableCheckbox>
+                        </td>
+            
+                        <td style="width: 100px;">{{value.ProductCode}}</td>
+                        <td style="width: 100px;">{{value.ProductName}}</td>
+                        <td style="width: 100px;">{{value.ContactName }}</td>
+                        <td style="width: 100px;">{{value.ProductDescription }}</td>
+                        <!-- <td style="width: 100px;">{{value.ProductIsActive }}</td> -->
+                        <td style="width: 100px;">{{value.CreatedDate | date: 'yyyy-MM-dd'}}</td>
+                        <!-- <td style="width: 50PX;" class="aligncenter">
+                            <button type="button" class="btn" (click)="EditOpportunity(value.Id)">
+                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                            </button>
+                        </td> -->
+                    </tr>
+            
+                </ng-template>
+                <ng-template pTemplate="emptymessage" let-columns>
+                    <tr>
+                        <td [attr.colspan]="ProductsLists.length">
+                            No records found
+                        </td>
+                    </tr>
+                </ng-template>
+            
+            </p-table>
+            <div *ngIf="ProductsLists.length==0">
+                <div class="col-12 error errorMessage">
+                    <p class="errorMessage">
+                        {{filterMessage}}
+                    </p>
+                </div>
+            </div>
+            <div style="clear: both;"></div>
+            <ngb-pagination *ngIf="ProductsLists.length>0" (pageChange)="ProductsListPageChange($event)" style="z-index: auto;"
+                [collectionSize]="ProductsListsPagerConfig.TotalRecords" class="d-flex justify-content-center"
+                [pageSize]="ProductsListsPagerConfig.RecordsToFetch" [maxSize]="5" [(page)]="currentPage" [boundaryLinks]="true">
+                <ng-template ngbPaginationPages let-page let-pages="pages">
+                    10 of 100
+                </ng-template>
+            </ngb-pagination>
+        </div>
+      </div>
+      <br>
+      <hr/>
+    </div>
+    <p-footer>
+        <div class="row">
+            <div class="col-md-12">
+                <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickAddToOpportunity($event)">
+                    <i class="fa fa-plus" aria-hidden="true"></i> Add To Opportunities</button>
+                &nbsp;
+                <button type="button" class="btn" (click)="ClickCloseProducts($event)">Close</button>
+            </div>
+        </div>
+
+    </p-footer>
+  </p-dialog>
+
+
+  <!-- Confirmation Dialog For Opportunity Product Delete -->
+  <p-dialog [modal]="true" [(visible)]="ShowConfirmForOpportunityPopop">
+    <p-header> Remarks </p-header>
+    <div>
+      <form [formGroup]="RemarksForm">
+        <div>
+          <label class="form-label">Reasons</label>
+          <textarea rows="4" cols="50" class="form-control" formControlName="Reasons">
+                </textarea>
+        </div>
+        <div class="errorMessage"
+          *ngIf="RemarksForm.get('Reasons') && RemarksForm.get('Reasons').errors!=null && RemarksForm.get('Reasons').touched==true">
+          <span *ngIf="RemarksForm.get('Reasons').errors.required">
+            Reason is Required
+          </span>
+          <span *ngIf="RemarksForm.get('Reasons').hasError('invaliddata')">
+            Required valid data
+          </span>
+        </div>
+      </form>
+    </div>
+    <p-footer>
+      <button type="button" class="btn" (click)="ChangeStatus($event)">Yes</button>
+      &nbsp;
+      <button type="button" class="btn" (click)="ChangeStatus($event)">No</button>
+    </p-footer>
+  </p-dialog>
+

@@ -1,0 +1,315 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+            <div class="flexrow space-between align-center">
+                <h3 class="item-heading"> Taxes  </h3>
+                <div>
+                    <input #file style="visibility: hidden;width:0px" type="file" accept="xlsx/*"
+                        (click)="file.value = null" (change)="uploadFile($event)">
+                    <!-- <button class="btn  btn-transparent" (click)="addRecord();"
+                        *ngIf="isDisplayMode!=false && newPermission"> New Record</button> -->
+
+                        <button class="btn btn-save ng-star-inserted" style="margin-right: 20px;" type="button" 
+                        (click)="AddNewTax($event)">
+                          <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> New</button>
+
+                </div>
+            </div>
+
+            <div class="left-section1" [class.display-filters]="!showfilters">
+                <div class="filter-section" ngbDropdown #myDrop="ngbDropdown">
+                    <div class="flexrow space-between">
+                        <div class="left-search">
+                            <input type="text" placeholder="Search Taxes..." [(ngModel)]="taxSearchKey"
+                                class="search-filter" (keyup)="onSearchInputChange($event)">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                            <div class="filter-popup" *ngIf="initDone" ngbDropdownMenu aria-labelledby="dropdownManual"
+                                (click)="$event.stopPropagation(); myDrop.open();">
+
+                                <form [formGroup]="taxFilterInfoForm" class="form-horizontal">
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-6 form-label">Tax Name</label>
+                                        <div class="col-6">
+
+                                            <input type="text" #axName formControlName="TaxnameFilter"
+                                                class="form-control">
+
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-6 form-label">Tax Group</label>
+                                        <div class="col-6">
+
+                                            <input type="text" formControlName="AuthorityFilter" class="form-control">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-6 form-label">Tax In Percentage</label>
+                                        <div class="col-6">
+
+                                            <input type="text" formControlName="TaxAmountFilter" class="form-control">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <div class="col-12 error">
+                                            {{filterMessage}}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+
+                                        <div class="col-12" style="text-align: right">
+                                            <button type="submit" (click)="filterData()" class="btn btn-save">
+                                                <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                            <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                                <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+
+                        <div class="filter-icon">
+                            <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                                <i class="fa fa-filter" aria-hidden="true"></i>
+                            </button>
+                        </div>
+
+                        <div class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+                            <i class="fa fa-undo" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                    <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="filter-scroll"
+                        style="width:100%; float:left;">
+                        <p-table #TaxesListTable
+                        [globalFilterFields]="['TaxName','TaxAuthority']" 
+                        [columns]="TaxesListCols" selectionMode="single | multiple"
+                        [value]="TaxesList" [rows]="this.taxGroupPagerConfig.RecordsToFetch"
+                        [scrollable]="true" [scrollHeight]="'calc(100vh - 260px)'" scrollWidth="100%"
+                        [virtualRowHeight]="30" [virtualScroll]="true" 
+                        [(selection)]="selectedItems"
+                        (sortFunction)="customSort($event)" [customSort]="true"
+                        responsiveLayout="scroll" [paginator]="false"
+                        (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
+                        [rowsPerPageOptions]="[5,10,15,25,50,75,100]">
+                        <ng-template pTemplate="header" let-columns>
+                            <tr style="height: 40px;">
+                              <th style="width: 36px;">
+                                  <p-tableHeaderCheckbox (click)="onRowUnselect($event)">                    
+                                  </p-tableHeaderCheckbox>
+                              </th>
+                              <th style="width: 100px;" pSortableColumn="TaxName">Tax Name <p-sortIcon field="TaxName"></p-sortIcon></th>  
+                              <th style="width: 100px;" pSortableColumn="TaxAuthority">Authority <p-sortIcon field="TaxAuthority"></p-sortIcon></th>
+                              <th style="width: 100px;" pSortableColumn="TaxAmount">Tax In % <p-sortIcon field="TaxAmount"></p-sortIcon></th>         
+                              <th style="width: 50px;">Action</th>
+                            </tr>
+                        </ng-template>
+                        <!-- <ng-template pTemplate="colgroup" let-columns>
+                            <colgroup>
+                                <col *ngFor="let col of columns" [style.width]="col.width">
+                            </colgroup>
+                        </ng-template> -->
+                        <ng-template pTemplate="body" let-value let-Tax let-rowData let-columns let-i="rowIndex">
+                            <tr style="height:30px" [pSelectableRow]="TaxesList">
+                              <td style="width: 36px;">
+                                  <p-tableCheckbox [value]="Tax"></p-tableCheckbox>
+                              </td>
+                                  <td style="width: 100px;">{{value.TaxName }}</td>  
+                                  <td style="width: 100px;">{{value.TaxAuthority}}</td>
+                                  <td style="width: 100px;">{{value.TaxAmount}}</td>
+                                  <td style="width: 50PX;" class="aligncenter">
+                                      <button type="button" class="btn"
+                                          (click)="EditTax(value.TaxId)">
+                                          <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                      </button>
+                                  </td>
+                            </tr>
+              
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage" let-columns>
+                            <tr>
+                                <td [attr.colspan]="TaxesList.length">
+                                    No records found
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                        <!-- <table class="table">
+                            <tr>
+                                <td (click)="hidefilter()" style="padding: 0px;">
+                                    <table class="listtable">
+                                        <tr>
+                                            <th>Tax Name </th>
+                                            <th>Authority</th>
+                                            <th>Tax In Percentage</th>
+                                        </tr>
+                                        <tr [class.activerow]="record.TaxId==selectedTaxRecord.TaxId"
+                                            (click)="onItemRecordSelection(record)" *ngFor="let record of TaxesList">
+                                            <td>{{record.TaxName}}</td>
+                                            <td>{{record.TaxAuthority}}</td>
+                                            <td>{{record.TaxAmount}}</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table> -->
+                        <div *ngIf="TaxesList.length==0" class="col-12 error listErrorMessage">
+                            {{errorMessage}}
+                        </div>
+
+
+                    </div>
+                    <div style="clear: both;"></div>
+                    <ngb-pagination [maxSize]="5" *ngIf="TaxesList.length>0" (pageChange)="pageChange($event)"
+                        [collectionSize]="taxGroupPagerConfig.TotalRecords" class="d-flex justify-content-center"
+                        [pageSize]="taxGroupPagerConfig.RecordsToFetch" [page]="1"
+                        [boundaryLinks]="true"></ngb-pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <p>Edit Form Starts Here</p> -->
+    <!-- <div class="row">
+        <div #rightPanel class="rightPanel col-lg-12 col-md-12" [class.expand-rightcol]="rightSection">
+            <div class="fullScreenLabel"> <app-header></app-header> </div>
+            <div *ngIf="isDisplayMode!=null">
+
+                <form [formGroup]="taxForm" class="form-horizontal">
+                    <div class="rightcol-scrroll">
+                        <div class="row fullScreenLabel">
+                            <div class="col-12">
+                                <h3 class="item-heading" style="float:none;">Taxes</h3>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Tax Name<i
+                                    class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"
+                                    aria-hidden="true"></i> </label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <input type="text" appAutofocus formControlName="TaxName" maxlength="50"
+                                    [ngClass]="(validateControl(taxForm.get('TaxName')))?'form-control ng-touched':'form-control'"
+                                    placeholder="Tax Name" *ngIf="isDisplayMode==false" class="form-control">
+
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true">
+                                    <b style="color:#01548e">{{ selectedTaxRecord.TaxName }}</b>
+                                </label>
+                                <div
+                                    *ngIf="isDisplayMode==false &&taxForm.get('TaxName') && taxForm.get('TaxName').errors!=null && taxForm.get('TaxName').touched==true">
+                                    <span class="errorMessage" *ngIf="taxForm.get('TaxName').errors.required">Tax Name
+                                        is required</span>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Tax in Percentage<i
+                                    class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"
+                                    aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <input type="number" min="0" max="100" oninput="validity.valid||(value='')"
+                                    formControlName="TaxAmount"
+                                    [ngClass]="(validateControl(taxForm.get('TaxAmount')))?'form-control ng-touched':'form-control'"
+                                    placeholder="Tax Amount" *ngIf="isDisplayMode==false" class="form-control">
+
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true">
+                                    {{ selectedTaxRecord.TaxAmount }}
+                                </label>
+
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Tax Group <i
+                                    class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"
+                                    aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <select *ngIf="isDisplayMode==false" class="form-control" formControlName="TaxGroupId"
+                                    [ngClass]="(validateControl(taxForm.get('TaxGroupId')))?'form-control ng-touched':'form-control'">
+                                    <option [ngValue]="null">--Select--</option>
+                                    <option *ngFor="let taxGroup of taxGroups" [value]="taxGroup.TaxGroupId">
+                                        {{taxGroup.TaxGroupName}}
+                                    </option>
+                                </select>
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true">
+                                    {{ selectedTaxRecord.TaxAuthority }}
+                                </label>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Tax Class<i
+                                    class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"
+                                    aria-hidden="true"></i>
+                            </label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <input type="text" oninput="validity.valid||(value='')" formControlName="TaxClass"
+                                    [ngClass]="(validateControl(taxForm.get('TaxClass')))?'form-control ng-touched':'form-control'"
+                                    placeholder="Tax Class" *ngIf="isDisplayMode==false" class="form-control">
+
+                                <label class="col-form-label  form-text" *ngIf="isDisplayMode==true">
+                                    {{selectedTaxRecord.TaxClass}} </label>
+                                <div
+                                    *ngIf="isDisplayMode==false && taxForm.get('TaxClass').errors!=null && taxForm.get('TaxClass').touched==true">
+                                    <span class="errorMessage" *ngIf="taxForm.get('TaxClass').errors.Duplicate">Tax
+                                        Group and Class cannot be same.</span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group text-right btn-list">
+                        <button type="submit" (click)="saveRecord()" class="btn btn-save"
+                            *ngIf="isDisplayMode==false"><i class="fa fa-check" aria-hidden="true"></i> Save</button>
+                        <button type="submit" (click)="cancelRecord()" class="btn btn-cancel"
+                            *ngIf="isDisplayMode==false"><i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                        <button type="submit" (click)="editRecord()" class="btn btn-edit"
+                            *ngIf="isDisplayMode==true && TaxesList.length > 0 && editPermission"><i
+                                class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                        <button type="submit" (click)="deleteRecord()" class="btn btn-delete"
+                            *ngIf="isDisplayMode==true && TaxesList.length > 0 && deletePermission"><i class="fa fa-trash-o"
+                                aria-hidden="true"></i> Delete</button>
+                    </div>
+
+                </form>
+                <p-confirmDialog></p-confirmDialog>
+            </div>
+        </div>
+    </div> -->
+    <!-- <p>Edit Form Ends Here</p> -->
+        <ng-template #filters>
+            <div class="flter-popover">
+                <form class="form-horizontal" (ngSubmit)="onSubmit()">
+                    <div class="form-group row">
+                        <label class="col-form-label col-4 form-label">Name </label>
+                        <div class="col-8">
+
+                            <input type="text" id="orderlevel" name="orderlevel" placeholder="Re-Order Level"
+                                class="form-control">
+
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-4 form-label">Category</label>
+                        <div class="col-8">
+
+                            <input type="text" id="alertqty" name="alertqty" placeholder="Low Alert Qty"
+                                class="form-control">
+
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </ng-template>

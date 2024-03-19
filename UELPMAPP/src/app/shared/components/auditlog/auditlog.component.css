@@ -1,0 +1,20 @@
+:host ::ng-deep ul,li{list-style: disc;
+    list-style-position: inside;
+}
+
+.customtable{
+    margin: 5px 0px 0px 15px;
+    width: 97%;
+}
+
+.trheight{
+    height:20px;
+}
+
+.tdpad{
+    padding: 2px 10px;
+}
+
+.lipad{
+    padding: 5px 0 0 0; 
+}

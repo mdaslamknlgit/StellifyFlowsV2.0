@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <style>
+        body {
+            font-family: Arial;
+            font-size: 10px;
+            padding: 0px;
+            margin: 0px
+        }
+
+        .form-label {
+            color: #01548e;
+        }
+
+        .form-size {
+            font-size: 10px;
+            font-family: Arial;
+        }
+
+        .form-table td {
+            padding: 0px;
+            vertical-align: top;
+        }
+
+        .form-heading {
+            color: #01548e;
+            font-size: 18px;
+            display: inline-block;
+            border-bottom: 1px solid #01548e;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .footer td {
+            background: #111;
+            color: #fff;
+            position: relative;
+            z-index: 99;
+            text-align: right;
+            height: 61px;
+            line-height: 61px;
+            width: 100%;
+            font-size: 12px;
+            font-weight: 300;
+        }
+
+        .nowrap {
+            white-space: nowrap
+        }
+
+        .hidecontent {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <table border="1" cellpadding="3" cellspacing="0" style="margin-bottom:20px;font-size:11px;font-family:Arial; width:90%;padding: 5px">
+        <thead style="font-size:11px;font-family:Arial;">
+            <tr>
+                <th width="33%" align="center" class="reportField textHeader"><b>Field Name</b></th>
+                <th width="33%" align="center" class="reportField textHeader"><b>Value Before</b></th>
+                <th width="33%" align="center" class="reportField textHeader"><b>Value After</b></th> 
+            </tr>
+        </thead>
+        <tbody style="font-size:11px;font-family:Arial;">
+            {{#each AuditChanges}}
+            <tr>
+                <td align="center" class="reportField">{{FieldName}}</td>
+                <td align="center" class="reportField">{{ValueBefore}}</td>
+                <td align="center" class="reportField">{{ValueAfter}}</td>    
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</body>
+</html>

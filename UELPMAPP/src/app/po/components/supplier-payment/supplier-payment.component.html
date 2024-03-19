@@ -1,0 +1,496 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 col-sm-12 padding-null tittlediv">
+        <h3 class="item-heading"> <img src="../assets/images/icon1.png"> Purchase order > Supplier Payment</h3>
+        </div>
+        <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+            <div class="leftmenuline"  (click)="showLeftCol($event)"    >
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+            <img src="../assets/images/add-new.png" (click)="addRecord()" *ngIf="hidetext && newPermission">
+            <img src="../assets/images/grid1.png" (click)="showFullScreen()">
+        <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+                <button class="btn btn-outline-primary" style="background:none;border:none;padding:0px;" id="dropdownBasic1" ngbDropdownToggle>
+                    <img src="../assets/images/grid2.png">
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1" *ngIf="printPermission">
+                        <button class="dropdown-item" (click)="printPaymentVoucher()">Print</button>                   
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3 col-md-4 leftdiv"  [class.collapse-leftcol]="leftsection">
+                <div class="left-section">
+                    <div class="filter-section" ngbDropdown #myDrop="ngbDropdown">
+                        
+                        <div class="left-search">
+                            <input  type="text" [(ngModel)]="supplierPaymentSearchKey" placeholder="Search requests..." (keyup)="onSearchInputChange($event)"
+                                class="search-filter">
+                            <i class="fa fa-search"  aria-hidden="true"></i>
+                            <!-- (click)="onSearchClick()"  ngbDropdownMenu -->
+    
+                            <div class="filter-popup" *ngIf="initDone" ngbDropdownMenu aria-labelledby="dropdownManual" (click)="$event.stopPropagation(); myDrop.open();">
+    
+                                <form [formGroup]="spFilterInfoForm" class="form-horizontal">
+    
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-6 form-label">Supplier Payment Code</label>
+                                        <div  class="col-6">
+    
+                                            <input  type="text" #spCode formControlName="SPCode" class="form-control">
+    
+                                        </div>
+                                    </div>
+    
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-6 form-label">Supplier</label>
+                                        <div class="col-6">
+    
+                                                <input formControlName="SupplierCategory" type="text" class="form-control" [inputFormatter]="supplierInputFormater"
+                                                [ngbTypeahead]="supplierSearch" [resultTemplate]="supplierTemplate" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-6 form-label">Invoice No</label>
+                                        <div  class="col-6">
+    
+                                            <input  type="text" formControlName="Invoiceno" class="form-control">
+    
+                                        </div>
+                                    </div>
+    
+                                    <div class="form-group row">
+                                        <div class="col-12 error">
+                                            {{filterMessage}}
+                                        </div>
+                                    </div>
+    
+                                    <div class="form-group row">
+    
+                                        <div class="col-12" style="text-align: right">
+                                            <button type="submit" (click)="filterData()" class="btn btn-save">
+                                                <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                            <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                                <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+    
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <!-- start filter code -->
+                        <div class="filter-icon">
+                            <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                                <i class="fa fa-filter" aria-hidden="true"></i>
+                            </button>
+                        </div>
+    
+                        <div class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+                            <i class="fa fa-undo" aria-hidden="true"></i>
+                        </div>
+    
+                        
+                        <!-- end filter code -->
+    
+    
+                        <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="filter-scroll" style="width:100%; float:left;">
+                            <table class="table">
+                                    <tr [class.activerow]="record.SupplierPaymentId==selectedSupplierPaymentDetails.SupplierPaymentId" (click)="onRecordSelection(record.SupplierPaymentId)"
+                                        *ngFor="let record of SupplierPaymentList">
+                                        <td (click)="hidefilter()">
+                                            <h5 class="sub-heading">{{ record.SupplierPaymentCode }}</h5>
+                                            <label class="label-text">Supplier</label> :
+                                            <label class="label-value">{{ record.SupplierName }}</label>
+                                            <label class="label-text">Invoices</label> :
+                                            <label class="label-value">{{ record.InvoiceCode | slice:0:25}}<span *ngIf="record.InvoiceCode!= null && record.InvoiceCode.length>25">...</span></label>
+                                        </td>
+                                    </tr>
+                            </table>
+                            <div *ngIf="SupplierPaymentList.length==0" class="col-12 listErrorMessage">
+                                {{errorMessage}}
+                            </div> 
+                            <ngb-pagination [maxSize]="5" *ngIf="SupplierPaymentList.length>0" (pageChange)="pageChange($event)" [collectionSize]="supplierPaymentsPagerConfig.TotalRecords" class="d-flex justify-content-center" [pageSize]="supplierPaymentsPagerConfig.RecordsToFetch" [page]="1" [boundaryLinks]="true"></ngb-pagination>
+                        </div>
+                    </div>
+                </div>
+                <div class="split-line" (click)="split()"></div>
+            </div>
+        <!-- left col end here-->
+
+            <!-- <div  style="margin-right:5%;" #rightPanel class="col-lg-12 col-md-12"> -->
+            <div #rightPanel class="rightPanel col-lg-9 col-md-8" [class.expand-rightcol]="rightsection">
+                    <div class="fullScreenLabel">    <app-header></app-header> </div>
+                <div>
+                    <form  [formGroup]="supplierPaymentForm" class="form-horizontal">
+                    <div malihu-scrollbar class="rightcol-scrroll">
+                    <div class="row fullScreenLabel">
+                        <div class="col-12">
+                            <h3 class="item-heading" style="float:none;">Supplier Payment</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier<i class="fa fa-star mandatory-icon" *ngIf="hideinput" aria-hidden="true"></i></label>  
+                                <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text" *ngIf="hidetext&&selectedSupplierPaymentDetails.Supplier!=null">{{ selectedSupplierPaymentDetails.Supplier.SupplierName }}</label>
+
+                                    <input appAutofocus formControlName="Supplier" *ngIf="hideinput" type="text" class="form-control show" [inputFormatter]="supplierInputFormater"
+                                    [ngbTypeahead]="supplierSearch" [resultTemplate]="supplierTemplate" (selectItem)="supplierSelection($event)" />
+                                    <!-- <div *ngIf="supplierPaymentForm.get('Supplier') && supplierPaymentForm.get('Supplier').errors!=null && supplierPaymentForm.get('Supplier').touched==true">
+                                        <span class="errorMessage" *ngIf="supplierPaymentForm.get('Supplier').errors.required">Supplier is required</span>
+                                    </div>  -->
+                                </div>      
+                            </div>   
+                            
+                            <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier Email</label>  
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text" *ngIf="hidetext&&selectedSupplierPaymentDetails.Supplier!=null">{{ selectedSupplierPaymentDetails.Supplier.SupplierEmail }}</label>                                        
+                                        <input formControlName="SupplierEmail" *ngIf="hideinput" type="text" class="form-control" />                                  
+                                    </div>      
+                            </div>     
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Amount Paid<i class="fa fa-star mandatory-icon" *ngIf="hideinput" aria-hidden="true"></i></label>  
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text" *ngIf="hidetext">{{ selectedSupplierPaymentDetails.TotalAmountPaid }}</label>
+                                    <input formControlName="TotalAmountPaid" *ngIf="hideinput" (change)="Allocateamount($event.target.value)" min="0" (keydown)=restrictMinus($event)  type="number" class="form-control" />
+                                    <div *ngIf="supplierPaymentForm.get('TotalAmountPaid').errors!=null">
+                                        <span class="errorMessage" *ngIf="supplierPaymentForm.get('TotalAmountPaid').errors.GreaterValue">Amount Paid Cannot Greater than Total Outstanding</span>
+                                    </div>     
+
+                                    <!-- <div *ngIf="supplierPaymentForm.get('TotalAmountPaid').errors!=null && supplierPaymentForm.get('TotalAmountPaid').errors!= 0" >
+
+                                    <div *ngIf="supplierPaymentForm.get('TotalAmountPaid').errors==0">
+
+                                        <span class="errorMessage" *ngIf="supplierPaymentForm.get('TotalAmountPaid').errors.Zero">Amount Paid Can not be Zero.</span>
+                                    </div> -->
+                                    <span class="errorMessage" *ngIf="showGridErrorMessage3">
+                                        Amount Paid Can not be Zero.
+                                    </span>                       
+                                </div>      
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Remarks</label>  
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text" *ngIf="hidetext">{{ selectedSupplierPaymentDetails.Remarks }}</label>
+                                    <textarea formControlName="Remarks" *ngIf="hideinput" autoresize type="text" class="form-control" >
+                                    </textarea>
+                                </div>      
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Total Outstanding</label>  
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <!-- <label class="col-form-label form-text" >{{ selectedSupplierPaymentDetails.TotalOutstanding }}</label>       -->
+                                    <label class="col-form-label form-text" >{{ addtotaloutstanding }}</label>                                  
+                                </div>      
+                            </div>
+                            
+                            
+                        </div>
+                        <div class="col-sm-6">                          
+                            <!-- <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Payment Type</label>  
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="hidetext">{{selectedSupplierPaymentDetails.PaymentType==undefined?"": selectedSupplierPaymentDetails.PaymentType.Name }}</label>
+                                            <input formControlName="PaymentType" *ngIf="hideinput" type="text" class="form-control" [inputFormatter]="paymentTypeInputFormater"
+                                            [ngbTypeahead]="paymentTypeSearch" [resultTemplate]="paymenttypeTemplate" (selectItem)="paymentTypeSelection($event.item)" />
+                                       
+                                </div>      
+                            </div>   -->
+
+                            <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Payment Type<i class="fa fa-star mandatory-icon" *ngIf="hideinput" aria-hidden="true"></i></label>  
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text" *ngIf="hidetext">{{selectedSupplierPaymentDetails.Name }}</label>
+                                        <select formControlName="PaymentTypeId" *ngIf="hideinput" (change)="paymentTypeSelection($event.target.value)"
+                                         class="form-control">
+                                            <option [ngValue]="undefined">--Select--</option>
+                                            <option *ngFor="let record of paymentType" value={{record.PaymentTypeId}}>
+                                                {{record.Name}}
+                                        </select>
+                                        <!-- <div *ngIf="supplierPaymentForm.get('PaymentTypeId') && supplierPaymentForm.get('PaymentTypeId').errors!=null &&supplierPaymentForm.get('PaymentTypeId').touched==true">
+                                            <span class="errorMessage" *ngIf="supplierPaymentForm.get('PaymentTypeId').errors.required">Payment Type is required</span>
+                                        </div> -->
+                                    </div>
+                                </div>
+
+                            
+                            <div class="form-group row" *ngIf="hidecheque">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Cheque No.</label>  
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text" *ngIf="hidetext">{{ selectedSupplierPaymentDetails.ChequeNumber }}</label>
+                                    <input type="text" formControlName="ChequeNumber" *ngIf="hideinput" class="form-control"  />
+                                </div>  
+                            </div>
+
+                            
+                            <div class="form-group row" *ngIf="hidecheque">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Cheque Date</label>  
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text" *ngIf="hidetext">{{ selectedSupplierPaymentDetails.ChequeDate|DisplayDateFormat }}</label>
+                                        <div class="input-group" *ngIf="hideinput">
+                                            <input class="form-control" formControlName="ChequeDate" (click)="onDatePickerFocus(deliveryDatePicker)" ngbDatepicker
+                                                #deliveryDatePicker="ngbDatepicker">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary" (click)="deliveryDatePicker.toggle()" type="button">
+                                                    <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>  
+                            </div>
+
+                            <div class="form-group row" *ngIf="hidecarddetails">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Card No.</label>  
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text" *ngIf="hidetext">{{ selectedSupplierPaymentDetails.CreditCardNo }}</label>
+                                    <input type="text" formControlName="CreditCardNo" min="0" (keydown)=restrictMinus($event) *ngIf="hideinput" class="form-control"  />
+                                </div>  
+                            </div>
+
+                            
+                            <div class="form-group row" *ngIf="hidecarddetails">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Expiry Month</label>  
+                                <div class="col-xl-2 col-sm-2 col-2">
+                                    <label class="col-form-label form-text" *ngIf="hidetext">{{ selectedSupplierPaymentDetails.ExpiryMonth }}</label>
+                                    <input type="text" formControlName="ExpiryMonth" min="1" max="11" (keydown)=restrictMinus($event) (change)="Checkmonth($event.target.value)" placeholder="MM" *ngIf="hideinput" class="form-control"  />
+                                </div>     
+
+                                <label class="col-form-label col-xl-3 col-sm-4 col-4 form-label">Year</label>  
+                                <div class="col-xl-3 col-sm-2 col-2">
+                                    <label class="col-form-label form-text" *ngIf="hidetext">{{ selectedSupplierPaymentDetails.ExpiryYear }}</label>
+                                    <input type="text" formControlName="ExpiryYear" min="0" max="3000" (keydown)=restrictMinus($event) placeholder="YYYY" *ngIf="hideinput" class="form-control"  />
+                                </div> 
+                            </div>
+
+                            <div class="form-group row" *ngIf="hidetext">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Request Number</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text">{{ selectedSupplierPaymentDetails.SupplierPaymentCode }}</label>
+                                    </div>
+                            </div>
+
+                            <div class="form-group row" *ngIf="hidetext">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Created Date</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text">{{ selectedSupplierPaymentDetails.CreatedDate|DisplayDateFormat }}</label>
+                                    </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="col-lg-12" style="min-height:200px;">       
+                            <div style="text-align: center;">
+                                    <span class="errorMessage" *ngIf="showGridErrorMessage">
+                                            Payment Amount Can not be Greater than Total Amount
+                                    </span>
+                                    <span class="errorMessage" *ngIf="showGridErrorMessage1">
+                                            Payment Amount Can not be Less than Total Amount
+                                    </span>
+                                    <span class="errorMessage" *ngIf="showGridErrorMessage6">
+                                        No Invoice Pending
+                                    </span>
+                                   
+                                </div>                     
+                            <fieldset *ngIf="hideinput" formArrayName="SupplierInvoiceDetails">
+                                     
+                                    <p-table  [columns]="gridColumns" (sortFunction)="customSort($event)" [customSort]="true" sortMode="single" 
+                                    [value]="supplierPaymentForm.controls.SupplierInvoiceDetails.controls">
+                                        <ng-template pTemplate="emptymessage">
+                                            <tr>
+                                                <td colspan="12" style='text-align: center;'>
+                                                    <b>{{ gridNoMessageToDisplay }}</b>
+                                                </td> 
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="colgroup" let-columns>
+                                                <colgroup>
+                                                    <col style="width:5%;">
+                                                    <col style="width:19%;" >
+                                                    <col style="width:19%;">
+                                                    <col style="width:19%;">
+                                                    <col style="width:19%;">
+                                                    <col style="width:19%;">
+                                                </colgroup>
+                                        </ng-template>
+                                        <ng-template pTemplate="header" let-columns>
+                                            <tr>
+                                                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                                    {{col.header}}        
+                                                   
+                                                    <p-sortIcon *ngIf="col.field!='IsDetailed'&&col.field!='Sno'" [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                                </th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                            <tr *ngIf="hideinput" [formGroupName]="i">
+                                                <td align="center">
+                                                    <input type="checkbox" *ngIf="supplierPaymentForm.get('SupplierInvoiceDetails').controls[i].get('OutstandingAmount').value!=0" (ngModelChange)="opentextbox($event,i)" formControlName="Checked">
+                                                </td>
+                                                <td>
+                                                    {{supplierPaymentForm.get('SupplierInvoiceDetails').controls[i].get('InvoiceDate').value|DisplayDateFormat }}
+                                                    <!-- {{ rowData.InvoiceDate|DisplayDateFormat }}  (ngModelChange)="opentextbox($event,i)" -->
+                                                </td>
+                                                <td>
+                                                        {{supplierPaymentForm.get('SupplierInvoiceDetails').controls[i].get('InvoiceNo').value }}
+                                                    <!-- {{ rowData.InvoiceNo  }} -->
+                                                </td>
+                                                <td align="right">
+                                                        {{supplierPaymentForm.get('SupplierInvoiceDetails').controls[i].get('InvoiceAmount').value|number:'1.2-4' }}
+                                                    <!-- {{ rowData.InvoiceAmount|number:'1.2-4'  }} -->
+                                                </td>
+                                                <td align="right">
+                                                        {{supplierPaymentForm.get('SupplierInvoiceDetails').controls[i].get('OutstandingAmount').value|number:'1.2-4' }}
+                                                    <!-- {{ rowData.OutstandingAmount|number:'1.2-4'  }} -->
+                                                </td>
+                                                <td>
+                                                    <label style="align-content: right " *ngIf="supplierPaymentForm.get('SupplierInvoiceDetails').controls[i].get('OutstandingAmount').value==0" >
+                                                         {{supplierPaymentForm.get('SupplierInvoiceDetails').controls[i].get('PaymentAmount').value|number:'1.2-4' }}
+                                                    </label>
+
+                                                    <input type="number" formControlName="PaymentAmount" min="0" (keydown)=restrictMinus($event) *ngIf="supplierPaymentForm.get('SupplierInvoiceDetails').controls[i].get('OutstandingAmount').value!=0" 
+                                                     (change)="calculateOutstandingPayment(supplierPaymentForm.get('SupplierInvoiceDetails').controls[i].get('InvoiceAmount').value,supplierPaymentForm.get('SupplierInvoiceDetails').controls[i].get('OutstandingAmount').value,i,supplierPaymentForm.get('SupplierInvoiceDetails').controls[i])"
+                                                      class="form-control"> 
+                                                     <!-- <div *ngIf="supplierPaymentForm.get('SupplierInvoiceDetails').get('PaymentAmount').errors!=null">
+                                                        <span class="errorMessage" *ngIf="supplierPaymentForm.get('SupplierInvoiceDetails').get('PaymentAmount').errors.PaymentGreaterValue">Payment Amount Cannot Greater than Outstanding</span>
+                                                    </div>    -->
+                                                    <span class="errorMessage"  *ngIf="supplierPaymentForm.get('SupplierInvoiceDetails').controls[i].get('PaymentAmount')!=null &&
+                                                                supplierPaymentForm.get('SupplierInvoiceDetails').controls[i].get('PaymentAmount').errors!=null ">     
+                                                            <span *ngIf="supplierPaymentForm.get('SupplierInvoiceDetails').controls[i].get('PaymentAmount').errors.qtyerror2">
+                                                                    Payment Amount can not greater than Outstanding Amount
+                                                            </span>
+                                                      </span>
+                                                </td>
+                                                
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                    <!-- <div *ngIf="hideinput">
+                                        <input type="number" [(ngModel)]="linesToAdd" [ngModelOptions]="{standalone: true}" class="form-control linesToAdd">
+                                        <button type="submit" (click)="addGridItem(linesToAdd)" class="addLine">
+                                            <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Line
+                                        </button>
+                                    </div> -->
+                                </fieldset>
+
+                        <!-- //end filedset- -->
+                        <p-table  *ngIf="hidetext"  [columns]="gridColumns" sortMode="single" [value]="selectedSupplierPaymentDetails.SupplierInvoiceDetails">
+                                <ng-template pTemplate="emptymessage">
+                                    <tr>
+                                        <td colspan="7" style='text-align: center;'>
+                                            <b>{{gridNoMessageToDisplay}}</b>
+                                        </td> 
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="colgroup" let-columns>
+                                    <colgroup>
+                                        <col style="width:5%;">
+                                        <col style="width:19%;" >
+                                        <col style="width:19%;">
+                                        <col style="width:19%;">
+                                        <col style="width:19%;">
+                                        <col style="width:19%;">
+                                    </colgroup>
+                                </ng-template>
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr >
+                                        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                            {{col.header}}                               
+                                            <span *ngIf="(col.field=='InvoiceAmount'||col.field=='OutStandingAmount'||col.field=='AmountToBePaid')&&selectedSupplierPaymentDetails.CurrencySymbol!=null">
+                                                &nbsp;
+                                            ( {{ selectedSupplierPaymentDetails.CurrencySymbol }} )
+                                            </span>
+                                            <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                        <tr>
+                                            <td>
+                                            <!-- <input  formControlName="Checked" type="checkbox" (ngModelChange)="opentextbox($event,i)" > -->
+                                            </td>
+                                            <td>
+                                                {{ rowData.InvoiceDate|DisplayDateFormat }}
+                                            </td>
+                                            <td>
+                                                {{ rowData.InvoiceNo  }}
+                                            </td>
+                                            <td align="right">
+                                                {{ rowData.InvoiceAmount|number:'1.2-4'  }}
+                                            </td>
+                                            <td align="right">
+                                                {{ rowData.OutstandingAmount|number:'1.2-4'  }}
+                                            </td>
+                                            <!-- <td pEditableColumn align="right">
+                                                <p-cellEditor>
+                                                    <ng-template pTemplate="input">
+                                                    <input type="number" (change)="calculateOutstandingPayment(rowData.InvoiceAmount,i)" class="form-control">
+                                                    </ng-template>
+                                                    <ng-template pTemplate="output">
+                                                            {{ rowData.PaymentAmount|number:'1.2-4'  }}
+                                                    </ng-template>
+                                                </p-cellEditor>
+                                            </td> -->
+
+                                            <td align="right">             
+                                                    <!-- <input type="number" formControlName="PaymentAmount" (change)="calculateOutstandingPayment(rowData.InvoiceAmount,i)" class="form-control">                                                 -->
+                                                    {{ rowData.PaymentAmount|number:'1.2-4'  }}
+                                                    <!-- <input type="number" *ngIf="supplierPaymentForm.get('PurchaseOrderItems').controls[i].get('Checked').value " formControlName="PaymentAmount" (change)="calculateOutstandingPayment(rowData.InvoiceAmount,i)" class="form-control">                                                 -->
+                                            </td>
+
+                                        </tr>
+                                </ng-template>
+                        </p-table>
+                        
+                    </div>    
+<!-- 
+                    <div class="col-sm-6">
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Over Payment</label>
+                            <div class="col-xl-8 col-sm-6 col-6">
+                                <input type="number" formControlName="Overpayment" disabled="true" class="form-control"  />
+                            </div>
+                        </div>  
+                    </div> -->
+
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group text-right btn-list">
+                                    <button type="submit" (click)="saveRecord()" class="btn btn-save" *ngIf="hideinput">
+                                            <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+                                        <button type="submit" (click)="cancelRecord()" class="btn btn-cancel" *ngIf="hideinput">
+                                            <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                                        <button type="submit" (click)="editRecord()" class="btn btn-edit" *ngIf="hidetext && editPermission">
+                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                                        <button type="submit" (click)="deleteRecord()" class="btn btn-delete" *ngIf="hidetext && deletePermission">
+                                            <i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                            </div>
+                        </div>
+                    </div>   
+                    </form>
+                </div>
+                <p-confirmDialog></p-confirmDialog>
+            </div>
+            <!-- right col end here-->
+    </div>
+</div>
+<ng-template #itemMasterTemplate let-r="result" let-t="term">
+        {{ r.ItemName }}
+</ng-template>
+<ng-template #supplierTemplate let-r="result" let-t="term">          
+        {{ r.SupplierName }}
+</ng-template>
+<!-- <ng-template #paymenttypeTemplate let-r="result" let-t="term">
+        {{ r.Name }}
+    </ng-template> -->
+                
+         

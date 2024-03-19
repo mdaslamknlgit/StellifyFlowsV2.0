@@ -1,0 +1,759 @@
+ 
+<div class="left-nav" (clickOutside)="onClickedOutside($event)" [class.expand-leftnav]="lgmenu" [class.showleftnav]="lefnavshow">
+ 
+  <div class="menuline" [class.glyphicon-align-justify]="!isSelected" [class.glyphicon-remove]="isSelected"
+  (click)="menuexpand($event)">
+  <div></div>
+  <div></div>
+  <div></div>
+</div>
+  <ul malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="mainmenulist">
+
+    <!-- CRM Menu Starts Here -->
+    <li class="menulist" *ngIf="CRMView">
+      <span (click)="CRMExpand($event)"  class="faicon" [class.activemenu]="crm">
+        <img src="assets/images/crm_white.png" style="width:24px;height:24px;" />
+        <a class="iconinfo"    *ngIf="CRMView" >CRM  <fa-icon  [icon]="faArrowDown" ></fa-icon></a>
+      </span>
+    </li>
+    <div class="submenu" [class.activesubmenu]="showCRM">
+      <div>
+        <ul>
+          <div>
+            <li *ngIf="uomView || itemMasterView" [ngClass]="activecrmset ? 'active-mainmenu' : 'inactive'">
+              <a class="mainmenu" (click)="togglecrmSet($event)">Settings</a>
+            </li>
+            <ul class="childMenu" *ngIf="activecrmset">
+              <li *ngIf="uomView" routerLinkActive="active-menu"><a [routerLink]="['/crm/emailimportcsv']">Import CSV </a></li>
+              <!-- <li *ngIf="uomView" routerLinkActive="active-menu"><a [routerLink]="['/crm/importcsv']">Import CSV</a></li> -->
+              <li *ngIf="uomView" routerLinkActive="active-menu"><a [routerLink]="['/crm/backgroundprocess']">Background Process</a></li>
+              <li routerLinkActive="active-menu" *ngIf="itemMasterView"><a [routerLink]="['/crmsettings/crmsettings']">CRM Settings</a></li>
+              <li routerLinkActive="active-menu" *ngIf="itemMasterView"><a [routerLink]="['/crm/crmtemplates']">Templates</a></li>
+              <li *ngIf="uomView" routerLinkActive="active-menu"><a [routerLink]="['/crm/entityimport']">Import Entity </a></li>
+            </ul>
+          </div>
+          <div>
+            <li [ngClass]="activemanagement ? 'active-mainmenu' : 'inactive'">
+              <a class="mainmenu" (click)="toggleCRMManagement($event)">Management</a>
+            </li>
+            <ul class="childMenu" *ngIf="activemanagement">
+              <li routerLinkActive="active-menu"><a [routerLink]="['/crm/dashboard']">Dashboard </a></li>
+              <li routerLinkActive="active-menu"><a [routerLink]="['/crm/contactslist/999']">Contacts </a></li>
+              <li routerLinkActive="active-menu"><a [routerLink]="['/crm/crmactivities/999']">Activities </a></li>
+              <li routerLinkActive="active-menu"><a [routerLink]="['/crm/leadlists/999']">Leads </a></li>
+              
+              <li routerLinkActive="active-menu"><a [routerLink]="['/crm/deallist/999']">Deals </a></li>
+
+              <li routerLinkActive="active-menu"><a [routerLink]="['/crm/accountslist/999']">Accounts </a></li>   
+              <li routerLinkActive="active-menu"><a [routerLink]="['/crm/opportunities']">Opportunities</a></li>
+              <li routerLinkActive="active-menu"><a [routerLink]="['/crm/crmconnectionslist']">Marketing List</a></li>
+                     
+              <!-- <li routerLinkActive="active-menu"><a [routerLink]="['/crm/crmcampaigns']">Campaigns</a></li>
+              <li routerLinkActive="active-menu"><a [routerLink]="['/crm/leadslist']">Lead Pipeline</a></li>               -->
+            </ul>
+          </div>
+          <div>
+            <li [ngClass]="actionCRMReportsView ? 'active-mainmenu' : 'inactive'">
+              <a class="mainmenu" (click)="toggleCRMReports($event)">Reports</a>
+            </li>
+            <ul class="childMenu" *ngIf="actionCRMReportsView">
+              <li routerLinkActive="active-menu"><a [routerLink]="['/crm/crmanalytics']">Analytics</a></li>
+              <li routerLinkActive="active-menu"><a [routerLink]="['/crm/crmdashboard']">Dashboard</a></li>
+            </ul>
+          </div>
+        </ul>
+      </div>
+    </div>
+    <!-- CRM Menu Ends Here -->
+    <!-- Inventory Management Starts Here -->
+    <li class="menulist" *ngIf="inventoryManagmentView">
+      <span (click)="inventoryexpand($event)"  class="faicon" [class.activemenu]="inventory">
+        <img src="assets/images/Inventory_white.png" />
+        <a class="iconinfo"    *ngIf="inventoryManagmentView" >Inventory Management <!--[routerLink]="['/inventory']"--> <fa-icon  [icon]="faArrowDown" ></fa-icon></a>
+      </span>
+    </li>
+    <div class="submenu" [class.activesubmenu]="showinventory">
+      <div *ngIf="inventoryManagmentView" >
+        <ul>
+          <div *ngIf="inventoryManagmentView">
+            <li *ngIf="uomView || itemMasterView" [ngClass]="activeinventoryset ? 'active-mainmenu' : 'inactive'">
+              <a class="mainmenu" (click)="toggleInventorySet($event)">Settings</a>
+            </li>
+            <ul class="childMenu" *ngIf="activeinventoryset">
+              <li *ngIf="uomView" routerLinkActive="active-menu">
+                <a [routerLink]="['/inventory/uom']">UOM</a>
+              </li>
+              <li routerLinkActive="active-menu"><a [routerLink]="['/inventory/itemcategory']">Item Category</a></li>
+              <li routerLinkActive="active-menu"><a [routerLink]="['/inventory/itemtypes']">Item Type</a></li>
+              <li routerLinkActive="active-menu"><a [routerLink]="['/inventory/costcenter']">Cost Center</a></li>
+
+            </ul>
+          </div>
+          <!-- Management Starts Here 
+          style="display: none;" 
+          -->
+          <div> <!--routerLinkActive="active-mainmenu"-->
+            <li [ngClass]="activemanagement ? 'active-mainmenu' : 'inactive'">
+              <a class="mainmenu" (click)="toggleManagement($event)">Management</a>
+            </li>
+            <ul class="childMenu" *ngIf="activemanagement">
+              <li routerLinkActive="active-menu" *ngIf="itemMasterView">
+                <a [routerLink]="['/inventory/itemmaster']">Item Master</a>
+              </li>
+              <li routerLinkActive="active-menu"><a [routerLink]="['/inventory/itemlisting']">Inventory Listing</a>
+              </li>
+              <li routerLinkActive="active-menu">
+                <a [routerLink]="['/inventory/inventoryrequest']">Inventory Request</a>
+              </li>
+              <li routerLinkActive="active-menu">
+                <a [routerLink]="['/inventory/inventoryrequestapproval']">Inventory Approval</a>
+              </li>
+              <li routerLinkActive="active-menu"><a [routerLink]="['/inventory/inventoryreciept']">Inventory
+                  Reciept</a></li>
+              <li routerLinkActive="active-menu"><a [routerLink]="['/inventory/inventoryinspection']">Inventory
+                  Inspection</a></li>
+              <li routerLinkActive="active-menu">
+                <!-- [routerLink]="['/inventory/location/request']" -->
+                <a>Location Transfer</a>
+              </li>
+              <!-- [routerLink]="['/inventory/location/approval']" -->
+              <li routerLinkActive="active-menu">
+                <a>Location Transfer Approvals</a>
+              </li>
+              <li routerLinkActive="active-menu">
+                <a [routerLink]="['/inventory/itemsadjustment']">Items Adjustment</a>
+              </li>
+              <li routerLinkActive="active-menu">
+                <a [routerLink]="['/inventory/adjustmentapproval']">Adjustment Approvals</a>
+              </li>
+              <li routerLinkActive="active-menu">
+                <a [routerLink]="['/inventory/disposalrequest']">Inventory Disposals</a>
+              </li>
+              <li routerLinkActive="active-menu">
+                <a [routerLink]="['/inventory/disposalapprovals']">Disposal Approvals </a>
+              </li>
+              <li routerLinkActive="active-menu">
+                <a [routerLink]="['/inventory/cyclecount']">Stock Count</a>
+              </li>
+            </ul>
+
+          </div>
+          <!-- Management Ends Here -->
+          <!-- Inventory Reports Starts Here -->
+          <li routerLinkActive="active-menu" style="display: none">
+            <a [routerLink]="['/reports']">Reports</a>
+          </li>
+          <!-- Inventory Reports Ends Here -->
+        </ul>
+      </div>
+    </div>
+    <!-- Inventory Management Ends Here -->
+    <li class="menulist"  *ngIf="assetManagmentView" >
+      <span (click)="assetsexpand($event)"class="faicon" [class.activemenu]="fixedassets">
+        <img src="assets/images/Assets_white.png" />
+        <a class="iconinfo" *ngIf="assetManagmentView">Asset Management  <!-- [routerLink]="['/admin']"--> <fa-icon  [icon]="faArrowDown" ></fa-icon></a> 
+      </span>
+     
+    </li>
+    <div class="submenu" [class.activesubmenu]="showfixedassets">
+         
+      <div  >
+        <ul>
+          <div *ngIf="false" routerLinkActive="active-mainmenu">
+            <li *ngIf="!assetView" [ngClass]="activeassetset ? 'active-mainmenu' : 'inactive'">
+              <a class="mainmenu" (click)="toggleassetSet($event)">Settings</a>
+            </li>
+            
+          </div>
+
+          <div > <!--routerLinkActive="active-mainmenu"-->
+            <li *ngIf="assetView" [ngClass]="activeassetmanagement ? 'active-mainmenu' : 'inactive'">
+              <a class="mainmenu" (click)="toggleassetManagement($event)">Management</a>
+            </li>
+            <ul class="childMenu" *ngIf="activeassetmanagement">
+              <!-- <li routerLinkActive="active-menu"><a [routerLink]="['/fixedassets/assetmaster']">Asset Class</a></li> -->
+              <li *ngIf="assetView" routerLinkActive="active-menu">
+                <a [routerLink]="['/fixedassets/assets']">Assets</a>
+              </li>
+              <li style="display: none;" routerLinkActive="active-menu"><a [routerLink]="['/fixedassets/assetregister']">Asset Register</a>
+              </li>
+              <li style="display: none;" routerLinkActive="active-menu"><a [routerLink]="['/fixedassets/assettransfer/request']">Asset
+                  Transfer</a></li>
+              <li style="display: none;" routerLinkActive="active-menu"><a [routerLink]="['/fixedassets/assettransfer/approval']">Asset
+                  Transfer Approval</a></li>
+              <li style="display: none;" routerLinkActive="active-menu"><a [routerLink]="['/fixedassets/assetdisposal/request']">Asset
+                  Disposal</a></li>
+              <li style="display: none;" routerLinkActive="active-menu"><a [routerLink]="['/fixedassets/assetdisposal/approval']">Asset
+                  Disposal Approval</a></li>
+              <li style="display: none;" routerLinkActive="active-menu"><a [routerLink]="['/fixedassets/assetdepreciation/request']">Asset
+                  Depreciation</a></li>
+              <li style="display: none;"  routerLinkActive="active-menu"><a [routerLink]="['/fixedassets/assetdepreciation/approval']">Asset
+                  Depreciation Approval</a></li>
+            </ul>
+          </div>
+
+        </ul>
+      </div>
+    </div>
+    <!-- style="display:none" -->
+    <li class="menulist" style="display: none;">
+      <span  (click)="facilifyexpand($event)" class="faicon" [class.activemenu]="facility">
+        <img src="assets/images/Facility_white.png" />
+        <a class="iconinfo" >Facility Management <!-- [routerLink]="['/facility']"--> <fa-icon  [icon]="faArrowDown" ></fa-icon></a>
+      </span> 
+    </li>
+    <div class="submenu" [class.activesubmenu]="showfacility">
+         
+      <!-- style="display:none" -->
+      <div  >
+        <ul>
+          <div > <!--routerLinkActive="active-mainmenu"-->
+            <li [ngClass]="activefacilityset ? 'active-mainmenu' : 'inactive'">
+              <a class="mainmenu" (click)="togglefacilityset($event)">Settings</a>
+            </li>
+            <ul class="childMenu" *ngIf="activefacilityset">
+              <li routerLinkActive="active-menu">
+                <a [routerLink]="['/facility/facilitiesmanagement']">Facility Management</a>
+              </li>
+              <li routerLinkActive="active-menu">
+                <a [routerLink]="['/facility/engineermanagement']"> Engineer Management</a>
+              </li>
+
+
+              <li routerLinkActive="active-menu">
+                <a [routerLink]="['/facility/preventivemaintenance']">Preventive Maintenance Schedule</a>
+              </li>
+              <li routerLinkActive="active-menu">
+                <a [routerLink]="['/facility/ticketmanagement']">Ticket Management</a>
+              </li>
+              <li routerLinkActive="active-menu">
+                <a [routerLink]="['/facility/povendor']">PO to Vendor</a>
+              </li>
+              <li routerLinkActive="active-menu">
+                <a [routerLink]="['/facility/vendorbilling']">Vendor Billing Entry</a>
+              </li>
+              <li routerLinkActive="active-menu">
+                <a [routerLink]="['/facility/engineerticket']">Engineer Ticket Monitoring</a>
+              </li>
+              <li routerLinkActive="active-menu">
+                <a [routerLink]="['/facility/generatebilling']">Generate Billing to Tenant</a>
+              </li>
+
+              <li routerLinkActive="active-menu">
+                <a [routerLink]="['/facility/reports']">Reports</a>
+              </li>
+            </ul>
+          </div>
+
+
+        </ul>
+      </div>
+
+    </div>
+    <li class="menulist" style="display:none">
+      <span class="faicon" [class.activemenu]="Project">
+        <fa-icon [icon]="faFileContract" size="2x"></fa-icon>
+      </span>
+      <div class="submenu" [class.activesubmenu]="Project">
+        
+        <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="submenu-scrroll" style="display:none">
+          <ul>
+            <div > <!--routerLinkActive="active-mainmenu"-->
+              <li [ngClass]="activeprojectset ? 'active-mainmenu' : 'inactive'">
+                <a class="mainmenu" (click)="toggleprojectSet($event)">Settings</a>
+              </li>
+              <ul class="childMenu" *ngIf="activeprojectset">
+                <li routerLinkActive="active-menu">
+                  <a [routerLink]="['/project/project-creation']">Project Creation</a>
+                </li>
+                <li routerLinkActive="active-menu">
+                  <a [routerLink]="['/project/project-ganttchart']">Gantt Chart</a>
+                </li>
+              </ul>
+            </div>
+            <div ><!--routerLinkActive="active-mainmenu"-->
+              <li [ngClass]="activeprojectcosting ? 'active-mainmenu' : 'inactive'">
+                <a class="mainmenu" (click)="togglepojectcost($event)">Costing</a>
+              </li>
+              <ul class="childMenu" *ngIf="activeprojectcosting">
+                <li routerLinkActive="active-menu">
+                  <a [routerLink]="['/project/budget']">Budget</a>
+                </li>
+                <li routerLinkActive="active-menu">
+                  <a [routerLink]="['/project/project-billing']">Billing</a>
+                </li>
+                <li routerLinkActive="active-menu">
+                  <a [routerLink]="['/project/project-retention']">Retention Management</a>
+                </li>
+                <li routerLinkActive="active-menu">
+                  <a [routerLink]="['/project/project-customerreceipt']">Customer Reciept</a>
+                </li>
+              </ul>
+            </div>
+          </ul>
+        </div>
+      </div>
+    </li>
+
+    <li class="menulist" style="display:none">
+      <span class="faicon" [class.activemenu]="CapEX">
+        <fa-icon [icon]="faFileInvoiceDollar" size="2x"></fa-icon>
+      </span>
+      <div class="submenu" [class.activesubmenu]="CapEX">
+         
+
+        <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="submenu-scrroll" style="display:none">
+          <ul>
+            <li [ngClass]="activecapexset ? 'active-mainmenu' : 'inactive'">
+              <a class="mainmenu" (click)="togglecapexSet($event)">Settings</a>
+            </li>
+            <ul class="childMenu" *ngIf="activecapexset">
+              <li routerLinkActive="active-menu">
+                <a [routerLink]="['/ecapex/requesttype']">Request Type</a>
+              </li>
+              <li routerLinkActive="active-menu">
+                <a [routerLink]="['/ecapex/capexnature']">CapEx Nature</a>
+              </li>
+              <li routerLinkActive="active-menu">
+                <a [routerLink]="['/ecapex/capexpurpose']">CapEx Purpose</a>
+              </li>
+              <li routerLinkActive="active-menu">
+                <a [routerLink]="['/ecapex/approvallimitprofile']">Approvar Limit Profile</a>
+              </li>
+            </ul>
+            <li [ngClass]="activecapexmanagement ? 'active-mainmenu' : 'inactive'">
+              <a class="mainmenu" (click)="togglecapexManagement($event)">Management</a>
+            </li>
+            <ul class="childMenu" *ngIf="activecapexmanagement">
+              <li routerLinkActive="active-menu">
+                <a [routerLink]="['/ecapex/capex']">CapEx Form</a>
+              </li>
+
+              <li routerLinkActive="active-menu">
+                <a [routerLink]="['/ecapex/budgetprofile']">Budget Profile</a>
+              </li>
+              <li routerLinkActive="active-menu">
+                <a [routerLink]="['/ecapex/capex-approval']">CapEx Approvals</a>
+              </li>
+              <li routerLinkActive="active-menu">
+                <a [routerLink]="['/ecapex/capex-disposal']">Disposal Form</a>
+              </li>
+              <li routerLinkActive="active-menu">
+                <a [routerLink]="['/ecapex/capex-disposal-approval']">Disposal Approvals</a>
+              </li>
+              <li routerLinkActive="active-menu">
+                <a [routerLink]="['/ecapex/#']">Purchase order</a>
+              </li>
+
+
+            </ul>
+            <li routerLinkActive="active-menu">
+              <a [routerLink]="['/reports']">Reports</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </li>
+    <li class="menulist" >
+      <span  (click)="purchaseexpand($event)" *ngIf="purchaseManagementView" class="faicon" [class.activemenu]="purchase">
+        <img src="assets/images/Purchase_white.png" />
+        <a class="iconinfo"  *ngIf="purchaseManagementView" >Purchase Management <!--[routerLink]="['/po']"-->  
+          <fa-icon  [icon]="faArrowDown" ></fa-icon> </a>
+      </span> 
+    </li>
+    <div class="submenu" [class.activesubmenu]="showpurchase"> 
+      <div >
+        <ul>
+          <div *ngIf="purchaseManagementView" > <!-- routerLinkActive="active-mainmenu"-->
+            <li
+              *ngIf="serviceCategoryView||supplierCategoryView||supplierServicesView||coaAccountTypeView||accountSubcategoryView||accountCodesView||paymentTermsView||taxGroupView||gSTTypeView||suppliersView||vendorsExportView||supplierApprovalView||contractMasterView"
+              [ngClass]="activepurchaseset ? 'active-mainmenu' : 'inactive'">
+              <a class="mainmenu" (click)="togglepurchaseSet($event)">Settings</a>
+            </li>
+            <ul class="childMenu" *ngIf="activepurchaseset">
+              <li *ngIf="serviceCategoryView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                <a [routerLink]="['/po/servicecategory']">Service Category</a>
+              </li>
+              <li *ngIf="supplierCategoryView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                <a [routerLink]="['/po/SupplierCategory']">Supplier Category</a>
+              </li>
+              <li *ngIf="scheduleNOView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                <a [routerLink]="['/po/SchedulerMaster']">Schedule No</a>
+              </li>
+              <!-- <li routerLinkActive="active-menu"><a [routerLink]="['/po/servicetypes']">Service Types</a></li> -->
+              <li *ngIf="supplierServicesView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                <a [routerLink]="['/po/supplierservices']">Supplier Services</a>
+              </li>
+              <li *ngIf="coaAccountTypeView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                <a [routerLink]="['/po/accounttypes']">COA Account Type</a>
+              </li>
+              <li *ngIf="accountSubcategoryView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                <a [routerLink]="['/po/accountsubcategory']">Account Subcategory</a>
+              </li>
+              <li *ngIf="accountCodesView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                <a [routerLink]="['/po/accountcodes']">Account Codes</a>
+              </li>
+              <li *ngIf="paymentTermsView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                <a [routerLink]="['/po/paymenttermsold']">Payment Terms Old</a>
+              </li>
+              <li *ngIf="paymentTermsView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                <a [routerLink]="['/po/paymentterms']">Payment Terms</a>
+              </li>
+              <!-- <li routerLinkActive="active-menu"><a [routerLink]="['/po/deliveryterms']">Delivery Terms</a></li> -->
+              <li *ngIf="taxGroupView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                <a [routerLink]="['/po/taxgroup']">Tax Group</a>
+              </li>
+              <li *ngIf="gSTTypeView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                <a [routerLink]="['/po/taxes']">GST Type</a>
+              </li>
+              <li *ngIf="suppliersView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                <a [routerLink]="['/po/supplierslist/request']">Suppliers</a>
+              </li>
+              <li *ngIf="suppliersView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                <a [routerLink]="['/po/suppliersold/request']">Suppliers Old</a>
+              </li>
+              <li *ngIf="suppliersView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                <a [routerLink]="['/po/suppliersoldl/request']">Suppliers Old L</a>
+              </li>
+              <li *ngIf="supplierApprovalView" routerLinkActive="active-menu">
+                <a [routerLink]="['/po/supplierslist/approval']">Supplier Approval</a>
+              </li>
+              <li *ngIf="supplierApprovalView" routerLinkActive="active-menu">
+                <a [routerLink]="['/po/suppliersold/approval']">Supplier Approval Old</a>
+              </li>
+              <li *ngIf="vendorsExportView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                <a [routerLink]="['/po/vendorsexport']">Vendors Export</a>
+              </li>
+              <!-- <li *ngIf ="viewPermission"  routerLinkActive="active-menu"><a [routerLink]="['/po/suppliers/request']">Suppliers</a></li> -->
+
+              <!-- <li routerLinkActive="active-menu"><a [routerLink]="['/po/expenses']">Expenses</a></li> -->
+              <li *ngIf="contractMasterView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                <!-- <a [routerLink]="['/po/contractpo']" [queryParams]="{ type:'master'}">Contract Master</a> -->
+
+                <!-- <a [routerLink]="['/details', data.id]"> Link </a> -->
+                <!-- <a [routerLink]="['/user-profil', _registrationService.getUserId()]"> -->
+                <!-- <a [routerLink]="['dynamic']" [state]="{ id:1 , name:'Angular'}">Dynamic Data</a> -->
+                
+                <!-- HTML -->
+                <!-- <a [routerLink]="['items', customer.id, 'items', item.id]">{{item.name}}</a> -->
+
+                <!-- Resulting DOM Element -->
+                <!-- <a href="/customers/1/items/5">Some Item</a> -->
+
+                <!-- <a [routerLink]="['/po/contractpolist/master/', this.getRandomInt(10), 'items', this.getRandomInt(10)]">Contract Master A</a> -->
+                <!-- <br>-->
+                <!-- <a [routerLink]="['/po/contractpolist/master/1',this.getRandomInt(10)]">Contract Master</a>  -->
+                
+                <!-- <a [routerLink]="['/po/contractpolist/master/1']">Contract Master</a>  -->
+
+                <a (click)="ClickContractMaster()">Contract Master</a>
+
+
+              </li>
+            </ul>
+          </div>
+
+          <div > <!--routerLinkActive="active-mainmenu"-->
+            <li
+              *ngIf="poView||pocView||creditNoteApprovalsView||exportInvoiceView||accrualManagementView||accrualReverseView||supplierInvoiceView||supplierInvoiceApprovalView||creditNoteView||purchaseOrderApprovalView||goodsReceivedNotesView"
+              [ngClass]="activepurchasemanagement ? 'active-mainmenu' : 'inactive'">
+              <a class="mainmenu" (click)="togglepurchaseManagement($event)">Management</a>
+            </li>
+            <ul class="childMenu" *ngIf="activepurchasemanagement">
+              <!-- <li routerLinkActive="active-menu"><a [routerLink]="['/po/PurchaseOrderRequest']">Purchase Order Request</a></li>
+        <li routerLinkActive="active-menu"><a [routerLink]="['/po/porequestapproval']">Purchase Order Request Approval</a></li>
+        <li routerLinkActive="active-menu"><a [routerLink]="['/po/quotationrequest']">Quotation Request</a></li>
+        <li routerLinkActive="active-menu"><a [routerLink]="['/po/quotationresponse']">Quotation Response</a></li>
+        <li routerLinkActive="active-menu"><a [routerLink]="['/po/quotationresponseapproval']">Quotation Response Approval</a></li>  -->
+              <li *ngIf="poView||pocView " [ngClass]="activepurchaseorder ? 'active-mainmenu' : 'inactive'"
+                routerLinkActive="active-menu">
+                <a class="mainmenu" (click)="togglepurchaseorder($event)">Purchase Order</a>
+              </li>
+              <ul class="subchildMenu" *ngIf="activepurchaseorder">
+                
+                <!-- PO Creation Old Link -->
+                <!-- <li *ngIf="poView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                  <a [routerLink]="['/po/pocreation']">PO</a>
+                </li> -->
+
+                <li *ngIf="poView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                  <a [routerLink]="['/po/polist']">PO</a>
+                </li>
+
+
+                <!-- <li routerLinkActive="active-menu"><a [routerLink]="['/po/projectcontractmaster/request']">POP</a></li>
+                <li routerLinkActive="active-menu"><a [routerLink]="['/po/projectcontractmaster/approval']">POP Approval</a></li>
+                <li routerLinkActive="active-menu"><a [routerLink]="['/po/projectcontractvariation/request']">Variation Order</a></li>
+                <li routerLinkActive="active-menu"><a [routerLink]="['/po/projectcontractvariation/approval']">Variation Order Approval</a></li>
+                <li routerLinkActive="active-menu"><a [routerLink]="['/po/projectpaymenthistory']">PaymentHistory</a></li> -->
+                <li *ngIf="pocView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                  <!-- <a [routerLink]="['/po/contractpo']" [queryParams]="{ type:'child'}">POC</a> -->
+                  <!-- <a [routerLink]="['/po/contractpolist/master/',this.getRandomInt(10)]">Contract Master</a> -->
+                  <!-- <a [routerLink]="['/user-profil', _registrationService.getUserId()]"> -->
+                  
+                    <!-- <a [routerLink]="['/po/contractpolist/child/' + this.getRandomInt(10)]">POC</a> -->
+
+                  <a (click)="ClickPOC()">POC</a>
+                </li>
+                <!-- <li *ngIf="poView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                  <a [routerLink]="['/po/polistnew']">PO New</a>
+                </li> -->
+                <!-- <li routerLinkActive="active-menu"><a [routerLink]="['/po/projectpo/request']">Project PO</a></li>
+          <li routerLinkActive="active-menu"><a [routerLink]="['/po/projectpo/approval']">Project PO Approval</a></li> -->
+              </ul>
+              <li *ngIf="!projectContractMasterView||!projectContractMasterApprovalView "
+                [ngClass]="activepopurchaseorder ? 'active-mainmenu' : 'inactive'" routerLinkActive="active-menu">
+                <a class="mainmenu" (click)="togglepurchaseorderpo($event)">Project PO</a>
+              </li>
+              <ul class="subchildMenu" *ngIf="activepopurchaseorder">
+                <li routerLinkActive="active-menu" [hidden]="projectContractMasterView">
+                  <a [routerLink]="['/po/projectcontractmaster/request']">Project Contract Master</a>
+                </li>
+                <li routerLinkActive="active-menu" [hidden]="projectContractMasterApprovalView">
+                  <a [routerLink]="['/po/projectcontractmaster/approval']">Project Contract Master Approval</a>
+                </li>
+                <!-- <li routerLinkActive="active-menu"><a [routerLink]="['/po/projectpaymenthistory/0/0']">
+                    Project Contract Payment</a></li> -->
+                <li *ngIf="projectContractPaymentView" routerLinkActive="active-menu"><a
+                    [routerLink]="['/po/projectpaymentlist/request']">
+                    Project Invoice</a></li>
+                <li *ngIf="projectContractPaymentApprovalView" routerLinkActive="active-menu"><a
+                    [routerLink]="['/po/projectpaymentlist/approval']">
+                    Project Invoice Approvals</a></li>
+                <li *ngIf="projectVOView" routerLinkActive="active-menu"><a
+                    [routerLink]="['/po/projectvariationorderlist/request']">
+                    Project Variation Orders</a></li>
+                <li *ngIf="projectVOApprovalView" routerLinkActive="active-menu"><a
+                    [routerLink]="['/po/projectvariationorderlist/approval']">
+                    Project Variation Orders Approvals</a></li>
+                <li routerLinkActive="active-menu"><a [routerLink]="['/po/expensetypelist']">Expense Type</a></li>
+                <!-- <li routerLinkActive="active-menu"><a [routerLink]="['/po/uom']">UOM</a></li> -->
+
+                <!-- <li [hidden]="pocView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                    <a [routerLink]="['/po/contractpo']" [queryParams]="{ type:'child'}">POC</a>
+                  </li> -->
+                <!-- <li routerLinkActive="active-menu"><a [routerLink]="['/po/projectpo/request']">Project PO</a></li>
+                <li routerLinkActive="active-menu"><a [routerLink]="['/po/projectpo/approval']">Project PO Approval</a></li> -->
+              </ul>
+              
+              <!-- <li  [ngClass]="activeuommanagement ? 'active-mainmenu' : 'inactive'"
+                routerLinkActive="active-menu">
+                <a class="mainmenu" (click)="toggleuommanagement($event)">Inventory Management B</a>
+              </li>
+              <ul class="subchildMenu" *ngIf="activeuommanagement">
+                <li routerLinkActive="active-menu"><a [routerLink]="['/inventorymanagement/uom']">UOM </a></li>
+                <li routerLinkActive="active-menu"><a [routerLink]="['/inventorymanagement/itemcategory']">Item
+                    Category</a></li>
+                <li routerLinkActive="active-menu"><a [routerLink]="['/inventorymanagement/itemtype']">Item Type</a>
+                </li>
+                <li routerLinkActive="active-menu"><a [routerLink]="['/inventorymanagement/itemmaster']">Item
+                    Master</a></li>
+              </ul> -->
+
+              <li *ngIf="purchaseOrderApprovalView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                <a [routerLink]="['/po/poapproval']">Purchase Order Approval</a>
+              </li>
+              <li *ngIf="goodsReceivedNotesView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                <!-- <a [routerLink]="['/po/goodsreceivednotes/request']">Goods Received Notes</a> -->
+                <a [routerLink]="['/po/goodsreceivednoteslist/request']">Goods Received Notes</a>
+              </li>
+              <!-- <li routerLinkActive="active-menu"><a [routerLink]="['/po/deliveryorder']">Delivery Order</a></li> -->
+              <li *ngIf="supplierInvoiceView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                <!-- <a [routerLink]="['/po/supplierinvoice/request']">Supplier Invoice</a> -->
+                <a [routerLink]="['/po/supplierinvoicelist/request']">Supplier Invoice</a>
+              </li>
+              <li *ngIf="supplierInvoiceApprovalView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                <!-- <a [routerLink]="['/po/supplierinvoice/approval']">Supplier Invoice Approval</a> -->
+                <a [routerLink]="['/po/supplierinvoicelist/approval']">Supplier Invoice Approval</a>
+              </li>
+              <!-- <li routerLinkActive="active-menu"><a [routerLink]="['/po/supplierpayment']">Supplier Payment</a></li>
+        <li routerLinkActive="active-menu"><a [routerLink]="['/po/salesorder']">Sales Order</a></li> -->
+              <!-- <li routerLinkActive="active-menu"><a [routerLink]="['/po/salesorder/approval']">Sales Order Approval</a></li>
+        <li routerLinkActive="active-menu"><a [routerLink]="['/po/salesorder/invoice']">Sales Order Invoice</a></li>
+        <li routerLinkActive="active-menu"><a [routerLink]="['/po/customerpayment']">Customer Payment</a></li>
+        <li routerLinkActive="active-menu"><a [routerLink]="['/po/goodsreturnednotes/request']">Goods Return Notes</a></li> -->
+              <!-- <li routerLinkActive="active-menu"><a [routerLink]="['/po/goodsreturnednotes/approval']">Goods Return Notes Approval</a></li> -->
+
+
+
+              <li *ngIf="exportInvoiceView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                <a [routerLink]="['/po/exportinvoice']">Export Invoice</a>
+              </li>
+              <li *ngIf="accrualManagementView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                <a [routerLink]="['/po/accrualmanagement/export']">Accrual Management</a>
+              </li>
+              <li *ngIf="accrualReverseView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                <a [routerLink]="['/po/accrualmanagement/reverse']">Accrual Reverse</a>
+              </li>
+              <li *ngIf="importPaymentsView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                <a [routerLink]="['/po/payments/import']">Import Payments</a>
+              </li>
+              <li *ngIf="creditNoteView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                <a [routerLink]="['/po/creditnotelist/request']">Credit Note</a>
+              </li>
+              <li *ngIf="creditNoteApprovalsView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                <a [routerLink]="['/po/creditnotelist/approval']">Credit Note Approvals</a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- <li routerLinkActive="active-menu"><a [routerLink]="['/reports']">Reports</a></li> -->
+        </ul>
+      </div>
+    </div>
+
+    <!-- {{salesModuleView}}
+    <li *ngIf="salesModuleView" class="menulist"> -->
+      <li class="menulist" *ngIf="salesManagementView" >
+        <span  (click)="salesexpand($event)" *ngIf="salesManagementView" class="faicon" [class.activemenu]="purchase">
+          <img src="assets/images/Sales_white.png" />
+          <a class="iconinfo"  *ngIf="salesManagementView" >Sales Management <!--[routerLink]="['/po']"-->  
+            <fa-icon  [icon]="faArrowDown" ></fa-icon> </a>
+        </span> 
+      </li>
+
+      <div class="submenu" [class.activesubmenu]="showsales">
+        <div *ngIf="salesManagementView">
+          <ul>
+            <div routerLinkActive="active-mainmenu">
+              <li *ngIf="salessettingsView" [ngClass]="activeSalesSettings ? 'active-mainmenu' : 'inactive'">
+                <a class="mainmenu" (click)="toggleSalesSettings()">Settings</a>
+              </li>
+              <ul class="childMenu" *ngIf="activeSalesSettings">
+                <li *ngIf="bankMasterView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                  <a [routerLink]="['/adhoc/bank-master']">Bank Master</a>
+                </li>
+                <li *ngIf="creditTermView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                  <a [routerLink]="['/adhoc/credit-term']">Credit Term</a>
+                </li>
+                <li *ngIf="locationMasterView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                  <a [routerLink]="['/adhoc/location']">Location Master</a>
+                </li>
+                <li *ngIf="emailConfigView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                  <a [routerLink]="['/adhoc/email-config']">Email Configuration</a>
+                </li>
+                <li *ngIf="tenantsTypeView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                  <a [routerLink]="['/adhoc/tenants-type']">Tenants Type</a>
+                </li>
+                <li *ngIf="salestaxGroupView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                  <a [routerLink]="['/adhoc/tax-group-old']">Tax Group</a>
+                </li>
+                <li *ngIf="taxMasterView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                  <a [routerLink]="['/adhoc/tax-master']">Tax Master</a>
+                </li>
+                <li *ngIf="taxTypeView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                  <a [routerLink]="['/adhoc/tax-type']">Tax Type</a>
+                </li>
+                <li *ngIf="customerTypeView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                  <a [routerLink]="['/adhoc/customer-type']">Customer Type</a>
+                </li>
+                <li *ngIf="customerView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                  <a [routerLink]="['/adhoc/customer/list/request']">Customer</a>
+                </li>
+                <li *ngIf="customerApprovalView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                  <a [routerLink]="['/adhoc/customer/list/approval']">Customer approval</a>
+                </li>
+              </ul>
+              <li *ngIf="salesManagementView" [ngClass]="activeSalesManagement ? 'active-mainmenu' : 'inactive'">
+                <a class="mainmenu" (click)="toggleSalesManagement($event)">Management</a>
+              </li>
+              <ul class="childMenu" *ngIf="activeSalesManagement">
+                <li *ngIf="salesQuotationView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                  <a [routerLink]="['/adhoc/quotation/list/request']">Sales Quotation</a>
+                </li>
+                <li *ngIf="salesQuotationApprovalView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                  <a [routerLink]="['/adhoc/quotation/list/approval']">Sales Quotation approval</a>
+                </li>
+                <li *ngIf="salesInvoiceView" routerLinkActive="active-menu">
+                  <a [routerLink]="['/adhoc/invoice/list/request']">Sales Invoice</a>
+                </li>
+                <li *ngIf="salesInvoiceApprovalView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                  <a [routerLink]="['/adhoc/invoice/list/approval']">Sales Invoice approval</a>
+                </li>
+                <li *ngIf="salesInvoiceExportView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                  <a [routerLink]="['/adhoc/invoice/export']">Sales Invoice Export</a>
+                </li>
+              </ul>
+            </div>
+
+            <!-- <div routerLinkActive="active-mainmenu">
+              <li
+                *ngIf="poView||pocView||creditNoteApprovalsView||exportInvoiceView||accrualManagementView||accrualReverseView||supplierInvoiceView||supplierInvoiceApprovalView||creditNoteView||purchaseOrderApprovalView||goodsReceivedNotesView"
+                [ngClass]="activepurchasemanagement ? 'active-mainmenu' : 'inactive'">
+                <a class="mainmenu" (click)="togglepurchaseManagement($event)">Management</a>
+              </li>
+              <ul class="childMenu" *ngIf="activepurchasemanagement">
+                <ul class="subchildMenu" *ngIf="activepurchaseorder">
+                  <li *ngIf="poView" (click)="hidenav($event)" routerLinkActive="active-menu">
+                    <a [routerLink]="['/po/pocreation']">PO</a>
+                  </li>
+                </ul>
+              </ul>
+            </div> -->
+          </ul>
+        </div>
+      </div>
+    
+
+    <li class="menulist" *ngIf="systemAdministrationView">
+      <span  (click)="systemexpand($event)"  class="faicon" [class.activemenu]="system">
+        <img src="assets/images/System Administration_white.png" />
+        <a class="iconinfo"  *ngIf="userManagementView || roleManagementView||changePasswordView||currencyView||departmentView||workflowView||workflowReassignmentView||auditLogView||companiesView"
+        >System Admin <!--[routerLink]="['/admin']"--> <fa-icon  [icon]="faArrowDown" ></fa-icon></a>
+      </span>
+      
+    </li>
+
+    <div class="submenu" [class.activesubmenu]="showsystem" *ngIf="systemAdministrationView">
+         
+      <ul>
+        <!-- <li><a href="#">User Settings</a></li> -->
+        <!-- <li routerLinkActive="active-menu"><a [routerLink]="['/admin/user']">User Settings</a></li> -->
+
+        <li routerLinkActive="active-menu" (click)="hidenav($event)">
+          <a *ngIf="userManagementView" [routerLink]="['/admin/usermanagement']">User Management</a>
+        </li>
+        <li *ngIf="roleManagementView" routerLinkActive="active-menu" (click)="hidenav($event)">
+          <a [routerLink]="['/admin/rolemanagementlist']">Role Management</a>
+        </li>
+        <li (click)="hidenav($event)" *ngIf="changePasswordView && isActiveUser===false"
+          routerLinkActive="active-menu">
+          <a [routerLink]="['/admin/changepassword']">Change Password</a>
+        </li>
+        <!-- <li (click)="hidenav($event)" *ngIf="currencyView" routerLinkActive="active-menu">
+          <a [routerLink]="['/admin/currencies']">Currency</a>
+        </li> -->
+        <!-- <a [routerLink]="['/po/contractpolist/master/' + this.getRandomInt(10)]">Contract Master</a> -->
+        <li (click)="hidenav($event)" *ngIf="currencyView" routerLinkActive="active-menu">
+          <!-- <a [routerLink]="['/admin/currencieslist/' + this.getRandomInt(10)]">Currency</a> -->
+
+          <a (click)="ClickCurrencyList()">Currency</a>
+
+        </li>
+        <li (click)="hidenav($event)" *ngIf="departmentView" routerLinkActive="active-menu">
+          <a [routerLink]="['/admin/departments']">Department</a>
+        </li>
+        <!-- <li><a href="#">Site Settings</a></li>
+      <li><a href="#">Project Settings</a></li>
+      <li><a href="#">Global Settings</a></li> -->
+        <li (click)="hidenav($event)" *ngIf="workflowView" routerLinkActive="active-menu">
+          <a [routerLink]="['/admin/workflow']">Workflow</a>
+        </li>
+        <li (click)="hidenav($event)" *ngIf="workflowView" routerLinkActive="active-menu">
+          <a [routerLink]="['/admin/workflowl']">Workflow New</a>
+        </li>
+
+        <li (click)="hidenav($event)" *ngIf="workflowReassignmentView" routerLinkActive="active-menu">
+          <a [routerLink]="['/admin/workflowreassignment']">Workflow Re-assignment</a>
+        </li>
+        <!-- <li routerLinkActive="active-menu"><a [routerLink]="['/admin/customers']">Customers</a></li> -->
+        <li (click)="hidenav($event)" *ngIf="auditLogView" routerLinkActive="active-menu">
+          <a [routerLink]="['/admin/auditlog']">Audit Log</a>
+        </li>
+        <li (click)="hidenav($event)" *ngIf="companiesView" routerLinkActive="active-menu">
+          <a [routerLink]="['/admin/companies']">Companies</a>
+        </li>
+      </ul>
+    </div>
+  </ul>
+</div>

@@ -1,0 +1,42 @@
+﻿<html >
+<head>
+    <title>Clarification for $$MailTitle Approval</title>
+</head>
+<body >
+<div  style="font-family:tahoma;font-size:14px">
+Dear $$Name,
+<br/> <br/> 
+<div style="font-size:13px;">Clarifications for New $$MailTitle approval.</div>  
+<br/>
+<div><b>The below are the clarifications and please check.</b> </div>  
+<br/> 
+<table border="1" cellpadding="5" cellspacing="0">
+<tr>
+<th style="color:#2672ec;">$$MailTitle Number</th>
+<th style="color:#2672ec;">Supplier</th>
+<th style="color:#2672ec;">Total Amount($$DocumentCurrencySymbol)</th>
+<th style="color:#2672ec;">Requester Name</th>
+<th style="color:#2672ec;">Status</th>
+<th style="color:#2672ec;">Clarifications</th>
+</tr>
+<tr>
+<td>$$OrderNumber</td>
+<td>$$Supplier</td>
+<td>$$TotalAmount</td>
+<td>$$sender</td>
+<td>$$Status</td>
+<td>$$Clarification</td>
+</tr>
+</table>
+<br/> 
+<div style="font-size:13px;">For more details, Click below to login. <br/>
+<a href="$$SiteLogin" style="color:#0645AD; text-decoration: underline;">$$PurchaseOrderRequestNumber</a></div> 
+<br/>
+Best regards,
+<br/> 
+$$sender
+</div>
+</div>
+</body>
+</html>
+

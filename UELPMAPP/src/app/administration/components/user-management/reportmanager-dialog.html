@@ -1,0 +1,22 @@
+<h1 mat-dialog-title>{{data.HeaderTitle}}</h1>
+<div mat-dialog-content>
+  <div id="divReportingManager" class="ReportingMang">
+    <input #gb type="text" pInputText size="50" style="width:99%;" placeholder="Global Search">
+    <!--<button type="button" (click)="exapandORcollapse(nodes)">Collapse /Expand all</button>-->
+    <ay-treeTable [value]="nodes" [globalFilter]="gb" selectionMode="single" [(selection)]="selectedRows"
+      (onNodeSelect)="nodeSelect($event)" [tableStyle]="{'table-layout': 'auto'}">
+      <ay-column field="UserName" header="User Name">
+        <ng-template let-col let-node="rowData" pTemplate="body">
+          <span>{{node.data[col.field]}}</span>
+        </ng-template>
+      </ay-column>
+    </ay-treeTable>
+   
+  </div>
+  <!--<span>{{selectedRows}}</span>-->
+</div>
+<div mat-dialog-actions>
+  <button class="btn btn-save" (click)="data.SaveClick='NO';onNoClick()">No Thanks</button>
+  <button class="btn btn-save" (click)="data.SaveClick='YES';YesClick($event,selectedRows)" *ngIf="data.Type==null" 
+  [mat-dialog-close]="MyListID" cdkFocusInitial>Ok</button>
+</div>

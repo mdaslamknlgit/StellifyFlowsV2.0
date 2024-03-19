@@ -1,0 +1,71 @@
+﻿SELECT * FROM
+(SELECT entity.CompanyId,po.LocationId,entity.companyname AS Entity,  
+                   L.NAME                                                 AS  
+                   Department,  
+                   Format (po.createddate, 'dd-MM-yyyy')                  AS  
+                   Date,  
+                   Isnull(po.popmastercode, '')                           AS  
+                   ContractID,  
+                   'Project PO'                                           AS  
+                   POType,  
+                   PO.projectname                                         AS  
+                   ContractName,  
+                   wfstatus.statustext                                          AS  
+                   Status,  
+                   Concat(entity.companycode, '-', (SELECT  
+                   dbo.Getsuppliercode(s.suppliercode,  
+                   '-')),  
+                   '-', ssc.subcode)                                      AS  
+                   SupplierID,  
+                   s.suppliername as SupplierName,  
+                   Format (po.contractstartdate, 'dd-MM-yyyy')            AS  
+                   ContractStartDate,  
+                   Format (po.contractenddate, 'dd-MM-yyyy')              AS  
+                   ContractEndDate,  
+                   Isnull(PT.description, '')                             AS  
+                   PaymentTerms,  
+                   po.originalcontractsum as OriginalContractSum,  
+                   po.TotalVOSum,  
+                   isnull(PO.adjustedcontractsum,0) as AdjustedContractSum,  
+                   ( CASE  
+                       WHEN PO.isretentionapplicable = 1 THEN 'YES'  
+                       ELSE 'NO'  
+                     END )                                                AS  
+                   RetentionApplicable,  
+                   PO.retentionpercentage as RetentionPercentage,  
+                   po.retentionmaxlimit as RetentionMaxLimit,  
+                   ( CASE  
+                       WHEN retentiontypeid = 1 THEN 'Fixed Retention'  
+                       ELSE 'Variable Retention'  
+                     END )                                                AS  
+                   RetentionType,  
+                   (SELECT subcodedescription  
+                    FROM   suppliersubcode  
+                    WHERE  subcodeid = (SELECT retentionsuppliercode  
+                                        FROM   projectmastercontract  
+                                        WHERE  
+                   projectmastercontractid = po.projectmastercontractid)) AS  
+                   RetentionSupplierId,  
+                   Isnull(ET.expensestype, '')                            AS  
+                   ExpensesType,  
+                   Concat(requester.firstname, requester.lastname)                    AS  
+                   Requster ,
+                   wfstatus.workflowstatusid,
+                   requester.userid 
+            FROM   projectmastercontract AS po  
+                   INNER JOIN supplier AS s  
+                           ON po.supplierid = s.supplierid  
+                   INNER JOIN workflowstatus AS wfstatus  
+                           ON po.workflowstatusid = wfstatus.workflowstatusid  
+                   INNER JOIN userprofile AS requester  
+                           ON po.createdby = requester.userid  
+                   INNER JOIN company AS entity  
+                           ON po.companyid = entity.companyid  
+                   INNER JOIN location AS L  
+                           ON po.locationid = L.locationid  
+                   LEFT JOIN dbo.paymentterms AS PT  
+                          ON po.paymenttermsid = PT.paymenttermsid  
+                   LEFT JOIN dbo.expensestype AS ET  
+                          ON po.expensestype = ET.expensestypeid  
+                   LEFT JOIN suppliersubcode AS ssc  
+                          ON po.suppliersubcodeid = ssc.subcodeid) AS T1

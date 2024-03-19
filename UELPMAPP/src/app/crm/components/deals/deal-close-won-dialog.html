@@ -1,0 +1,212 @@
+<!-- <button class="close" mat-button (click)="onNoClick($event)">Close</button> -->
+<h1 mat-dialog-title>{{data.HeaderTitle}}
+  {{ShowReasonForLoss}}
+</h1>
+<div mat-dialog-content>
+  <div id="DivAccount" class="ClassAccount">
+    <form [formGroup]="data.DealCloseForm" (ngSubmit)="OnDealCloseFormSubmit(data.DealCloseForm.value,$event)" 
+    #MyDealCloseForm style="width: 90%;margin-top: 10px;margin-left:26px !important;">
+    <div class="row">
+      <div class="col-md-12 col-sm12">
+        <div class="form-group text-right btn-list">
+          <!-- *ngIf="data.DealCloseForm.valid" -->
+          <button type="submit" class="btn btn-save" >
+            <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+    
+          <button type="button" (click)="SaveClick='NO';CloseDealNoClick($event)" class="btn btn-cancel">
+            <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+        </div>
+      </div>
+    </div>
+      <div class="row">
+        <div class="col-md-12 col-sm-12">
+          <div class="form-group row">
+            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Amount
+            <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+            <div class="autoComplete col-xl-8 col-sm-6 col-6">
+              <input id="Amount" #Amount formControlName="Amount" placeholder="Amount"
+              tabindex="30" class="form-control" required />
+
+              <div *ngIf="data.DealCloseForm.get('Amount') && data.DealCloseForm.get('Amount').errors!=null && data.DealCloseForm.get('Amount').touched==true">
+                <span class="errorMessage" *ngIf="data.DealCloseForm.get('Amount').errors.required">
+                  Account Name is required</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Closing Date -->
+      <div class="row">
+        <div class="col-md-12 col-sm-12">
+          <div class="form-group row">
+            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Closing Date
+            </label>
+            <div class="col-xl-8 col-sm-6 col-6">
+                <div class="input-group">
+                    <input id="ClosingDate" #ClosingDate class="form-control" formControlName="ClosingDate"
+                        valueDefault={null} [minDate]="ClosingMinDate"
+                        [maxDate]="ClosingMaxDate" tabindex="31"
+                        (click)="OnClosingDatePickerFocus(ClosingDateDatePicker,$event)"
+                        ngbDatepicker #ClosingDateDatePicker="ngbDatepicker">
+
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary"
+                            (click)="ClosingDateDatePicker.toggle()" type="button">
+                            <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                        </button>
+                    </div>
+
+                </div>
+                <div *ngIf="data.DealCloseForm.get('ClosingDate') && data.DealCloseForm.get('ClosingDate').errors!=null 
+                && data.DealCloseForm.get('ClosingDate').touched==true">
+                  <span class="errorMessage" *ngIf="data.DealCloseForm.get('ClosingDate').errors.required">
+                    Closing Date is required</span>
+                </div>
+            </div>
+        </div>
+        </div>
+      </div>
+
+      <!-- Stage -->
+      <!-- <div class="row">
+        <div class="col-md-12 col-sm-12">
+          <div class="form-group row">
+            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Stage</label>
+            <div class="col-xl-8 col-sm-6 col-6">
+              <label class="form-label">{{DealStageName}} </label>
+            </div>
+          </div>
+        </div>
+      </div> -->
+
+      <div class="row" *ngIf="!ShowReasonForLoss">
+        <div class="col-md-12 col-sm-12">
+          <div class="form-group row">
+            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Total Amount
+            <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+            <div class="autoComplete col-xl-8 col-sm-6 col-6">
+              <input id="TotalAmount" #TotalAmount formControlName="TotalAmount" placeholder="Total Amount"
+              tabindex="32" class="form-control" required />
+
+              <div *ngIf="data.DealCloseForm.get('TotalAmount') && data.DealCloseForm.get('TotalAmount').errors!=null && data.DealCloseForm.get('TotalAmount').touched==true">
+                <span class="errorMessage" *ngIf="data.DealCloseForm.get('TotalAmount').errors.required">
+                  Total Amount is required</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="!ShowReasonForLoss">
+        <div class="col-md-12 col-sm-12">
+          <div class="form-group row">
+            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Upfront Or Advance
+            <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+            <div class="autoComplete col-xl-8 col-sm-6 col-6">
+              <input id="UpfrontOrAdvance" #UpfrontOrAdvance formControlName="UpfrontOrAdvance" 
+              onlyNumber placeholder="Upfront Or Advance"
+              tabindex="33" class="form-control" required />
+
+              <div *ngIf="data.DealCloseForm.get('UpfrontOrAdvance') && data.DealCloseForm.get('UpfrontOrAdvance').errors!=null && 
+                data.DealCloseForm.get('UpfrontOrAdvance').touched==true">
+                <span class="errorMessage" *ngIf="data.DealCloseForm.get('UpfrontOrAdvance').errors.required">
+                  Upfront Or Advance is required</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="!ShowReasonForLoss">
+        <div class="col-md-12 col-sm-12">
+          <div class="form-group row">
+            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">PO Numbner
+            <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+            <div class="autoComplete col-xl-8 col-sm-6 col-6">
+              <input id="PoNumber" #PoNumber formControlName="PoNumber" placeholder="PO Numbner"
+              tabindex="34" class="form-control" required />
+
+              <div *ngIf="data.DealCloseForm.get('PoNumber') && data.DealCloseForm.get('PoNumber').errors!=null && 
+                data.DealCloseForm.get('PoNumber').touched==true">
+                <span class="errorMessage" *ngIf="data.DealCloseForm.get('PoNumber').errors.required">
+                  PO Numbner is required</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="!ShowReasonForLoss">
+        <div class="col-md-12 col-sm-12">
+          <div class="form-group row">
+            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Balance
+            <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+            <div class="autoComplete col-xl-8 col-sm-6 col-6">
+              <input id="Balance" #Balance formControlName="Balance" 
+              onlyNumber placeholder="Upfront Or Advance"
+              tabindex="35" class="form-control" required />
+
+              <div *ngIf="data.DealCloseForm.get('Balance') && data.DealCloseForm.get('Balance').errors!=null && 
+                data.DealCloseForm.get('Balance').touched==true">
+                <span class="errorMessage" *ngIf="data.DealCloseForm.get('Balance').errors.required">
+                  Balance is required</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12 col-sm-12">
+          <div class="form-group row">
+            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Remarks
+            <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+            <div class="autoComplete col-xl-8 col-sm-6 col-6">
+              <textarea id="Remarks" #Remarks formControlName="Remarks" tabindex="36"
+                  rows="2" cols="50" class="form-control" formControlName="Remarks">
+              </textarea>
+              
+
+              <div *ngIf="data.DealCloseForm.get('Remarks') && data.DealCloseForm.get('Remarks').errors!=null && 
+                data.DealCloseForm.get('Remarks').touched==true">
+                <span class="errorMessage" *ngIf="data.DealCloseForm.get('Remarks').errors.required">
+                  Remarks is required</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="ShowReasonForLoss" >
+        <div class="col-md-12">
+          <div class="form-group row">
+            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Reason for Loss
+            <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+            <div class="autoComplete col-xl-8 col-sm-6 col-6">
+              <select id="DealReasonId" #DealReasonId (change)="OnDealReasonChange($event)" formControlName="DealReasonId" 
+              class="form-control" tabindex="37" required>
+                <option [ngValue]="0">--None--</option>
+                <option *ngFor="let list of DealResonForLossDomainItemsList" value={{list.DealReasonId}}>
+                  {{ list.DealReasonName }}
+              </select>
+
+              <div
+                *ngIf="data.DealCloseForm.get('DealReasonId') && data.DealCloseForm.get('DealReasonId').errors!=null && data.DealCloseForm.get('DealReasonId').touched==true">
+                <span class="errorMessage" *ngIf="data.DealCloseForm.get('DealReasonId').errors.required">
+                  Contact is required</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+  <!--<span>{{selectedRows}}</span>-->
+</div>
+<!-- <div mat-dialog-actions>
+  <button class="btn btn-save" (click)="data.SaveClick='NO';onNoClick($event)">No Thanks</button>
+  <button class="btn btn-save" (click)="data.SaveClick='YES';YesClick($event,selectedRows)" 
+  *ngIf="data.DealCloseForm.valid==true" [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
+</div> -->

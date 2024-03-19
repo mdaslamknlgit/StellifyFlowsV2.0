@@ -1,0 +1,255 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Sales Quotation</title>
+    <style type="text/css">
+        body {
+            font-family: Arial;
+            font-size: 10px;
+            padding: 0px;
+            margin: 0px
+        }
+
+        .form-label {
+            color: #01548e;
+        }
+
+        .form-size {
+            font-size: 10px;
+            font-family: Arial;
+        }
+
+        .form-table td {
+            padding: 0px;
+            vertical-align: top;
+        }
+
+        .form-heading {
+            color: #01548e;
+            font-size: 18px;
+            display: inline-block;
+            border-bottom: 1px solid #01548e;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .footer td {
+            background: #111;
+            color: #fff;
+            position: relative;
+            z-index: 99;
+            text-align: right;
+            height: 61px;
+            line-height: 61px;
+            width: 100%;
+            font-size: 12px;
+            font-weight: 300;
+        }
+
+        .nowrap {
+            white-space: nowrap
+        }
+
+        .hidecontent {
+            width: 0px;
+            height: 0px;
+            display: none;
+        }
+
+        .tablelineitem td, .tablelineitem th {
+            border-top: 1px solid black;
+            border-left: 1px solid black;
+        }
+
+        .rightborder {
+            border-right: 1px solid black;
+        }
+
+        tablelineitem th {
+            border-bottom: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <table style="width:100%;" align="center" border="0">
+        <tr>
+            <td colspan="3"><h4 style="text-align:center;font-weight:bold;font-size:18px;font-family:Arial;">Quotation</h4></td>
+        </tr>
+        <tr>
+            <td width="40%" valign="top">
+                <table class="form-table" cellpadding="0" cellspacing="0" style="width:100%" border="0">
+                    <tr class="form-group row" style="font-family:Arial;font-size:12px;">
+                        <td colspan="3" style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word"><b>[[SupplierName]]</b></td>
+                    </tr>
+                    <tr class="form-group row form-size" style="font-family:Arial;font-size:12px;">
+                        <td colspan="3">[[SupplierAddress]]</td>
+                    </tr>
+                    <tr class="form-group row form-size [[DynamicHideContent1]]" style="font-family:Arial;font-size:12px;">
+                        <td width="30%">Attention </td>
+                        <td width="5%">:</td>
+                        <td width="65%">[[DynamicProp1]]</td>
+                    </tr>
+                </table>
+            </td>
+            <td width="20%"> </td>
+            <td width="40%" valign="top">
+                <table style="width:100%" cellpadding="0" cellspacing="0" border="0" class="form-table">
+                    <tr class="form-group row form-size" style="font-family:Arial;font-size:12px;">
+                        <td width="40%"><b>Quotation No.</b> </td>
+                        <td width="5%">:</td>
+                        <td width="55%" colspan="2" style="word-break:break-word;white-space:pre-wrap;"><b>[[DocumentCode]]</b></td>
+                    </tr>
+                    <tr class="form-group row form-size" style="font-family:Arial;font-size:12px;">
+                        <td colspan="1">Account No. </td>
+                        <td>:</td>
+                        <td colspan="2" style="word-break: break-word; white-space: pre-wrap;">[[DynamicProp2]]</td>
+                    </tr>
+                    <tr class="form-group row form-size" style="font-family:Arial;font-size:12px;">
+                        <td>Quotation Date </td>
+                        <td>:</td>
+                        <td colspan="2" style=";white-space:pre-wrap;word-wrap:break-word;">[[CreatedDate]] </td>
+                    </tr>
+                    <tr class="form-group row form-size" style="font-family:Arial;font-size:12px;">
+                        <td>Validity Date</td>
+                        <td>:</td>
+                        <td colspan="2" style="word-break:break-word;white-space:pre-wrap;">[[DynamicProp3]]</td>
+                    </tr>
+                    <tr class="form-group row form-size" style="font-family:Arial;font-size:12px;">
+                        <td>Prepared by</td>
+                        <td>:</td>
+                        <td colspan="2" style="word-break:break-word;white-space:pre-wrap;">[[Requestor]]</td>
+                    </tr>
+                    <tr class="form-group row form-size" style="font-family:Arial;font-size:12px;">
+                        <td>Credit Term</td>
+                        <td>:</td>
+                        <td colspan="2" style="word-break:break-word;white-space:pre-wrap;">[[CreditTerm]] Days</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td height="20"></td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <table border="0" class="tablelineitem" cellpadding="3" cellspacing="0" style="margin-bottom:20px;font-size:12px;font-family:Arial; width:100%;border:1px">
+                    <thead style="font-size:12px;font-family:Arial;">
+                        <tr>
+                            <th width="5%" align="center" class="reportField textHeader"><b>No.</b></th>
+                            <th width="32%" align="center" class="reportField textHeader"><b>Description</b></th>
+                            <th width="8%" align="center" class="reportField textHeader"><b>Qty.</b></th>
+                            <th width="8%" align="center" class="reportField textHeader"><b>UOM</b></th>
+                            <th width="16%" align="center" class="reportField textHeader"><b>Unit Price ([[Currency]])</b> </th>
+                            <th width="11%" align="center" class="rightborder"><b>Total ([[Currency]])</b></th>
+                        </tr>
+                    </thead>
+                    <tbody style="font-size:12px;font-family:Arial;">
+                        <tr style="font-size:12px;font-family:Arial;">
+                            <td width="5%"></td>
+                            <td colspan="5" class="rightborder"><b>[[DynamicProp4]]</b></td>
+                        </tr>
+                        {{#each ItemDetails}}
+                        <tr>
+                            <td align="center" class="reportField">{{SNo}}</td>
+                            <td align="left" class="reportField">{{Item}}</td>
+                            <td align="right" class="reportField">{{Quantity}}</td>
+                            <td align="right" class="reportField">{{UOM}}</td>
+                            <td align="right" class="reportField">{{UnitPrice}}</td>
+                            <td align="right" class="rightborder">{{Total}}</td>
+                        </tr>
+                        {{/each}}
+                        <tr>
+                            <td colspan="6"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="form-size" border="0" cellpadding="3" cellspacing="0" style=" width:100%;table-layout:fixed">
+                    <tr>
+                        <td width="50%"></td>
+                        <td width="20%" align="left"> </td>
+                        <td align="right"> </td>
+                    </tr>
+                    <tr class="[[DynamicHideContent2]]" style="font-size:12px;font-family:Arial;font:bold">
+                        <td></td>
+                        <td align="left">Total Amount</td>
+                        <td align="right">[[Currency]] [[TotalBeforeDiscount]]</td>
+                    </tr>
+                    <tr class="[[DynamicHideContent2]]" style="font-size:12px;font-family:Arial;font:bold">
+                        <td></td>
+                        <td align="left">Discount</td>
+                        <td align="right">
+                            <table style="border-bottom: 1px solid #000000; width:100%;   padding-bottom:5px;text-align:right;font-size:12px;font-family:Arial;font:bold">
+                                <tr>
+                                    <td>  [[Currency]] [[Discount]]  </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr style="font-size:12px;font-family:Arial;font:bold">
+                        <td></td>
+                        <td align="left">Total before [[DynamicProp5]]</td>
+                        <td align="right">[[Currency]] [[TotalBeforeTax]]</td>
+                    </tr>
+                    <tr style="font-size:12px;font-family:Arial;font:bold">
+                        <td></td>
+                        <td align="left">[[DynamicProp5]] ([[TaxPercentage]]%)</td>
+                        <td align="right">
+                            [[Currency]] [[TaxValue]]
+                        </td>
+                    </tr>
+                    <tr style="font-size:12px;font-family:Arial;font:bold">
+                        <td></td>
+                        <td align="left">Total</td>
+                        <td align="right" style="border-bottom:1px;border-top:1px;">
+                            [[Currency]] [[Total]]
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"></td>
+        </tr>
+        <tr class="row">
+            <td colspan="2"></td>
+        </tr>
+    </table>
+    <div style="height:20px"> </div>
+    <!--<div>
+        <h4 style="margin:0px;padding:0px; text-decoration:underline; margin-bottom:10px;font-family:Arial;font-size:12px;"><b>Audit Trial</b></h4>
+        <div style="font-size:12px;">
+            {{#each AuditLogData}}
+            <div style="padding: 3px 3px 3px 3px">
+                - {{Message}}
+            </div>
+            {{/each}}
+        </div>
+    </div>-->
+    <div style="height:20px"> </div>
+    <div style="padding-bottom:8px;text-align:left;font-family:Arial; font-size:12px;">
+        Please contact <b>([[RequestedByUserName]])</b> at DID:65 [[RequestorContactNo]] or email to <b>[[RequestorEmailID]]</b> for further clarification.
+    </div>
+    <div style="padding-bottom:8px;text-align:left;font-family:Arial; font-size:12px;">
+        <b>This is computer generated Sales Quotation. No signature is required.</b>
+    </div>
+    <div style="background:#000; height:2px; width:100%"> </div>
+    <div style="padding-bottom:8px;text-align:center;font-family:Arial; font-size:12px; ">
+        <b>Acknowledgement of Acceptance</b>
+    </div>
+    <div style="background:#000; height:2px; width:100%"> </div>
+    <div style="height:20px"> </div>
+    <div style="padding-bottom:8px;text-align:left;font-family:Arial; font-size:12px;">
+        We hereby acknowledge receipt of the above quotation and indicate our agreement to purchase the above-mentioned equipment and services.
+        This acknowledgement shall therefore represent the order from us to purchase the stated equipment and services
+    </div>
+    <div style="height:60px"> </div>
+    <div style="padding-bottom:8px;text-align:left;font-family:Arial; font-size:12px; float:left;">
+        <div style="background:#000; height:2px; width:220px"> </div>
+        Authorised Signatory/ Name & Company Stamp
+    </div>
+    <div style="height:20px"> </div>
+    <div style="padding-bottom:8px;text-align:left;font-family:Arial; font-size:12px;">
+        Date : ____________________
+    </div>
+</body>
+</html>

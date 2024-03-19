@@ -1,0 +1,99 @@
+<div class="flexele flex-center height100 loginpage mdwrap "> 
+<div class="whitefont mdpadding-null" style="flex:1;padding-left:50px;">
+    <div class="mdblock flexitems"  > 
+    <h2>Welcome to <br/>
+        Stellify Website</h2>
+    <img class="mdhide"  style="max-width: 450px;float:right; 
+    " src="assets/images/loginbg-new.png">  
+</div>
+</div>
+<div class="login-data">
+    
+    <div class="login-box">
+      
+        <div class="login-form">
+            <div class="text-center"> 
+            <img alt="logo"    src="assets/images/logo.jpg"> </div>
+       
+            <div class="login-form">
+                <ul class="usertabs">
+                    <li  (click)="tabClick($event)"  [ngClass]="selecttab ? 'danger' : 'activetab'">Sign in</li>
+                     <li  style="display: none;" (click)="tabClick($event)"  [ngClass]="selecttab ? 'activetab' : 'danger'">Create Account</li>
+                </ul>
+
+                <form *ngIf="!selecttab" [formGroup]="signupForm">
+                    <div class="form-group row">
+                         
+                        <div class="col-xl-12">
+                            <input type="text" autocomplete="off" id="username" name="username" [ngClass]="(validateControl(signupForm.get('UserName')))?'form-control ng-touched':'form-control'"
+                                formControlName="UserName" placeholder="Username/ email address" class="form-control">
+                            <div *ngIf="signupForm.get('UserName')&& signupForm.get('UserName').errors!=null && signupForm.get('UserName').touched==true">
+                                <span class="errorMessage" *ngIf="signupForm.get('UserName').errors.required">Username is required</span>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                       
+                        <div class="col-xl-12">
+                            <div style="position: relative; "> 
+                            <input type="{{password}}" autocomplete="off" id="password" name="password" formControlName="Password" [ngClass]="(validateControl(signupForm.get('Password')))?'form-control ng-touched':'form-control'"
+                                placeholder="password" class="form-control">
+                                <fa-icon *ngIf="eyeIcon" (click)="eyeSymbol($event)" style="position: absolute;right: 10px; top:10px; cursor: pointer;" [icon]="faEyeSlash" ></fa-icon>
+                                <fa-icon *ngIf="eyeIcon2" (click)="eyeSymbol2($event)" style="position: absolute;right: 10px; top:10px;cursor: pointer;" [icon]="faEye" ></fa-icon>
+                            </div>
+                                 
+                            <div *ngIf="signupForm.get('Password')&& signupForm.get('Password').errors!=null && signupForm.get('Password').touched==true">
+                                <span class="errorMessage" *ngIf="signupForm.get('Password').errors.required">Password is required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; column-gap: 10px;">
+                        <label class="checkbox">  
+                            <input type="checkbox" class=""  >
+                            <span class="checkmark"></span>
+                        </label>
+
+                        <a>Remember me</a>
+                    </div>
+                    <div class="form-group row">
+
+                        <div class="col-xl-12 text-center" >
+                            <button class="login-btn"  (click)="Login();">Sign in</button>
+                            <!-- <a class="forgot-password" [routerLink]="['/user/forgetpassword']" href="#">Forgot Password?</a> -->
+                            <a class="forgot-password" style="cursor: pointer;" (click)="validateUsername();">Forgot Password?</a>
+                        </div>
+                        <div>
+                            <label class="col-xl-12 col-form-label errorMessage" *ngIf="showError">Invalid username or password</label>
+                        </div>
+                    </div>
+                </form>
+
+                <form *ngIf="selecttab">
+                    <div class="form-group row">
+                        <label class="col-xl-12 col-form-label">Username</label>
+                        <div class="col-xl-12">
+                            <input type="text" autocomplete="off" id="username" name="username" [ngClass]="(validateControl(signupForm.get('UserName')))?'form-control ng-touched':'form-control'"
+                                formControlName="UserName" placeholder="username" class="form-control">
+                            <div *ngIf="signupForm.get('UserName')&& signupForm.get('UserName').errors!=null && signupForm.get('UserName').touched==true">
+                                <span class="errorMessage" *ngIf="signupForm.get('UserName').errors.required">Username is required</span>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </form>
+
+
+            </div>
+
+
+
+        </div>
+        <!--login-form end here formControlName="password"  formControlName="username" -->
+    </div>
+</div>
+</div>

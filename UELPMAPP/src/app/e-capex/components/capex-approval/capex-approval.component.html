@@ -1,0 +1,456 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6 col-sm-12padding-null tittlediv">
+      <h3 class="item-heading">
+        <img src="../assets/images/icon1.png"> E-Capex > Capex Approval </h3>
+    </div>
+    <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+        <img src="../assets/images/grid1.png">
+        <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+          <button class="btn btn-outline-primary" style="background:none;border:none;padding:0px;" id="dropdownBasic1" ngbDropdownToggle>
+            <img src="../assets/images/grid2.png">
+          </button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <button class="dropdown-item">Email</button>
+          </div>
+        </div>
+      </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-lg-3 col-md-4 leftdiv" [class.collapse-leftcol]="leftsection">
+      <div class="left-section">
+
+        <div class="filter-section">
+          <div class="left-search">
+            <input type="text" placeholder="Search projects..." class="search-filter">
+            <i class="fa fa-search" aria-hidden="true"></i>
+          </div>
+
+          <div class="filter-icon">
+            <i class="fa fa-filter" aria-hidden="true"></i>
+          </div>
+          <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="filter-scroll" style="width:100%; float:left;">
+            <table class="table">
+              <tr>
+                <td>
+                  <h5 class="sub-heading"> #CA001 </h5>
+                  <label class="label-text">ApplicantName</label> :
+                  <label class="label-value">John</label>
+                  <label class="label-text">Company</label> :
+                  <label class="label-value">Company 1</label>
+                  <label class="label-text">Department </label> :
+                  <label class="label-value">Inventory</label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <h5 class="sub-heading"> #CA002 </h5>
+                  <label class="label-text">ApplicantName</label> :
+                  <label class="label-value">Williams</label>
+                  <label class="label-text">Company</label> :
+                  <label class="label-value">Company 2</label>
+                  <label class="label-text">Department </label> :
+                  <label class="label-value">Assets</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <h5 class="sub-heading"> #CA003 </h5>
+                  <label class="label-text">ApplicantName</label> :
+                  <label class="label-value">John</label>
+                  <label class="label-text">Company</label> :
+                  <label class="label-value">Company 3</label>
+                  <label class="label-text">Department </label> :
+                  <label class="label-value">Quality</label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <h5 class="sub-heading"> #CA004 </h5>
+                  <label class="label-text">ApplicantName</label> :
+                  <label class="label-value">John</label>
+                  <label class="label-text">Company</label> :
+                  <label class="label-value">Company 4</label>
+                  <label class="label-text">Department </label> :
+                  <label class="label-value">Purchase</label>
+                </td>
+              </tr>
+            </table>
+
+
+          </div>
+
+
+        </div>
+      </div>
+      <div class="split-line" (click)="split()"></div>
+    </div>
+    <!-- left col end here-->
+
+    <div  #rightPanel class="rightPanel col-lg-9 col-md-8" [class.expand-rightcol]="rightsection">
+
+      <form [formGroup]="capexForm" class="form-horizontal">
+        <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+            <div class="row fullScreenLabel">
+                <div class="col-12">
+                    <h3 class="item-heading" style="float:none;">Capex Approval</h3>
+                </div>
+            </div>
+          <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Company</label>
+            <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">Company 1</label>
+              <input type="text" formControlName="CompanyName" placeholder="Company" *ngIf="hideinput" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Name of Applicant</label>
+            <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">John </label>
+              <input type="text" formControlName="ApplicantName" placeholder="Name of Applicant" *ngIf="hideinput" class="form-control">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Budget Year</label>
+            <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">2018</label>
+              <input type="text" formControlName="BudgetYear" placeholder="Budget Year" *ngIf="hideinput" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Division/Department</label>
+            <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">Inventory</label>
+              <input type="text" formControlName="DepartmentName" placeholder="Department Name" *ngIf="hideinput" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Designation</label>
+            <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">SuperVisor</label>
+              <input type="text" formControlName="Designation" placeholder="Designation" *ngIf="hideinput" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Request Date</label>
+            <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">{{requestDate| date:"yyyy/MM/dd"}} </label>
+              <div class="input-group" *ngIf="hideinput">
+                <input class="form-control" formControlName="RequestDate" placeholder="Request Date" ngbDatepicker #d="ngbDatepicker">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+                    <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Application Status</label>
+            <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">Active </label>
+
+              <label class="col-form-label form-text" *ngIf="hideinput">
+                <mat-slide-toggle formControlName="ApplicationStatus" (change)="matselect($event)"></mat-slide-toggle>
+                <label *ngIf="slideactive">Yes</label>
+              </label>
+
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">CapEx User</label>
+            <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">John </label>
+              <textarea type="text" formControlName="CapexUser" placeholder="CapEx User" *ngIf="hideinput" class="form-control"></textarea>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Request Type</label>
+            <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">Request 1</label>
+              <select *ngIf="hideinput" class="form-control" formControlName="RequestTypeId">
+                <option *ngFor="let requestType of requestTypes" [value]="requestType.RequestTypeId">
+                  {{requestType.Name}}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Nature of CapEx</label>
+            <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">Fixed one</label>
+              <select *ngIf="hideinput" class="form-control" formControlName="NatureId">
+                <option *ngFor="let nature of capexNatures" [value]="nature.NatureId">
+                  {{nature.Name}}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Purpose of CapEx</label>
+            <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">Purpose 1</label>
+              <select *ngIf="hideinput" class="form-control" formControlName="PurposeId">
+                <option *ngFor="let purpose of capexPurposes" [value]="purpose.PurposeId">
+                  {{purpose.Name}}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Fixed Asset to be Purchased
+            </label>
+            <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">Fixed Asset</label>
+              <input type="text" formControlName="PurchasedFixedAsset" placeholder="Designation" *ngIf="hideinput" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Purchase for a Project
+            </label>
+            <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">Yes </label>
+
+              <label class="col-form-label form-text" *ngIf="hideinput">
+                <mat-slide-toggle formControlName="IsPurchaseForProject" (change)="matselect($event)"></mat-slide-toggle>
+                <label *ngIf="slideactive">Yes</label>
+              </label>
+
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Financial Evaluation
+            </label>
+            <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">Yes </label>
+
+              <label class="col-form-label form-text" *ngIf="hideinput">
+                <mat-slide-toggle formControlName="IsFinancialEvaluation" (change)="matselect($event)"></mat-slide-toggle>
+                <label *ngIf="slideactive">Yes</label>
+              </label>
+
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Currency</label>
+            <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">USD</label>
+              <input type="text" formControlName="Currency" placeholder="Currency" *ngIf="hideinput" class="form-control">
+            </div>
+          </div>
+
+          <h4 class="form-heading">CapEx Required per this application</h4>
+
+          <div class="form-group row">
+            <div class="col-12">
+              <table class="table table-border" *ngIf="hidetext" style="width:97%">
+                <tr>
+                  <th>S.no.</th>
+                  <th>Item Name </th>
+                  <th>Description </th>
+                  <th>Quantity </th>
+                  <th>Price </th>
+                  <th>Amount </th>
+                </tr>
+                <tr *ngFor="let x of capexDetails; let i = index;">
+                  <td> {{x.SNo}} </td>
+                  <td>{{x.ItemName}}</td>
+                  <td>{{x.Description}}</td>
+                  <td>{{x.Quantity}}</td>
+                  <td>{{x.Price}}</td>
+                  <td>{{x.Amount}}
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" (click)="deleteRow(i)" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <table class="table table-border" *ngIf="hideinput" style="width:97%">
+                <tr>
+                  <th>S.no.</th>
+                  <th>Item Name </th>
+                  <th>Description </th>
+                  <th>Quantity </th>
+                  <th>Price </th>
+                  <th>Amount </th>
+                </tr>
+                <tr>
+                  <td> </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+
+              </table>
+            </div>
+          </div>
+
+
+
+          <div class="form-group row">
+            <label class="col-form-label col-xl-8 col-sm-6 col-6 form-label">Is the Capex supported by at least three quotations?</label>
+            <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">Yes </label>
+
+              <label class="col-form-label form-text" *ngIf="hideinput">
+                <mat-slide-toggle formControlName="IsQuotationsSupported" (change)="matselect($event)"></mat-slide-toggle>
+                <label *ngIf="slideactive">Yes</label>
+              </label>
+
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-form-label col-xl-8 col-sm-6 col-6 form-label">Is a summary of quotations/rationale for selection attached?</label>
+            <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">Yes </label>
+
+              <label class="col-form-label form-text" *ngIf="hideinput">
+                <mat-slide-toggle formControlName="IsSelectionAttached" (change)="matselect($event)"></mat-slide-toggle>
+                <label *ngIf="slideactive">Yes</label>
+              </label>
+
+            </div>
+          </div>
+
+          <h4 class="form-heading">Price Table Summary from the three vendors</h4>
+
+          <div class="form-group row">
+            <div class="col-12">
+              <table class="table table-border" *ngIf="hidetext" style="width:97%">
+                <tr>
+                  <th>S. no.</th>
+                  <th>Vendor Name </th>
+                  <th>Price </th>
+                </tr>
+                <tr *ngFor="let x of priceDetails; let i = index;">
+                  <td> {{x.SNo}} </td>
+                  <td>{{x.VendorName}}</td>
+                  <td>{{x.Price}}
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" (click)="deleteRow(i)" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <table class="table table-border" *ngIf="hideinput" style="width:97%">
+                <tr>
+                  <th>S. no.</th>
+                  <th>Vendor Name </th>
+                  <th>Price </th>
+                </tr>
+                <tr>
+                  <td> </td>
+                  <td></td>
+                  <td>
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+
+          <h4 class="form-heading">Additional Working Capital Required</h4>
+          <div class="col-xl-8 col-sm-12 col-12 form-group padding-null">
+            <p *ngIf="hidetext">but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s
+              with the release of Letraset sheets </p>
+
+            <textarea type="text" *ngIf="hideinput" formControlName="CapexUser" placeholder="Additional Working Capital Required" class="form-control"></textarea>
+          </div>
+
+          <h4 class="form-heading">Justification For Capital Expenditure</h4>
+          <div class="col-xl-8 col-sm-12 col-12 form-group padding-null">
+            <p *ngIf="hidetext">but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s
+              with the release of Letraset sheets </p>
+            <textarea type="text" *ngIf="hideinput" formControlName="CapexUser" placeholder="Justification For Capital Expenditure" class="form-control"></textarea>
+          </div>
+
+          <h4 class="form-heading">Source of Funding </h4>
+          <div class="col-xl-8 col-sm-12 col-12 form-group padding-null">
+            <p *ngIf="hidetext">but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s
+              with the release of Letraset sheets </p>
+            <textarea type="text" *ngIf="hideinput" formControlName="CapexUser" placeholder="Source of Funding" class="form-control"></textarea>
+          </div>
+
+
+          <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Attachments</label>
+            <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">Yes </label>
+
+              <label class="col-form-label form-text" *ngIf="hideinput">
+                <input type="file" />
+
+              </label>
+
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-form-label col-xl-2 col-sm-12 col-12 form-label">Remarks</label>
+            <div class="col-xl-12 col-sm-12 col-12">
+              <textarea formControlName="Remarks" placeholder="Remarks" *ngIf="hideinput" class="form-control">
+             </textarea>
+
+              <label class="col-form-label form-text" *ngIf="hidetext">Capex Approval remarks are here</label>
+            </div>
+          </div>
+
+
+
+          <div class="form-group row">
+            <label class="col-form-label col-xl-12 col-sm-12 col-12 form-label">Inspection Remarks</label>
+            <div class="col-xl-12 col-sm-12 col-12">
+              <textarea formControlName="InspectionRemarks" placeholder="Inspection Remarks" class="form-control" style="width:70%;display:inline-block ">
+             </textarea>
+              <button type="submit" style="float:inherit;vertical-align: top;" (click)="editData()" class="btn btn-edit">
+                <i class="fa fa-envelope" aria-hidden="true"></i> Send for Clarification</button>
+
+            </div>
+          </div>
+
+
+
+        </div>
+
+
+        <div class="form-group text-right btn-list">
+          <button type="submit" (click)="editdata()" class="btn btn-approve" *ngIf="hidetext">
+            <i class="fa fa-check" aria-hidden="true"></i> Approve</button>
+          <button type="submit" class="btn btn-delete" *ngIf="hidetext">
+            <i class="fa fa-ban" aria-hidden="true"></i> Reject</button>
+        </div>
+      </form>
+    </div>
+    <!-- right col end here-->
+  </div>
+</div>

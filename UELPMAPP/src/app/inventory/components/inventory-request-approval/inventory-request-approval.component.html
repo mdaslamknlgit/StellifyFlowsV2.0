@@ -1,0 +1,217 @@
+<div class="container-fluid">
+<div class="row">
+<div class="col-md-12 col-sm-12 padding-null tittlediv">
+  <div class="flexrow space-between align-center"> 
+  <h3 class="item-heading"> Inventory Request Approval </h3> 
+
+  <div> 
+    <button  class="btn btn-transparent" (click)="editdata()"  *ngIf="hidetext"> New Record </button>
+    <button  class="btn btn-transparent" (clickOutside)="onClickedOutside($event)"  [exclude]="'.filter-section'" (click)="split()">  {{showfilterstext}}  </button> 
+  <img style="display: none;" src="../assets/images/grid1.png" (click)="showFullScreen()">
+  <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+      <button class="btn customdropdown btn-transparent" style="background:none;border:none;padding:0px;" id="dropdownBasic1" ngbDropdownToggle>
+        <i  class="fa-solid fa-bars"></i>
+      </button>
+      <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+        <button class="dropdown-item">Email</button>       
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <div class="filter-section left-section" style="display: none;"  [class.display-filters]="showfilters">
+
+  <div class="flexrow space-between"> 
+    <div class="left-search">
+    <input type="text" placeholder="Search requests..." class="search-filter">
+    <i class="fa fa-search" aria-hidden="true"></i>
+    </div> 
+  
+   <div class="filter-icon"> <i class="fa fa-filter" aria-hidden="true"></i></div>
+</div>
+   <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="filter-scroll">
+     
+  <table class="table">
+  <tr><td>
+   <label class="stock-id">#19354535</label> <label class="stock-btn">  </label>
+    <label class="label-text">Qty Required</label> :<label class="label-value">200</label>
+    <label class="label-text">Description</label> :<label class="label-value">Lorem ipsum  text</label>
+      
+  </td></tr>
+  <tr><td>
+    <label class="stock-id">#58645846</label> <label class="stock-btn"> <button class="filter-btn btn-reqplaced">Waiting for approval</button> </label>
+      <label class="label-text">Qty Required</label> :<label class="label-value">200</label>
+    <label class="label-text">Description</label> :<label class="label-value">Lorem ipsum  text</label>
+  </td></tr>
+   
+  <tr><td>
+   <label class="stock-id">#54658467</label> <label class="stock-btn"> <button class="filter-btn btn-reqplaced">Request Placed</button> </label>
+      <label class="label-text">Qty Required</label> :<label class="label-value">200</label>
+    <label class="label-text">Description</label> :<label class="label-value">Lorem ipsum  text</label>
+  </td></tr>
+  <tr><td>
+   <label class="stock-id">#32659854</label> <label class="stock-btn"> </label>
+      <label class="label-text">Qty Required</label> :<label class="label-value">200</label>
+    <label class="label-text">Description</label> :<label class="label-value">Lorem ipsum  text</label>
+  </td></tr>
+</table>
+   </div>   
+   </div> 
+
+</div>
+</div>
+<div class="row">
+ 
+
+<div  #rightPanel class="rightPanel col-lg-12 col-md-12" [class.expand-rightcol]="rightsection">
+
+
+<form [formGroup]="inventoryReqApprovalForm"  class="form-horizontal" >
+<div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="rightcol-scrroll">
+    <div class="row fullScreenLabel">
+        <div class="col-12">
+            <h3 class="item-heading" style="float:none;">Inventory Request Approval</h3>
+        </div>
+    </div>
+ <div class="form-group row">
+      <label class="col-form-label col-xl-2 col-sm-6 col-6 form-label">Request ID </label>  
+      <div class="col-xl-4 col-sm-6 col-6">
+  <input type="text" 
+           id="requestiid" 
+           name="requestiid" 
+           formControlName="requestiid" 
+           placeholder="Request ID" *ngIf="hideinput" class="form-control">
+
+     <label class="col-form-label  form-text" *ngIf="hidetext"><b style="color:#01548e">#1233555</b> </label>  
+      </div>
+     
+  </div>
+
+    <div class="form-group row">
+         <label class="col-form-label col-xl-2 col-sm-6 col-6 form-label">Location </label>  
+      <div class="col-xl-4 col-sm-6 col-6">
+
+          <input type="text" 
+           id="location" 
+           name="location" 
+           formControlName="location" 
+           placeholder="Location" *ngIf="hideinput" class="form-control">
+
+<!-- 
+    <input class="form-control" *ngIf="hideinput" placeholder="Location"  autocomplete="off" [minDate]="minDate" (dateSelect)="onDateSelection($event)" name="checkInDate"
+            [(ngModel)]="checkInDate" (click)="d.toggle();d2.close();" ngbDatepicker #d="ngbDatepicker"> -->
+
+     <label class="col-form-label   form-text" *ngIf="hidetext">Engineering Department</label>  
+      </div>
+
+      
+  </div>
+     
+
+ 
+ <div class="row">
+<div class="col-12"  >    
+<table  class="table table-border" *ngIf="hidetext"   >
+  <tr>
+  <th>S. no.</th>
+  <th>Item Name </th>
+  <th>Qty Required</th>
+ 
+  </tr>
+
+  <tr>   															              
+  <td> 1 </td>
+  <td>Laptops </td>
+  <td>100 </td> 
+ 
+  </tr>
+
+  <tr>   															              
+  <td> 2 </td>
+  <td>Laptops </td>
+  <td>100 </td> 
+ 
+  </tr>
+
+  <tr>   															              
+  <td> 3 </td>
+  <td>Laptops </td>
+  <td>100 </td> 
+ 
+  </tr>
+   
+</table>
+  
+<table  class="table table-border"  *ngIf="hideinput"   >
+  <tr>
+  <th>S. no.</th>
+  <th>Item Name </th>
+  <th>Qty Required</th>
+ 
+  </tr>
+  <tr>   															              
+  <td></td>
+  <td></td>
+  <td></td> 
+ 
+  </tr>
+  
+</table>
+         </div>
+
+ </div>
+
+ 
+<div class="col-12 padding-null">
+ <div class="form-group row">
+  <label class="col-form-label col-xl-2 col-sm-12 col-12 form-label">Remarks</label>  
+  <div class="col-xl-12 col-sm-12 col-12">
+<textarea 
+           id="priority" 
+           name="priority" 
+           formControlName="remarks" 
+           placeholder="Priority" *ngIf="hideinput" class="form-control">
+</textarea>
+
+   <label class="col-form-label form-text" *ngIf="hidetext"> </label>
+      </div> 
+  </div>
+ 
+ <div class="form-group row">
+  <label class="col-form-label col-xl-12 col-sm-12 col-12 form-label">Inspection Remarks</label>  
+  <div class="col-xl-12 col-sm-12 col-12">
+<textarea 
+           id="priority" 
+           name="priority" 
+           formControlName="inspectionremarks" 
+           placeholder="Priority"  class="form-control" style="width:70%;display:inline-block ">
+</textarea>
+<button type="submit" style="float:inherit;vertical-align: top;" (click)="editdata()" class="btn btn-edit"  ><i class="fa fa-envelope" aria-hidden="true"></i> Send for Clarification</button>
+ 
+      </div> 
+  </div>
+</div>
+
+
+</div>
+
+<div class="form-group text-right btn-list">
+  <button type="submit" (click)="savedata()"  class="btn btn-save" *ngIf="hideinput"><i class="fa fa-check" aria-hidden="true"></i> Save</button>
+  <button type="submit" (click)="canledata()"  class="btn btn-cancel" *ngIf="hideinput"><i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+  <button type="submit" (click)="editdata()" class="btn btn-approve" *ngIf="hidetext"><i class="fa fa-check" aria-hidden="true"></i> Approve</button>
+  <button type="submit"  class="btn btn-delete" *ngIf="hidetext"><i class="fa fa-ban" aria-hidden="true"></i> Reject</button>
+  <button type="submit" (click)="editdata()" class="btn btn-edit" *ngIf="hidetext"><i class="fa fa-barcode" aria-hidden="true"></i> Genarate Bar Code / QR Code</button>
+
+</div>
+
+</form>
+
+
+
+</div><!-- left col end here-->
+
+
+</div>
+ 
+</div>

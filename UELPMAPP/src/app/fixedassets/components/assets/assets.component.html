@@ -1,0 +1,538 @@
+<div class="container-fluid">
+    <div class="row">
+    <div class="col-md-12 col-sm-12 padding-null tittlediv">
+        <div class="flexrow space-between align-center"> 
+        <h3 class="item-heading">  Assets  .</h3>
+  
+        <div>
+            <button class="btn  btn-transparent"  *ngIf="importPermission"  (click)="showImportAssets();"> Show Imported Assets</button>
+           
+            <input #file style="visibility: hidden;width:0px" type="file" accept="xlsx/*" (click)="file.value = null" (change)="uploadFile($event)">
+           <!-- <button  #upload (click)="file.click()" class="btn btn-edit">Import Asset Subcategory</button> -->
+          
+           <button class="btn  btn-transparent"  #upload (click)="file.click()"> Import Asset SubCategory</button>
+        <!-- <img src="../assets/images/add-new.png" (click)="addRecord();" *ngIf="hideText">   -->
+        <img style="display: none;" src="../assets/images/grid1.png"  (click)="showFullScreen()">
+        <button  class="btn btn-transparent" (clickOutside)="onClickedOutside($event)"   (click)="split()">  {{showfilterstext}}  </button>  
+        <!-- <img src="../assets/images/grid2.png">  -->
+    </div> 
+        </div>
+
+
+
+
+        <div class="left-section"   [class.display-filters]="!showfilters"> 
+            <div class="filter-section" ngbDropdown #myDrop="ngbDropdown">
+                <div class="flexrow space-between"> 
+              <div class="left-search">
+                <input type="text" placeholder="Search requests..." class="search-filter" [(ngModel)]="searchKey" (keyup)="onSearch($event)">
+                <i class="fa fa-search" aria-hidden="true"></i>
+                <div class="filter-popup" *ngIf="showFilterPopUp" ngbDropdownMenu aria-labelledby="dropdownManual" (click)="$event.stopPropagation();">
+                    <form [formGroup]="assetFilterForm" class="form-horizontal">
+                        <div class="form-group row">
+                            <label class="col-form-label col-6 form-label">Asset Name</label>
+                            <div  class="col-6">
+                              <input  type="text" #assetCategory formControlName="AssetName" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-6 form-label">Location</label>
+                            <div  class="col-6">
+                              <input formControlName="Location" type="text"  class="form-control" [inputFormatter]="locationInputFormater"
+                                    [ngbTypeahead]="locationSearch" [resultTemplate]="locationTemplate" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-6 form-label">Purchase Date</label>
+                            <div  class="col-6">
+                                <div class="input-group">
+                                    <input class="form-control" formControlName="PurchasedDate" ngbDatepicker #purchaseDatePicker="ngbDatepicker">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" (click)="purchaseDatePicker.toggle()" type="button">
+                                            <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-6 form-label">Bar Code</label>
+                            <div  class="col-6">
+                              <input  type="text" formControlName="BarCode" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12 error">
+                                {{filterMessage}}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12" style="text-align: right">
+                                <button type="submit" (click)="filterData()" class="btn btn-save">
+                                    <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+              </div>  
+              <!-- start filter code -->
+            <div> <div  class="filter-icon">
+                  <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                      <i class="fa fa-filter" aria-hidden="true"></i>
+                  </button>
+              </div>
+              <div class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+                  <i class="fa fa-undo" aria-hidden="true"></i>
+              </div>    
+            </div> 
+</div>
+              <!-- end filter code -->
+              <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="filter-scroll" style="width:100%; float:left;">
+                <table class="table">
+                  <tr >
+                    <td>
+
+
+                        <table class="listtable">
+                            <tr>
+                                <th>Serial Number</th>   
+                                <th>Asset Name</th> 
+                                
+                            </tr>
+                            <tr [class.activerow]="record.AssetDetailsId==selectedRecordDetails.AssetDetailsId" (click)="onRecordSelection(record.AssetDetailsId)" *ngFor="let record of assetsList">
+                                <td>{{ record.SerialNumber  }}</td>
+                                <td>{{ record.Asset.AssetName }} </td>
+                                   
+                            </tr>
+                        </table>
+
+
+                  
+                       
+                    </td>
+                  </tr>
+                </table>
+                <div *ngIf="assetsList.length==0" class="col-12 listErrorMessage">
+                    {{errorMessage}}
+                </div> 
+                <ngb-pagination [maxSize]="5" *ngIf="assetsList.length>0" (pageChange)="pageChange($event)" [collectionSize]="assetPagerConfig.TotalRecords" class="d-flex justify-content-center" [pageSize]="assetPagerConfig.RecordsToFetch" [(page)]="currentPage" [boundaryLinks]="true"></ngb-pagination>
+              </div>   
+            </div>  
+            </div>
+
+
+
+
+    </div>
+    </div>
+    <div class="row">
+    
+    
+    <div  #rightPanel [CustomSpinner]="showRightPanelLoadingIcon" class="rightPanel col-lg-9 col-md-8" [class.expand-rightcol]="rightSection"> 
+            <div class="fullScreenLabel">    <app-header></app-header> </div> 
+    <form  [ngClass]="{'hideRightPanel':(assetsList.length==0 && hideText==true)}" [formGroup]="assetForm"  class="form-horizontal" >
+        <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="rightcol-scrroll">
+            <div class="row fullScreenLabel">
+                <div class="col-12">
+                    <h3 class="item-heading" style="float:none;">Assets</h3>
+                </div>
+            </div>
+            <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="form-group row">
+                    <label class="col-form-label col-4 form-label">Serial Number <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i></label>  
+                    <div class="col-8">
+                    <input type="text" maxlength="100" appAutofocus formControlName="SerialNumber" placeholder="SerialNumber" *ngIf="hideInput" class="form-control">
+                    <label class="col-form-label form-text" *ngIf="hideText"><b style="color:#01548e">{{ selectedRecordDetails.SerialNumber }}</b></label>  
+                    <div *ngIf="hideInput && assetForm.get('SerialNumber') && assetForm.get('SerialNumber').errors!=null && assetForm.get('SerialNumber').touched==true">
+                        <span class="errorMessage" *ngIf="assetForm.get('SerialNumber').errors.required">Serial Number is required</span>
+                    </div> 
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-4 form-label">Asset Name <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i></label>  
+                    <div class="col-8">
+                        <input formControlName="Asset" *ngIf="hideInput"  type="text" class="form-control" [inputFormatter]="assestInputFormater"
+                            [ngbTypeahead]="assetSearch" [resultTemplate]="assetTemplate" />
+                        <label class="col-form-label form-text" *ngIf="hideText"><b style="color:#01548e">{{ selectedRecordDetails.Asset==undefined?"": selectedRecordDetails.Asset.AssetName }}</b></label>  
+                        <div *ngIf="hideInput && assetForm.get('Asset') && assetForm.get('Asset').errors!=null && assetForm.get('Asset').touched==true">
+                            <span class="errorMessage" *ngIf="assetForm.get('Asset').errors.required">Name is required</span>
+                        </div> 
+                    </div>
+                </div>
+                <!-- <div class="form-group row">
+                    <label class="col-form-label col-4 form-label">Supplier</label>  
+                    <div class="col-8">
+                        <input type="text" formControlName="Supplier" placeholder="Supplier" *ngIf="hideInput" class="form-control">
+                        <label class="col-form-label form-text" *ngIf="hideText">{{  selectedRecordDetails.Supplier==undefined?"": selectedRecordDetails.Supplier.Name }}</label>  
+                    </div>
+                </div> -->
+                <div class="form-group row">
+                    <label class="col-form-label col-4 form-label">Current Location <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i></label>  
+                    <div class="col-8">
+                        <input formControlName="Location" type="text"  *ngIf="hideInput" class="form-control" [inputFormatter]="locationInputFormater"
+                            [ngbTypeahead]="locationSearch" [resultTemplate]="locationTemplate" />
+                        <label class="col-form-label form-text" *ngIf="hideText">{{ selectedRecordDetails.Location==undefined?"": selectedRecordDetails.Location.Name }}</label>  
+                        <div *ngIf="hideInput && assetForm.get('Location') && assetForm.get('Location').errors!=null && assetForm.get('Location').touched==true">
+                            <span class="errorMessage" *ngIf="assetForm.get('Location').errors.required">Location is required</span>
+                        </div> 
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-4 form-label">Purchased Value <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i></label>  
+                    <div class="col-8">
+                        <input type="number" formControlName="PurchasedValue" min="0"  (keydown)="restrictMinus($event)" placeholder="Purchased Value" *ngIf="hideInput" class="form-control">
+                        <label class="col-form-label form-text" *ngIf="hideText">{{ selectedRecordDetails.PurchasedValue }}</label>  
+                        <div *ngIf="hideInput && assetForm.get('PurchasedValue') && assetForm.get('PurchasedValue').errors!=null && assetForm.get('PurchasedValue').touched==true">
+                            <span class="errorMessage" *ngIf="assetForm.get('PurchasedValue').errors.required">Purchase Value is required</span>
+                        </div> 
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-4 form-label">Depreciation Years <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i></label>  
+                    <div class="col-8">
+                        <!-- <select formControlName="DepreciationId" *ngIf="hideInput" class="form-control">
+                            <option [ngValue]="undefined">--Select--</option>
+                            <option *ngFor="let record of depreciationMethods" value={{record.DepreciationId}}>
+                                {{record.Name}}
+                            </option>
+                        </select> -->
+                        <input type="number" formControlName="DepreciationYears" min="0" (keydown)="restrictMinus($event)"  placeholder="Depreciation Years" *ngIf="hideInput" class="form-control">
+                        <label class="col-form-label form-text" *ngIf="hideText">{{ selectedRecordDetails.DepreciationYears }}</label>  
+                        <div *ngIf="hideInput && assetForm.get('DepreciationYears') && assetForm.get('DepreciationYears').errors!=null && assetForm.get('DepreciationYears').touched==true">
+                            <span class="errorMessage" *ngIf="assetForm.get('DepreciationYears').errors.required">Depreciation Years is required</span>
+                        </div> 
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-4 form-label">Warranty</label>  
+                    <div class="col-8">
+                        <input type="number" min="0" (keydown)="restrictMinus($event)"  formControlName="Warranty" placeholder="Warranty" *ngIf="hideInput" class="form-control">
+                        <label class="col-form-label form-text" *ngIf="hideText">{{ selectedRecordDetails.Warranty }}</label>  
+                    </div>
+                </div>
+                <div class="form-group row">
+                        <label class="col-form-label col-4 form-label">Manufactured By</label>  
+                        <div class="col-8">
+                            <input type="text" formControlName="ManufacturedBy" placeholder="Manufactured By" *ngIf="hideInput" class="form-control">
+                            <label class="col-form-label form-text" *ngIf="hideText">{{ selectedRecordDetails.ManufacturedBy }}</label>  
+                        </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-4 form-label">Supplier</label>  
+                    <div class="col-8">                    
+                        <label class="col-form-label form-text" *ngIf="hideText">{{ selectedRecordDetails.Supplier == null ?"":selectedRecordDetails.Supplier.SupplierName }}</label>
+                        <input appAutofocus formControlName="Supplier" type="text" *ngIf="hideInput" class="show form-control" [inputFormatter]="supplierInputFormater"
+                        (selectItem)="onSupplierChange($event)" [ngbTypeahead]="supplierSearch" [resultTemplate]="supplierTemplate"
+                        />
+                        <!-- <div *ngIf="assetForm.get('Supplier') && assetForm.get('Supplier').errors!=null && assetForm.get('Supplier').touched==true">
+                            <span class="errorMessage" *ngIf="assetForm.get('Supplier').errors.required">Supplier is required</span>
+                        </div> -->
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-4 form-label">Expired Date</label>  
+                    <div class="col-8">
+                        <div class="input-group" *ngIf="hideInput">
+                            <input class="form-control" formControlName="ExpiryDate" ngbDatepicker #expiredDatePicker="ngbDatepicker">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" (click)="expiredDatePicker.toggle()" type="button">
+                                    <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                </button>
+                            </div>
+                            </div>
+                        <label class="col-form-label form-text" *ngIf="hideText">{{ selectedRecordDetails.ExpiryDate|DisplayDateFormat  }}</label>  
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-4 form-label">GL Code <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i></label>  
+                    <div class="col-8">
+                        <input type="text" formControlName="GLCode" placeholder="GL Code" *ngIf="hideInput" class="form-control">
+                        <label class="col-form-label form-text" *ngIf="hideText">{{ selectedRecordDetails.GLCode }}</label>  
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="form-group row">
+                    <label class="col-form-label col-4 form-label">Bar Code</label>  
+                    <div class="col-8">
+                        <ngx-barcode *ngIf="hideText" [bc-value]="selectedRecordDetails.BarCode" [bc-height]="20" [bc-display-value]="true"></ngx-barcode>
+                        <input type="text" formControlName="BarCode" placeholder="BarCode" *ngIf="hideInput" class="form-control">
+                        <!-- <label  class="col-form-label form-text"><b style="color:#01548e">{{ selectedRecordDetails.BarCode }}</b></label>   -->
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-4 form-label">Asset Type</label>  
+                    <div class="col-8">
+                        <!-- <input type="text" formControlName="AssetTypeId" *ngIf="hideInput" class="form-control"> -->
+                        <label class="col-form-label form-text" *ngIf="hideInput">
+                            <b style="color:#01548e">
+                                    {{ assetForm.get('Asset').value==null||assetForm.get('Asset').value==undefined?"": assetForm.get('Asset').value.AssetType }}
+                            </b>
+                        </label>  
+                        <label class="col-form-label form-text" *ngIf="hideText"><b style="color:#01548e">{{  selectedRecordDetails.Asset==undefined?"": selectedRecordDetails.Asset.AssetType }}</b></label>  
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-4 form-label">Used By</label>  
+                    <div class="col-8">
+                        <input formControlName="UsedBy" *ngIf="hideInput"  type="text" class="form-control" [inputFormatter]="userInputFormater"
+                            [ngbTypeahead]="userSearch" [resultTemplate]="userTemplate" />
+                        <label class="col-form-label form-text" *ngIf="hideText">{{ selectedRecordDetails.UsedBy==undefined?"": selectedRecordDetails.UsedBy.FirstName }}</label>  
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-4 form-label">Current Value <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i></label>  
+                    <div class="col-8">
+                        <input type="number" min="0" (keydown)="restrictMinus($event)"  formControlName="CurrentValue" placeholder="Current Value" *ngIf="hideInput" class="form-control">
+                        <label class="col-form-label form-text" *ngIf="hideText">{{ selectedRecordDetails.CurrentValue }}</label> 
+                        <div *ngIf="hideInput && assetForm.get('CurrentValue') && assetForm.get('CurrentValue').errors!=null && assetForm.get('CurrentValue').touched==true">
+                            <span class="errorMessage" *ngIf="assetForm.get('CurrentValue').errors.required">Current Value is required</span>
+                        </div>  
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-4 form-label">Salvage Value <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i></label>  
+                    <div class="col-8">
+                        <input type="number" min="0" (keydown)="restrictMinus($event)"  formControlName="SalvageValue" placeholder="Salvage Value" *ngIf="hideInput" class="form-control">
+                        <label class="col-form-label form-text" *ngIf="hideText">{{ selectedRecordDetails.SalvageValue }}</label>  
+                        <div *ngIf="hideInput && assetForm.get('SalvageValue') && assetForm.get('SalvageValue').errors!=null && assetForm.get('SalvageValue').touched==true">
+                            <span class="errorMessage" *ngIf="assetForm.get('SalvageValue').errors.required">Salvage Value is required</span>
+                        </div> 
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-4 form-label">Purchased Date <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i></label>  
+                    <div class="col-8">
+                        <div class="input-group" *ngIf="hideInput">
+                            <input class="form-control" formControlName="PurchasedDate" ngbDatepicker #purchaseDatePicker="ngbDatepicker">
+                            <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" (click)="purchaseDatePicker.toggle()" type="button">
+                                        <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                    </button>
+                            </div>
+                            </div>
+                        <label class="col-form-label form-text" *ngIf="hideText">{{ selectedRecordDetails.PurchasedDate|DisplayDateFormat  }}</label>  
+                        <div *ngIf="hideInput && assetForm.get('PurchasedDate') && assetForm.get('PurchasedDate').errors!=null && assetForm.get('PurchasedDate').touched==true">
+                            <span class="errorMessage" *ngIf="assetForm.get('PurchasedDate').errors.required">Purchased Date is required</span>
+                        </div> 
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-4 form-label">Manufactured Date</label>  
+                    <div class="col-8">
+                        <div class="input-group" *ngIf="hideInput">
+                            <input class="form-control" formControlName="ManufacturedDate" ngbDatepicker #manufacturedDatePicker="ngbDatepicker">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" (click)="manufacturedDatePicker.toggle()" type="button">
+                                    <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                </button>
+                            </div>
+                            </div>
+                        <label class="col-form-label form-text" *ngIf="hideText">{{ selectedRecordDetails.ManufacturedDate|DisplayDateFormat  }}</label>  
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-4 form-label">Supplier Invoice</label>  
+                    <div class="col-8">
+                        <label class="col-form-label form-text" *ngIf="hideText"> {{(selectedRecordDetails.Invoice==null || selectedRecordDetails.Invoice==undefined)?"": selectedRecordDetails.Invoice.InvoiceCode }}</label>
+                        <input formControlName="Invoice" type="text" *ngIf="hideInput"  class="show form-control" 
+                                [inputFormatter]="invoiceFormater"
+                                [ngbTypeahead]="invoiceSearch"  [resultTemplate]="invoiceTemplate"/>
+                        <div *ngIf="hideInput && assetForm.get('Invoice') && assetForm.get('Invoice').errors!=null && assetForm.get('Invoice').touched==true">
+                            <span class="errorMessage"  *ngIf="assetForm.get('Invoice').errors.required">Supplier Invoice is required</span>
+                        </div>
+                    </div>
+                </div>
+             
+            </div>
+          </div>
+            <!-- Start Supplier Details -->
+            <div class="row" style="margin-top:2em;">
+                <div class="col-12">
+                    <h4 class="form-heading">Preferred Suppliers</h4>
+                </div>
+                <div class="col-12">
+                    <fieldset *ngIf="hideInput" formArrayName="PreferredSuppliers">
+                        <div style="text-align: center;">
+                            <span class="errorMessage" *ngIf="showSupplierGridErrorMessage &&(selectedRecordDetails.PreferredSuppliers==undefined|| selectedRecordDetails.PreferredSuppliers.length==0)">
+                                Please enter Supplier Details
+                            </span>
+                        </div>
+                        <p-table [columns]="supplierGridColumns"  sortMode="single" [value]="assetForm.controls.PreferredSuppliers.controls">
+                            <ng-template pTemplate="colgroup" let-columns>
+                                <colgroup>
+                                    <col style="width:10%;">
+                                    <col style="width:30%;">
+                                    <col style="width:30%;">
+                                    <col style="width:30%;">                                                  
+                                </colgroup>
+                            </ng-template>
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                        {{col.header}}
+                                        <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                <tr *ngIf="hideInput&&( rowData.get('IsDeleted').value!=true )" [formGroupName]="i">
+                                    <td>
+                                        {{ i + 1 }}
+                                    </td>
+                                    <td>
+                                        <input formControlName="Supplier" type="text" class="form-control show" [inputFormatter]="supplierInputFormater"
+                                        [ngbTypeahead]="supplierSearch" (click)="onItemSupplierClick(i)"  [resultTemplate]="supplierTemplate" />
+                                    </td>                                                 
+                                    <td>  
+                                        {{  rowData.get('Supplier').value==null||rowData.get('Supplier').value==undefined?"": rowData.get('Supplier').value.SupplierEmail  }}           
+                                    </td>                                                
+                                    <td>  
+                                        <div style="float:left;width:99%;">    
+                                        <div style="float:left;width:60%;text-align: left;">       
+                                            {{ rowData.get('Supplier').value==null||rowData.get('Supplier').value==undefined?"": rowData.get('Supplier').value.BillingTelephone  }}
+                                        </div>                                                                                                
+                                        <div class="gridIconsStyle"  style="float: right;left: 0px;"> 
+                                            <i class="fa fa-trash gridRemoveIcon" (click)="removeGridItem(i)" aria-hidden="true"></i>
+                                        </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        <div *ngIf="hideInput">
+                            <input type="number" min="0" (keydown)="restrictMinus($event)"  [(ngModel)]="linesToAdd" [ngModelOptions]="{standalone: true}" class="form-control linesToAdd">
+                            <button type="submit" (click)="addGridItem(linesToAdd)" class="addLine">
+                                <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Line
+                            </button>
+                        </div>
+                    </fieldset>
+                    <p-table *ngIf="hideText" [columns]="supplierGridColumns" (sortFunction)="customSort($event)" [customSort]="true" sortMode="single" [value]="selectedRecordDetails.PreferredSuppliers">
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="5" style='text-align: center;'>
+                                    <b>{{ gridNoMessageToDisplay }}</b>
+                                </td> 
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="colgroup" let-columns>
+                            <colgroup>
+                                <col style="width:10%;">
+                                <col style="width:30%;">
+                                <col style="width:30%;">
+                                <col style="width:30%;">
+                            </colgroup>
+                        </ng-template>
+                        <ng-template pTemplate="header" let-columns>
+                            <tr>
+                                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                    {{col.header}}    
+                                    <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                            <tr>
+                                <td>
+                                    {{ i + 1 }}
+                                </td>
+                                <td>
+                                    {{ rowData.Supplier==null?"":rowData.Supplier.SupplierName }}
+                                </td>
+                                <td>
+                                    {{  rowData.Supplier==null?"":rowData.Supplier.SupplierEmail }}
+                                </td>                             
+                                <td>
+                                    <div style="float:left;width:99%;">
+                                    <div style="float:left;width:60%;text-align: left;">
+                                        {{  rowData.Supplier==null?"":rowData.Supplier.BillingTelephone }}
+                                    </div>
+                                    <div class="gridIconsStyle" *ngIf="hideInput==true" style="float: right;left: 0px;">
+                                        &nbsp;&nbsp;&nbsp;
+                                        <i class="fa fa-trash gridRemoveIcon" (click)="removeGridItem(i)" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </div>
+      <div class="form-group text-right btn-list">
+        <button (click)="saveRecord()"  class="btn btn-save" *ngIf="hideInput"><i class="fa fa-check" aria-hidden="true"></i> Save</button>
+        <button (click)="cancelRecord()"  class="btn btn-cancel" *ngIf="hideInput"><i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+        <button (click)="editRecord()" class="btn btn-edit" *ngIf="hideText"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+        <button (click)="deleteRecord()" class="btn btn-delete" *ngIf="hideText"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+      </div>
+    </form>
+    <p-confirmDialog></p-confirmDialog>
+     <p-dialog header="Show Imported Assets"  width="1000" height="500" modal='true' [(visible)]="showImportAssetsVisible">
+        <p-table [columns]="gridColumns" [paginator]="true"  [rows]="10" [scrollable]="true" scrollHeight="auto" scrollHeight="380px" scrollWidth="100%"
+        sortMode="single" [value]="assetSubcategoryDetails" class="importassets">
+       
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="12" style='text-align: center;'>
+              <b>{{ gridNoMessageToDisplay }}</b>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="colgroup" let-columns>
+          <colgroup>
+            <col *ngFor="let col of columns" [style.width]="col.width">
+          </colgroup>
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+              {{col.header}}
+            </th>
+           </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+          <tr>
+            <td>
+              {{ rowData.AssetSubcategory }}
+            </td>
+            <td>
+              {{ rowData.AccountCode }}
+            </td>
+            <td>
+              {{ rowData.Type }}   
+            </td>
+            <td>
+              {{ rowData.Description}}
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+        
+     </p-dialog>
+    </div>
+  </div>   
+</div>
+
+<ng-template #supplierTemplate let-r="result" let-t="term">
+    {{ r.SupplierName }}
+</ng-template>
+<ng-template #assetTemplate let-r="result" let-t="term">
+    {{ r.AssetName }}
+</ng-template>
+<ng-template #locationTemplate let-r="result" let-t="term">
+    {{ r.Name }}
+</ng-template>
+<ng-template #userTemplate let-r="result" let-t="term">
+    {{ r.FirstName }}
+</ng-template>
+<ng-template #invoiceTemplate let-r="result" let-i="index" let-t="term">  
+    {{ r.InvoiceCode }}
+</ng-template> 
+    
+
+    
+     

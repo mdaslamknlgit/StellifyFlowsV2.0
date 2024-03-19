@@ -1,0 +1,99 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12 col-sm-12 padding-null tittlediv">
+      <div class="flexrow space-between align-center">
+        <h3 class="item-heading"> Unit of Measurement </h3>
+        <div>
+          <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickBack($event)">
+            <i class="fa fa-arrow-left" ria-hidden="true" aria-hidden="true"></i> Back</button>
+
+        </div>
+      </div>
+      <br clear="all" />
+    </div>
+  </div>
+  <p>Edit Form Starts Here</p>
+  <div class="row">
+    <div #rightPanel class="rightPanel col-lg-12 " [class.expand-rightcol]="rightsection">
+      <div *ngIf="isDisplayMode!=null">
+        <form [formGroup]="measurementUnitForm" class="form-horizontal">
+          <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+            <div class="row fullScreenLabel">
+              <div class="col-12">
+                <h3 class="item-heading" style="float:none;">Unit of Measurement</h3>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Name <i class="fa fa-star mandatory-icon"
+                  *ngIf="isDisplayMode==false" aria-hidden="true"></i></label>
+              <div class="col-xl-4 col-sm-6 col-12">
+                <input type="text" formControlName="Name" maxlength="50" placeholder="Name"
+                  [ngClass]="(validateControl(measurementUnitForm.get('Name')))?'form-control ng-touched':'form-control'"
+                  *ngIf="isDisplayMode==false" class="form-control">
+                <label class="col-form-label  form-text" *ngIf="isDisplayMode==true"><b style="color:#01548e">{{
+                    selectedRecord.Name}}</b></label>
+                <div *ngIf="measurementUnitForm.get('Name').errors!=null && isDisplayMode==false">
+                  <span class="errorMessage" *ngIf="measurementUnitForm.get('Name').errors.Duplicate">Duplicate
+                    Measurement Name</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Code <i class="fa fa-star mandatory-icon"
+                  *ngIf="isDisplayMode==false" aria-hidden="true"></i></label>
+              <div class="col-xl-4 col-sm-6 col-12">
+                <label class="col-form-label form-text" *ngIf="isDisplayMode==true">{{ selectedRecord.Code }}</label>
+                <input type="text" formControlName="Code" maxlength="50" placeholder="Units"
+                  [ngClass]="(validateControl(measurementUnitForm.get('Code')))?'form-control ng-touched':'form-control'"
+                  *ngIf="isDisplayMode==false" class="form-control">
+                <div *ngIf="measurementUnitForm.get('Code').errors!=null && isDisplayMode==false">
+                  <span class="errorMessage" *ngIf="measurementUnitForm.get('Code').errors.Duplicate">Duplicate
+                    Code</span>
+                </div>
+              </div>
+            </div>
+            <h4 class="form-heading">Details</h4>
+            <div class="form-group row">
+              <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Abbreviation <i
+                  class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false" aria-hidden="true"></i></label>
+              <div class="col-xl-4 col-sm-6 col-12">
+                <input type="text" maxlength="10" formControlName="Abbreviation"
+                  [ngClass]="(validateControl(measurementUnitForm.get('Abbreviation')))?'form-control ng-touched':'form-control'"
+                  placeholder="Abbreviation" *ngIf="isDisplayMode==false" class="form-control">
+                <label class="col-form-label form-text" *ngIf="isDisplayMode==true">{{ selectedRecord.Abbreviation }}
+                </label>
+                <div *ngIf="measurementUnitForm.get('Abbreviation').errors!=null && isDisplayMode==false">
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Description</label>
+              <div class="col-xl-4 col-sm-6 col-12">
+                <textarea formControlName="Description" rows="4" cols="50" *ngIf="isDisplayMode==false"
+                  class="form-control">
+                      </textarea>
+                <label class="col-form-label form-text descriptionStyle" *ngIf="isDisplayMode==true">
+                  {{ selectedRecord.Description }}
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group text-right btn-list">
+            <button type="submit" (click)="saveRecord()" class="btn btn-save" *ngIf="isDisplayMode==false"><i
+                class="fa fa-check" aria-hidden="true"></i> Save</button>
+            <button type="submit" (click)="cancelRecord()" class="btn btn-cancel" *ngIf="isDisplayMode==false"><i
+                class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+            <button type="submit" (click)="editRecord()" class="btn btn-edit"
+              *ngIf="isDisplayMode==true && editPermission"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+              Edit</button>
+            <button type="submit" (click)="deleteRecord()" class="btn btn-delete"
+              *ngIf="isDisplayMode==true && deletePermission"><i class="fa fa-trash-o" aria-hidden="true"></i>
+              Delete</button>
+          </div>
+        </form>
+        <p-confirmDialog></p-confirmDialog>
+      </div>
+    </div>
+    <p>Edit Form Ends Here</p>
+  </div>
+</div>

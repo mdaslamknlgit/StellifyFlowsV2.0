@@ -1,0 +1,6 @@
+.mytable{
+    padding: 4px 0 4px 30px;
+}
+ :host /deep/ td {white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;}

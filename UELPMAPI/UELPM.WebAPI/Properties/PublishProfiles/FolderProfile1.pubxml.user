@@ -1,0 +1,660 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\inetpub\wwwroot\StellifyFlowsAPI</_PublishTargetUrl>
+    <History>True|2022-11-10T10:12:24.3466742Z;</History>
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="bin/App_global.asax.compiled">
+      <publishTime>11/10/2022 15:42:07</publishTime>
+    </File>
+    <File Include="bin/App_global.asax.dll">
+      <publishTime>11/10/2022 15:42:07</publishTime>
+    </File>
+    <File Include="bin/CommonServiceLocator.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/CommonServiceLocator.pdb">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/Dapper.dll">
+      <publishTime>01/16/2020 16:52:22</publishTime>
+    </File>
+    <File Include="bin/DocumentFormat.OpenXml.dll">
+      <publishTime>01/16/2020 16:52:22</publishTime>
+    </File>
+    <File Include="bin/EntityFramework.dll">
+      <publishTime>01/16/2020 16:52:22</publishTime>
+    </File>
+    <File Include="bin/EntityFramework.SqlServer.dll">
+      <publishTime>01/16/2020 16:52:22</publishTime>
+    </File>
+    <File Include="bin/EPPlus.dll">
+      <publishTime>02/03/2019 11:02:30</publishTime>
+    </File>
+    <File Include="bin/ExcelDataReader.DataSet.dll">
+      <publishTime>05/02/2019 04:39:58</publishTime>
+    </File>
+    <File Include="bin/ExcelDataReader.DataSet.pdb">
+      <publishTime>05/02/2019 04:39:58</publishTime>
+    </File>
+    <File Include="bin/ExcelDataReader.dll">
+      <publishTime>05/02/2019 04:39:52</publishTime>
+    </File>
+    <File Include="bin/ExcelDataReader.pdb">
+      <publishTime>05/02/2019 04:39:52</publishTime>
+    </File>
+    <File Include="bin/HtmlAgilityPack.dll">
+      <publishTime>11/10/2021 01:24:06</publishTime>
+    </File>
+    <File Include="bin/HtmlAgilityPack.pdb">
+      <publishTime>11/10/2021 01:24:06</publishTime>
+    </File>
+    <File Include="bin/itextsharp.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/itextsharp.xmlworker.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/KellermanSoftware.Compare-NET-Objects.dll">
+      <publishTime>07/24/2019 10:30:38</publishTime>
+    </File>
+    <File Include="bin/log4net.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll">
+      <publishTime>01/16/2020 16:52:22</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Cors.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Diagnostics.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Host.HttpListener.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Host.SystemWeb.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Hosting.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.OAuth.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/mustache-sharp.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/Newtonsoft.Json.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/Owin.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/Quartz.dll">
+      <publishTime>03/03/2018 22:53:22</publishTime>
+    </File>
+    <File Include="bin/Quartz.pdb">
+      <publishTime>03/03/2018 22:53:22</publishTime>
+    </File>
+    <File Include="bin/roslyn/csc.exe">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/csc.exe.config">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/csc.rsp">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/csi.exe">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/csi.exe.config">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/csi.rsp">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.Build.Tasks.CodeAnalysis.dll">
+      <publishTime>01/16/2020 16:52:22</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.CodeAnalysis.CSharp.dll">
+      <publishTime>01/16/2020 16:52:22</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.CodeAnalysis.CSharp.Scripting.dll">
+      <publishTime>01/16/2020 16:52:22</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.CodeAnalysis.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.CodeAnalysis.Scripting.dll">
+      <publishTime>01/16/2020 16:52:22</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.CodeAnalysis.VisualBasic.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.CSharp.Core.targets">
+      <publishTime>01/16/2020 16:52:22</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.DiaSymReader.Native.amd64.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.DiaSymReader.Native.x86.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.VisualBasic.Core.targets">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.Win32.Primitives.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.AppContext.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Collections.Immutable.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Console.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Diagnostics.FileVersionInfo.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Diagnostics.Process.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Diagnostics.StackTrace.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.IO.Compression.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.IO.FileSystem.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.IO.FileSystem.DriveInfo.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.IO.FileSystem.Primitives.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.IO.Pipes.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Reflection.Metadata.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Security.AccessControl.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Security.Claims.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Security.Cryptography.Algorithms.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Security.Cryptography.Encoding.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Security.Cryptography.Primitives.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Security.Cryptography.X509Certificates.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Security.Principal.Windows.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Text.Encoding.CodePages.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Threading.Thread.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.ValueTuple.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Xml.ReaderWriter.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Xml.XmlDocument.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Xml.XPath.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Xml.XPath.XDocument.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/vbc.exe">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/vbc.exe.config">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/vbc.rsp">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/VBCSCompiler.exe">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/VBCSCompiler.exe.config">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/System.Configuration.ConfigurationManager.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/System.Net.Http.Formatting.dll">
+      <publishTime>01/16/2020 16:52:22</publishTime>
+    </File>
+    <File Include="bin/System.Web.Cors.dll">
+      <publishTime>01/16/2020 16:52:22</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.Cors.dll">
+      <publishTime>01/16/2020 16:52:22</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.dll">
+      <publishTime>01/16/2020 16:52:22</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.Owin.dll">
+      <publishTime>01/16/2020 16:52:22</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.WebHost.dll">
+      <publishTime>01/16/2020 16:52:22</publishTime>
+    </File>
+    <File Include="bin/UELPM.Business.dll">
+      <publishTime>11/10/2022 15:41:43</publishTime>
+    </File>
+    <File Include="bin/UELPM.Business.dll.config">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="bin/UELPM.Business.pdb">
+      <publishTime>11/10/2022 15:41:43</publishTime>
+    </File>
+    <File Include="bin/UELPM.Model.dll">
+      <publishTime>11/10/2022 15:41:37</publishTime>
+    </File>
+    <File Include="bin/UELPM.Model.dll.config">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="bin/UELPM.Model.pdb">
+      <publishTime>11/10/2022 15:41:37</publishTime>
+    </File>
+    <File Include="bin/UELPM.Scheduler.dll">
+      <publishTime>11/10/2022 15:41:44</publishTime>
+    </File>
+    <File Include="bin/UELPM.Scheduler.dll.config">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="bin/UELPM.Scheduler.pdb">
+      <publishTime>11/10/2022 15:41:44</publishTime>
+    </File>
+    <File Include="bin/UELPM.Service.dll">
+      <publishTime>11/10/2022 15:41:41</publishTime>
+    </File>
+    <File Include="bin/UELPM.Service.dll.config">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="bin/UELPM.Service.pdb">
+      <publishTime>11/10/2022 15:41:41</publishTime>
+    </File>
+    <File Include="bin/UELPM.Util.dll">
+      <publishTime>11/10/2022 15:41:38</publishTime>
+    </File>
+    <File Include="bin/UELPM.Util.dll.config">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="bin/UELPM.Util.pdb">
+      <publishTime>11/10/2022 15:41:38</publishTime>
+    </File>
+    <File Include="bin/UELPM.WebAPI.dll">
+      <publishTime>11/10/2022 15:41:49</publishTime>
+    </File>
+    <File Include="bin/UELPM.WebAPI.pdb">
+      <publishTime>11/10/2022 15:41:49</publishTime>
+    </File>
+    <File Include="bin/Unity.Abstractions.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/Unity.Abstractions.pdb">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/Unity.Configuration.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/Unity.Configuration.pdb">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/Unity.Container.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/Unity.Container.pdb">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/Unity.Interception.Configuration.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/Unity.Interception.Configuration.pdb">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/Unity.Interception.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/Unity.Interception.pdb">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/Unity.RegistrationByConvention.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/Unity.RegistrationByConvention.pdb">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/Unity.ServiceLocation.dll">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="bin/Unity.ServiceLocation.pdb">
+      <publishTime>01/16/2020 16:52:24</publishTime>
+    </File>
+    <File Include="EmailTemplates/AssetDepreciationApprovalEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/AssetDepreciationRequestEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/AssetDisposalApprovalEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/AssetDisposalRequestEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/AssetTransferApprovalEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/AssetTransferRequestEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/ClarificationMail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/ContractMasterRecallApprovalEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/ContractMasterRequestApprovalMail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/ContractMasterRequestEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/CreditNote.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/CreditNoteApprovalEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/CreditNoteRequestEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/CustomerMaster.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/GoodsReturnNoteApprovalEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/GoodsReturnNoteRequestEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/InvoiceApprovalEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/InvoiceRecallApprovalEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/InvoiceRequestEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/LocationTransferApprovalEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/LocationTransferRequestEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/NoReplyMailText.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/POPPaymentRecallEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/POPVORecallEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/ProjectContractMasterApprovalEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/ProjectContractMasterRecallApprovalEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/ProjectContractMasterRequestEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/ProjectContractVariationOrderApprovalEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/ProjectContractVariationOrderRequestEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/ProjectPaymentContractApprovalEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/ProjectPaymentContractRequestEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/PurchaseOrderClarificationReplyMail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/PurchaseOrderEmailToSupplier.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/PurchaseOrderRecallApprovalEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/PurchaseOrderRequestApprovalMail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/PurchaseOrderRequestClarificationMail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/PurchaseOrderRequestEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/QuotationRequestEmailToSupplier.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/ReplyForClarificationMail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/ReplyMail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/ReturnForClarificationMail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/SalesInvoice.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/SalesInvoiceEmail.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/SalesOrderApprovalMail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/SalesOrderMail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/SalesQuotation.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/SalesQuotationEmail.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/SupplierApprovalEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/SupplierRecallEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/SupplierRequestEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="EmailTemplates/UserManagementLoginEmail.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="images/logo.jpg">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="index.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/AssetRegister.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/AuditLogChanges.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/CreditNote.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/Footer.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/GoodsReceivedNotestBody.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/GoodsReturnedNotestBody.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/Header.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/InvoiceHeader.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/InvoicePayments.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/LocationTransferBody.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/payment-voucher.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/PurchaseOrderExpensePOBody.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/PurchaseOrderExpensePOBodyNew.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/PurchaseOrderFixedAssetPOBody.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/PurchaseOrderFixedAssetPOBodyNew.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/PurchaseOrderFixedContractBody.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/PurchaseOrderInventoryPOBody.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/PurchaseOrderInventoryPOBodyNew.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/PurchaseOrderRequestApprovalBody.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/PurchaseOrderRequestBody.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/PurchaseOrderRequestFixedPOApprovalBody.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/PurchaseOrderRequestFixedPOBody.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/PurchaseOrderRequestFooter.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/PurchaseOrderRequestHeader.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/QuotationRequestBody.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/SalesHeader.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/SalesInvoice.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/SalesInvoiceBody.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/SalesOrderBody.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/SalesQuotation.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/SupplierInvoiceBodyNew.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PDFTemplates/WorkFlowReAssignmentBody.html">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="PrecompiledApp.config">
+      <publishTime>11/10/2022 15:41:54</publishTime>
+    </File>
+    <File Include="ReportQueries/ADMINWORKFLOW.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="ReportQueries/APCREDITNOTE.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="ReportQueries/APINVOICE.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="ReportQueries/COA.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="ReportQueries/PO.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="ReportQueries/POC.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="ReportQueries/POCMASTER.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="ReportQueries/POPINVOICE.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="ReportQueries/POPMASTER.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="ReportQueries/SUPPLIER.txt">
+      <publishTime>11/04/2022 11:05:18</publishTime>
+    </File>
+    <File Include="Web.config">
+      <publishTime>11/10/2022 15:41:51</publishTime>
+    </File>
+  </ItemGroup>
+</Project>

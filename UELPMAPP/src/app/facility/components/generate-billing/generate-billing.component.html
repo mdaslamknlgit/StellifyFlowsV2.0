@@ -1,0 +1,235 @@
+ <div class="container-fluid">
+<div class="row">
+<div class="col-md-12 col-sm-12 padding-null tittlediv">
+  <div class="flexrow space-between align-center">
+<h3 class="item-heading"> Generate Billing to Tenant</h3>
+ 
+  <div> 
+    <button class="btn  btn-transparent" (click)="editdata()" > New Record</button>
+    <button  class="btn btn-transparent" (clickOutside)="onClickedOutside($event)"    (click)="split()">  {{showfilterstext}}  </button> 
+  <img style="display: none;" src="../assets/images/grid1.png" (click)="showFullScreen();"> 
+  <img style="display: none;" src="../assets/images/grid2.png"> 
+</div>
+  </div>
+
+  <div class="left-section"    [class.display-filters]="!showfilters"> 
+    <div class="filter-section"> 
+   <div class="left-search">
+     <input type="text" placeholder="Search requests..." class="search-filter">
+     <i class="fa fa-search" aria-hidden="true"></i>
+     </div>
+   
+    <div class="filter-icon"> <i class="fa fa-filter" aria-hidden="true"></i></div>
+    <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="filter-scroll"  style="width:100%; float:left;"> 
+   <table class="table">
+   <tr><td>
+    <label class="stock-id">#19354535</label> <label class="stock-btn"> <button class="filter-btn btn-pending">Pending</button> </label>
+     <label class="label-text">Amount</label> :<label class="label-value">$250</label>
+     <label class="label-text">Invoice ID</label> :<label class="label-value">#211235</label>
+     <label class="label-text">Quantity</label> :<label class="label-value">15</label>
+       
+   </td></tr>
+   <tr><td>
+     <label class="stock-id">#58645846</label> <label class="stock-btn"> <button class="filter-btn btn-draft">In Progress</button> </label>
+    <label class="label-text">Amount</label> :<label class="label-value">$250</label>
+     <label class="label-text">Invoice ID</label> :<label class="label-value">#211235</label>
+     <label class="label-text">Quantity</label> :<label class="label-value">15</label>
+   </td></tr>
+    
+   <tr><td>
+    <label class="stock-id">#54658467</label> <label class="stock-btn"> <button class="filter-btn btn-approved">Completed</button> </label>
+    <label class="label-text">Amount</label> :<label class="label-value">$250</label>
+     <label class="label-text">Invoice ID</label> :<label class="label-value">#211235</label>
+     <label class="label-text">Quantity</label> :<label class="label-value">15</label>
+   </td></tr>
+   <tr><td>
+    <label class="stock-id">#32659854</label> <label class="stock-btn"> <button class="filter-btn btn-pending">Pending</button> </label>
+    <label class="label-text">Amount</label> :<label class="label-value">$250</label>
+     <label class="label-text">Invoice ID</label> :<label class="label-value">#211235</label>
+     <label class="label-text">Quantity</label> :<label class="label-value">15</label>
+   </td></tr>
+   </table>
+    </div>  
+    
+    
+    </div>   
+       </div>
+
+
+
+
+
+
+</div>
+</div>
+<div class="row">
+ 
+
+<div  #rightPanel class="rightPanel col-lg-12 col-md-12" [class.expand-rightcol]="rightsection">
+
+<form   [formGroup]="signupForm" class="form-horizontal" novalidate="true" >
+<div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="rightcol-scrroll">
+    <div class="row fullScreenLabel">
+        <div class="col-12">
+            <h3 class="item-heading" style="float:none;">Generate Billing to Tenant</h3>
+        </div>
+    </div>
+
+ <div class="row">
+<div class="col-md-12">
+ <div class="form-group row">
+      <label class="col-form-label col-sm-4 form-label">Item ID</label>  
+      <div class="col-sm-8">
+  <input type="text" 
+           id="tickettno" 
+           name="tickettno" 
+           formControlName="tickettno" 
+           placeholder="Ticket No" *ngIf="hideinput" class="form-control">
+
+     <label class="col-form-label  form-text" *ngIf="hidetext"><b style="color:#01548e">#121321</b> </label>  
+      </div>
+  </div>
+
+ 
+     <div class="form-group row">
+    <label class="col-form-label col-sm-4 form-label">PO Number</label>  
+    <div class="col-sm-8">
+  <input type="text" 
+           id="priority" 
+           name="priority" 
+           formControlName="priority" 
+           placeholder="Priority" *ngIf="hideinput" class="form-control">
+     <label class="col-form-label  form-text" *ngIf="hidetext">#152122</label>  
+      </div>
+  </div> 
+
+  <div class="form-group row">
+  <label class="col-form-label col-sm-4 form-label">Due Date</label>  
+  <div class="col-sm-8">
+  <input class="form-control" *ngIf="hideinput" placeholder="Start Date"  autocomplete="off" [minDate]="minDate" (dateSelect)="onDateSelection($event)" name="checkInDate"
+            [(ngModel)]="checkInDate" (click)="d.toggle();d2.close();" ngbDatepicker #d="ngbDatepicker"> 
+     <label class="col-form-label  form-text" *ngIf="hidetext">18-Aug-2018</label>  
+      </div> 
+
+  </div>
+
+ <div class="form-group row">
+  <label class="col-form-label col-sm-4 form-label">Amount</label>  
+  <div class="col-sm-8">
+  <input class="form-control" *ngIf="hideinput" placeholder="Start Date"  autocomplete="off" [minDate]="minDate" (dateSelect)="onDateSelection($event)" name="checkInDate"
+            [(ngModel)]="checkInDate" (click)="d.toggle();d2.close();" ngbDatepicker #d="ngbDatepicker"> 
+     <label class="col-form-label  form-text" *ngIf="hidetext">$20</label>  
+      </div> 
+  </div>
+  
+<div class="form-group row">
+  <label class="col-form-label col-sm-4 form-label">Quantity</label>  
+  <div class="col-sm-8">
+<input type="text" 
+           id="priority" 
+           name="priority" 
+           formControlName="priority" 
+           placeholder="Priority" *ngIf="hideinput" class="form-control">
+
+     <label class="col-form-label  form-text" *ngIf="hidetext">$200</label>  
+      </div> 
+  </div>
+
+
+
+  <div class="form-group row">
+  <label class="col-form-label col-sm-4 form-label">Balance</label>  
+  <div class="col-sm-8">
+<input type="text" 
+           id="priority" 
+           name="priority" 
+           formControlName="priority" 
+           placeholder="Priority" *ngIf="hideinput" class="form-control">
+
+     <label class="col-form-label  form-text" *ngIf="hidetext">$200</label>  
+      </div> 
+  </div>
+
+<div class="form-group row">
+  <label class="col-form-label col-sm-4 form-label">Carried Balance</label>  
+  <div class="col-sm-8">
+<input type="text" 
+           id="priority" 
+           name="priority" 
+           formControlName="priority" 
+           placeholder="Priority" *ngIf="hideinput" class="form-control">
+
+     <label class="col-form-label  form-text" *ngIf="hidetext">100</label>  
+      </div> 
+  </div>
+
+  <div class="form-group row">
+  <label class="col-form-label col-sm-4 form-label">In Process payment</label>  
+  <div class="col-sm-8">
+<input type="text" 
+           id="priority" 
+           name="priority" 
+           formControlName="priority" 
+           placeholder="Priority" *ngIf="hideinput" class="form-control">
+
+     <label class="col-form-label  form-text" *ngIf="hidetext">$200</label>  
+      </div> 
+  </div>
+
+<div class="form-group row">
+  <label class="col-form-label col-sm-4 form-label">Reminders</label>  
+  <div class="col-sm-8">
+ <label class="col-form-label form-text"  >
+  <mat-slide-toggle (change)="matselect($event)"></mat-slide-toggle>
+ <label *ngIf="slideactive">Yes</label>  
+  </label>
+      </div> 
+  </div>
+
+<div class="form-group row">
+  <label class="col-form-label col-sm-4 form-label">Actual Price</label>  
+  <div class="col-sm-8">
+<input type="text" 
+           id="priority" 
+           name="priority" 
+           formControlName="priority" 
+           placeholder="Priority" *ngIf="hideinput" class="form-control">
+
+     <label class="col-form-label  form-text" *ngIf="hidetext">$200</label>  
+      </div> 
+  </div>
+
+<div class="form-group row">
+  <label class="col-form-label col-sm-4 form-label">Discount</label>  
+  <div class="col-sm-8">
+<input type="text" 
+           id="priority" 
+           name="priority" 
+           formControlName="priority" 
+           placeholder="Priority" *ngIf="hideinput" class="form-control">
+
+     <label class="col-form-label  form-text" *ngIf="hidetext">50%</label>  
+      </div> 
+  </div>
+
+ 
+</div>
+</div>
+  
+</div>
+
+<div class="form-group text-right btn-list">
+  <button type="submit" (click)="savedata()"  class="btn btn-save" *ngIf="hideinput"><i class="fa fa-check" aria-hidden="true"></i> Save</button>
+  <button type="submit" (click)="canledata()"  class="btn btn-cancel" *ngIf="hideinput"><i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+
+   <button type="submit" (click)="editdata()" class="btn btn-edit" *ngIf="hidetext"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+  <button type="submit"  class="btn btn-delete" *ngIf="hidetext"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+</div>
+
+</form>
+</div><!-- right col end here-->
+</div>
+ 
+ 
+
+</div>

@@ -1,0 +1,243 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12 col-sm-12 padding-null tittlediv" style="padding-right:30px !important;">
+      <div class="flexrow space-between align-center">
+        <h3 class="item-heading"> {{moduleHeading}} </h3>
+       <div>
+        <!-- <button type="submit" (click)="getFilterData()" class="btn btn-save">
+          <i class="fa fa-check" ria-hidden="true"></i> Submit</button> -->
+          <!-- <button  class="btn btn-save ng-star-inserted" type="button" (click)="ClickNewRecord()">
+            <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> New</button> -->
+
+      <!-- <button class="btn  btn-transparent"  *ngIf="!isApprovalPage && newPermission" (click)="addRecord()"> New Record</button> -->
+
+      <button  class="btn btn-save ng-star-inserted" type="button" *ngIf="!isApprovalPage && newPermission"
+          (click)="addRecord()">
+        <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> New</button>
+     
+    </div>
+</div>
+    </div>
+  </div>
+
+  <div #rightPanel class="rightPanel col-lg-12 col-md-12"> 
+    
+  <div class="row">
+    <div class="col-sm-12 ">
+      <form [formGroup]="FiltersForm" class="form-horizontal">
+        
+        <div class="form-group row">
+          <label class="col-form-label form-label" style="margin: 4px 0px;">
+            POP Document Code</label>
+          <div class=" col-lg-2 col-sm-8 col-12 input-group" style="margin: 4px 0px;">
+            <input class="form-control" formControlName="POPDocumentCode">
+          </div>
+          <label class="col-form-label form-label" style="margin: 4px 0px;">
+            Supplier Name</label>
+          <div class=" col-lg-2 col-sm-8 col-12 input-group" style="margin: 4px 0px;">
+            <input type="text" formControlName="SupplierName" class="form-control" [inputFormatter]="supplierInputFormater"
+              [ngbTypeahead]="supplierSearch" [resultTemplate]="supplierTemplate" />
+          </div>
+          <div class="input-group" style="margin: 4px 0px;justify-content: end;width:690px;">
+            <button type="submit" (click)="getFilterData()" class="btn btn-save">
+              <i class="fa fa-check" ria-hidden="true"></i> Submit</button>
+            &nbsp;
+            <button type="submit" (click)="resetFilters()" class="btn btn-save">
+              <i class="fa fa-refresh" ria-hidden="true"></i> Refresh</button>
+            <!-- <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                      <i class="fa fa-refresh" aria-hidden="true"></i> Reset</button> -->
+          </div>
+        </div>
+
+
+
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class=" col-sm-12 table-responsive" [ngStyle]="{'max-width.px': screenWidth}">
+      <!-- <p-table #PurchaseOrderListTable dataKey="DraftCode" [rowHover]="true" [filterDelay]="0"
+      [globalFilterFields]="['DraftCode', 'SupplierName']" [columns]="PurchaseOrdersListsCols"
+      [value]="purchaseOrdersList" [rows]="1" [scrollable]="true" [scrollHeight]="'calc(100vh - 400px)'"
+      scrollWidth="100%" [virtualRowHeight]="30" [virtualScroll]="true" sortMode="multiple"
+      responsiveLayout="scroll" [rowsPerPageOptions]="[10,25,50,75,100]"> -->
+
+      <p-table #ProjectPaymentList dataKey="POPDocumentCode" [rowHover]="true" [filterDelay]="0"
+      [globalFilterFields]="['POPDocumentCode', 'SupplierName']" [columns]="importPaymentColumns" 
+      [value]="payments" [rows]="1" [scrollable]="true" [scrollHeight]="'calc(100vh - 280px)'"
+      scrollWidth="100%" [virtualRowHeight]="30" [virtualScroll]="true" sortMode="multiple"
+      responsiveLayout="scroll" [rowsPerPageOptions]="[10,25,50,75,100]">
+        <ng-template pTemplate="colgroup" let-columns>
+          <colgroup>
+            <col style="width:5%;">
+            <col style="width:12%;">
+            <col style="width:13%;">
+            <col style="width:15%;">
+            <col style="width:15%;">
+            <col style="width:10%;">
+            <col style="width:10%;">
+            <col style="width:15%;">
+            <col style="width:5%;">
+          </colgroup>
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th *ngFor="let col of columns;let i=index" [pSortableColumn]="col.field">
+              {{col.header}}
+              <p-sortIcon [hidden]="i==0" *ngIf="i!=columns.length-1" [field]="col.field"></p-sortIcon>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-payment let-i="rowIndex">
+          <tr>
+            <td> {{ i + 1 }} </td>
+            <td> {{payment.POPDocumentCode}} </td>
+            <td> {{payment.PaymentDocumentCode}} </td>
+            <td class="wordbreak"> {{payment.SupplierName}} </td>
+            <td class="wordbreak">{{payment.SupplierInvoiceNumber}}</td>
+            <td> {{payment.CertificateNo}} </td>
+            <td align="right"> {{payment.GrandTotal | number:'1.2-2'}} </td>
+            <td> {{payment.Status}} </td>
+            <td align="center">
+              <button type="button" (click)="viewRecord(payment)" class="btn">
+                <i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <!-- <ngb-pagination *ngIf="payments.length>0" (pageChange)="pageChange($event)"
+      [collectionSize]="purchaseOrderPagerConfig.TotalRecords" class="d-flex justify-content-center"
+      [pageSize]="purchaseOrderPagerConfig.RecordsToFetch" [maxSize]="5" [(page)]="currentPage"
+      [boundaryLinks]="true">
+      <ng-template ngbPaginationPages let-page let-pages="pages">
+          10 of 100
+      </ng-template>
+  </ngb-pagination> -->
+  </div>
+
+</div>
+
+</div>
+<div class="popoverbg" *ngIf="showContractDialog"> </div>
+<p-dialog header="Project Contract Master" class="modalheightauto" [resizable]="false" [draggable]="false"
+  styleClass="mydialog" height="550" [(visible)]="showContractDialog">
+  <form [formGroup]="MastersFiltersForm" class="form-horizontal">
+    <!-- <div class="form-group row">
+      <label class="col-form-label col-lg-2 col-sm-6 col-6 form-label" style="margin: 4px 0px;">Contract Start
+        Date</label>
+      <div class="col-lg-3 col-sm-6 col-6 input-group" style="margin: 4px 0px;">
+        <input class="form-control fromcontrol" formControlName="StartDate" placeholder="yyyy-mm-dd" ngbDatepicker #fromDate="ngbDatepicker">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" (click)="fromDate.toggle();toDate.close()" type="button">
+            <i class="fa fa-calendar" style="cursor: pointer;"></i>
+          </button>
+        </div>
+      </div>
+      <label class="col-form-label col-lg-2 col-sm-6 col-6 form-label" style="margin: 4px 0px;">Contract End
+        Date</label>
+      <div class=" col-lg-3 col-sm-6 col-6 input-group" style="margin: 4px 0px;">
+        <input class="form-control" formControlName="EndDate" placeholder="yyyy-mm-dd" ngbDatepicker #toDate="ngbDatepicker">
+
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" (click)="toDate.toggle();fromDate.close()" type="button">
+            <i class="fa fa-calendar" style="cursor: pointer;"></i>
+          </button>
+        </div>
+      </div>
+    </div> -->
+    <div class="form-group row">
+      <label class="col-form-label col-lg-2 col-sm-6 col-6 form-label" style="margin: 4px 0px;">Contract
+        Name</label>
+      <div class=" col-lg-3 col-sm-6 col-6 input-group" style="margin: 4px 0px;">
+        <input class="form-control" formControlName="ContractName" #contractName>
+      </div>
+      <label class="col-form-label col-lg-2 col-sm-6 col-6 form-label" style="margin: 4px 0px;">Supplier
+        Name</label>
+      <div class=" col-lg-3 col-sm-6 col-6 input-group" style="margin: 4px 0px;">
+        <input type="text" formControlName="SupplierName" class="form-control" [inputFormatter]="supplierInputFormater"
+          [ngbTypeahead]="supplierSearch" [resultTemplate]="supplierTemplate" />
+      </div>
+
+      <div class=" col-lg-2 col-sm-12 col-12 input-group" style="margin: 4px 0px;">
+        <!-- (click)="filterData()" -->
+        <button type="submit" (click)="getMasterFilterData()" class="btn btn-save">
+          <i class="fa fa-check" ria-hidden="true"></i> Submit</button>
+        <!-- <button type="submit" (click)="resetFilters()" class="btn btn-save">
+              <i class="fa fa-check" aria-hidden="true"></i> Reset</button> -->
+      </div>
+    </div>
+    <div>
+      <div class="col-12 error errorMessage">
+        <!-- {{filterMessage}} -->
+      </div>
+    </div>
+  </form>
+  <div class="respnsive-table">
+    <div class="col-12" style="padding:0px;">
+      <p-table [columns]="pMCGridColumns"  [value]="projectPoList" [scrollable]="true" [rows]="100"
+        scrollHeight="300px" [virtualScroll]="true" [virtualRowHeight]="34">
+        <ng-template pTemplate="emptymessage" let-columns>
+          <tr style="text-align: center;">
+              <td [attr.colspan]="columns.length+1">
+                  No records found
+              </td>
+          </tr>
+      </ng-template>
+        <ng-template pTemplate="colgroup" let-columns>
+          <colgroup>
+            <col style="width:5%;">
+            <col style="width:13%;">
+            <col style="width:10%;">
+            <col style="width:10%;">
+            <col style="width:10%;">
+            <col style="width:10%;">
+            <col style="width:13%;">
+            <col style="width:10%;">
+            <col style="width:12%;">
+            <col style="width:7%;">
+          </colgroup>
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th *ngFor="let col of columns">
+              {{col.header}}
+            </th>
+            <th>Options </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+          <tr>
+            <td> {{ i + 1 }} </td>
+            <td> {{rowData.POPMasterCode}} </td>
+            <td class="wordbreak"> {{ rowData.ProjectName }} </td>
+            <td class="wordbreak"> {{ rowData.SupplierName}} </td>
+            <td> {{ rowData.ContractStartDate | date:"yyy-MM-dd" }} </td>
+            <td> {{ rowData.ContractEndDate | date:"yyy-MM-dd" }} </td>
+            <td style="text-align: right"> {{ rowData.OriginalContractSum|number:'1.2-4' }} </td>
+            <td style="text-align: right"> {{ rowData.TotalVOSum|number:'1.2-4' }} </td>
+            <td style="text-align: right"> {{ rowData.AdjustedContractSum|number:'1.2-4' }} </td>
+            <td>
+              <button (click)="getProjectContractMasterDetails(rowData)" class="addLine">Select</button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</p-dialog>
+<ng-template #supplierTemplate let-r="result" let-t="term">
+  {{ r.SupplierName }}
+</ng-template>
+<p-dialog header="Validations" width="400" modal='true' [(visible)]="showWFPopup">
+  <div class="form-group row">
+    <div class="col-xl-8 col-sm-6 col-6">
+      {{validationMessage}}
+    </div>
+  </div>
+  <div class="form-group row">
+    <button style='left:84%;position: relative;' (click)="closeValidationPopUp()" class="btn btn-save">
+      Ok
+    </button>
+  </div>
+</p-dialog>

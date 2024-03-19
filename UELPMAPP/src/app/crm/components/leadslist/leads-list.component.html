@@ -1,0 +1,257 @@
+<!-- <block-ui message="Deafult Message"></block-ui> -->
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12 col-sm-12 padding-null tittlediv">
+        <div class="flexrow space-between align-center">
+            <h3 class="item-heading"> CRM - Leads Pipeline</h3>
+
+            <div> 
+              <!-- <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickBack()">
+                  <i class="fa fa-arrow-left" ria-hidden="true" aria-hidden="true"></i> Back</button>    -->
+                  
+                  <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickNewLead($event)">
+                    <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> New</button>
+
+            </div>
+        </div>
+        <hr style="margin-top: 0px;" />
+    </div>
+  </div>
+
+  <div class="row">
+    <div>
+      
+      <ul class="ul-list">
+        <!-- <li *ngFor="let item of LeadNames" class="HeaderLabel{{item.Sno}}"> -->
+        <li *ngFor="let item of LeadNames" class="HeaderLabel" [ngStyle]="{'background-color':item.Colour,'border':item.Colour}">
+          <div style="margin: 0px">{{item.Count}}</div>
+          <a class="TopicClass" (click)="SetGroupHighlight(item.ProbabilityId)">{{item.topic}}</a>
+        </li>
+      </ul>
+
+      <!-- <p-treeTable [columns]="cols" [value]="LeadsList"  #MyLeadsTable [loading]="loading">
+        <ng-template pTemplate="colgroup" let-columns>
+          <colgroup>
+            <col *ngFor="let col of columns" />
+          </colgroup>
+        </ng-template>
+      
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th *ngFor="let col of columns" ttReorderableColumn>
+              {{ col.header }}
+            </th>
+          </tr>
+        </ng-template>
+      
+        <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
+          <tr>
+            <td *ngFor="let col of columns; let i = index">
+              <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
+              {{ rowData[col.field] }}
+            </td>
+          </tr>
+        </ng-template>
+      </p-treeTable> -->
+      <!-- [(selection)]="selections" -->
+      <hr style="margin-top: 0px;" />
+      <!-- <p>New Table Starts Here</p> -->
+      
+    <!-- Column Group -->
+    <!-- <div class="card">
+      <p-treeTable [value]="LeadsList" [scrollable]="true" >
+        <ng-template pTemplate="header">
+          <tr>
+            <th rowspan="2">Stage</th>
+            <th colspan="1">Account Name</th>
+            <th colspan="1">First Name</th>
+            <th colspan="1">Last Name</th>
+            <th>Email Id </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+          <tr>
+            <td>
+              <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+              {{ rowData.topic }}
+            </td>
+            <td>{{ rowData.compName }}</td>
+            <td>{{ rowData.firstName }}</td>
+            <td>{{ rowData.lastName }}</td>
+            <td>{{ rowData.emailId }}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="footer">
+          <tr>
+            <td colspan="3">Totals</td>
+            <td>$3,283,772</td>
+            <td>$2,126,925</td>
+          </tr>
+        </ng-template>
+      </p-treeTable>
+    </div> -->
+    <!-- Column Group Ends -->
+
+    <!-- <p-treeTable [value]="files1" [(selection)]="files1" selectionMode="checkbox"></p-treeTable> -->
+
+
+    <!-- Leads List From Filesystem Starts Header -->
+    <!-- <p-treeTable [columns]="gridColumns" [value]="files1" #MyLeadsTableFiles class="acceslevels" [scrollable]="true" scrollHeight="400px"
+        [style]="{width:'100%'}" sortMode="single"  [loading]="loading" selectionMode="checkbox" 
+        [(selection)]="selectedFiles2"  (onNodeExpand)="nodeSelect($event,MyLeadsTable)" [rowHover]="true">
+        
+        <ng-template pTemplate="colgroup" let-columns>
+          <colgroup>
+            <p-column field="compName" header="Account Name"></p-column>
+            <col style="width:200px;">
+          </colgroup>
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+          <tr style="height:40px !important;">
+            <th class="grid-Header" *ngFor="let col of columns; let i = index">
+              {{col.header}}
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowNode let-i="rowIndex" let-rowData="rowData">
+          <tr class="ui-treetable-tablewrapper">
+            <td [style.background-color]="rowData.Colour">
+              <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+              <p-treeTableCheckbox [value]="rowNode" *ngIf="i === 0"></p-treeTableCheckbox>
+              {{ rowData.topic }} 
+            </td>
+            <td class="grid-Col">
+              {{ rowData.compName }}
+            </td>
+            <td class="grid-Col">
+              {{ rowData.firstName }}
+            </td>
+            <td class="grid-Col">
+              {{ rowData.lastName }}
+            </td>
+            <td class="grid-Col">
+              {{ rowData.emailId }}
+            </td>
+            <td class="grid-Col">
+              {{ rowData.mobile }}
+            </td>
+            <td class="grid-Col">
+              {{ rowData.StringCreatedDate }}
+            </td>
+            <td>
+              <button class="btn"  style="font-size:12px;" (click)="MyEditLead($event,rowData)"
+              [hidden]="rowData.children" matTooltip="Click to edit the lead">
+              <i class="fa fa-id-card-o"></i>
+            </button>
+
+            <button class="btn" type="button" (click)="MyEditLead($event,rowData)"
+            [hidden]="rowData.children" matTooltip="Click to edit the lead">
+              <i class="fa fa-edit" ria-hidden="true" aria-hidden="true"></i></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-treeTable> -->
+    <!-- Leads List From Filesystem Ends Header -->
+    <button type="button" (click)="exapandORcollapse(MyLeadsTable)">Collapse /Expand all</button>
+      <p-treeTable [columns]="gridColumns" [value]="LeadsList" #MyLeadsTable class="acceslevels" [scrollable]="true" scrollHeight="400px"
+        [style]="{width:'100%'}" sortMode="single"  [loading]="loading" selectionMode="checkbox" 
+        [(selection)]="selectedFiles2"  (onNodeExpand)="nodeSelect($event,MyLeadsTable)" [rowHover]="true">
+        
+        <ng-template pTemplate="colgroup" let-columns>
+          <colgroup>
+            <p-column field="compName" header="Account Name"></p-column>
+            <col style="width:200px;">
+          </colgroup>
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+          <tr style="height:40px !important;">
+            <th class="grid-Header" *ngFor="let col of columns; let i = index">
+              {{col.header}}
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowNode let-i="rowIndex" let-rowData="rowData">
+          <tr class="ui-treetable-tablewrapper">
+            <td [style.background-color]="rowData.Colour">
+              <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+              <p-treeTableCheckbox [value]="rowNode"></p-treeTableCheckbox>
+              {{ rowData.Stage }} 
+            </td>
+            <td class="grid-Col">
+              {{ rowData.compName }}
+            </td>
+            <td class="grid-Col">
+              {{ rowData.firstName }}
+            </td>
+            <td class="grid-Col">
+              {{ rowData.lastName }}
+            </td>
+            <td class="grid-Col">
+              {{ rowData.emailId }}
+            </td>
+            <td class="grid-Col">
+              {{ rowData.mobile }}
+            </td>
+            <td class="grid-Col">
+              {{ rowData.StringCreatedDate }}
+            </td>
+            <td>
+              <!-- <button class="btn" style="font-size:12px;" (click)="MyEditLead($event,rowData)"
+              [hidden]="rowData.children" matTooltip="Click to edit the lead">
+              <i class="fa fa-id-card-o"></i>
+            </button> -->
+
+            
+            <button class="btn" *ngIf="rowData.LeadId>0" type="button" (click)="MyLeadEdit($event,rowData)"
+            [hidden]="rowData.children" matTooltip="Click to edit the lead A">
+              <i class="fa fa-edit" ria-hidden="true" aria-hidden="true"></i></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-treeTable>
+      <!-- <p>New Table Ends Here</p> -->
+
+      <!-- <p-treeTable #MyLeadsTable [value]="LeadsList" [columns]="cols" [style]="{'width': '100%'}" selectionMode="checkbox"
+        [(selection)]="selectedFiles2" (onNodeExpand)="nodeSelect($event,MyLeadsTable)">
+        <p-column field="topic" [style]="{'width':'200px'}" header="Stage"></p-column>
+        <div *ngIf="ShowColumn">
+          <p-column field="compName" header="Account Name"></p-column>
+          <p-column field="firstName" header="First Name"></p-column>
+          <p-column field="lastName" header="Last Name"></p-column>
+          <p-column field="emailId" header="EMail Id"></p-column>
+          <p-column field="mobile" header="Mobile"></p-column>
+          <p-column field="StringCreatedDate" header="Lead Date"></p-column>
+        </div>
+        <div *ngIf="Showother">
+          <p-column field="compName" header="Account Name"></p-column>
+          <p-column field="oppTopic" header="Opportunity Name"></p-column>
+          <p-column field="ActualRevenue" header="Opportunity Amount"></p-column>
+          <p-column field="firstName" header="First Name"></p-column>
+          <p-column field="lastName" header="Last Name"></p-column>
+          <p-column field="emailId" header="EMail Id"></p-column>
+          <p-column field="mobile" header="Mobile"></p-column>
+          <p-column field="StringCreatedDate" header="Lead Date"></p-column>
+      
+        </div>
+        <p-column field="emailId">
+          <ng-template pTemplate="body" let-columns let-rowNode let-rowData="rowData">
+      
+            <button class="btn btn-info" style="font-size:12px;" (click)="MyEditLead($event,rowData)"
+              [hidden]="rowData.children" matTooltip="Click to edit the lead">
+              <i class="fa fa-edit"></i>
+            </button>
+      
+          </ng-template>
+        </p-column>
+      </p-treeTable> -->
+        
+    </div>
+  </div>
+</div>
+
+<ng-template #NameTemplate let-r="result" let-t="term">
+  <div [ngClass]="ngb-disabled">
+      <span [ngClass]="{disabled : r.WorkFlowStatus!='Approved' || r.IsFreezed===true}"> {{
+          r.WorkFlowStatus!='Approved' ? r.SupplierName + " ( " + r.WorkFlowStatus + " ) " : r.SupplierName}}</span>
+  </div>
+</ng-template>

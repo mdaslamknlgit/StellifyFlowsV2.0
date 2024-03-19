@@ -1,0 +1,211 @@
+<div class="container-fluid">
+<div class="row">
+<div class="col-md-6 col-sm-12 padding-null tittlediv">
+<h3 class="item-heading"> <img src="../assets/images/icon1.png"> Inventory > Stock Receipts </h3>
+</div>
+<div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+<img src="../assets/images/add-new.png" (click)="editdata();" *ngIf="hidetext">  <img src="../assets/images/grid1.png"> <img src="../assets/images/grid2.png"> 
+</div>
+</div>
+<div class="row">
+ <div class="col-lg-3 col-md-4 leftdiv"  [class.collapse-leftcol]="leftsection">   
+<div class="left-section"> 
+ <div class="filter-section">
+
+<div class="left-search"><input type="text" placeholder="Receipts" class="search-text"></div> <div class="filter-icon"> <i class="fa fa-filter" aria-hidden="true"></i></div>
+
+<div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="filter-scroll">
+<table class="table">
+<tr><td>
+ <label class="stock-id">#19354535</label> <label class="stock-btn"> <button class="filter-btn btn-pending">Pending
+Approval</button> </label>
+  <label class="label-text">Date</label> :<label class="label-value">28/05/2018</label>
+  <label class="label-text">Total Qty</label> :<label class="label-value">100</label>
+    
+</td></tr>
+<tr><td>
+  <label class="stock-id">#58645846</label> <label class="stock-btn"> <button class="filter-btn btn-draft">Draft</button> </label>
+  <label class="label-text">Date</label> :<label class="label-value">28/05/2018</label>
+  <label class="label-text">Total Qty</label> :<label class="label-value">100</label>
+</td></tr>
+ 
+<tr><td>
+ <label class="stock-id">#54658467</label> <label class="stock-btn"> <button class="filter-btn btn-approved">Approved</button> </label>
+  <label class="label-text">Date</label> :<label class="label-value">28/05/2018</label>
+  <label class="label-text">Total Qty</label> :<label class="label-value">100</label>
+</td></tr>
+<tr><td>
+ <label class="stock-id">#32659854</label> <label class="stock-btn"> <button class="filter-btn btn-draft">Draft</button> </label>
+  <label class="label-text">Date</label> :<label class="label-value">28/05/2018</label>
+  <label class="label-text">Total Qty</label> :<label class="label-value">100</label>
+</td></tr>
+</table>
+ </div>   
+ </div>   
+    </div>
+       <div class="split-line" (click)="splite()"></div> 
+ </div><!-- left col end here-->
+
+<div class="col-lg-9 col-md-8" [class.expand-rightcol]="rightsection">
+
+  <div  class="saved-text"  *ngIf="savedsucess"><i class="fa fa-check-circle"  aria-hidden="true"></i> Saved successfully</div> 
+
+<form    class="form-horizontal" >
+<div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="rightcol-scrroll">
+ <div class="form-group row">
+      <label class="col-form-label col-xl-2 col-sm-6 col-6 form-label">Receipt No # </label>  
+      <div class="col-xl-4 col-sm-6 col-6">
+  <input type="text" 
+           id="receiptno" 
+           name="receiptno" 
+           formControlName="receiptno" 
+           placeholder="Receipt No" *ngIf="hideinput" class="form-control">
+
+     <label class="col-form-label  form-text" *ngIf="hidetext"><b style="color:#01548e">#1233555</b> </label>  
+      </div>
+  </div>
+
+    <div class="form-group row">
+         <label class="col-form-label col-xl-2 col-sm-6 col-6 form-label">Date </label>  
+      <div class="col-xl-4 col-sm-6 col-6">
+ 
+    <input class="form-control" *ngIf="hideinput" placeholder="Start Date"  autocomplete="off" [minDate]="minDate" (dateSelect)="onDateSelection($event)" name="checkInDate"
+            [(ngModel)]="checkInDate" (click)="d.toggle();d2.close();" ngbDatepicker #d="ngbDatepicker"> 
+
+     <label class="col-form-label   form-text" *ngIf="hidetext">28/05/2018 </label>  
+      </div>
+
+      
+  </div>
+    
+
+     <div class="form-group row">
+         <label class="col-form-label col-xl-2 col-sm-6 col-6 form-label">Supplier </label>  
+      <div class="col-xl-4 col-sm-6 col-6">
+  <input type="text" 
+           id="supplier" 
+           name="supplier" 
+           formControlName="supplier" 
+           placeholder="Supplier" *ngIf="hideinput" class="form-control">
+
+     <label class="col-form-label  form-text" *ngIf="hidetext">New Trends Ltd</label>  
+      </div>
+  </div>
+    
+     <div class="form-group row">
+         <label class="col-form-label col-xl-2 form-label col-sm-6 col-6">Location </label>  
+      <div class="col-xl-4 col-sm-6 col-6">
+  <input type="text" 
+           id="Location" 
+           name="Location" 
+           formControlName="Location" 
+           placeholder="Location" *ngIf="hideinput" class="form-control">
+
+     <label class="col-form-label  form-text" *ngIf="hidetext">Ground</label>  
+      </div>
+
+
+       <label class="col-form-label col-xl-2 col-sm-6 col-6 form-label">Status </label>  
+      <div class="col-xl-4 col-sm-6 col-6">
+ <button class="filter-btn btn-nowrap btn-pending" *ngIf="hidetext" >Pending
+Approval</button> 
+
+    <label class="col-form-label  form-text" *ngIf="hideinput"> </label>  
+      </div>
+  </div>
+
+ 
+ <div class="form-group row">
+<div class="col-12">    
+<table  class="table table-border" *ngIf="hidetext"  style="width:97%">
+  <tr>
+  <th>S. no.</th>
+  <th>Item Name </th>
+  <th>Category </th>
+  <th>Received Qty. </th>
+  <th>Exp. Date </th>
+  <th>Batch No. </th>
+  <th class="total-amount">Total Price </th>
+
+  </tr>
+  <tr>   															              
+  <td> 1 </td>
+  <td>Laptops </td>
+  <td>Computers </td>
+  <td>100 </td>
+  <td>20/05/2030 </td>
+  <td>253225 </td>
+  <td class="total-amount">$5000  <div class='edit-list'><i class="fa fa-plus-circle" aria-hidden="true"></i>  <i class="fa fa-minus-circle" aria-hidden="true"></i></div></td>
+  </tr>
+  <tr >   															              
+  <td> 2 </td>
+  <td>Tables </td>
+  <td>Furnitre </td>
+  <td>20 </td>
+  <td>20/05/2030 </td>
+  <td>253225 </td>
+  <td class="total-amount">$5000  <div class='edit-list'><i class="fa fa-plus-circle" aria-hidden="true"></i>  <i class="fa fa-minus-circle" aria-hidden="true"></i></div></td>
+  </tr>
+  <tr>   															              
+  <td> 3 </td>
+  <td>Chairs </td>
+  <td>Furniture </td>
+  <td>10 </td>
+  <td>20/05/2030 </td>
+  <td>253225 </td>
+  <td class="total-amount">$5000  <div class='edit-list'><i class="fa fa-plus-circle" aria-hidden="true"></i>  <i class="fa fa-minus-circle" aria-hidden="true"></i></div></td>
+  </tr>
+    <tr class="grand-total">
+  <td> </td>
+  <td> </td>
+  <td> </td>
+   <td> </td>
+    <td> </td>
+  <td>Grand Total </td>
+  <td class="total-amount">$6300  </td>
+  </tr>
+</table>
+  
+<table  class="table table-border"  *ngIf="hideinput"  style="width:97%">
+  <tr>
+  <th>S. no.</th>
+  <th>Item Name </th>
+  <th>Category </th>
+  <th>Received Qty. </th>
+  <th>Exp. Date </th>
+  <th>Batch No. </th>
+  <th class="total-amount">Total Price </th>
+  </tr>
+  <tr>   															              
+  <td>  </td>
+  <td></td>
+  <td></td>
+  <td> </td>
+  <td></td>
+  <td> </td>
+  <td class="total-amount"> <div class='edit-list'><i class="fa fa-plus-circle" aria-hidden="true"></i>  <i class="fa fa-minus-circle" aria-hidden="true"></i></div></td>
+  </tr>
+  
+</table>
+         </div>
+ </div>
+
+
+ <div class="form-group text-right btn-list">
+    <button type="submit" (click)="savedata()"  class="btn btn-save" *ngIf="hideinput"><i class="fa fa-check" aria-hidden="true"></i> Save</button>
+    <button type="submit" (click)="canledata()"  class="btn btn-cancel" *ngIf="hideinput"><i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+
+     <button type="submit" (click)="editdata()" class="btn btn-edit" *ngIf="hidetext"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+    <button type="submit"  class="btn btn-delete" *ngIf="hidetext"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+  </div>
+</div>
+</form>
+
+
+
+</div><!-- left col end here-->
+
+
+</div>
+ 
+</div>

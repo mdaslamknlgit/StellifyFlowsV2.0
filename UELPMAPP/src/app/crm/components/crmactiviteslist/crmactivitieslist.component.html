@@ -1,0 +1,372 @@
+<block-ui message="Deafult Message"></block-ui>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12 col-sm-12 padding-null tittlediv">
+        <div class="flexrow space-between align-center">
+            <h3 class="item-heading"> CRM - Activities List  </h3>
+            <!-- <p>{{TotalSelectedContacts}} -- {{SelectedContacts}}</p> -->
+            <!-- <p> {{SelectedLeads}} -- {{ShowToolBar}}  ---- {{closeResult}} </p> -->
+            <!-- <p> {{DefaultViewId}} </p> -->
+            <div class="divnewbutton"> 
+                  <!-- <button class="btn btn-save ng-star-inserted" style="margin-right: 20px;" type="button" (click)="ClickNewContact($event)">
+                    <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> New</button> -->
+
+                    &nbsp;&nbsp;
+                    <!-- <button class="btn btn-save ng-star-inserted" mat-button [matMenuTriggerFor]="NewMenu">
+                        <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i>
+                        New</button>
+                    <mat-menu #NewMenu="matMenu">
+                        <button mat-menu-item (click)="ClickNewActivity($event,'Phone');">
+                            <i class="fa fa-file-excel-o" ria-hidden="true" aria-hidden="true"></i> Phone
+                        </button>
+                        <button mat-menu-item (click)="ClickNewActivity($event,'Email');">
+                            <i class="fa fa-file-excel-o" ria-hidden="true" aria-hidden="true"></i> Email
+                        </button>
+        
+                        <button mat-menu-item (click)="ClickNewActivity($event,'Appointment');">
+                            <i class="fa fa-file-pdf-o" ria-hidden="true" aria-hidden="true"></i> Appointment
+                        </button>
+                    </mat-menu> -->
+                    <button type="button" class="btn btn-save ng-star-inserted" style="margin-right: 20px;"
+                        [matMenuTriggerFor]="ActivityMenu">
+                        <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> New
+                    </button>
+
+                    <mat-menu #ActivityMenu="matMenu">
+                        <button mat-menu-item [matMenuTriggerFor]="Call">Phone</button>
+                        <button mat-menu-item (click)="ClickNewPhoneActivity(0,3,'Email','NEW',$event);">Email</button>
+                        <button mat-menu-item (click)="ClickNewPhoneActivity(0,4,'Appointment','NEW',$event);">Appointment</button>
+                    </mat-menu>
+                    <mat-menu #Call="matMenu">
+                        <button mat-menu-item (click)="ClickNewPhoneActivity(0,1,'Phone','NEW',$event);">Schedule a call</button>
+                        <button mat-menu-item (click)="ClickNewPhoneActivity(0,2,'Phone','NEW',$event);">Log a call</button>
+                    </mat-menu>
+            </div>            
+        </div>
+       <hr style="margin-top: 0px;" />
+    </div>
+  </div>
+
+    <!-- Toolbar Starts Here -->
+    <div class="row">
+    
+    </div>
+    <!-- Toolbar Ends Here -->
+    <form [formGroup]="ActivityFilterInfoForm">
+        <div class="row">
+            <!-- Filter Section Start Here -->
+            <div class="filter-section" style="width: 100%;" ngbDropdown #myDrop="ngbDropdown">
+            
+                    <div class="form-group " style="display: flex; flex-wrap:wrap;justify-content: space-between;">
+                        <!-- <label class="col-form-label col form-label">Name :</label>
+                        <div class=" autoComplete">
+                            <input style="width: 100px;" formControlName="Name" type="text"
+                                class="form-control show" [inputFormatter]="NameInputFormater"
+                                [ngbTypeahead]="NameSearch"
+                                (selectItem)="OnNameFilterChange($event)"
+                                [resultTemplate]="NameTemplate" (keyup)="Namechange($event)" />
+                        </div> -->
+                        <div class="col-sm-12 col-md-12 col-lg-1 mb-1">
+                            <label for="Name">Activity Subject</label>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-2 mb-1">
+                            <input type="text" #ActivitySubject id="ActivitySubject" class="form-control" formControlName="ActivitySubject">
+                        </div>
+
+                        <div class="col-sm-12 col-md-12 col-lg-2 mb-1">
+                            <label class="col-form-label  col form-label">Desc</label>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-2 mb-1">
+                            <div class=" input-group" style="width: auto;">
+                                <input type="text" #ActivityDesc formControlName="ActivityDesc" placeholder="" class="form-control">
+                                
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-12 col-lg-1 mb-1">
+                            <label class="col-form-label  col form-label">Email</label>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-2 mb-1">
+                            <div class="  input-group" style="width: auto;">
+                                <input type="text" #FirstName formControlName="Email" placeholder="" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-12 col-lg-2 mb-1">
+                            <button type="submit" (click)="FilterData()" class="btn btn-save">
+                                <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                            <button type="submit" (click)="resetFiltersMain($event)" class="btn btn-save">
+                                <i class="fa fa-refresh" aria-hidden="true"></i> Reset</button>
+                        </div>
+                    </div>
+            
+            </div>
+            <!-- Filter Section Ends Here -->
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-5 col-md-5 col-sm-8">
+                <div class="form-group row">
+                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Views
+                        <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                    <div class="autoComplete col-xl-8 col-sm-6 col-6">
+        
+                        <select id="ViewId" #ViewId (change)="OnViewChange($event)" formControlName="ViewId"
+                            class="form-control" tabindex="10" required>
+                            <option *ngFor="let list of AppViewsList" value={{list.ViewId}}>
+                                {{ list.ViewName }}
+                        </select>
+                        <!-- <div
+                            *ngIf="LeadForm.get('LeadSourceId') && LeadForm.get('LeadSourceId').errors!=null &&LeadForm.get('LeadSourceId').touched==true">
+                            <span class="errorMessage" *ngIf="LeadForm.get('LeadSourceId').errors.required">
+                                Lead Source is required</span>
+                            </div> -->
+        
+                    </div>
+                    <!-- <button class="btn" type="button" (click)="ClickViewPin($event)">
+                        <i class="fa fa-map-pin" aria-hidden="true"></i> </button> -->
+                </div>
+        
+            </div>
+            <div class="col-lg-7 col-md-7 col-sm-12">
+                <div style="display: flex; flex-wrap:wrap;justify-content:end;">
+                    <div *ngIf="!ShowToolBar">
+                        Total Records : {{TotalRecords}} &nbsp;
+                    </div>
+                    <!-- <button class="btn btn-save ng-star-inserted" type="button" (click)="toggleShowDiv('divA')">
+                        <i class="fa fa-search" ria-hidden="true" aria-hidden="true"></i> Search Advance</button> -->
+        
+                    <button class="btn btn-save ng-star-inserted" mat-button [matMenuTriggerFor]="ExportMenu">
+                        <i class="fa fa-file-export" ria-hidden="true" aria-hidden="true"></i>
+                        Export</button>
+                    <mat-menu #ExportMenu="matMenu">
+                        <button mat-menu-item (click)="ExportToCSV()">
+                            <i class="fa fa-file-excel-o" ria-hidden="true" aria-hidden="true"></i> CSV
+                        </button>
+                        <button mat-menu-item (click)="ExportToExcel()">
+                            <i class="fa fa-file-excel-o" ria-hidden="true" aria-hidden="true"></i>
+                            Excel </button>
+        
+                        <button mat-menu-item (click)="ExportToPDF()">
+                            <i class="fa fa-file-pdf-o" ria-hidden="true" aria-hidden="true"></i> PDF
+                        </button>
+                    </mat-menu>
+
+                    <!-- <button class="btn btn-save ng-star-inserted" type="button" (click)="ImportContacts($event)">
+                        <i class="fa fa-file-import" ria-hidden="true" aria-hidden="true"></i> Import </button> -->
+
+                        <input #file style="visibility: hidden;width:0px" type="file" (change)="fileChanged($event)" 
+                        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                        (click)="file.value = null"
+                            (change)="ImportContacts($event)">
+                    
+                        <!-- <button class="btn btn-save ng-star-inserted" #upload (click)="file.click()">
+                            <i class="fa-solid fa-file-import " ria-hidden="true" aria-hidden="true"></i> Import Payments 
+                        </button> -->
+
+                        <button class="btn btn-save ng-star-inserted" style="margin-right: 20px;" type="button" 
+                            (click)="ClickImport($event)">
+                            <i class="fa fa-file-import" ria-hidden="true" aria-hidden="true"></i> Import
+                        </button>
+                    
+                </div>
+                <div *ngIf="ShowToolBar" style="display: flex; flex-wrap:wrap;justify-content:end;" [@fadeInOut]>
+        
+                    <!-- <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickPrint($event)">
+                            <i class="fa fa-print" ria-hidden="true" aria-hidden="true"></i> Print</button> -->
+        
+                    <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickAddToList($event)">
+                        <i class="fa fa-list" ria-hidden="true" aria-hidden="true"></i> Add To List</button>
+        
+                    <button type="button" (click)="ClickAssignTo($event)" class="btn btn-save" *ngIf="ShowToolBar">
+                        <i class="fa fa-users" ria-hidden="true"></i> Assign To</button>
+        
+                    <button type="button" (click)="ClickQuickCampaign($event)" class="btn btn-save" *ngIf="ShowToolBar">
+                        <i class="fa fa-bullhorn" ria-hidden="true"></i> Quick Campaign</button>
+        
+                </div>
+        
+        
+            </div>
+        </div>
+    </form>
+
+    <div class="row" style="border:1px solid blue;visibility: hidden;height:0px;">
+            <!-- Animation Test Starts Here -->
+            <!-- <div>
+                <h2>Hello {{name}}</h2>
+                <button (click)="ShowToolBar = !ShowToolBar">togle show ({{ShowToolBar}})</button>
+                <div *ngIf="ShowToolBar" [@myAnimation]>xxx</div>
+            </div> -->
+
+            <!-- <div *ngIf="show" class="fade" [@state]="state" (@state.done)="animationDone($event)">
+                <ng-content #fadeableContent>Display</ng-content>
+            </div> -->
+            
+            <!-- <button class="btn btn-default" (click)="toggle($event)">Toggle</button>
+            <div class="note" [ngClass]="{'transition':show}" *ngIf="show">
+                <p> Notes</p>
+            </div> -->
+
+            <!-- <div class="row margin upper-margin" [@animate]="cardOpen">
+                // lots of code
+            </div> -->
+            <!-- <div (click)="changeDivState()"
+            [@animationOption1]="clickedDivState"
+    >Click Me
+    </div> -->
+    <!--         
+            <h1>Animation Option 1</h1>
+            <button (click)="changeDivState()">Click Me</button>
+            <div (click)="changeDivState()"
+                [@animationOption1]="clickedDivState"
+            >Click Me
+            </div>
+            
+            <h1>Animation Option 2</h1>
+            <button (click)="toggleMenu()">Click Me</button>
+            <ul *ngIf="ShowToolBar"
+                [@animationOption2]="ShowToolBar ? 'open': 'close'"
+            >
+            <li>Menu Item 1</li>
+            <li>Menu Item 2</li>
+            <li>Menu Item 3</li>
+            </ul> -->
+            <!-- Animation Test Ends Here -->
+    </div>
+    <div class="row">
+        <div class="respnsive-table tablescroll p-datatable-wrapper">
+            
+        <!-- sortMode="multiple" -->
+        <p-table #ActivityListTable
+            [globalFilterFields]="['ActivityTypeName','ActivitySubject','StartDate','EndDate','DueDate']" 
+            [columns]="ActivityListsCols" selectionMode="single | multiple"
+            [value]="ActivityLists" [rows]="this.ActivityListsPagerConfig.RecordsToFetch"
+            [scrollable]="true" [scrollHeight]="'calc(100vh - 360px)'" scrollWidth="100%"
+            [virtualRowHeight]="30" [virtualScroll]="true" 
+            [(selection)]="selectedItems"
+            (sortFunction)="customSort($event)" [customSort]="true"
+            responsiveLayout="scroll" [paginator]="false"
+            (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
+            [rowsPerPageOptions]="[5,10,15,25,50,75,100]">
+            <ng-template pTemplate="header" let-columns>
+                <tr style="height: 40px;">
+                    <th style="width: 36px;">
+                        <p-tableHeaderCheckbox (click)="onRowUnselect($event)">                    
+                        </p-tableHeaderCheckbox>
+                    </th>
+                    <!-- <th *ngFor="let col of ContactsLists;let i=index" style="width: 100px;"
+                        [pSortableColumn]="col.field">
+                        {{col.header}}
+                        <p-sortIcon [hidden]="i==1" *ngIf="i!=ContactsLists.length-1"
+                            [field]="col.field"></p-sortIcon>
+                    </th> -->
+
+                    <!-- Testing Column Custom Sort -->
+                    <!-- <th pSortableColumn="status">Status<p-sortIcon field="status"></p-sortIcon></th> -->
+                    <th style="width: 100px;" pSortableColumn="ActivityTypeName">Activity Type <p-sortIcon field="ActivityTypeName"></p-sortIcon></th>
+                    <th style="width: 100px;" pSortableColumn="ActivitySubject">Subject <p-sortIcon field="ActivitySubject"></p-sortIcon></th>
+                    <th style="width: 100px;" pSortableColumn="RegardingName">Regarding <p-sortIcon field="RegardingName"></p-sortIcon></th>
+                    <th style="width: 100px;" pSortableColumn="StartDate">Start Date <p-sortIcon field="StartDate"></p-sortIcon></th>  
+                    <th style="width: 100px;" pSortableColumn="EndDate">End Date <p-sortIcon field="EndDate"></p-sortIcon></th>         
+                    <th style="width: 100px;" pSortableColumn="DueDate">Due Date <p-sortIcon field="DueDate"></p-sortIcon></th>         
+                    <th style="width: 100px;" pSortableColumn="ActivityStatusName">Status <p-sortIcon field="ActivityStatusName"></p-sortIcon></th>         
+                        
+                    <th style="width: 100px;" pSortableColumn="CreatedDate">Created On <p-sortIcon field="CreatedDate"></p-sortIcon></th>
+                    <th style="width: 50px;">Action</th>
+                </tr>
+            </ng-template>
+            <!-- <ng-template pTemplate="colgroup" let-columns>
+                <colgroup>
+                    <col *ngFor="let col of columns" [style.width]="col.width">
+                </colgroup>
+            </ng-template> -->
+            <ng-template pTemplate="body" let-value let-people let-rowData let-columns let-i="rowIndex">
+                <tr style="height:30px" [pSelectableRow]="ActivityLists">
+                    <td style="width: 36px;">
+                        <p-tableCheckbox [value]="people"></p-tableCheckbox>
+                    </td>
+                        <td style="width: 100px;">{{value.ActivityTypeName }}</td>  
+                        <td style="width: 100px;">{{value.ActivitySubject}}</td>
+                        <td style="width: 100px;">{{value.RegardingName}}</td>
+                        <td style="width: 100px;">{{value.StartDate}}</td>
+                        <td style="width: 100px;">{{value.EndDate }}</td>
+                        <td style="width: 100px;">{{value.DueDate }}</td>
+                        <!-- {{(value.WorkFlowStatusId!=workFlowStatus.Draft)?value.PurchaseOrderCode:value.DraftCode}} -->
+                        <td style="width: 100px;">{{(value.isClose==true)?'Close':'Open' }}</td>
+                    
+                        <td style="width: 100px;">{{value.CreatedDate  | date: 'yyyy-MM-dd'}}</td>
+                        <td style="width: 50PX;" class="aligncenter">
+                            <button type="button" class="btn"
+                                (click)="ClickEditActivity(value.ActivityId,value.ActivityTypeId,value.ActivityTypeName,'EDIT',$event)">
+                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                            </button>
+                        </td>
+                </tr>
+
+            </ng-template>
+            <ng-template pTemplate="emptymessage" let-columns>
+                <tr>
+                    <td [attr.colspan]="ActivityLists.length">
+                        No records found
+                    </td>
+                </tr>
+            </ng-template>
+
+        </p-table>
+        <div *ngIf="ActivityLists.length==0">
+            <div class="col-12 error errorMessage">
+                <p class="errorMessage">
+                    {{filterMessage}}
+                </p>
+            </div>
+        </div>
+        <div style="clear: both;"></div>
+        <ngb-pagination *ngIf="ActivityLists.length>0" (pageChange)="pageChange($event)" style="z-index: auto;"
+            [collectionSize]="ActivityListsPagerConfig.TotalRecords"
+            class="d-flex justify-content-center" [pageSize]="ActivityListsPagerConfig.RecordsToFetch"
+            [maxSize]="5" [(page)]="currentPage" [boundaryLinks]="true">
+            <ng-template ngbPaginationPages let-page let-pages="pages">
+                10 of 100
+            </ng-template>
+        </ngb-pagination>
+    </div>
+    </div>
+</div>
+
+<ng-template #NameTemplate let-r="result" let-t="term">
+    <div>
+        <span> {{r.Name}}</span>
+    </div>
+  </ng-template>
+
+<!-- Modal Dialog Ends Here -->
+<ng-template #content let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="CloseLeadSearch($event,'Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+	</div>
+	<div class="modal-body">
+		<form [formGroup]="ActivityFilterInfoForm">
+			<div class="mb-3">
+				<label for="dateOfBirth">Date of birth</label>
+				<div class="input-group">
+                    <label class="col-form-label col form-label">Topic </label>
+                    <div class=" autoComplete">
+                        <input style="width: 100px;" formControlName="Topic" type="text" class="form-control show" />
+                    </div> 
+ 
+					<button class="btn btn-outline-secondary" (click)="dp.toggle()" type="button">
+                        <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                    </button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="modal-footer">
+        CloseLeadSearch
+        <button type="button" class="btn btn-outline-dark" (click)="CloseLeadSearch($event,'Save click')">Save</button>
+	</div>
+</ng-template>

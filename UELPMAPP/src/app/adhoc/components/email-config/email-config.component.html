@@ -1,0 +1,167 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6 col-sm-12 padding-null tittlediv">
+      <h3 class="item-heading">
+        <img src="../assets/images/icon1.png"> Email Configuration
+      </h3>
+    </div>
+    <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+      <!-- <img src="../assets/images/add-new.png" *ngIf="!showDetailsScreen && addPersmission" (click)="addRecord()"> -->
+      <button class="btn btn-save ng-star-inserted" style="margin-right: 20px;" type="button" (click)="addRecord($event)">
+        <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> New</button>
+      <div ngbDropdown placement="bottom-right" *ngIf="showDetailsScreen && logPersmission" style="padding:0px;"
+        class="d-inline-block">
+        <button class="btn btn-outline-primary" style="background:none;border:none;padding:0px;" id="dropdownBasic1"
+          ngbDropdownToggle>
+          <img src="../assets/images/grid2.png">
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+          <button class="dropdown-item" (click)="displayLogPopUp()">View Log</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12 col-md-12 enlargeRightPanel">
+      <div class="enlargeRightPanelMargin">
+        <div class="rightcol-scrroll rightcol-scrrollbtn" malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
+          <div *ngIf="showDetailsScreen">
+            <form class="form-horizontal" style="height:calc(100vh - 320px);   " [formGroup]="EmailConfigForm">
+              <div class="form-group row">
+                <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Department Name
+                  <span><i class="fa fa-star mandatory-icon" aria-hidden="true"></i></span>
+                </label>
+                <div class="col-xl-4 col-sm-6 col-12">
+                  <select formControlName="Department" (change)="getUsers()" class="form-control">
+                    <option [ngValue]="undefined">--Select--</option>
+                    <option *ngFor="let record of departments" [ngValue]="record">
+                      {{record.Name}}
+                  </select>
+                  <div class="errorMessage"
+                    *ngIf="f.Department.invalid && (f.Department.dirty || f.Department.touched)">
+                    <span *ngIf="f.Department.errors.required">
+                      Department Name is required</span>
+                  </div>
+                  <span class="errorMessage" *ngIf="f.Department!=null &&  f.Department.errors!=null ">
+                    <span *ngIf="f.Department.errors.duplicate">
+                      Duplicate Department Name
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Document Type
+                  <i class="fa fa-star mandatory-icon" aria-hidden="true"></i>
+                </label>
+                <div class="col-xl-4 col-sm-6 col-12">
+                  <select formControlName="ProcessType" class="form-control">
+                    <option [ngValue]="undefined">--Select--</option>
+                    <option *ngFor="let record of processes" [ngValue]="record">
+                      {{record.ProcessName}}
+                  </select>
+                  <div class="errorMessage"
+                    *ngIf="f.ProcessType.invalid && (f.ProcessType.dirty || f.ProcessType.touched)">
+                    <span *ngIf="f.ProcessType.errors.required">
+                      Document Type is required</span>
+                  </div>
+                  <span class="errorMessage" *ngIf="f.Department!=null &&  f.Department.errors!=null ">
+                    <span *ngIf="f.Department.errors.duplicate">
+                      Duplicate Document Type
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">User
+                  <i class="fa fa-star mandatory-icon" aria-hidden="true"></i>
+                </label>
+                <div class="col-xl-4 col-sm-6 col-12">
+                  <ng-select [items]="Users" class="form-control custom" bindLabel="UserName" [multiple]="true"
+                    placeholder="Select Users" [virtualScroll]="true" formControlName="Users">
+                  </ng-select>
+                  <span class="errorMessage"
+                    *ngIf="f.Users.invalid && (f.Users.dirty || f.Users.touched) && f.Users.errors.required">
+                    User is required</span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">User Email
+                </label>
+                <div class="col-xl-4 col-sm-6 col-12" style="border: 1px solid #eae5e5; border-radius: 5px; left: 15px;">
+                  <div *ngFor="let user of f.Users.value">
+                    {{user.Email}}
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Group Email
+                </label>
+                <div class="col-xl-4 col-sm-6 col-12">
+                  <input type="text" class="form-control" formControlName="GroupEmail">
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="row" *ngIf="!showDetailsScreen">
+            <div class="col-xl-12">
+              <div class="respnsive-table">
+                <fieldset>
+                  <p-table #dt [columns]="EmailConfigColumns" [value]="EmailConfigurationGrid" [rows]="1"
+                    scrollHeight="400px" [virtualRowHeight]="30" [virtualScroll]="true">
+                    <ng-template pTemplate="header" let-columns>
+                      <tr>
+                        <th *ngFor="let col of EmailConfigColumns">
+                          {{col.header}}
+                        </th>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="colgroup" let-columns>
+                      <colgroup>
+                        <col *ngFor="let col of columns" [style.width]="col.width">
+                      </colgroup>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-value let-columns let-i="rowIndex">
+                      <tr style="height:30px">
+                        <td>{{i+1}}</td>
+                        <td>{{value.Department.Name}}</td>
+                        <td>{{value.ProcessType.ProcessName}}</td>
+                        <td>
+                          <div *ngFor="let user of value.Users">
+                            {{user.UserName}}
+                          </div>
+                        </td>
+                        <td>{{value.GroupEmail}}</td>
+                        <td>
+                          <button type="button" class="btn"
+                            (click)="EditEmailConfigurationDetails(value.EmailConfigId)">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="showDetailsScreen" class="form-group text-right btn-list">
+          <button type="submit" class="btn btn-save" (click)="PostEmailConfiguration()"
+            *ngIf="f.EmailConfigId.value ==0">
+            <i class="fa fa-check" aria-hidden="true"></i>
+            Save</button>
+          <button type="submit" class="btn btn-save" (click)="PostEmailConfiguration()"
+            *ngIf="f.EmailConfigId.value >0 && editPersmission" [disabled]="!IsFormValueChanges">
+            <i class="fa fa-check" aria-hidden="true"></i>
+            Update </button>
+          <button type="submit" (click)="cancelRecord()" class="btn btn-cancel">
+            <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<p-confirmDialog></p-confirmDialog>
+<app-auditlog *ngIf="showLogPopUp" (hideLogPopUp)="hideLogPopUp($event)" [DocumentId]="f.EmailConfigId.value"
+  [CompanyId]="0" [DocumentNumber]="0" [PageName]="'EmailConfiguration'" [showLogPopUp]="showLogPopUp">
+</app-auditlog>

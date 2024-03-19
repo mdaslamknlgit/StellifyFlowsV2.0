@@ -1,0 +1,116 @@
+.nowrap{ white-space: nowrap;}
+.table-subtotal {border-collapse: collapse}
+.table-subtotal td{ border: inherit}
+.table-totalamount td{ border: inherit;}
+.gridSaveIcon,.gridEditIcon,.gridCancelIcon,.gridRemoveIcon
+{
+    font-size:18px;
+    cursor: pointer;
+    position: relative;
+}
+.gridIconsStyle
+{
+    float: left;
+    top: 5px;
+    position: relative;
+    left: 7%;
+}
+.table tr .gridIconsStyle
+{
+    display:none;
+}
+
+
+.table tr:hover .gridIconsStyle
+{
+    display:block;
+}
+.fileList
+{   
+    width:100%;
+}
+.fileList li
+{   
+    background-color: #fff;
+    border:1px solid #e6e6e6; 
+}
+.fileList .fileName
+{
+    font-weight: bold;
+}
+.fileList .fileSize
+{
+    color:#afa5a5;
+}
+.fileList .fa.fa-close
+{
+    font-size: 16px;
+    float: right;
+    color:#afa5a5;
+    cursor: pointer;
+}
+.displayFileName
+{
+    display: inline-block;
+    /* padding:1em; */
+}
+.attachments .fa
+{
+    font-size:16px;
+    cursor: pointer;
+}
+.autoCompleteTable td{
+border: 1px solid #c4c4c4;
+border-collapse: separate;
+}
+.autoCompleteTable
+{
+    table-layout: fixed;
+}
+/* .rightcol-scrroll {
+    height: calc(104vh - 350px);
+} */
+/*
+ to show div in full screen....
+*/
+ 
+ 
+.addLine
+{
+    background: #01548e;
+    color: white;
+    border: 1px solid #01548e;
+    cursor: pointer;
+    border-radius: 3px;
+    margin-left: 3px;
+
+}
+.fullScreenLabel
+{
+    display:none;
+}
+.ui-table-summary 
+{
+    text-align: left;
+}
+.linesToAdd
+{
+    width: 5%;
+    height: 24px;
+    padding: 3px;
+    display:inline-block;
+    font-size: 12px;
+}
+.showMore,.showLess
+{
+  color:blue;
+  cursor: pointer;
+}
+.showLessContent
+{
+   overflow:"hidden";
+   height:18px;
+}
+ 
+
+

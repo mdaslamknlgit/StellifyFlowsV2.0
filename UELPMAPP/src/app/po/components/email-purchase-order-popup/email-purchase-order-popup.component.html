@@ -1,0 +1,82 @@
+<p-dialog (onHide)="onPopUpHide()" [style]="{'width': '300px','max-height':'500px','overflow':'auto'}" [modal]="true" 
+  [(visible)]="showEmailPopUp" >
+  <p-header>
+      <span >Contact List</span>
+  </p-header>
+  <div>
+      <form [formGroup]="purchaseOrderEmailForm">
+          <div style='margin-top:2%'>
+              <div style="text-align: center;">
+                  <span class="errorMessage" *ngIf="showGridErrorMessage">
+                         Please Choose Any Email
+                  </span>
+              </div>       
+              <fieldset formArrayName="SupplierContactDetails">
+                  <p-table [style]="{width: '400px'}" [columns]="gridColumns" [customSort]="true" sortMode="single" 
+                  [value]="purchaseOrderEmailForm.get('SupplierContactDetails')['controls']">                  
+                      <ng-template pTemplate="emptymessage">
+                          <tr>
+                              <td colspan="12" style='text-align: center;'>
+                                  <b>{{ gridNoMessageToDisplay }}</b>
+                              </td> 
+                          </tr>
+                      </ng-template>
+                      <ng-template pTemplate="colgroup" let-columns>
+                              <colgroup>
+                                  <col style="width:10%;">
+                                  <col style="width:35%;" >
+                                  <col style="width:55%;">
+                              </colgroup>
+                      </ng-template>
+                      <ng-template pTemplate="header" let-columns>
+                          <tr>
+                              <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                  {{col.header}}  
+                                  <p-sortIcon *ngIf="col.field!='IsDetailed'&&col.field!='Sno'" [field]="col.field" ariaLabel="Activate to sort" 
+                                  ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                              </th>
+                          </tr>
+                      </ng-template>
+                      <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                          <tr [formGroupName]="i">
+                              <td align="center">
+                                  <input type="checkbox" formControlName="Checked" (change)="checkValue($event,i)">
+                              </td>
+                              <td>
+                                  <!-- {{purchaseOrderEmailForm.get('SupplierContactDetails').controls[i].get('Name').value }} -->
+                                  <input formControlName="Name" type="text" class="form-control" />
+                              </td>
+                              <td>
+                                  <!-- {{purchaseOrderEmailForm.get('SupplierContactDetails').controls[i].get('EmailId').value }} -->
+                                  <input formControlName="EmailId" type="text" class="form-control"/>
+                              </td>
+                          </tr>
+                      </ng-template>
+                  </p-table>
+                  <div>                      
+                        <button type="button" (click)="addSupplierEmail(rowsToAdd)" class="addLine">
+                            <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Email
+                        </button>
+                    </div>
+
+              </fieldset>
+          
+          </div>
+      </form>
+  </div>
+
+
+
+
+
+  <p-footer>
+      <button type="button"  class="btn" (click)="emailRecord()">Email</button>
+      &nbsp;&nbsp;
+     <!-- <button type="button"  class="btn" (click)="showEmailPopUp=false">Cancel</button> -->
+     <button type="button"  class="btn" (click)="HidePopUp()">Cancel</button>
+
+  </p-footer>
+</p-dialog>
+
+
+<!-- (click)="rejectRecord()" -->

@@ -1,0 +1,39 @@
+ 
+body{font-family: 'Montserrat', sans-serif; font-size:13px;padding:0px; margin: 0px; background: #f5f7f8;}
+h2  {
+    color: #259cde;
+}
+
+.wrapper  {
+    max-width: 998px;
+    margin: 0 auto;
+    border: 1px solid #dad6d6;
+    height: 100%;
+    padding: 10px;
+}
+
+.notes-logo {
+    color: #0082c8;    
+    width: 100%;
+    max-width: 400px; margin-bottom: 20px;
+    
+}
+.notes-logo img {
+    margin-right: 35px;
+}
+.notes-logo h4 {
+    display: inline-block;
+    vertical-align: middle;
+}
+h3  {
+    margin: 10px 0 5px;
+    font-size: 16px;
+    font-weight: 700;
+}
+ul {
+    margin-left: 10px;
+}
+ul  li  {
+    list-style-type: disc;
+    list-style-position: inside;
+}

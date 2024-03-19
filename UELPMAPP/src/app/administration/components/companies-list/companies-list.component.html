@@ -1,0 +1,205 @@
+<div class="container-fluid" ngbDropdown #myDrop="ngbDropdown">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+            <div class="flexrow space-between align-center">
+            <h3 class="item-heading">  Companies  </h3>
+     
+            <!-- <img src="../assets/images/importsupplier.png" *ngIf="hideText"> -->
+            <div>   
+                <button class="btn btn-save ng-star-inserted" style="margin-right: 20px;" type="button" 
+                *ngIf="isDisplayMode && newPermission" (click)="AddCompany($event)">
+                    <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> New</button>
+                
+                <!-- <button  class="btn btn-transparent" (clickOutside)="onClickedOutside($event)"  [exclude]="'.filter-section,.submenu'" 
+                (click)="split()">  {{showfilterstext}}  </button>  -->
+
+               
+            <img style="display: none;" src="../assets/images/grid1.png" (click)="fullScreen()">
+            <img   style="display: none;" src="../assets/images/grid2.png">
+            </div>
+
+            </div>
+
+
+            <!-- <div class="left-section"   [class.display-filters]="!showfilters" > -->
+                <div class="filter-section">
+                    <div class="flexrow space-between showlist"> 
+                    <div class="left-search">
+                        <input type="text" [(ngModel)]="companySearchKey" #searchInput placeholder="Search requests..."
+                            (keyup)="onChange($event)" class="search-filter">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+
+                        <div class="filter-popup" *ngIf="showFilterPopUp" ngbDropdownMenu
+                            aria-labelledby="dropdownManual" (click)="$event.stopPropagation(); myDrop.open();">
+
+                            <form [formGroup]="companyFilterInfoForm" class="form-horizontal">
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-6 form-label">Company Name </label>
+                                    <div class="col-6">
+                                        <input type="text" #CompanyName formControlName="CompanyName" placeholder=""
+                                            class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-6 form-label">Company Code </label>
+                                    <div class="col-6">
+                                        <input type="text" #CompanyCode formControlName="CompanyCode" placeholder=""
+                                            class="form-control">
+                                    </div>
+                                </div>
+                               
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-6 form-label">Country</label>
+                                    <div class="col-6">
+
+                                        <select class="form-control" #Country formControlName="Country"
+                                            class="form-control">
+                                            <option *ngFor="let country of countries" [value]="country.Id">
+                                                {{country.Name}}
+                                            </option>
+                                        </select>
+
+                                    </div>
+                                </div>
+
+                               
+                                <div class="form-group row">
+                                    <div class="col-12 error errorMessage">
+                                        {{filterMessage}}
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+
+                                    <div class="col-12" style="text-align: right">
+                                        <button type="submit" (click)="filterData()" class="btn btn-save">
+                                            <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                        <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                            <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
+                        <!--filterpopup end here-->
+                    </div>
+
+
+                    <div class="filter-icon">
+                        <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                            <i class="fa fa-filter" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div style="float:right;margin:0px;" class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+                        <i class="fa fa-undo" aria-hidden="true"></i>
+                    </div>
+</div>
+
+                    <!-- [scrollbarOptions]="scrollbarOptions" -->
+                    <div malihu-scrollbar class="filter-scroll" style="width:100%; float:left;">
+
+                        <p-table #CompaniesTable 
+                            [globalFilterFields]="['CompanyName','CompanyShortName','CompanyCode','ZipCode','Telephone','Email','Website']"
+                            [columns]="filteredCompaniesCols" selectionMode="single | multiple" [value]="filteredCompanies"
+                            [rows]="this.companyPagerConfig.RecordsToFetch" [scrollable]="true" [scrollHeight]="'calc(100vh - 320px)'"
+                            scrollWidth="100%" [virtualRowHeight]="30" [virtualScroll]="true" [(selection)]="selectedItems"
+                            
+                            [rowsPerPageOptions]="[5,10,15,25,50,75,100]">
+                            <ng-template pTemplate="header" let-columns>
+                                <tr style="height: 40px;">
+                                    <!-- <th style="width: 36px;">
+                                        <p-tableHeaderCheckbox (click)="onRowUnselect($event)">
+                                        </p-tableHeaderCheckbox>
+                                    </th> -->
+                                    <!-- <th *ngFor="let col of filteredCompaniesCols;let i=index" style="width: 200px;" [pSortableColumn]="col.field">
+                                        {{col.header}}
+                                        <p-sortIcon [hidden]="i==1" *ngIf="i!=filteredCompaniesCols.length-1" [field]="col.field"></p-sortIcon>
+                                    </th> -->
+                                    <th style="width: 200px;" pSortableColumn="CompanyName">Company Name <p-sortIcon field="CompanyName"></p-sortIcon></th>  
+                                    <th style="width: 100px;" pSortableColumn="CompanyShortName">Short Name <p-sortIcon field="CompanyShortName"></p-sortIcon></th>
+                                    <th style="width: 100px;" pSortableColumn="CompanyCode">Company Code <p-sortIcon field="CompanyCode"></p-sortIcon></th>
+                                    <th style="width: 100px;" pSortableColumn="ZipCode">Postal Code <p-sortIcon field="ZipCode"></p-sortIcon></th>
+                                    <th style="width: 100px;" pSortableColumn="Telephone">Telephone <p-sortIcon field="Telephone"></p-sortIcon></th>         
+                                    <th style="width: 200px;" pSortableColumn="Email">Email <p-sortIcon field="Email"></p-sortIcon></th>                                                   
+                                    <th style="width: 200px;" pSortableColumn="Website">Website <p-sortIcon field="Website"></p-sortIcon></th>
+                                    <th style="width: 50px;" >Action</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-value let-people let-rowData let-columns let-i="rowIndex">
+                                <tr style="height:30px" [pSelectableRow]="filteredCompanies">
+                                    <!-- <td style="width: 36px;">
+                                        <p-tableCheckbox [value]="people"></p-tableCheckbox>
+                                    </td> -->
+                                    <td style="width: 200px;">{{value.CompanyName }}</td>
+                                    <td style="width: 100px;">{{value.CompanyShortName}}</td>
+                                    <td style="width: 100px;">{{value.CompanyCode}}</td>
+                                    <td style="width: 100px;">{{value.ZipCode}}</td>
+                                    <td style="width: 100px;">{{value.Telephone }}</td>
+                                    <td style="width: 200px;">{{value.Email }}</td>
+                                    <td style="width: 200px;">{{value.Website }}</td>
+                                    <td style="width: 50px;"  class="aligncenter">
+                                        <button type="button" class="btn" (click)="onRecordSelected(value.CompanyId)">
+                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                        
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage" let-columns>
+                                <tr>
+                                    <td [attr.colspan]="filteredCompanies.length">
+                                        No records found
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        
+                        </p-table>
+                        <!-- <table class="table">
+                            <tr >
+                                <td (click)="hidefilter()" style="padding: 0px;">
+                                    
+                                    <table class="listtable">
+                                        <tr>
+                                            <th>Company Name </th>  
+                                             <th>Short Name </th>
+                                              <th>Company Code </th>
+                                             <th>Postal Code </th>
+                                             <th>Telephone </th>
+                                             <th>Email </th>
+                                             <th>Website </th>
+                                        </tr>
+                                        <tr [class.activerow]="company.CompanyId==defaultCompany.CompanyId"
+                                        (click)="onRecordSelected(company)"
+                                        *ngFor="let company of filteredCompanies; let i = index;">
+                                            <td>{{company.CompanyName}}</td>
+                                            <td>{{company.CompanyShortName}} </td>
+                                              <td>{{company.CompanyCode}} </td> 
+                                               <td>{{company.ZipCode}} </td>
+                                               <td> {{company.Telephone}}</td>
+                                               <td> {{company.Email}}</td>
+                                               <td> {{company.Website}}</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                        </table> -->
+                        <div *ngIf="filteredCompanies.length==0" class="col-12 error">
+                            {{errorMessage}}
+                        </div>
+                       
+                    </div>
+
+                    <div style="clear: both;"></div>
+                    <ngb-pagination [maxSize]="5" *ngIf="filteredCompanies.length>0"
+                        (pageChange)="pageChange($event)" [collectionSize]="companyPagerConfig.TotalRecords"
+                        class="d-flex justify-content-center" [pageSize]="companyPagerConfig.RecordsToFetch"
+                        [page]="1" [boundaryLinks]="true"></ngb-pagination>
+
+                </div>
+        </div>
+    </div>
+

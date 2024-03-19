@@ -1,0 +1,894 @@
+<div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6 col-sm-12 padding-null tittlediv">
+                <h3 class="item-heading">
+                    <img src="../assets/images/icon1.png"> Purchase order > Purchase Order Request</h3>
+            </div>
+            <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+                <img src="../assets/images/add-new.png" (click)="addRecord()" *ngIf="hidetext">
+                <img src="../assets/images/grid1.png" (click)="showFullScreen()">
+                <div ngbDropdown #mySettingsDrop="ngbDropdown" placement="bottom-right" style="padding:0px;" class="d-inline-block">
+                    <button class="btn btn-outline-primary" style="background:none;border:none;padding:0px;" id="dropdownBasic1" (click)="openSettingsMenu()"
+                        ngbDropdownToggle>
+                        <img src="../assets/images/grid2.png">
+                    </button>
+                    <div ngbDropdownMenu *ngIf="initSettingsDone" aria-labelledby="dropdownBasic1" (click)="$event.stopPropagation(); mySettingsDrop.open();">
+                        <button class="dropdown-item" (click)="onPrintScreen($event)">Print</button>
+                        <!-- <button class="dropdown-item" (click)="sendMailtoSupplier()">Email</button> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-4 leftdiv" [CustomSpinner]="showLeftPanelLoadingIcon" [class.collapse-leftcol]="leftsection">
+                <div class="left-section">
+                    <div class="filter-section" ngbDropdown #myDrop="ngbDropdown">
+    
+                        <div class="left-search">
+                            <input type="text" [(ngModel)]="purchaseOrderRequestSearchKey" placeholder="Search requests..." (keyup)="onSearchInputChange($event)"
+                                class="search-filter">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                            <!-- (click)="onSearchClick()"  ngbDropdownMenu -->
+    
+                            <div class="filter-popup" *ngIf="initDone" ngbDropdownMenu aria-labelledby="dropdownManual" (click)="$event.stopPropagation(); myDrop.open();">
+    
+                                <form [formGroup]="porFilterInfoForm" class="form-horizontal">
+    
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-6 form-label">POR Code</label>
+                                        <div class="col-6">
+    
+                                            <input type="text" #porCode formControlName="PORCode" class="form-control">
+    
+                                        </div>
+                                    </div>
+    
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-6 form-label">Supplier</label>
+                                        <div class="col-6 autoComplete">
+                                          
+                                            <input formControlName="SupplierCategory" type="text"  class="form-control show" [inputFormatter]="supplierInputFormater"
+                                                [ngbTypeahead]="supplierSearch" [resultTemplate]="supplierTemplate" /> 
+                                        </div>
+                                    </div>
+    
+                                    <div class="form-group row">
+                                        <div class="col-12 error">
+                                            {{filterMessage}}
+                                        </div>
+                                    </div>
+    
+                                    <div class="form-group row">
+    
+                                        <div class="col-12" style="text-align: right">
+                                            <button type="submit" (click)="filterData()" class="btn btn-save">
+                                                <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                            <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                                <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+    
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+    
+                        <!-- start filter code -->
+                        <div class="filter-icon">
+                            <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                                <i class="fa fa-filter" aria-hidden="true"></i>
+                            </button>
+                        </div>
+    
+                        <div   class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+                            <i class="fa fa-undo" aria-hidden="true"></i>
+                        </div>
+    
+    
+                        <!-- end filter code -->
+    
+    
+                        <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="filter-scroll" style="width:100%; float:left;">
+                            <table class="table">
+                                <tr [class.activerow]="record.PurchaseOrderRequestId==selectedPORequestDetails.PurchaseOrderRequestId" (click)="onRecordSelection(record.PurchaseOrderRequestId,record.POTypeId)"
+                                    *ngFor="let record of purchaseOrdersRequestList">
+                                    <td>
+                                        <!-- <h5 class="sub-heading">{{ record.IsDocumentApproved==true? record.PurchaseOrderRequestCode:record.DraftCode }}</h5> -->
+                                        <h5 class="sub-heading">{{ (record.WorkFlowStatusId!=workFlowStatus.Draft)? record.PurchaseOrderRequestCode:record.DraftCode }}</h5>
+                                        <label class="label-text">Supplier</label> :
+                                        <label class="label-value">{{ record.SupplierName }}</label>
+                                        <label class="label-text">Status</label> :
+                                        <label class="label-value">{{ record.WorkFlowStatusText }}</label>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div *ngIf="purchaseOrdersRequestList.length==0" class="col-12 listErrorMessage">
+                                {{errorMessage}}
+                            </div> 
+                            <ngb-pagination [maxSize]="5" *ngIf="purchaseOrdersRequestList.length>0" (pageChange)="pageChange($event)" [collectionSize]="purchaseOrderRequestPagerConfig.TotalRecords"
+                                class="d-flex justify-content-center" [pageSize]="purchaseOrderRequestPagerConfig.RecordsToFetch"
+                                [page]="1" [boundaryLinks]="true"></ngb-pagination>
+                        </div>
+                    </div>
+                </div>
+                <div class="split-line" (click)="split()"></div>
+            </div>
+            <!-- left col end here-->
+    
+            <div #rightPanel [CustomSpinner]="showRightPanelLoadingIcon" class="rightPanel col-lg-9 col-md-8" [class.expand-rightcol]="rightsection">
+    
+                <div>
+                    <form [formGroup]="purchaseOrderRequestForm" class="form-horizontal">
+                        <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+                            <div class="row fullScreenLabel">
+                                <div class="col-12">
+                                    <h3 class="item-heading" style="float:none;">Purchase Order Request</h3>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">PO Type<i class="fa fa-star mandatory-icon" *ngIf="!hidetext" aria-hidden="true"></i></label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="purchaseOrderRequestForm.get('PurchaseOrderRequestId').value >0 || hidetext==true">{{ selectedPORequestDetails.PurchaseOrderType }}</label>
+                                            <select *ngIf="(purchaseOrderRequestForm.get('PurchaseOrderRequestId').value ==0 ||  purchaseOrderRequestForm.get('PurchaseOrderRequestId').value == null)&&hideinput==true" appAutofocus formControlName="POTypeId" (change)="onPoTypeChange($event.target.value)" placeholder="Select" class="form-control">
+                                                <option *ngFor="let record of purchaseOrderTypes" value={{record.PurchaseOrderTypeId}}>
+                                                    {{record.PurchaseOrderType}}
+                                                </option>
+                                            </select>
+                                            <div *ngIf="(purchaseOrderRequestForm.get('PurchaseOrderRequestId').value ==0 ||  purchaseOrderRequestForm.get('PurchaseOrderRequestId').value == null)&&purchaseOrderRequestForm.get('POTypeId') && purchaseOrderRequestForm.get('POTypeId').errors!=null && purchaseOrderRequestForm.get('POTypeId').touched==true">
+                                                <span class="errorMessage" *ngIf="purchaseOrderRequestForm.get('POTypeId').errors.required">Purchase Order Type is required</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row" *ngIf="hidetext">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Requestor</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">{{ selectedPORequestDetails.RequestedByUserName }}</label>
+                                        </div>
+                                    </div>                                    
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier Type</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="hidetext&&selectedPORequestDetails.Supplier!=null&&selectedPORequestDetails.Supplier.SupplierId>0">{{ selectedPORequestDetails.Supplier.SupplierTypeID==1?"UEL Related Supplier":"External
+                                                Supplier" }}
+                                            </label>
+                                            <label class="col-form-label"  *ngIf="hideinput">
+                                                <input type="radio" (change)="supplierTypeChange($event)" value="1" formControlName="SupplierTypeID" /> UEL Related Supplier
+                                            </label>
+                                            <label class="col-form-label" style="margin-left: 5px;" *ngIf="hideinput">
+                                                <input type="radio" (change)="supplierTypeChange($event)" value="2" formControlName="SupplierTypeID" /> External Supplier
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier</label>
+                                        <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="hidetext&&selectedPORequestDetails.Supplier!=null">{{ selectedPORequestDetails.Supplier.SupplierName }}</label>
+                                            <input formControlName="Supplier" type="text"  *ngIf="hideinput" class="show form-control" [inputFormatter]="supplierInputFormater"
+                                                (selectItem)="onSupplierChange($event)" [ngbTypeahead]="supplierSearch" [resultTemplate]="supplierTemplate"
+                                            />
+                                            <div *ngIf="purchaseOrderRequestForm.get('Supplier') && purchaseOrderRequestForm.get('Supplier').errors!=null && purchaseOrderRequestForm.get('Supplier').touched==true">
+                                                <span class="errorMessage" *ngIf="purchaseOrderRequestForm.get('Supplier').errors.required">Supplier is required</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier Address</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="hidetext&&selectedPORequestDetails.Supplier!=null">{{ selectedPORequestDetails.Supplier.BillingAddress1 }}</label>
+                                            <textarea formControlName="SupplierAddress" *ngIf="hideinput" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Delivery Address</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="hidetext">{{ selectedPORequestDetails.DeliveryAddress }}</label>
+                                            <textarea formControlName="DeliveryAddress" *ngIf="hideinput" class="form-control"></textarea>
+                                            <div *ngIf="purchaseOrderRequestForm.get('DeliveryAddress') && purchaseOrderRequestForm.get('DeliveryAddress').errors!=null && purchaseOrderRequestForm.get('DeliveryAddress').touched==true">
+                                                <span class="errorMessage" *ngIf="purchaseOrderRequestForm.get('DeliveryAddress').errors.required">Delivery Address is required</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Fax</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="hidetext&&selectedPORequestDetails.Supplier!=null">{{ selectedPORequestDetails.Supplier.BillingFax }}</label>
+                                            <input formControlName="BillingFax" *ngIf="hideinput" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Currency Type</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="hidetext">{{ selectedPORequestDetails.CurrencyCode }}</label>
+                                            <select (change)="onCurrencyChange($event)" formControlName="CurrencyId" *ngIf="hideinput" class="form-control">
+    
+                                                <option *ngFor="let record of currencies" value={{record.Id}}>
+                                                    {{ record.Code }}
+                                            </select>
+                                            <div *ngIf="purchaseOrderRequestForm.get('CurrencyId') && purchaseOrderRequestForm.get('CurrencyId').errors!=null && purchaseOrderRequestForm.get('CurrencyId').touched==true ">
+                                                <span class="errorMessage" *ngIf="purchaseOrderRequestForm.get('CurrencyId').errors.required">Currency Code is required</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">No. of Entries</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">{{ (selectedPORequestDetails==undefined||selectedPORequestDetails.PurchaseOrderRequestItems==undefined)?0:selectedPORequestDetails.PurchaseOrderRequestItems.length
+                                                }}
+                                            </label>
+                                        </div>
+                                    </div> -->
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group row" *ngIf="hidetext">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">POR Number</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">{{ (selectedPORequestDetails.WorkFlowStatusId!=workFlowStatus.Draft)?selectedPORequestDetails.PurchaseOrderRequestCode:selectedPORequestDetails.DraftCode }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row" *ngIf="hidetext">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Created Date</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">{{ selectedPORequestDetails.CreatedDate|DisplayDateFormat }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Status</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+    
+                                            <label *ngIf="selectedPORequestDetails.WorkFlowStatusText!=''&&selectedPORequestDetails.WorkFlowStatusText!=null" class="col-form-label form-text">{{ selectedPORequestDetails.WorkFlowStatusText }}&nbsp;
+                                                <span *ngIf="selectedPORequestDetails.CurrentApproverUserName!=''&&selectedPORequestDetails.CurrentApproverUserName!=null">[{{ selectedPORequestDetails.CurrentApproverUserName }}]</span>
+                                            </label>
+    
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Department<i class="fa fa-star mandatory-icon"  *ngIf="!hidetext" aria-hidden="true"></i></label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="hidetext">{{ selectedPORequestDetails.Location }}</label>
+                                            <select formControlName="LocationId" (change)="onDepChage($event)" *ngIf="hideinput" class="form-control">
+                                                <option *ngFor="let record of departments" value={{record.LocationID}}>
+                                                    {{record.Name}}
+                                            </select>
+                                            <div *ngIf="purchaseOrderRequestForm.get('LocationId') && purchaseOrderRequestForm.get('LocationId').errors!=null &&purchaseOrderRequestForm.get('LocationId').touched==true">
+                                                <span class="errorMessage" *ngIf="purchaseOrderRequestForm.get('LocationId').errors.required">Department is required</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row" *ngIf="hidetext">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Designation</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">{{ selectedPORequestDetails.Designation }}</label>
+                                        </div>
+                                    </div>                                   
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Cost of Service<i class="fa fa-star mandatory-icon"  *ngIf="!hidetext" aria-hidden="true"></i></label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="hidetext">{{ selectedPORequestDetails.CostOfService }}</label>
+                                            <select formControlName="CostOfServiceId" *ngIf="hideinput" class="form-control">
+                                                <option *ngFor="let record of costOfServiceType" value={{record.CostOfServiceId}}>
+                                                    {{record.CostOfService}}
+                                            </select>
+                                            <div *ngIf="purchaseOrderRequestForm.get('CostOfServiceId')&& purchaseOrderRequestForm.get('CostOfServiceId').errors!=null && purchaseOrderRequestForm.get('CostOfServiceId').touched==true">
+                                                <span class="errorMessage" *ngIf="purchaseOrderRequestForm.get('CostOfServiceId').errors.required">Cost Of Service is required</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Expected Delivery</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="hidetext">{{ selectedPORequestDetails.ExpectedDeliveryDate|DisplayDateFormat }}</label>
+                                            <div class="input-group" *ngIf="hideinput">
+                                                <input class="form-control" formControlName="ExpectedDeliveryDate" (click)="onDatePickerFocus(deliveryDatePicker)" ngbDatepicker
+                                                    #deliveryDatePicker="ngbDatepicker">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-secondary" (click)="deliveryDatePicker.toggle()" type="button">
+                                                        <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">GST Required</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label *ngIf="hideinput" class="col-form-label form-text">
+                                                <mat-slide-toggle formControlName="IsGstRequired" (change)="matselect($event)"></mat-slide-toggle>
+                                                &nbsp;
+                                                <label *ngIf="slideactive">Yes</label>
+                                            </label>
+                                            <label class="col-form-label form-text" *ngIf="hidetext">{{ selectedPORequestDetails.IsGstRequired==true?'Yes':'No' }}</label>
+                                        </div>
+                                    </div> -->
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Vendor Reference</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="hidetext">{{ selectedPORequestDetails.VendorReferences }}</label>
+                                            <input type="text" formControlName="VendorReferences" placeholder="Vendor Reference" *ngIf="hideinput" class="form-control">
+                                        </div>
+                                    </div>
+                                 
+                                </div>
+                            </div>
+                            <div class="col-12 engineers-assigned" style="padding:0px;">
+    
+    
+    
+    
+                                <!-- statrt item grid -->
+                                <div class="row" style="margin-top:2em;">
+                                    <div class="col-12">
+                                        <h4 class="form-heading">Items Details</h4>
+                                    </div>
+                                    <div class="col-12">
+                                        <fieldset *ngIf="hideinput" formArrayName="PurchaseOrderRequestItems">
+                                            <div style="text-align: center;">
+                                                <span class="errorMessage" *ngIf="showGridErrorMessage &&(selectedPORequestDetails.PurchaseOrderRequestItems==undefined|| selectedPORequestDetails.PurchaseOrderRequestItems.length==0)">
+                                                    Please enter purchase order items
+                                                </span>
+                                            </div>
+                                            <p-table [columns]="gridColumns" (sortFunction)="customSort($event)" [customSort]="true" sortMode="single" [value]="purchaseOrderRequestForm.controls.PurchaseOrderRequestItems.controls">
+                                                <ng-template pTemplate="colgroup" let-columns>
+                                                    <colgroup>
+                                                        <col *ngIf="purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.FixedAssetPo" style="width:6%;">
+                                                        <col *ngIf="(purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.InventoryPo||purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.ExpensePo)" style="width:3%;">
+                                                        <col *ngIf="purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.FixedAssetPo" style="width:10%;">
+                                                        <!-- <col style="width:10%;"> -->
+                                                        <col *ngIf="(purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.InventoryPo|| purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.FixedAssetPo || purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.ExpensePo)"  style="width:10%;">
+                                                        <col *ngIf="(purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.InventoryPo|| purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.FixedAssetPo || purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.ExpensePo)" style="width:15%;">
+                                                        <col style="width:10%;">
+                                                        <col *ngIf="(purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.InventoryPo||purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.ExpensePo)" style="width:10%;">
+                                                        <col style="width:10%;">
+                                                        <col style="width:10%;">
+                                                        <col style="width:10%;">      
+                                                        <col *ngIf="!isTypeSelected" style="width:15%;">
+                                                        <col *ngIf="!isTypeSelected" style="width:15%;">                                                                                                            
+                                                    </colgroup>
+                                                </ng-template>
+                                                <ng-template pTemplate="header" let-columns>
+                                                    <tr>
+                                                        <ng-template ngFor let-data [ngForOf]="columns" let-i="index">
+                                                            <th *ngIf="(( (purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.InventoryPo|| purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.ExpensePo) &&data.field!='IsDetailed')||(purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.FixedAssetPo && data.field!='MeasurementUnitID'))" [pSortableColumn]="data.field">
+                         
+                                                                <span *ngIf="(data.field=='Unitprice'||data.field=='ItemTotal') && selectedPORequestDetails.CurrencySymbol!=null">
+                                                                    &nbsp; ( {{ selectedPORequestDetails.CurrencySymbol }} )
+                                                                </span>
+                                                                <span *ngIf="purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.FixedAssetPo && data.field=='Name'">
+                                                                    Asset
+                                                                </span>
+                                                                <span *ngIf="purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.ExpensePo && data.field=='Name'">
+                                                                    Expense
+                                                                </span>
+                                                                <span *ngIf="(purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.InventoryPo||(purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.ExpensePo && data.field!='Name' )||(purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.FixedAssetPo && data.field!='Name'))">
+                                                                    {{data.header}}
+                                                                </span>
+                                                                <p-sortIcon [field]="data.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                                            </th>
+                                                        </ng-template>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                                    <tr *ngIf="hideinput" [formGroupName]="i">
+                                                        <td *ngIf="purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.FixedAssetPo" align="center">
+                                                            <input *ngIf="i>0" type="checkbox" (ngModelChange)="onIsDetailedCheck($event,i)" formControlName="IsDetailed">
+                                                        </td>
+                                                        <td *ngIf="(purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.InventoryPo||purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.ExpensePo)">
+                                                            {{ i + 1 }}
+                                                        </td>
+                                                        <td *ngIf="purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.FixedAssetPo">
+                                                            {{ (purchaseOrderRequestForm.get('PurchaseOrderRequestItems').controls[i].get('Sno')==null||purchaseOrderRequestForm.get('PurchaseOrderRequestItems').controls[i].get('Sno').value==null)?"": purchaseOrderRequestForm.get('PurchaseOrderRequestItems').controls[i].get('Sno').value }}
+                                                        </td>
+                                                        <td *ngIf="(purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.InventoryPo|| purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.FixedAssetPo || purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.ExpensePo)">
+                                                            <select formControlName="TypeId"  class="form-control" (change)="onCategoryChange($event.target.value,i)">
+                                                                <option *ngFor="let type of accountCodeCategories" [value]="type.AccountCodeCategoryId">
+                                                                    {{ type.AccountCodeName }}
+                                                            </select>
+                                                        </td>
+                                                        <td *ngIf="(purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.InventoryPo|| purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.FixedAssetPo || purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.ExpensePo)">
+                                                            <input *ngIf="purchaseOrderRequestForm.get('PurchaseOrderRequestItems').controls[i].get('TypeId').value==4" formControlName="Item" type="text" class="form-control" [inputFormatter]="itemMasterInputFormater" (selectItem)="itemMasterSelection($event,i)"
+                                                                [ngbTypeahead]="itemMasterSearch"  (click)="onItemClick(i)" [resultTemplate]="itemMasterTemplate"
+                                                            />
+                                                            <input *ngIf="purchaseOrderRequestForm.get('PurchaseOrderRequestItems').controls[i].get('TypeId').value==5" formControlName="Asset" type="text" class="form-control" [inputFormatter]="assestInputFormater" (selectItem)="assestSelection($event,i)"
+                                                                [ngbTypeahead]="assetSearch"  (click)="onItemClick(i)" [resultTemplate]="assetTemplate"
+                                                             />
+                                                             <input *ngIf="purchaseOrderRequestForm.get('PurchaseOrderRequestItems').controls[i].get('TypeId').value==2||purchaseOrderRequestForm.get('PurchaseOrderRequestItems').controls[i].get('TypeId').value==3" formControlName="Expense" type="text" class="form-control" [inputFormatter]="expenseInputFormater" (selectItem)="expenseSelection($event,i)"
+                                                             [ngbTypeahead]="expenseSearch"  (click)="onItemClick(i)" [resultTemplate]="expenseTemplate"
+                                                          />
+                                                          <input *ngIf="purchaseOrderRequestForm.get('PurchaseOrderRequestItems').controls[i].get('TypeId').value==1" formControlName="Service" type="text" class="form-control" [inputFormatter]="serviceInputFormater" (selectItem)="expenseSelection($event,i)"
+                                                          [ngbTypeahead]="serviceMasterSearch"  (click)="onItemClick(i)" [resultTemplate]="serviceMasterTemplate"
+                                                        />
+                                                        </td>
+                                                        <td>
+                                                            <textarea formControlName="ItemDescription" autoresize type="text" class="form-control">
+                                                            </textarea>
+                                                        </td>
+                                                        <td *ngIf="(purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.InventoryPo||purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.ExpensePo)">
+                                                            <select formControlName="MeasurementUnitID" *ngIf="hideinput" class="form-control">
+                                                                <option *ngFor="let record of measurementUnits" value={{record.MeasurementUnitID}}>
+                                                                    {{ record.Name }}
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" style="text-align: right;" min="0" class="form-control" (change)="calculateTotalPrice($event)" (keydown)=restrictMinus($event)
+                                                                formControlName="ItemQty" />
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" style="text-align: right;" min="0" class="form-control" (change)="calculateTotalPrice($event)" (keydown)=restrictMinus($event)
+                                                                formControlName="Unitprice" />
+                                                        </td>
+                                                        <td>
+                                                            <select formControlName="TaxID"  (change)="setTaxAmount($event.target.value,i)" class="form-control">
+                                                                <option [ngValue]="undefined">--Select--</option>
+                                                                <option *ngFor="let record of taxTypes" value={{record.TaxId}}>
+                                                                    {{ record.TaxName }}
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            {{ purchaseOrderRequestForm.get('PurchaseOrderRequestItems').controls[i].get('TotalTax').value  }}
+                                                        </td>
+                                                        <td>
+                                                            <div style="float:left;width:60%;">
+                                                                {{ ( purchaseOrderRequestForm.get('PurchaseOrderRequestItems').controls[i].get('ItemQty').value * purchaseOrderRequestForm.get('PurchaseOrderRequestItems').controls[i].get('Unitprice').value)+  purchaseOrderRequestForm.get('PurchaseOrderRequestItems').controls[i].get('TotalTax').value |number:'1.2-4'
+                                                                }}
+                                                            </div>
+                                                            <div class="gridIconsStyle">
+                                                                <i class="fa fa-trash gridRemoveIcon" (click)="removeGridItem(i)" aria-hidden="true"></i>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </ng-template>
+                                            </p-table>
+                                            <div *ngIf="hideinput">
+                                                <input type="number" [(ngModel)]="linesToAdd" [ngModelOptions]="{standalone: true}" class="form-control linesToAdd">
+                                                <button type="submit" (click)="addGridItem(linesToAdd)" class="addLine">
+                                                    <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Line
+                                                </button>
+                                            </div>
+                                        </fieldset>
+                                        <p-table *ngIf="hidetext" [columns]="gridColumns" (sortFunction)="customSort($event)" [customSort]="true" sortMode="single"
+                                            [value]="selectedPORequestDetails.PurchaseOrderRequestItems">
+                                            <ng-template pTemplate="colgroup" let-columns>
+                                                <colgroup>
+                                                    <col *ngIf="selectedPORequestDetails.POTypeId ==  purchaseOrderType.FixedAssetPo" style="width:6%;">
+                                                    <col style="width:5%;">
+                                                    <col style="width:10%;"> 
+                                                    <col style="width:10%;">
+                                                    <col style="width:15%;">
+                                                    <col *ngIf="(selectedPORequestDetails.POTypeId == purchaseOrderType.InventoryPo||selectedPORequestDetails.POTypeId == purchaseOrderType.ExpensePo)" style="width:7%;">
+                                                    <col style="width:10%;">
+                                                    <col style="width:10%;">
+                                                    <col style="width:10%;">
+                                                    <col style="width:5%;">
+                                                    <col style="width:10%;">
+                                                </colgroup>
+                                            </ng-template>
+                                            <ng-template pTemplate="header" let-columns>
+                                                <tr>
+                                                    <ng-template ngFor let-data [ngForOf]="columns" let-i="index">
+                                                        <th *ngIf="(((selectedPORequestDetails.POTypeId == purchaseOrderType.InventoryPo || purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.ExpensePo) && data.field!='IsDetailed')||(selectedPORequestDetails.POTypeId == purchaseOrderType.FixedAssetPo&&data.field!='MeasurementUnitID'))"  [pSortableColumn]="data.field">
+                                                            <span *ngIf="(data.field=='Unitprice'||data.field=='ItemTotal')&&selectedPORequestDetails.CurrencySymbol!=null">
+                                                                &nbsp; ( {{ selectedPORequestDetails.CurrencySymbol }} )
+                                                            </span>
+                                                            <span *ngIf="selectedPORequestDetails.POTypeId==purchaseOrderType.FixedAssetPo&&data.field=='Name'">
+                                                                    Asset
+                                                            </span>
+                                                            <span *ngIf="selectedPORequestDetails.POTypeId == purchaseOrderType.ExpensePo && data.field=='Name'">
+                                                                 Expense
+                                                            </span>
+                                                            <span *ngIf="(selectedPORequestDetails.POTypeId == purchaseOrderType.InventoryPo || purchaseOrderRequestForm.get('POTypeId').value == purchaseOrderType.ExpensePo || (selectedPORequestDetails.POTypeId == purchaseOrderType.FixedAssetPo&&data.field!='Name'))">
+                                                                {{data.header}}
+                                                            </span>
+                                                            <p-sortIcon [field]="data.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                                        </th>
+                                                    </ng-template>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                                <tr>
+                                                    <td *ngIf="selectedPORequestDetails.POTypeId == purchaseOrderType.FixedAssetPo">
+                                                        <i style="color:green;" class="fa fa-check" *ngIf="rowData.IsDetailed==true"></i>
+                                                    </td>
+                                                    <td>
+                                                        <span *ngIf="selectedPORequestDetails.POTypeId != purchaseOrderType.FixedAssetPo">{{ i + 1 }}</span> 
+                                                        <span *ngIf="selectedPORequestDetails.POTypeId == purchaseOrderType.FixedAssetPo">{{ rowData.Sno }}</span>
+                                                    </td>   
+                                                    <td>
+                                                        {{ rowData.AccountCodeName }} 
+                                                    </td>       
+                                                    <td>
+                                                       <span *ngIf="selectedPORequestDetails.POTypeId === purchaseOrderType.InventoryPo && rowData.TypeId === 4">{{ rowData.Item.ItemName }}</span> 
+                                                       <span *ngIf="selectedPORequestDetails.POTypeId == purchaseOrderType.InventoryPo && rowData.TypeId === 1">{{ rowData.Service.Code }}</span> 
+                                                       <span *ngIf="selectedPORequestDetails.POTypeId == purchaseOrderType.ExpensePo">{{ rowData.Expense.Code }}</span>
+                                                       <span *ngIf="selectedPORequestDetails.POTypeId == purchaseOrderType.FixedAssetPo && rowData.TypeId === 5">{{ rowData.Asset.AssetName }}</span> 
+                                                       <span *ngIf="selectedPORequestDetails.POTypeId == purchaseOrderType.FixedAssetPo && rowData.TypeId === 1">{{ rowData.Service.Code }}</span> 
+                                                    </td>
+                                                    <td>
+                                                        <span class="descriptionStyle" [innerHtml]="rowData.ItemDescription|TextAreaContentDisplay"></span>
+                                                    </td>
+                                                    <td *ngIf="selectedPORequestDetails.POTypeId != purchaseOrderType.FixedAssetPo">
+                                                        {{ rowData.MeasurementUnitCode }}
+                                                    </td>
+                                                    <td align="right">
+                                                        {{ rowData.ItemQty }}
+                                                    </td>
+                                                    <td align="right">
+                                                        {{ rowData.Unitprice|number:'1.2-4' }}
+                                                    </td>
+                                                    <td align="right">
+                                                        {{ rowData.TaxName }}
+                                                    </td>
+                                                    <td align="right">
+                                                        {{ rowData.TaxTotal|number:'1.2-4' }}
+                                                    </td>
+                                                    <td>
+                                                        <div style="float:left;width:60%;text-align: right;">
+                                                            <!-- {{ (rowData.ItemQty * rowData.Unitprice+ rowData.TotalTax)|number:'1.2-4' }} -->
+                                                            {{ rowData.ItemTotalPrice|number:'1.2-4' }}
+                                                        </div>
+                                                        <div class="gridIconsStyle" *ngIf="hideinput==true">
+                                                            <i class="fa fa-edit gridEditIcon" (click)="editGridItem(i)" aria-hidden="true"></i>
+                                                            &nbsp;&nbsp;&nbsp;
+                                                            <i class="fa fa-trash gridRemoveIcon" (click)="removeGridItem(i)" aria-hidden="true"></i>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </div>
+                                </div>
+                                <!-- End Item Grid -->
+    
+    
+    
+                                <div class="row colorder">
+                                    <div class="col-sm-5">
+                                        <div class="row" style="margin-top:3em;">
+                                            <div class="col-12 row">
+                                                <div class="col-5">
+                                                    <h4 class="form-heading">Payment Terms <i class="fa fa-star mandatory-icon" *ngIf="!hidetext" aria-hidden="true"></i></h4>
+                                                </div>
+                                                <div class="col-6">
+                                                    <select (change)="onPaymentTermChange($event)" formControlName="PaymentTermId" *ngIf="hideinput" class="form-control">
+                                                        <option *ngFor="let record of paymentTerms" value={{record.PaymentTermsId}}>
+                                                            {{ record.Code }}
+                                                        </option>
+                                                    </select>
+                                                    <div *ngIf="purchaseOrderRequestForm.get('PaymentTermId') && purchaseOrderRequestForm.get('PaymentTermId').errors!=null && purchaseOrderRequestForm.get('PaymentTermId').touched==true">
+                                                        <span class="errorMessage" *ngIf="purchaseOrderRequestForm.get('PaymentTermId').errors.required">Payment Terms is required</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12" style="margin-top:1em;">
+                                                <textarea *ngIf="hideinput" class="form-control" autoresize formControlName="PaymentTerms"></textarea>
+                                                <span class="descriptionStyle" showmore [value]="selectedPORequestDetails.PaymentTerms" *ngIf="hidetext"></span>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-top:3em;">
+                                            <div class="col-12">
+                                                <h4 class="form-heading">Reasons For Purchase Request<i class="fa fa-star mandatory-icon" *ngIf="!hidetext" aria-hidden="true"></i></h4>
+                                            </div>
+                                            <div class="col-12">
+                                                <textarea *ngIf="hideinput" class="form-control" autoresize formControlName="Reasons"></textarea>
+                                                <span class="descriptionStyle" showmore [value]="selectedPORequestDetails.Reasons" *ngIf="hidetext"></span>
+                                                <div *ngIf="purchaseOrderRequestForm.get('Reasons') && purchaseOrderRequestForm.get('Reasons').errors!=null && purchaseOrderRequestForm.get('Reasons').touched==true">
+                                                    <span class="errorMessage" *ngIf="purchaseOrderRequestForm.get('Reasons').errors.required">Reason is required</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-top:3em;">
+                                            <div class="col-12">
+                                                <h4 class="form-heading">Instructions to vendor</h4>
+                                            </div>
+                                            <div class="col-12">
+                                                <textarea *ngIf="hideinput" class="form-control" autoresize formControlName="Instructions"></textarea>
+                                                <span class="descriptionStyle" showmore [value]="selectedPORequestDetails.Instructions" *ngIf="hidetext"></span>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-top:3em;">
+                                            <div class="col-12">
+                                                <h4 class="form-heading">Justifications</h4>
+                                            </div>
+                                            <div class="col-12">
+                                                <textarea *ngIf="hideinput" class="form-control" autoresize formControlName="Justifications">
+                                    </textarea>
+                                                <span class="descriptionStyle" showmore [value]="selectedPORequestDetails.Justifications" *ngIf="hidetext"></span>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-top:3em;">
+                                            <div class="col-12 row">
+                                                <div class="col-5">
+                                                    <h4 class="form-heading">Delivery Terms<i class="fa fa-star mandatory-icon" *ngIf="!hidetext" aria-hidden="true"></i></h4>
+                                                </div>
+                                                <div class="col-6">
+                                                    <select (change)="onDeliveryTermChange($event)" formControlName="DeliveryTermId" *ngIf="hideinput" class="form-control">
+                                                        <option *ngFor="let record of deliveryTerms" value={{record.DeliveryTermsId}}>
+                                                            {{ record.Code }}
+                                                        </option>
+                                                    </select>
+                                                    <div *ngIf="purchaseOrderRequestForm.get('DeliveryTermId') && purchaseOrderRequestForm.get('DeliveryTermId').errors!=null && purchaseOrderRequestForm.get('DeliveryTermId').touched==true">
+                                                        <span class="errorMessage" *ngIf="purchaseOrderRequestForm.get('DeliveryTermId').errors.required">Delivery Term is required</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12" style="margin-top:1em;">
+                                                <textarea *ngIf="hideinput" class="form-control" autoresize formControlName="DeliveryTerm">
+                                                </textarea>
+                                                <span class="descriptionStyle" showmore [value]="selectedPORequestDetails.DeliveryTerm" *ngIf="hidetext"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="row" style="margin-top:3em;">
+                                            <div class="col-12">
+                                                <h4 class="form-heading">Attachments</h4>
+                                            </div>
+                                            <div class="col-12 attachments" *ngIf="selectedPORequestDetails!=undefined">
+                                                <ul>
+                                                    <li *ngFor="let data of selectedPORequestDetails.Attachments;let i=index">
+                                                        <span>
+                                                            <span class="displayFileName">
+                                                                {{ data.FileName }}
+                                                            </span>
+                                                            <a style="color:black;" *ngIf="hidetext" href="{{apiEndPoint}}/PurchaseOrderRequestFileDownload?AttachmentId={{ data.AttachmentId }}&AttachmentTypeId={{ data.AttachmentTypeId }}&FileName={{data.FileName|encodeURIComponent}}&RecordId={{data.RecordId}}">
+                                                                <i class="fa fa-download"></i>
+                                                            </a>
+                                                            &nbsp;&nbsp;
+                                                            <i *ngIf="hideinput" (click)="attachmentDelete(i)" class="fa fa-trash">
+                                                            </i>
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-12" *ngIf="hideinput">
+                                                <div class="col-12">
+                                                    <input type="file" multiple (change)="onFileUploadChange($event)" name="file">
+                                                </div>
+                                                <div class="col-12">
+                                                    <ul class="fileList">
+                                                        <li *ngFor="let data of uploadedFiles;let i = index" style="padding:0px;">
+                                                            <span>
+                                                                <span class="fileName">
+                                                                    {{ data.name }}
+                                                                </span>
+                                                                <i class="fa fa-close" (click)="onFileClose(i)"></i>
+                                                            </span>
+                                                            <br>
+                                                            <span class="fileSize">{{ data.size/1024 }} KB</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+ 
+ 
+                                    <div class="col-sm-3 mobilecolorder1">
+                                        <table class="table table-subtotal" style="float:right;">
+                                            <tr>
+                                                <td class="nowrap" width="50%" align="right">Sub Total</td>
+                                                <td align="right" *ngIf="hideinput">{{ selectedPORequestDetails.CurrencySymbol }} {{ ( purchaseOrderRequestForm.get('SubTotal').value)|number:'1.2-4' }}</td>
+                                                <td align="right" *ngIf="hidetext">{{ selectedPORequestDetails.CurrencySymbol }} {{ ( selectedPORequestDetails.SubTotal)|number:'1.2-4' }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="nowrap" align="right">Discount</td>
+                                                <td *ngIf="hideinput">
+                                                    <input type="number" style="text-align: right;" min="0" (change)="calculateTotalPrice($event)" formControlName="Discount" (keydown)=restrictMinus($event) class="form-control">
+                                                </td>
+                                                <td *ngIf="hidetext" align="right">{{ selectedPORequestDetails.CurrencySymbol }} {{ (selectedPORequestDetails.Discount)|number:'1.2-4'
+                                                    }}
+                                                </td>
+                                            </tr>
+                                            <!-- <tr>
+                                                <td class="nowrap" align="right">Tax Rate (%)</td>
+                                                <td *ngIf="hideinput">
+                                                    <input type="number" min="0" (keydown)=restrictMinus($event) style="text-align: right;" (change)="calculateTotalPrice($event)" formControlName="TaxRate" (keydown)=restrictMinus($event) class="form-control">
+                                                </td>
+                                                <td *ngIf="hidetext" align="right">{{ selectedPORequestDetails.TaxRate }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="nowrap" align="right">Total Tax</td>
+                                                <td *ngIf="hideinput" align="right">{{ selectedPORequestDetails.CurrencySymbol }} {{ (purchaseOrderRequestForm.get('TotalTax').value)|number:'1.2-4'
+                                                    }}
+                                                </td>
+                                                <td *ngIf="hidetext" align="right">{{ selectedPORequestDetails.CurrencySymbol }} {{ (selectedPORequestDetails.TotalTax)|number:'1.2-4'
+                                                    }}
+                                                </td>
+                                            </tr> -->
+                                            <tr>
+                                                <td class="nowrap" align="right">Shipping Charges</td>
+                                                <td *ngIf="hideinput">
+                                                    <input type="number" style="text-align: right;" min="0" (change)="calculateTotalPrice($event)" (keydown)=restrictMinus($event) formControlName="ShippingCharges"
+                                                        class="form-control">
+                                                </td>
+                                                <td *ngIf="hidetext" align="right">{{ selectedPORequestDetails.CurrencySymbol }} {{ (selectedPORequestDetails.ShippingCharges)|number:'1.2-4'
+                                                    }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="nowrap" align="right">Others</td>
+                                                <td *ngIf="hideinput">
+                                                    <input type="number" style="text-align: right;" min="0" (change)="calculateTotalPrice($event)" (keydown)=restrictMinus($event) formControlName="OtherCharges" class="form-control">
+                                                </td>
+                                                <td *ngIf="hidetext" align="right">{{ selectedPORequestDetails.CurrencySymbol }} {{ (selectedPORequestDetails.OtherCharges)|number:'1.2-4'
+                                                    }}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <div style="clear: both;">
+                                            <table class="table table-totalamount" style="float:right;border: inherit">
+                                                <tr>
+                                                    <td class="nowrap" width="50%" align="right">Total</td>
+                                                    <td *ngIf="hideinput" align="right">{{ selectedPORequestDetails.CurrencySymbol }} {{ (purchaseOrderRequestForm.get('TotalAmount').value)|number:'1.2-4'
+                                                        }}
+                                                    </td>
+                                                    <td *ngIf="hidetext" align="right">{{ selectedPORequestDetails.CurrencySymbol }} {{ (selectedPORequestDetails.TotalAmount)|number:'1.2-4'
+                                                        }}
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-xl-12 col-sm-12 col-12" *ngIf="selectedPORequestDetails.WorkFlowStatusId==2||selectedPORequestDetails.WorkFlowStatusId==3">
+                                        <h4 class="form-heading">Approval Remarks</h4>
+                                        <div>
+                                            <textarea appAutofocus formControlName="remarks" class="form-control" style="width:70%;display:inline-block ">
+                                            </textarea>
+                                            <button type="submit" (click)="updateStatus(3)" style="float:inherit;vertical-align: top;" class="btn btn-edit">
+                                                <i class="fa fa-envelope" aria-hidden="true"></i>Reply
+                                            </button>
+                                        </div>
+                                        <div *ngIf="purchaseOrderRequestForm.get('remarks') && purchaseOrderRequestForm.get('remarks').errors!=null && purchaseOrderRequestForm.get('remarks').touched==true">
+                                            <span class="errorMessage" *ngIf="purchaseOrderRequestForm.get('remarks').errors.required">Approval Remarks is Required</span>
+                                        </div>
+                                    </div>
+    
+                                    <div *ngIf="selectedPORequestDetails.WorkFlowComments!=undefined && selectedPORequestDetails.WorkFlowComments.length >0" class="col-xl-12 col-sm-12 col-12">
+                                        <label class="col-form-label form-label">Previous Comments</label>
+                                        <ul>
+                                            <li *ngFor="let record of selectedPORequestDetails.WorkFlowComments">
+                                                <span class='remarksUserName'>{{ record.UserName }}</span> - <span class='remarksDate'>{{ record.CreatedDate|date:'dd-MM-yyyy h:mm:ss a' }}</span>:
+                                                <br>
+                                                <span>{{ record.Remarks }}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div style="clear: both;"></div> -->
+    
+                            
+    
+                                <!-- Start VendorReferences -->
+                                <div class="row" style="margin-top:2em;" *ngIf="selectedPORequestDetails.PurchaseOrderRequestVendorItems!=undefined&&selectedPORequestDetails.PurchaseOrderRequestId>0">
+                                    <div class="col-12">
+                                        <h4 class="form-heading">Quotation Details</h4>
+                                    </div>
+                                    <div class="col-12">                        
+                                        <p-table *ngIf="hideQuotation" [columns]="gridVendorColumns" (sortFunction)="customSort($event)" [customSort]="true" sortMode="single"
+                                            [value]="selectedPORequestDetails.PurchaseOrderRequestVendorItems">
+                                            <ng-template pTemplate="colgroup" let-columns>
+                                                <colgroup>
+                                                    <col style="width:10%;">
+                                                    <col style="width:30%;">
+                                                    <col style="width:30%;">
+                                                    <col style="width:30%;">
+                                                </colgroup>
+                                            </ng-template>
+                                            <ng-template pTemplate="header" let-columns>
+                                                <tr>
+                                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                                        {{col.header}}
+                                                        <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                                    </th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                                <tr [class.rowselected]="rowData.IsSelected== true" >
+                                                    <td>
+                                                        {{ i + 1 }}
+                                                    </td>
+                                                    <td>
+                                                        {{ rowData.QuotationSupplier.SupplierName }}
+                                                    </td>
+                                                    <td>
+                                                        {{ rowData.QuotatedAmount }}
+                                                    </td>
+                                                    <td>
+                                                        <div class="col-12 attachments" *ngIf="selectedPORequestDetails!=undefined">
+                                                            <ul>
+                                                                <li *ngFor="let data of selectedPORequestDetails.QuotationAttachment;let k=index">
+                                                                    <span *ngIf="data.QuotationId==rowData.QuotationId">
+                                                                        <span>
+                                                                            <span class="displayFileName">
+                                                                                {{ data.FileName }}
+                                                                            </span>
+                                                                            <a style="color:black;" *ngIf="hideQuotation" href="{{apiEndPoint}}/PurchaseOrderRequestQuotationFileDownload?QuotationAttachmentId={{ data.QuotationAttachmentId }}&QuotationRequestId={{ data.QuotationRequestId }}&FileName={{data.FileName|encodeURIComponent}}&QuotationId={{data.QuotationId}}&RowId={{data.RowId}}">
+                                                                                <i class="fa fa-download"></i>
+                                                                            </a>
+                                                                            &nbsp;&nbsp;
+                                                                            <!-- <i *ngIf="hideinput" (click)="attachmentDelete(i)" class="fa fa-trash">
+                                                                            </i> -->
+                                                                        </span>
+                                                                    </span>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-12" style="margin-top:2em;">
+                                    <h4 class="form-heading">Remarks : </h4>
+                                    <br/>
+                                    <span class="displayFileName">
+                                       {{selectedPORequestDetails.QuotationRequestRemarks}}
+                                    </span>
+                                </div>
+    
+                                <!-- END VendorReferences -->
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group text-right btn-list">
+                                    <button type="submit" (click)="saveRecord('save')" class="btn btn-save" *ngIf="hideinput">
+                                        <i class="fa fa-save" aria-hidden="true"></i> Save</button>
+                                    <button type="submit" (click)="saveRecord('send')" class="btn btn-approve" *ngIf="((selectedPORequestDetails|DisableButton)==false)" [disabled]="selectedPORequestDetails|DisableButton">
+                                        <i class="fa fa-check" aria-hidden="true"></i> Send for Approval</button>
+                                    <button type="submit" (click)="cancelRecord()" class="btn btn-cancel" *ngIf="hideinput">
+                                        <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                                    <button type="submit" (click)="editRecord()" class="btn btn-edit" *ngIf="hidetext&&((selectedPORequestDetails|DisableButton)==false)" [disabled]="selectedPORequestDetails|DisableButton">
+                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                                    <!-- <button type="submit" (click)="deleteRecord()" class="btn btn-delete"*ngIf="hidetext&&((selectedPORequestDetails|DisableButton)==false)"  [disabled]="selectedPORequestDetails|DisableButton">
+                                        <i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button> -->
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <p-confirmDialog></p-confirmDialog>
+            </div>
+            <!-- left col end here-->
+        </div>
+    </div>
+    
+    <input type="file" style='display:none;' #fileInput multiple (change)="onFileVendorUploadChange($event)" name="file">
+    
+    <ng-template #itemMasterTemplate let-r="result" let-t="term">
+            <div style="max-height: 100px; overflow: auto">
+        {{ r.ItemName }}
+        </div>
+        
+    </ng-template>
+    
+    <ng-template #supplierTemplate let-r="result" let-t="term">
+            <div style="max-height: 100px; overflow: auto">
+        {{ r.SupplierName }}
+        </div>
+
+    </ng-template>
+    
+    <ng-template #assetTemplate let-r="result" let-t="term">
+            <div style="max-height: 100px; overflow: auto">
+        {{ r.AssetName }}
+        </div>
+    </ng-template>
+
+    <ng-template #expenseTemplate let-r="result" let-t="term">
+            <div style="max-height: 100px; overflow: auto">
+        {{ r.AccountCodeName }}
+        </div>
+    </ng-template>
+    <ng-template #serviceMasterTemplate let-r="result" let-t="term">
+        <div style="max-height: 100px; overflow: auto">
+    {{ r.AccountCodeName }}
+    </div>
+</ng-template>
+    

@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Request for Customer Master Approval</title>
+    <style>
+        .hideContent {
+            display: none;
+        }
+
+        .showContent {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div style="font-family:tahoma;font-size:14px">
+        Dear {{Receiver.FirstName}} {{Receiver.LastName}},
+        <br> <br>
+        <div><b>{{Header1}}</b></div>
+        <br>
+        <div> {{Header2}} </div>
+        <table border="1" cellpadding="5" cellspacing="0" style="margin-top: 10px;">
+            <tbody>
+                <tr>
+                    <td style="color:#2672ec;">Customer Name :</td>
+                    <td colspan="4">{{CustomerName}}</td>
+                </tr>
+                <tr>
+                    <td style="color:#2672ec;">Customer Type :</td>
+                    <td>{{CustomerType}}</td>
+                    <td style="color:#2672ec;width: 100px;">Status :</td>
+                    <td>{{DocumentStatus}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <div style="font-size:13px;padding:0 0 10px 0"> <b>{{ChatRemarks}}</b> <br></div>
+        <div class="{{LinkCssClass}}" style="font-size:13px;">
+            For more details, Click below to login. <br>
+            <br>
+            <a href="{{MailLink}}" style="color:#0645AD; text-decoration: underline;">{{DocumentCode}}</a>
+            <br>
+            <br>
+        </div>
+        Best regards,
+        <br>
+        {{Sender.FirstName}} {{Sender.LastName}}
+    </div>
+</body>
+</html>

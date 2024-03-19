@@ -1,0 +1,4 @@
+.listbox { display: inline-block; padding: 5px 10px; background:#f9f9f9;  border:1px solid #ced4da; border-radius: 20px; margin-right: 5px;}
+
+.error{float:left; width:100%;  color:red;}
+.margin { margin-top: 15px;}

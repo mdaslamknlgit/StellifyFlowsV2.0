@@ -1,0 +1,106 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+            <div class="flexrow space-between align-center">
+                <h3 class="item-heading"> Currency List</h3>
+                <div>
+                    <!-- <button class="btn  btn-transparent" (click)="addRecord();" *ngIf="hidetext && newPermission"> New
+                        Record</button> -->
+
+                        <button class="btn btn-save ng-star-inserted" type="button" 
+                        (click)="addRecord()">
+                        <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> New</button>
+
+
+                    <!-- <button class="btn btn-transparent" (clickOutside)="onClickedOutside($event)" (click)="split()">
+                        {{showfilterstext}} </button> -->
+                    <img style="display: none;" src="../assets/images/grid1.png" (click)="showFullScreen()">
+                </div>
+            </div>
+            <div class="left-section1" [class.display-filters]="!showfilters">
+                <div class="filter-section" ngbDropdown #myDrop="ngbDropdown">
+                    <div class="left-search">
+                        <input type="text" [(ngModel)]="currencySearchKey" placeholder="Search requests..."
+                            class="search-filter" (keyup)="onSearchInputChange($event)">
+                    </div>
+                    <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="filter-scroll"
+                        style="width:100%; float:left;">
+                        <!-- Currency List Starts Here -->
+                        <p-table #PurchaseOrderListTable dataKey="DraftCode" [rowHover]="true" [filterDelay]="0"
+                            [globalFilterFields]="['DraftCode', 'SupplierName']" [columns]="CurrencyManagementListCols"
+                            [value]="CurrencyManagementList" [rows]="1" [scrollable]="true"
+                            [scrollHeight]="'calc(100vh - 400px)'" scrollWidth="100%" [virtualRowHeight]="30"
+                            [virtualScroll]="true" sortMode="multiple" responsiveLayout="scroll"
+                            [rowsPerPageOptions]="[10,25,50,75,100]">
+                            <ng-template pTemplate="caption">
+                            </ng-template>
+
+                            <ng-template pTemplate="header" let-columns>
+                                <tr style="height: 40px;">
+                                    <th *ngFor="let col of CurrencyManagementListCols;let i=index"
+                                        [pSortableColumn]="col.field">
+                                        {{col.header}}
+                                        <p-sortIcon [hidden]="i==0" *ngIf="i!=CurrencyManagementListCols.length-1"
+                                            [field]="col.field"></p-sortIcon>
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="colgroup" let-columns>
+                                <colgroup>
+                                    <col *ngFor="let col of columns" [style.width]="col.width">
+                                </colgroup>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-value let-columns let-i="rowIndex">
+                                <tr style="height:30px" [pSelectableRow]="rowData">
+                                    <td>{{value.Code}}</td>
+                                    <td>{{value.Name}}</td>
+                                    <td>{{value.Status}}</td>
+                                    <td>{{value.Symbol }}</td>
+                                    <td class="aligncenter">
+                                        <button type="button" class="btn" (click)="onRecordSelection(value.Id)">
+                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage" let-columns>
+                                <tr>
+                                    <td [attr.colspan]="CurrencyManagementList.length">
+                                        No records found
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        <!-- Currency List Ends Here -->
+                        <!-- Old Table Starts Here     -->
+                        <!-- <table class="table">
+                        <tr [class.activerow]="record.Id==selectedCurrencyManagementRecord.Id"
+                            (click)="onRecordSelection(record.Id)" *ngFor="let record of CurrencyManagementList">
+                            <td (click)="hidefilter()">
+                                <h5 class="sub-heading"> {{record.Name}}</h5>
+                                <label class="label-text">Code</label> :
+                                <label class="label-value">{{record.Code}}</label>
+                            </td>
+                        </tr>
+                    </table> -->
+                        <!-- Old Table Ends Here     -->
+                        <div *ngIf="CurrencyManagementList.length==0" class="col-12 listErrorMessage">
+                            {{errorMessage}}
+                        </div>
+                        <ngb-pagination [maxSize]="5" *ngIf="CurrencyManagementList.length>0"
+                            (pageChange)="pageChange($event)"
+                            [collectionSize]="CurrencyManagementPagerConfig.TotalRecords"
+                            class="d-flex justify-content-center"
+                            [pageSize]="CurrencyManagementPagerConfig.RecordsToFetch" [page]="1"
+                            [boundaryLinks]="true"></ngb-pagination>
+                    </div>
+                </div>
+            </div>
+            <!-- <img src="../assets/images/grid2.png">  -->
+        </div>
+    </div>
+</div>
+<ng-template #userTemplate let-r="result" let-t="term">
+    {{ r.UserName }}
+</ng-template>

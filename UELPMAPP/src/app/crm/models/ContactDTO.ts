@@ -1,0 +1,77 @@
+export class ContactDTO
+{
+    Id:number;
+    ContactName:string;
+    ContactTypeId:number;
+    ContactType:boolean;
+    RegardingId:number;
+    RegarId:number;
+    SalId:number;
+    FirstName:string;
+    ContactMidName:string;
+    LastName:string;
+    JobTitle:string;
+    LeadId:number;
+    LeadNo:string;
+    AccountId:number;
+    ContactId:number;
+    CurId:number;
+    BusinessPhone:string;
+    HomePhone:string;
+    Mobile:string;
+    EmailId:string;
+    DeptId:number;
+    RoleId:number;
+    Manager:string;
+    ManagerPhone:string;
+    Assistant:string;
+    AssistantPhone:string;
+    GenderId:number;
+    DateOfBirth:string;
+    AnniversaryDate:string;
+    ContactOwnUserId:number;
+    MaritalStatusId:number;
+    SpousePartnerName:string;
+    CreditLimit:number;
+    CreditHold:boolean;
+    PriceListId:number;
+    PrimaryContactId:number;
+    PayTermId:number;
+    ContactDesc:string;
+    CustomerTypeId:number;
+    IsPrimary:boolean;
+    IsActive:boolean;
+    EmailOpt:boolean;
+    SkypeId:string;
+    CreatedBy:number;
+    CreatedDate:Date;
+    UpdatedBy:number;
+    UpdatedDate:Date;
+    DeletedBy:number;
+    DeletedDate:Date;
+
+}
+
+export class Contacts
+{
+    Id:number;
+    AccountName:string;
+    ContactName:string;
+    ContactTypeId:number;
+    RegardingId:number;
+    RegarId:number;
+    SalId:number;
+    FirstName:string;
+    LastName:string;
+    JobTitle:string;
+    BusinessPhone:string;
+    HomePhone:string;
+    Mobile:string;
+    EmailId:string;
+    ContactType:boolean;
+    CreatedBy:number;
+    CreatedDate:Date;
+    constructor() {
+
+    }
+}

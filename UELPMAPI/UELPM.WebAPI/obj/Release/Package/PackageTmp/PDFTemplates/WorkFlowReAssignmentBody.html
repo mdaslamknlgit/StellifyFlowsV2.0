@@ -1,0 +1,236 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500" rel="stylesheet" />
+    <title>WorkFlow Re-Assignment</title>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            padding: 0px;
+            margin: 0px
+        }
+
+        .form-label {
+            color: #01548e;
+        }
+
+        .form-table td {
+            height: 30px;
+            vertical-align: top;
+        }
+
+        .form-heading {
+            color: #01548e;
+            font-size: 18px;
+            display: inline-block;
+            border-bottom: 1px solid #01548e;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .footer td {
+            background: #111;
+            color: #fff;
+            position: relative;
+            z-index: 99;
+            text-align: right;
+            height: 61px;
+            line-height: 61px;
+            width: 100%;
+            font-size: 12px;
+            font-weight: 300;
+        }
+
+        .nowrap {
+            white-space: nowrap
+        }
+
+        .listbox {
+            display: block;
+            float:left;width:100px;
+            padding: 5px 10px;
+            background: #808080;
+            border: 1px solid #ced4da;          
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <table border="0" align="center" style="border-bottom:2px solid #000;line-height:22px; font-size:13px;width:100%">
+        <tr>
+            <td valign="top" width="16%"><img style="width: 200px; height: 70px;" src="[[LogoURL]]" alt="logo" /></td>
+            <td valign="top" align="center" width="61%">
+                <div style="padding-bottom:8px; text-align:center;"> [[CompanyName]].</div>
+                <div style="padding-bottom:8px;text-align:center;">[[CompanyDescription]]</div>
+                <div style="padding-bottom:8px;text-align:center;">Original</div>
+                <div style="padding-bottom:8px;text-align:center;"><b>[[Title]]</b></div>                
+            </td>
+            <td valign="top" width="23%">
+                <div style="padding-bottom:8px; text-align:left;"> [[Address1]]</div>
+                <div style="padding-bottom:8px;text-align:left;"> [[Address2]]</div>
+                <div style="padding-bottom:8px;text-align:left;">[[Country]] [[ZipCode]]</div>
+                <div style="padding-bottom:8px;text-align:left;">Tel: [[Telephone]]</div>
+                <div style="padding-bottom:8px;text-align:left;">Fax: [[Fax]]</div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3"><span style="color: #01548e;">Company Reg. Number: </span> [[CompanyRegNumber]]</td>
+        </tr>
+    </table>
+    <hr />
+    <table style="width:100%" align="center" border="0">
+        <tr>
+            <td width="50%" valign="top">
+
+                <table class="form-table" style="width:100%">
+
+                    <tr class="form-group row">
+                        <td width="45%" style="color: #01548e;">Current Approver </td>
+                        <td width="2%">:</td>
+                        <td width="53%" style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word"><b>[[CurrentApproverName]]</b></td>
+                    </tr>
+                    <tr class="form-group row">
+                        <td style="color: #01548e;">Created Date </td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[CreatedDate]]</td>
+                    </tr>
+
+                </table>
+            </td>
+
+            <td width="50%" valign="top">
+
+                <table style="width:100%" class="form-table">
+                    <tr class="form-group row">
+                        <td style="color: #01548e;">Assigned Approver</td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word"><b>[[AlternateApproverName]]</b></td>
+                    </tr>
+                </table>
+                <br />
+            </td>
+
+        </tr>
+        <tr>
+            <td colspan="2">
+                <br />
+                <h4 class="form-heading" style="text-decoration:underline;">Roles</h4>
+            </td>
+        </tr>
+
+
+        <tr>
+            <td colspan="2">
+
+        <!--{{#each UserRoles}}
+        <div style="color:#000;font-weight: bold; display:inline-block;  padding-right: 10px;   float:left;">
+            <table border="1" cellpadding="3" cellspacing="0" style="  background:#dbd6d6;"  >
+                <tr><td>{{SNo}}. {{RoleName}} </td></tr>
+            </table>
+        </div>
+            {{/each}}-->
+                <table border="1" cellpadding="3" cellspacing="0" style="margin-bottom:20px; width:100%">
+                    <thead>
+                        <tr>
+                            <th width="8%" class="reportField textHeader">S.no.</th>
+                            <th width="27%" class="reportField textHeader">Company</th>
+                            <th width="20%" class="reportField textHeader">Role(s)</th>                         
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each UserRoles}}
+                        <tr>
+                            <td class="reportField">{{SNo}}</td>
+                            <td class="reportField">{{CompanyName}}</td>
+                            <td class="reportField">{{RoleName}}</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <br />
+                <h4 class="form-heading" style="text-decoration:underline;">Workflow items</h4>
+            </td>
+        </tr>
+
+
+        <tr>
+            <td colspan="2">
+                <table border="1" cellpadding="3" cellspacing="0" style="margin-bottom:20px; width:100%">
+                    <thead>
+                        <tr>
+                            <th width="8%" class="reportField textHeader">S.no.</th>
+                            <th width="27%" class="reportField textHeader">Document Name</th>
+                            <th width="20%" class="reportField textHeader">Dept. Name</th>
+                            <th width="25%" class="reportField textHeader">Role</th>
+                            <th width="20%" class="reportField textHeader">Company</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each WorkflowItems}}
+                        <tr>
+                            <td class="reportField">{{SNo}}</td>
+                            <td class="reportField">{{ProcessName}}</td>
+                            <td class="reportField">{{DepartmentName}}</td>
+                            <td class="reportField">{{RoleName}}</td>
+                            <td class="reportField">{{CompanyName}}</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+
+
+        <tr>
+            <td colspan="2">
+                <br />
+                <h4 class="form-heading" style="text-decoration:underline;">Pending documents</h4>
+            </td>
+        </tr>
+
+
+        <tr>
+            <td colspan="2">
+                <table border="1" cellpadding="3" cellspacing="0" style="margin-bottom:20px; width:100%">
+                    <thead>
+                        <tr>
+                            <th width="8%" class="reportField textHeader">S.no.</th>
+                            <th width="27%" class="reportField textHeader">Document Code</th>
+                            <th width="20%" class="reportField textHeader">Document Type</th>
+                            <th width="25%" class="reportField textHeader">Workflow Status</th>
+                            <th width="20%" class="reportField textHeader">Company</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each Documents}}
+                        <tr>
+                            <td class="reportField">{{SNo}}</td>
+                            <td class="reportField">{{DocumentCode}}</td>
+                            <td class="reportField">{{ProcessName}}</td>
+                            <td class="reportField">{{WorkFlowStatus}}</td>
+                            <td class="reportField">{{CompanyName}}</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"></td>
+        </tr>
+
+
+    </table>
+
+
+
+</body>
+</html>

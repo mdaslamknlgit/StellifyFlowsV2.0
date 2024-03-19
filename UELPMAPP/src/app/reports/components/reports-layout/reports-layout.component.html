@@ -1,0 +1,9 @@
+<app-header></app-header>
+<div class="body-content" [class.showMenu]="showMenu">
+  <app-sidebar (change)="onMenuClick($event)"></app-sidebar>
+  <div class="right-nav">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+<app-footer></app-footer>

@@ -1,0 +1,12 @@
+<p>
+  animationslide works!
+</p>
+<div>
+  <h4>Ng-if slide animation</h4>
+  <button (click)="toggleElement()">toggle</button>
+  <div class="elemnt" 
+    *ngIf="toggle"
+    [@flyInOut]>
+    element
+  </div>
+</div>

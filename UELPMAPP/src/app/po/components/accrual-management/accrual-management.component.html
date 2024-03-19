@@ -1,0 +1,106 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+            <div class="flexrow space-between align-center">
+                <h3 class="item-heading"> {{ModuleHeading}} </h3>
+
+
+                <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+
+                    <button class="btn btn-save ng-star-inserted" #upload (click)="exportAccrualGL()">
+                        {{ButtonTitle}}</button>
+
+                    <!-- <button class="btn customdropdown btn-transparent" style="background:none;border:none;padding:0px;" id="dropdownBasic1" ngbDropdownToggle>
+         <i class="fa-solid fa-bars"></i>
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1" *ngIf="exportPermission">
+          <button class="dropdown-item"  (click)="exportAccrualGL()"  >{{ButtonTitle}}</button>   
+        </div> -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div #rightPanel class="rightPanel col-lg-12 col-md-12" [class.expand-rightcol]="rightSection">
+            <form class="form-horizontal" novalidate="true">
+
+                <div class="row">
+                    <div class="col-12">
+
+                    </div>
+                </div>
+            </form>
+            <div class="table-responsive" [ngStyle]="{'max-width.px': screenWidth}">
+                <div class="col-12" style="padding:0px;">
+                    <p-table [columns]="gridColumns" (sortFunction)="customSort($event)" [customSort]="true"
+                        [lazy]="true" [rowHover]="true" (onLazyLoad)="onLazyLoad($event)" [paginator]="true"
+                        [rows]="purchaseOrderPagerConfig.RecordsToFetch"
+                        [totalRecords]="purchaseOrderPagerConfig.TotalRecords" sortMode="single"
+                        [value]="purchaseOrdersList" [(selection)]="selectedPOC">
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="6" style='text-align: center;'>
+                                    <b>{{ gridNoMessageToDisplay }}</b>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="colgroup" let-columns>
+                            <colgroup>
+                                <col *ngFor="let col of columns" [style.width]="col.width">
+                            </colgroup>
+                        </ng-template>
+                        <ng-template pTemplate="header" let-columns>
+                            <tr>
+
+                                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                    {{col.header}}
+
+                                    <span
+                                        *ngIf="(col.field=='TotalAmount'||col.field=='ItemTotal')&&col.CurrencySymbol!=null">
+                                        &nbsp; ( {{ selectedPODetails.CurrencySymbol }} )
+                                    </span>
+                                    <p-sortIcon
+                                        *ngIf="col.field==='Sno'||col.field==='Asset'||col.field==='PurchasedDate'"
+                                        [field]="col.field" ariaLabel="Activate to sort"
+                                        ariaLabelDesc="Activate to sort in descending order"
+                                        ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                </th>
+                                <th style="width: 3em">
+                                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                            <tr>
+                                <td>
+                                    {{ i+1 }}
+                                </td>
+                                <td>
+                                    {{ rowData.CPONumber }}
+                                </td>
+                                <td style="word-wrap:break-word">
+                                    {{ rowData.ContractName }}
+                                </td>
+                                <td style="word-wrap:break-word">
+                                    {{ rowData.Supplier.SupplierName }}
+                                </td>
+                                <td>
+                                    {{ rowData.TotalAmount}}
+                                </td>
+                                <td style="width: 3em">
+                                    <p-tableCheckbox [value]="rowData">
+
+                                    </p-tableCheckbox>
+
+                                </td>
+
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </div>
+        <!-- left col end here-->
+    </div>
+</div>

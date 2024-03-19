@@ -1,0 +1,265 @@
+.error{float:left; width:100%;  color:red;}
+.error-message{ color: red;}
+.grid-Header{
+   text-align: center;
+}
+.green { color: green}
+.red{ color: red;}
+.kb-row {
+    background-color: #1CA979 !important;
+    color: #ffffff !important;
+}
+.acceslevels tr th:nth-child(14),.acceslevels tr th:nth-child(15),.acceslevels tr th:nth-child(16),.acceslevels tr th:nth-child(17),.acceslevels tr th:nth-child(18),.acceslevels tr th:nth-child(19),.acceslevels tr th:nth-child(20),.acceslevels tr th:nth-child(21),.acceslevels tr th:nth-child(22),.acceslevels tr th:nth-child(23),.acceslevels tr th:nth-child(24) {
+ display:none;
+  } 
+
+  .left-search
+  {
+    width:100% !important;
+  }
+
+  :host /deep/ .ui-chkbox .ui-chkbox-box {
+    width: 0.9em;
+    height: 0.9em;
+    line-height: 0.9em;
+ }
+ 
+ :host /deep/ .ui-treetable-child-table-container table tbody div td {
+    border: 1px solid #ccc;
+ }
+ 
+ :host /deep/ .ui-treetable th.ui-state-default {
+    background: #fff;
+    border: 1px solid #fff !important;
+    color: #222;
+    font-weight: 500;
+    font-family: 'Exo 2', sans-serif;
+    font-style: italic;
+ }
+ 
+ :host /deep/ .ui-treetable-row {
+    border-color: #052433;
+ }
+ 
+ :host /deep/ .ui-tabview {
+    padding: 0em;
+ }
+ 
+ :host /deep/ .ui-tabview-panels {
+    display: none
+ }
+ 
+ :host /deep/ .ui-tabview .ui-tabview-nav>li.ui-state-default {
+    background-color: white;
+ }
+ 
+ :host /deep/ .TabViewClass {
+    width: 100%;
+ }
+ 
+ :host /deep/ .ui-tabview.ui-tabview-top>.ui-tabview-nav li a {
+    color: rgb(255, 255, 255);
+ }
+ 
+ :host /deep/ .ui-tabview.ui-tabview-top>.ui-tabview-nav li {
+    width: 15%;
+    background-color: rgb(250, 87, 60);
+    font-size: 20px;
+    margin: 0px;
+ }
+ 
+ .ul-list {
+    display: -webkit-flex;
+    /* Safari */
+    display: flex;
+    width: 98.5%;
+    margin: 0px;
+    padding: 0px;
+ }
+ 
+ .ul-list li {
+    list-style: none;
+    -webkit-flex: 1;
+    /* Safari 6.1+ */
+    -ms-flex: 1;
+    /* IE 10 */
+    flex: 1;
+    position: relative;
+ }
+ 
+ :host /deep/ .ul-list li:after {
+    content: '';
+    display: block;
+    border-top: 25px solid transparent;
+    border-bottom: 25px solid transparent;
+    border-left: 21px solid;
+    right: -20px;
+    top: 0px;
+    position: absolute;
+    z-index: 2;
+    border-left-color: inherit;
+ }
+ 
+ :host /deep/ .HeaderLabel {
+    width: 15%;
+    height: 50px;
+    font-size: 14px;
+    margin: 0px;
+    text-align: center;
+    transition: width 200ms ease;
+    color: #000;
+    font-family: 'Exo 2', cursive;
+    padding-top: 5px;
+ }
+ 
+ :host /deep/ .ui-treetable-tablewrapper {
+    font-family: 'Montserrat', sans-serif;
+    color: #000;
+    font-size: 14px;
+    margin-top: 5px;
+ }
+ 
+ :host /deep/ .ui-treetable-tablewrapper>table>tbody:nth-child(2)>div.ui-treetable-row-selectable,
+ :host /deep/ .ui-treetable-tablewrapper>table>tbody:nth-child(2)>div.ui-treetable-row-selectable:hover {
+    background-color: #a8fa3ced !important;
+    border: 1px solid #a8fa3ced;
+    color: #FFF;
+    /* #a8fa3ced */
+ }
+ 
+ :host /deep/ .ui-treetable-tablewrapper>table>tbody:nth-child(3)>div.ui-treetable-row-selectable,
+ :host /deep/ .ui-treetable-tablewrapper>table>tbody:nth-child(3)>div.ui-treetable-row-selectable:hover {
+    background-color: #ffad46 !important;
+    border: 1px solid #ffad46;
+    color: #FFF;
+    /* #ffad46 */
+ }
+ 
+ :host /deep/ .ui-treetable-tablewrapper>table>tbody:nth-child(4)>div.ui-treetable-row-selectable,
+ :host /deep/ .ui-treetable-tablewrapper>table>tbody:nth-child(4)>div.ui-treetable-row-selectable:hover {
+    background-color: #b3dc6c !important;
+    border: 1px solid #b3dc6c;
+    color: #FFF;
+    /* #b3dc6c */
+ }
+ 
+ :host /deep/ .ui-treetable-tablewrapper>table>tbody:nth-child(5)>div.ui-treetable-row-selectable,
+ :host /deep/ .ui-treetable-tablewrapper>table>tbody:nth-child(5)>div.ui-treetable-row-selectable:hover {
+    background-color: #16A765 !important;
+    border: 1px solid #16A765;
+    color: #FFF;
+    /* #16A765 */
+ }
+ 
+ :host /deep/ .ui-treetable-tablewrapper>table>tbody:nth-child(6)>div.ui-treetable-row-selectable,
+ :host /deep/ .ui-treetable-tablewrapper>table>tbody:nth-child(6)>div.ui-treetable-row-selectable:hover {
+    background-color: #9FC6E7 !important;
+    border: 1px solid #9FC6E7;
+    color: #FFF;
+    /* #9FC6E7 */
+ }
+ 
+ :host /deep/ .ui-treetable-tablewrapper>table>tbody:nth-child(7)>div.ui-treetable-row-selectable,
+ :host /deep/ .ui-treetable-tablewrapper>table>tbody:nth-child(7)>div.ui-treetable-row-selectable:hover {
+    background-color: #4987e6 !important;
+    border: 1px solid #4987e6;
+    color: #FFF;
+    /* #4987e6 */
+ }
+ 
+ :host /deep/ .ui-treetable-tablewrapper>table>tbody:nth-child(8)>div.ui-treetable-row-selectable,
+ :host /deep/ .ui-treetable-tablewrapper>table>tbody:nth-child(8)>div.ui-treetable-row-selectable:hover {
+    background-color: #7bd148 !important;
+    border: 1px solid #7bd148;
+    color: #FFF;
+    /* #7bd148 */
+ }
+ 
+ :host /deep/ .ui-treetable-tablewrapper>table>tbody:nth-child(9)>div.ui-treetable-row-selectable,
+ :host /deep/ .ui-treetable-tablewrapper>table>tbody:nth-child(9)>div.ui-treetable-row-selectable:hover {
+    background-color: #AC725E !important;
+    border: 1px solid #AC725E;
+    color: #FFF;
+    /* #AC725E */
+ }
+ 
+ :host /deep/ .ui-treetable-tablewrapper>table>tbody:nth-child(10)>div.ui-treetable-row-selectable,
+ :host /deep/ .ui-treetable-tablewrapper>table>tbody:nth-child(10)>div.ui-treetable-row-selectable:hover {
+    background-color: #92E1C0 !important;
+    border: 1px solid #92E1C0;
+    color: #FFF;
+    /* #92E1C0 */
+ }
+ 
+ :host /deep/ .ui-treetable-tablewrapper>table>tbody:nth-child(11)>div.ui-treetable-row-selectable,
+ :host /deep/ .ui-treetable-tablewrapper>table>tbody:nth-child(11)>div.ui-treetable-row-selectable:hover {
+    background-color: #42D692 !important;
+    border: 1px solid #42D692;
+    color: #FFF;
+    /* #42D692 */
+ }
+ 
+ :host /deep/ .ui-treetable-tablewrapper>table>tbody:nth-child(12)>div.ui-treetable-row-selectable,
+ :host /deep/ .ui-treetable-tablewrapper>table>tbody:nth-child(12)>div.ui-treetable-row-selectable:hover {
+    background-color: #FBE983 !important;
+    border: 1px solid #FBE983;
+    color: #000;
+    /* #FBE983 */
+ }
+ 
+ :host /deep/ .HeaderLabel1:hover,
+ :host /deep/ .HeaderLabel2:hover,
+ :host /deep/ .HeaderLabel3:hover,
+ :host /deep/ .HeaderLabel4:hover,
+ :host /deep/ .HeaderLabel5:hover,
+ :host /deep/ .HeaderLabel6:hover,
+ :host /deep/ .HeaderLabel7:hover {
+    width: 18%;
+ }
+ 
+ :host /deep/ .TopicClass {
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+ }
+ 
+ :host /deep/ .ui-state-default .ui-corner-top>a {
+    width: 15%;
+ }
+ 
+ :host /deep/ .ui-tabview .ui-tabview-nav li a,
+ .ui-tabview.ui-tabview-collapsible .ui-tabview-nav li.ui-tabview-selected a {
+    width: 100%;
+ }
+ 
+ :host /deep/ .ui-helper-reset {
+    line-height: 1.6;
+ }
+ 
+ :host /deep/ .ui-state-highlight {
+    border-color: inherit;
+    background: inherit;
+    color: #000;
+ }
+ 
+ .ui-treetable th.ui-state-default {
+    background: #e8e3e3;
+ }
+ 
+ .mat-card {
+    padding: 6px !important;
+ }
+ 
+ :host /deep/ .ui-treetable-tablewrapper a.ui-clickable {
+    color: #000 !important;
+ }
+ 
+ :host /deep/ .HighlightClass .ui-treetable-row-selectable {
+ 
+    /* border:2px solid #462066 !important; */
+    border: 2px solid #1979ab !important;
+ }
+ .divnewbutton
+ {
+    flex:auto;
+    text-align:right;
+ }

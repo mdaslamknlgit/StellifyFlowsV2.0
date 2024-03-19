@@ -1,0 +1,432 @@
+<div class="container-fluid">
+    <div class="row" style="position: relative;">
+    <div class="col-md-12 col-sm-12 padding-null tittlediv">
+        <div class="flexrow space-between align-center"> 
+    <h3 class="item-heading">Facility Management </h3>
+     
+       <div>
+        <button class="btn  btn-transparent" (click)="addRecord();" *ngIf="hidetext"> New Record</button>
+        <button  class="btn btn-transparent" (clickOutside)="onClickedOutside($event)"  (click)="split()">  {{showfilterstext}}  </button> 
+        <img style="display: none;" src="../assets/images/grid1.png" (click)="showFullScreen()"> 
+        <img style="display: none;" src="../assets/images/grid2.png"> 
+    </div> 
+        </div>
+    </div>
+    
+    
+    <div class="left-section"   [class.display-filters]="!showfilters" > 
+    
+        <div class="filter-section"  ngbDropdown #myDrop="ngbDropdown" >
+            <div class="flexrow space-between"> 
+       <div class="left-search">
+               <input type="text"  [(ngModel)]="facilitySearchKey" placeholder="Search requests..." class="search-filter" (keyup)="onSearchInputChange($event)">
+               <i class="fa fa-search" aria-hidden="true"></i>
+               <div class="filter-popup" *ngIf="initDone" ngbDropdownMenu aria-labelledby="dropdownManual" (click)="$event.stopPropagation(); myDrop.open();">
+                   
+                       <form [formGroup]="FacilityFilterInfoForm" class="form-horizontal">
+       
+                           <div class="form-group row">
+                               <label class="col-form-label col-6 form-label">Unit Number</label>
+                               <div  class="col-6">
+       
+                                   <input  type="text" #unitCode formControlName="UnitNo" class="form-control">
+       
+                               </div>
+                           </div>
+       
+                           <div class="form-group row">
+                               <label class="col-form-label col-6 form-label">Owner Name</label>
+                               <div class="col-6">
+                                       <input  type="text" formControlName="Owner" class="form-control">
+       
+                               </div>
+                           </div>
+       
+                           <div class="form-group row">
+                               <label class="col-form-label col-6 form-label">Tenant Name</label>
+                               <div  class="col-6">
+       
+                                   <input  type="text" formControlName="Tenant" class="form-control">
+       
+                               </div>
+                           </div>
+       
+                           <div class="form-group row">
+                               <div class="col-12 error">
+                                   {{filterMessage}}
+                               </div>
+                           </div>
+       
+                           <div class="form-group row">
+       
+                               <div class="col-12" style="text-align: right">
+                                   <button type="submit" (click)="filterData()" class="btn btn-save">
+                                       <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                   <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                       <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+       
+                               </div>
+                           </div>
+                       </form>
+               </div>
+       
+           </div>
+       
+           <div><!-- start filter code -->
+            <div class="filter-icon">
+                   <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                       <i class="fa fa-filter" aria-hidden="true"></i>
+                   </button>
+               </div>
+       
+               <div style="float:right;margin:0px;" class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+                   <i class="fa fa-undo" aria-hidden="true"></i>  </div>
+        </div> 
+           </div>    
+               <!-- end filter code -->
+       
+       
+           <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="filter-scroll" style="width:100%; float:left;">
+           <table class="table">
+           <tr [class.activerow]="record.FacilityId==selectedFacilityManagementRecord.FacilityId" (click)="onRecordSelection(record.FacilityId)" *ngFor="let record of FacilityManagementList">
+                   <td>
+                           <h5 class="sub-heading"> {{record.UnitNumber}}</h5>
+                           <label class="label-text">Owner Name</label> :<label class="label-value">{{record.OwnerName}}</label>
+                           <label class="label-text">Tenant Name</label> :<label class="label-value">{{record.TenantName}}</label>
+                   </td>
+           </tr>
+           </table>
+               <div *ngIf="FacilityManagementList.length==0" class="col-12 listErrorMessage">
+                       {{errorMessage}}
+                   </div> 
+               
+           </div>  
+       
+           <ngb-pagination [maxSize]="5" *ngIf="FacilityManagementList.length>0" (pageChange)="pageChange($event)" [collectionSize]="FacilityPagerConfig.TotalRecords" class="d-flex justify-content-center" [pageSize]="FacilityPagerConfig.RecordsToFetch" [page]="1" [boundaryLinks]="true"></ngb-pagination>
+          </div>
+           </div> 
+    
+    </div>
+    <div class="row"> 
+    <div  #rightPanel [CustomSpinner]="showRightPanelLoadingIcon" class="rightPanel col-lg-12 col-md-12"  [class.expand-rightcol]="rightsection">
+    
+    <div >
+        <form  [formGroup]="signupForm" class="form-horizontal" >
+        <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="rightcol-scrroll">
+                <div class="row fullScreenLabel">
+                        <div class="col-12">
+                            <h3 class="item-heading" style="float:none;">Facility Management</h3>
+                        </div>
+                    </div>
+        <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Unit Number </label>  
+            <div class="col-xl-4 col-sm-6 col-6">
+                <label class="col-form-label form-text" *ngIf="selectedFacilityManagementRecord.FacilityId!=null || hidetext"><b style="color:#01548e">{{selectedFacilityManagementRecord.UnitNumber}}</b> </label>
+                <input type="text" 
+                    formControlName="UnitNumber" [ngClass]="(validateControl(signupForm.get('UnitNumber')))?'form-control ng-touched':'form-control'"
+                    placeholder="Unit Number"
+                     *ngIf="selectedFacilityManagementRecord.FacilityId==null&&hideinput" class="form-control">
+                <div *ngIf="signupForm.get('UnitNumber').errors!=null">
+                        <span class="errorMessage" *ngIf="signupForm.get('UnitNumber').errors.DuplicateUnit">Duplicate Unit Number</span>
+                </div>
+            </div>
+        </div>
+    
+        <h4 class="form-heading">Owner Details </h4>
+    
+        <!-- <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Owner Name</label>  
+            <div class="col-xl-4 col-sm-6 col-6">
+                    <label class="col-form-label form-text" *ngIf="hidetext">{{selectedFacilityManagementRecord.OwnerName}} </label>
+                <input type="text" 
+                    formControlName="OwnerName" [ngClass]="(validateControl(signupForm.get('OwnerName')))?'form-control ng-touched':'form-control'"
+                    placeholder="Owner Name" *ngIf="hideinput" class="form-control">     
+                <div *ngIf="signupForm.get('OwnerName').errors!=null && isDisplayMode==false">
+                        <span class="errorMessage" *ngIf="signupForm.get('OwnerName').errors.DuplicateName">Duplicate Owner Name</span>
+                </div>
+               
+            </div>
+        </div> -->
+    
+          <!-- <p-autoComplete formControlName="OwnerName"  [suggestions]="results" (completeMethod)="search($event)"
+                [dropdown]="true">
+                 <ng-template let-brand pTemplate="item">
+                    <div class="ui-helper-clearfix">
+                        <div >{{brand.CustomerName}}</div>
+                    </div>
+                </ng-template> 
+            
+                </p-autoComplete> -->
+    
+        <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Owner Name</label>  
+            <div class="autoComplete3 quotationReqAutoComplete col-xl-4 col-sm-6 col-6">
+                <label class="col-form-label form-text" *ngIf="hidetext">
+                    {{ selectedFacilityManagementRecord.OwnerName }}</label>
+    
+                <input formControlName="OwnerDetails" type="text" placeholder="Owner Name"
+                        *ngIf="hideinput&&hideowner==false"  class="show form-control" 
+                        [inputFormatter]="customerInputFormater"  (selectItem)="onCustomerChange($event)"  
+                        [ngbTypeahead]="customerSearch" [resultTemplate]="OwnerTemplate"/> 
+    
+                <input type="text"  *ngIf="hideowner" 
+                        formControlName="OwnerName" [ngClass]="(validateControl(signupForm.get('OwnerName')))?'form-control ng-touched':'form-control'"
+                        placeholder="Owner Name" class="form-control">   
+    
+                
+                 <!-- <div *ngIf="hideinput&&signupForm.get('OwnerName') && signupForm.get('OwnerName').errors!=null&& signupForm.get('OwnerName').touched==true">
+                    <span class="errorMessage"  *ngIf="signupForm.get('OwnerName').errors.required">Owner Name is required</span>
+                </div>      -->
+            </div>    
+            
+            <div>
+                <button type="submit"  (click)="newOwner()" class="btn btn-save" *ngIf="!hideowner&&hideinput">New Owner</button>
+                <button type="submit"  (click)="existingOwner()" class="btn btn-save" *ngIf="hideowner&&hideinput">Existing Owner</button>
+            </div>
+        </div>
+    
+        <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Email</label>  
+            <div class="col-xl-4 col-sm-6 col-6">
+                    <label class="col-form-label form-text" *ngIf="hidetext">{{selectedFacilityManagementRecord.OwnerEmail}} </label>
+                <input type="text" 
+                    formControlName="OwnerEmail" [ngClass]="(validateControl(signupForm.get('OwnerEmail')))?'form-control ng-touched':'form-control'"
+                    placeholder="Owner Email" *ngIf="hideinput" class="form-control">            
+            </div>
+        </div>
+    
+        <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Billing Address</label>  
+            <div class="col-xl-4 col-sm-6 col-6">
+                <label class="col-form-label form-text" *ngIf="hidetext">{{selectedFacilityManagementRecord.OwnerBillingAddress}} </label>
+        <textarea 
+                formControlName="OwnerBillingAddress" [ngClass]="(validateControl(signupForm.get('OwnerBillingAddress')))?'form-control ng-touched':'form-control'"
+                placeholder="Owner Address" *ngIf="hideinput" class="form-control">
+        </textarea>
+        
+            </div>     
+        </div>
+    
+        <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Country</label>
+            <div class="col-xl-4 col-sm-6 col-6">
+                <label class="col-form-label form-text" *ngIf="hidetext">{{selectedFacilityManagementRecord.OwnerBillingCountryName }}</label>
+                <select *ngIf="hideinput" class="form-control" formControlName="OwnerBillingCountryId"
+                 [ngClass]="(validateControl(signupForm.get('OwnerBillingCountryId')))?'form-control ng-touched':'form-control'">
+                    <option *ngFor="let country of countries" [value]="country.Id">
+                        {{country.Name}}
+                    </option>
+                </select>
+            </div>
+        </div>
+    
+        <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">City</label>  
+            <div class="col-xl-4 col-sm-6 col-6">
+                    <label class="col-form-label form-text" *ngIf="hidetext">{{selectedFacilityManagementRecord.OwnerCity}}</label>
+                <input type="text" 
+                    formControlName="OwnerCity" [ngClass]="(validateControl(signupForm.get('OwnerCity')))?'form-control ng-touched':'form-control'"
+                    placeholder="Owner City" *ngIf="hideinput" class="form-control">            
+            </div>
+        </div>
+    
+        
+        <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Telephone</label>  
+            <div class="col-xl-4 col-sm-6 col-6">
+                    <label class="col-form-label form-text" *ngIf="hidetext">{{selectedFacilityManagementRecord.OwnerContactNo}} </label>
+                <input type="text" 
+                    formControlName="OwnerContactNo" [ngClass]="(validateControl(signupForm.get('OwnerContactNo')))?'form-control ng-touched':'form-control'"
+                    placeholder="Owner ContactNo" *ngIf="hideinput" class="form-control">            
+            </div>
+        </div>
+    
+        
+        
+        <h4 class="form-heading">Tenant Details </h4>
+    
+        <!-- <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Tenant Name</label>  
+            <div class="col-xl-4 col-sm-6 col-6">
+                <label class="col-form-label form-text" *ngIf="hidetext">{{selectedFacilityManagementRecord.TenantName}}</label>
+                <input type="text" 
+                    formControlName="TenantName" [ngClass]="(validateControl(signupForm.get('TenantName')))?'form-control ng-touched':'form-control'"
+                    placeholder="Tenant Name" *ngIf="hideinput" class="form-control">            
+            </div>
+        </div> -->
+        <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Tenant Name</label>  
+            <div class="autoComplete3 quotationReqAutoComplete col-xl-4 col-sm-6 col-6">
+                <label class="col-form-label form-text" *ngIf="hidetext">
+                    {{ selectedFacilityManagementRecord.TenantName }}</label>
+    
+                <input formControlName="TenantDetails" type="text" placeholder="Tenant Name"
+                        *ngIf="hideinput&&hidetenant==false"  class="show form-control" 
+                        [inputFormatter]="tenantInputFormater" (selectItem)="onTenantChange($event)"
+                        [ngbTypeahead]="tenantSearch"  [resultTemplate]="TenantTemplate"/>
+    
+                <input type="text"  *ngIf="hidetenant" 
+                        formControlName="TenantName" [ngClass]="(validateControl(signupForm.get('TenantName')))?'form-control ng-touched':'form-control'"
+                        placeholder="Tenant Name" class="form-control">  
+    
+    
+    
+                <!-- <div *ngIf="hideinput&&signupForm.get('TenantName') && signupForm.get('TenantName').errors!=null&& signupForm.get('TenantName').touched==true">
+                    <span class="errorMessage"  *ngIf="signupForm.get('TenantName').errors.required">Tenant Name is required</span>
+                </div>  -->
+            </div>      
+            <div>
+                <button type="submit"  (click)="newTenant()" class="btn btn-save" *ngIf="!hidetenant&&hideinput">New Tenant</button>
+                <button type="submit"  (click)="existingTenant()" class="btn btn-save" *ngIf="hidetenant&&hideinput">Existing Tenant</button>
+            </div>
+    
+        </div>
+    
+        <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Email</label>  
+            <div class="col-xl-4 col-sm-6 col-6">
+                    <label class="col-form-label form-text" *ngIf="hidetext">{{selectedFacilityManagementRecord.TenantEmail}}</label>
+                    <input type="text" 
+                        formControlName="TenantEmail" [ngClass]="(validateControl(signupForm.get('TenantEmail')))?'form-control ng-touched':'form-control'"
+                        placeholder="Tenant Email" *ngIf="hideinput" class="form-control">            
+            </div>  
+        </div>
+    
+        <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Billing Address</label>  
+            <div class="col-xl-4 col-sm-6 col-6">
+                <label class="col-form-label form-text" *ngIf="hidetext">{{selectedFacilityManagementRecord.OwnerBillingAddress}}</label>
+        <textarea 
+                formControlName="TenantBillingAddress"  [ngClass]="(validateControl(signupForm.get('TenantBillingAddress')))?'form-control ng-touched':'form-control'"
+                placeholder="Tenant Address" *ngIf="hideinput" class="form-control">
+        </textarea>
+        
+            </div>     
+        </div>
+    
+    
+        <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Country</label>
+            <div class="col-xl-4 col-sm-6 col-6">
+                <label class="col-form-label form-text" *ngIf="hidetext">{{selectedFacilityManagementRecord.TenantBillingCountryName }}</label>
+                <select *ngIf="hideinput" class="form-control" formControlName="TenantBillingCountryId"
+                 [ngClass]="(validateControl(signupForm.get('TenantBillingCountryId')))?'form-control ng-touched':'form-control'">
+                    <option *ngFor="let country of countries" [value]="country.Id">
+                        {{country.Name}}
+                    </option>
+                </select>
+            </div>
+        </div>
+    
+        <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">City</label>  
+            <div class="col-xl-4 col-sm-6 col-6">
+                    <label class="col-form-label form-text" *ngIf="hidetext">{{selectedFacilityManagementRecord.TenantCity}}</label>
+                    <input type="text" 
+                        formControlName="TenantCity" [ngClass]="(validateControl(signupForm.get('TenantCity')))?'form-control ng-touched':'form-control'"
+                        placeholder="Tenant City" *ngIf="hideinput" class="form-control">            
+            </div>
+        </div>
+        
+        <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Telephone</label>  
+            <div class="col-xl-4 col-sm-6 col-6">
+                    <label class="col-form-label form-text" *ngIf="hidetext">{{selectedFacilityManagementRecord.TenantContactNo}} </label>
+                    <input type="text" 
+                        formControlName="TenantContactNo" [ngClass]="(validateControl(signupForm.get('TenantContactNo')))?'form-control ng-touched':'form-control'"
+                        placeholder="Tenant ContactNo" *ngIf="hideinput" class="form-control">            
+            </div>
+        </div>
+        
+       
+        
+    
+        <!-- <div class="form-group row">
+                <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Status</label>  
+                <div class="col-xl-4 col-sm-6 col-6">
+                    <label class="col-form-label form-text" *ngIf="hidetext">{{selectedFacilityManagementRecord.IsActive==true?"Active":"InActive"}} </label>
+                <label class="col-form-label form-text"  *ngIf="hideinput">
+                  <mat-slide-toggle formControlName="IsActive"  (change)="matselect($event)"></mat-slide-toggle>
+                          <label *ngIf="slideactive">Active</label>        
+                </label>        
+                </div>   
+        
+        </div> -->
+     
+        </div>
+    
+        <div class="form-group text-right btn-list">
+            <button type="submit" (click)="saveRecord()"  class="btn btn-save" *ngIf="hideinput"><i class="fa fa-check" aria-hidden="true"></i> Save</button>
+            <button type="submit" (click)="cancelRecord()"  class="btn btn-cancel" *ngIf="hideinput"><i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+            <button type="submit" (click)="editRecord()" class="btn btn-edit" *ngIf="hidetext"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+            <button type="submit" (click)="deleteRecord()"  class="btn btn-delete" *ngIf="hidetext"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+    </div>
+    
+        </form>
+    </div>
+    
+    
+    </div><!-- left col end here-->
+    
+    
+    </div>
+     
+    </div>
+    
+    
+    
+    <ng-template #OwnerTemplate let-r="result" let-i="index" let-t="term">          
+        <table class="autoCompleteTable" style="width: 150%;" >
+            <thead *ngIf='r.index==0'>
+                <tr>
+                    <th  style="width: 30%">
+                        Customer Code
+                    </th>
+                    <th  style="width: 30%">
+                        Name
+                    </th>
+                    <th  style="width: 40%">
+                        City
+                    </th>
+                    <!-- <th  style="width: 50%">
+                        Email
+                    </th> -->
+                </tr>             
+            </thead>          
+            <tr>
+                <td style="width: 30%">{{ r.CustomerCode }}</td>
+                <td style="width: 30%; white-space: pre-wrap; word-wrap: break-word; ">{{ r.OwnerName }}</td>                    
+                <td style="width: 40%">{{ r.BillingCity }}</td>                 
+                <!-- <td style="width: 50%">{{ r.CustomerEmail }}</td>    -->
+            </tr>
+        </table>
+    </ng-template>
+    
+    
+    <ng-template #TenantTemplate let-r="result" let-i="index" let-t="term">          
+        <table class="autoCompleteTable" style="width: 150%;" >
+            <thead *ngIf='r.index==0'>
+                <tr>
+                    <th  style="width: 30%">
+                        Tenant Code
+                    </th>
+                    <th  style="width: 30%">
+                        Name
+                    </th>
+                    <th  style="width: 40%">
+                        City
+                    </th>
+                    <!-- <th  style="width: 50%">
+                        Email
+                    </th> -->
+                </tr>             
+            </thead>          
+            <tr>
+                <td style="width: 30%">{{ r.CustomerCode }}</td>
+                <td style="width: 30%; white-space: pre-wrap; word-wrap: break-word; ">{{ r.TenantName }}</td>                    
+                <td style="width: 40%">{{ r.BillingCity }}</td>                 
+                <!-- <td style="width: 50%">{{ r.CustomerEmail }}</td>    -->
+            </tr>
+        </table>
+    </ng-template>
+     

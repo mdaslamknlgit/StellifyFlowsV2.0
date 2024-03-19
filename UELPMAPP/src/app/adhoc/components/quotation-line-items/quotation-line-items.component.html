@@ -1,0 +1,145 @@
+<div class="row">
+  <div [formGroup]="form" class="col-lg-12" style="margin-top:2%;">
+    <h4 class="form-heading" style="margin-bottom: 10px;">{{headerText}} Details</h4>
+    <div class="respnsive-table tablescrol">
+      <fieldset formArrayName="LineItems">
+        <p-table sortMode="single" [value]="form.get('LineItems')['controls']"
+          [columns]="QuotationDetailsColumns">
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td [attr.colspan]="QuotationDetailsColumns.length" style='text-align: center;'>
+                <b class="errorMessage" *ngIf="this.fAQuotations.invalid">
+                  Please Enter {{headerText}} Details
+                </b>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+              <col *ngFor="let col of columns" [style.width]="col.width">
+            </colgroup>
+          </ng-template>
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                {{col.header}}
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-row let-i="rowIndex" let-columns>
+            <tr [formGroupName]="i">
+              <td> {{i + 1}}</td>
+              <td>
+                <input *ngIf="!IsViewMode || IsReverify" type="text" class="form-control" (focus)="displayAccountCodePopUp(row,i)"
+                  formControlName="Code">
+                <span *ngIf="IsViewMode && !IsReverify">{{row.get('Code').value}}</span>
+              </td>
+              <td>
+                <textarea *ngIf="!IsViewMode || IsReverify" class="form-control" formControlName="Description"></textarea>
+                <span *ngIf="IsViewMode && !IsReverify">{{row.get('Description').value}}</span>
+              </td>
+              <td>
+                <input currencyMask [options]="options2precision" (blur)="calculateLineItem()" formControlName="Qty"
+                  *ngIf="!IsViewMode" class="form-control" />
+                <span *ngIf="IsViewMode">{{row.get('Qty').value | number:'1.2-2'}}</span>
+              </td>
+              <td>
+                <select formControlName="UOMId" *ngIf="!IsViewMode" class="form-control">
+                  <option [ngValue]="null">--Select--</option>
+                  <option *ngFor="let record of measurementUnits" value={{record.MeasurementUnitID}}>
+                    {{ record.Name }}
+                </select>
+                <span *ngIf="IsViewMode">{{row.get('UOM').value }}</span>
+              </td>
+              <td>
+                <input currencyMask [options]="options2precision" (blur)="calculateLineItem()"
+                  formControlName="UnitPrice" *ngIf="!IsViewMode" class="form-control" />
+                <span *ngIf="IsViewMode" class="alignright">{{row.get('UnitPrice').value | number:'1.2-2'}}</span>
+              </td>
+              <td class="alignright">
+                <span>{{row.get('TotalBeforeDiscount').value | number:'1.2-2'}}</span>
+              </td>
+              <td class="alignright">
+                <input currencyMask [options]="options2precision" (blur)="calculateLineItem()"
+                  formControlName="Discount" *ngIf="!IsViewMode" class="form-control" />
+                <span *ngIf="IsViewMode">{{row.get('Discount').value | number:'1.2-2'}}</span>
+              </td>
+              <td class="alignright">
+                <span>{{row.get('TotalBeforeTax').value | number:'1.2-2'}}</span>
+              </td>
+              <td class="aligncenter">
+                <select *ngIf="!IsViewMode" formControlName="TaxTypeId" id="TaxType" (change)="calculateLineItem()"
+                  class="form-control">
+                  <option [ngValue]="null">--Select--</option>
+                  <option *ngFor="let record of taxTypes" value={{record.TaxTypeId}}>
+                    {{record.TaxTypeName}}
+                </select>
+                <span *ngIf="IsViewMode">{{row.get('TaxType').value }}</span>
+              </td>
+              <td class="alignright"> <span>{{row.get('TaxAmount').value | number:'1.2-2' }}</span> </td>
+              <td class="alignright"> <span>{{row.get('TotalAfterTax').value | number:'1.2-2'}}</span> </td>
+              <td class="aligncenter">
+                <button *ngIf="!IsViewMode" type="button" class="btn" (click)="deleteRow(i)">
+                  <i class="fa fa-trash" aria-hidden="true"></i>
+                </button>
+                <span *ngIf="IsViewMode"></span>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+        <div *ngIf="!IsViewMode">
+          <button type="submit" (click)="addGridRow()" class="addLine">
+            <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Line
+          </button>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+</div>
+<p-dialog header="Account Code Information" class="modalheightauto" width="500" height="300"
+  [(visible)]="showGlCodeDialog">
+  <form [formGroup]="AccountCodeInfoForm" class="form-horizontal">
+    <div class="form-group row">
+      <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Account Type
+        <i class="fa fa-star mandatory-icon" aria-hidden="true"></i>
+      </label>
+      <div class="col-xl-8 col-sm-6 col-6">
+        <select class="form-control" (change)="GetASubCatByAccountType()" formControlName="AccountTypeId">
+          <option [ngValue]="null">--Select--</option>
+          <option [value]="record.AccountTypeId" *ngFor="let record of accountTypes">
+            {{record.AccountTypeName}}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-form-label col-6  col-xl-4 col-sm-6 form-label">SubCategory
+        <i class="fa fa-star mandatory-icon" aria-hidden="true"></i>
+      </label>
+      <div class="col-xl-8 col-sm-6 col-6">
+        <select class="form-control" (change)="GetAccountCodesBySubCat()" formControlName="SubCategoryId">
+          <option [ngValue]="null">--Select--</option>
+          <option *ngFor="let category of accountCodeCategories" [value]="category.AccountCodeCategoryId">
+            {{category.AccountCodeCategoryName}}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-form-label col-6  col-xl-4 col-sm-6 form-label">Account Code
+        <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+      <div class="col-xl-8 col-sm-6 col-6">
+        <select formControlName="AccountCodeId" class="form-control">
+          <option value="null">--Select--</option>
+          <option *ngFor="let record of accountCodes" value={{record.AccountCodeId}}>
+            {{record.Description}} - {{record.Code}}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group" style="text-align: right">
+      <button (click)="OKAccountcode()" class="btn btn-save"> OK </button>
+    </div>
+  </form>
+</p-dialog>

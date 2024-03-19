@@ -1,0 +1,195 @@
+<block-ui message="Deafult Message">
+  <!-- Markup here -->
+</block-ui>
+<div class="container-fluid">  
+  <div class="row">
+    <div class="col-md-12 col-sm-12 padding-null tittlediv">
+        <div class="flexrow space-between align-center">
+            <h3 class="item-heading"> Entity Import  </h3>
+            <!-- <p>{{TotalSelectedContacts}} -- {{SelectedContacts}}</p> -->
+            <!-- <p> {{SelectedLeads}} -- {{ShowToolBar}}  ---- {{closeResult}} </p> -->
+            <div class="divnewbutton"> 
+                  <!-- <button class="btn btn-save ng-star-inserted" style="margin-right: 20px;" type="button" (click)="ClickNewContact($event)">
+                    <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> New</button> -->
+            </div>            
+        </div>
+       <hr style="margin-top: 0px;" />
+    </div>
+  </div>
+
+  <div class="row">    
+      <form (ngSubmit)="onSubmit(ImportCSVForm.value,$event)" [formGroup]="ImportCSVForm" 
+      #ImportCSVEle style="width: 100%;margin-top: 10px">
+      <div class="row">
+        <div class="col-lg-6 col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Select Entity</label>
+            <div class="autoComplete col-xl-8 col-sm-6 col-6">
+            
+              <select (change)="OnEntityChange($event)" formControlName="EntityId"
+              tabindex="10"  class="form-control" tabindex="1">
+                <option [ngValue]="0">--Select Entity--</option>
+                <option *ngFor="let list of EntityItemsList" value={{list.Id}}>
+                  {{ list.Name }}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="col-lg-6 col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label"> {{SelectedEntityName}} </label>
+          </div>
+        </div>
+        <!-- <div class="col-lg-6 col-md-6">
+            <div class="form-group row" [hidden]="OnlySelectedList">
+              <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">List Name
+                <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                  <input id="ListName" #ListName formControlName="ListName" placeholder="List Name" 
+                  tabindex="2" class="form-control" required />
+
+                  <div *ngIf="ImportCSVForm.get('ListName') && ImportCSVForm.get('ListName').errors!=null &&ImportCSVForm.get('ListName').touched==true">
+                    <span class="errorMessage" *ngIf="ImportCSVForm.get('ListName').errors.required">
+                      List Name is required</span>
+                  </div>
+                </div>
+            </div>
+
+        </div> -->
+      </div>
+    </form>
+  </div>
+
+<!-- Old Code Commented as it's material design -->
+  <!-- <div class="row">
+    <div class="col-md-6">
+        <mat-form-field>
+            <mat-select placeholder="Select List"  (selectionChange)="onListChange($event)" [formControl]="listsControl">
+              <mat-option [value]=0><i class="fa fa-plus"></i> Create List</mat-option>
+              
+              <mat-option *ngFor="let list of MyLists" [value]="list.Id">
+                {{list.ListName}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+    </div>
+    <div class="col-md-6">
+        <form class="example-form"  class="form-horizontal">
+          <div [hidden]="OnlySelectedList">
+              <div class="form-group">
+                <label for="Name">List Name</label>
+                <input #MyListName placeholder="List Name" [formControl]="ListNameFormControl"
+                        required>
+                  <div
+                    *ngIf="ListNameFormControl.invalid">
+                    <span class="errorMessage" >
+                      List Name is required</span>
+                  </div>
+
+              </div>
+          </div>
+          </form>
+    </div>
+  </div> -->
+<!-- Old Code Commented as it's material design -->  
+  <div class="row">
+    <div class="col-md-12">
+      <div style="float:left;">
+        <input type='file' #fileUpload class="btn btn-search" (change)="fileChanged($event)" 
+        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+        
+      </div>
+      
+      <div style="float:right;">
+        <button type="button" class="btn btn-save ng-star-inserted" *ngIf="IsCSV" (click)="MapCSVFields($event)">
+          <i class="fa fa-signs-post"></i> Map CSV</button>
+        &nbsp;&nbsp;
+        <button type="button" class="btn btn-save ng-star-inserted" *ngIf="IsExcel" (click)="MapExcelFields($event)">
+          <i class="fa fa-signs-post"></i> Map Excel</button>
+          &nbsp;&nbsp;  
+        <button type="button" [hidden]="!IsMapped" class="btn btn-success" 
+        (click)="uploadDocument()">Upload File</button>
+      </div>
+      <div  style="clear: both"></div>
+      <!-- <div style="padding-left:6px;">File Type : {{FileType}}</div> -->
+      <div style="color:red;" [hidden]="!DisplayWarning">Only CSV File Allowed</div>
+      <!-- <div id="divExcel">
+        <input type="file" style="display: inline-block;" (change)="incomingfile($event)" placeholder="Upload file" accept=".xlsx">
+        <button type="button" class="btn btn-info" (click)="Upload()" >Upload</button>
+      </div> -->
+      <div #DivTables class="DivAutoMap" style="margin-top: 15px;">
+        <table [hidden]="!FileMapped" class="table">
+          <tr>
+            <td colspan="2" align="left" style="font-size:12px;">
+              <!--<hr>
+               <div style="color:red;">* For Linkedin 1st connections go to
+                <b>View List - Create List - Or Select Existing List in which you want to upload file then Select
+                  <b>Import CSV</b> and upload file.
+                  <br>
+                  <p style="font-weight: bold;">&nbsp;&nbsp; 
+                    If you upload linkedin 1st connection it will treat as 2nd degree connection.</p>
+                </b>
+              </div> -->
+              <hr>
+              <p>Your CSV file should contain the following fields :</p>
+              <ul>
+                <li>-First name (Required)</li>
+                <li>-Last name (Required)</li>
+                <li>-Email (Optional)</li>
+                <li>-Title (Optional)</li>
+                <li>-Company (Optional)</li>
+                <li>-Company domain (e.g stellify.com) (Optional)</li>
+                <li>-Location (Optional)</li>
+                <li>-Linkedin profile url (Optional)</li>
+                <li>To search for email addresses, a company name or domain should be provided, Providing the company domain
+                  will make the search for emails go faster</li>
+                <li>To send messages to connections Connection Profile URL should be provided, or else stellify will not able
+                  to send messages</li>
+
+
+              </ul>
+            </td>
+          </tr>
+        </table>
+        
+        <table *ngIf="temp!=null" class="table table-bordered">
+          <tr>
+            <th *ngFor="let key of objectKeys(temp);"> {{key}} </th>
+          </tr>
+
+          <tr>
+            <td *ngFor="let key of objectKeys(temp);">{{temp[key]}}</td>
+
+          </tr>
+          <tr>
+            <td *ngFor="let key of objectKeys(temp);">
+              <div class="form-group row">
+                <select (change)="onChange($event,key)" 
+                  style="width:60%;"
+                  class="form-control ng-pristine ng-valid ng-touched">
+                  <option *ngFor="let field of EntityFieldsList" [value]="field.value">{{field.name}}</option>
+                </select>
+              </div>
+            </td>
+
+          </tr>
+
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <hr style="margin-top: 0px;" />
+  <div class="row">
+    <!-- <input type="file" (change)="onFileChange($event)" /> -->
+  
+    <div id="output"></div>
+    <br>
+    <div *ngIf="willDownload">
+      <a id="download"> Download JSON File </a>
+    </div>
+  
+  </div>
+</div>

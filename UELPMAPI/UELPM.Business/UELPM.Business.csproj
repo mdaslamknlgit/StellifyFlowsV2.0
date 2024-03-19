@@ -1,0 +1,242 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4FD29755-8A95-4AA2-BFB4-9A6DEB39164C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UELPM.Business</RootNamespace>
+    <AssemblyName>UELPM.Business</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Interface\IAccountCodeManager.cs" />
+    <Compile Include="Interface\IAccountsManager.cs" />
+    <Compile Include="Interface\IAccountSubCategoryManager.cs" />
+    <Compile Include="Interface\IAccountTypesManager.cs" />
+    <Compile Include="Interface\IActivityManager.cs" />
+    <Compile Include="Interface\IAppViewsManager.cs" />
+    <Compile Include="Interface\IAssetDepreciationManager.cs" />
+    <Compile Include="Interface\IAssetDetailsManager.cs" />
+    <Compile Include="Interface\IAssetDisposalManager.cs" />
+    <Compile Include="Interface\IAssetMasterManager.cs" />
+    <Compile Include="IItemManager.cs" />
+    <Compile Include="IManagerBase.cs" />
+    <Compile Include="Interface\IAssetCategoryManager.cs" />
+    <Compile Include="Interface\IAssetRegisterManager.cs" />
+    <Compile Include="Interface\IAssetTransferManager.cs" />
+    <Compile Include="Interface\IAssetTypeManager.cs" />
+    <Compile Include="Interface\IAuditLogManager.cs" />
+    <Compile Include="Interface\ICompanyManager.cs" />
+    <Compile Include="Interface\IContactsManager.cs" />
+    <Compile Include="Interface\IContractPurchaseOrderManager.cs" />
+    <Compile Include="Interface\ICostCentreManager.cs" />
+    <Compile Include="Interface\ICreditNoteManager.cs" />
+    <Compile Include="Interface\ICurrencyManager.cs" />
+    <Compile Include="Interface\ICustomerManager.cs" />
+    <Compile Include="Interface\ICustomerPaymentManager.cs" />
+    <Compile Include="Interface\IAdhocMasterManager.cs" />
+    <Compile Include="Interface\IDealsManager.cs" />
+    <Compile Include="Interface\IDeliveryTermsManager.cs" />
+    <Compile Include="Interface\IDepartmentManager.cs" />
+    <Compile Include="Interface\IDepreciationManager.cs" />
+    <Compile Include="Interface\IEngineerManagementManager.cs" />
+    <Compile Include="Interface\IEntityImportManager.cs" />
+    <Compile Include="Interface\IExpenseMasterManager.cs" />
+    <Compile Include="Interface\IExpensesPurchaseOrderManager.cs" />
+    <Compile Include="Interface\IExpenseTypeManager.cs" />
+    <Compile Include="Interface\IFacilityManagementManager.cs" />
+    <Compile Include="Interface\IFixedAssetPurchaseOrderCreationManager.cs" />
+    <Compile Include="Interface\IGenericManager.cs" />
+    <Compile Include="Interface\IGoodsReceivedNotesManager.cs" />
+    <Compile Include="Interface\IGoodsReturnedNotesManager.cs" />
+    <Compile Include="Interface\IInventoryCycleCountManager.cs" />
+    <Compile Include="Interface\IInventoryDisposalRequestManager.cs" />
+    <Compile Include="Interface\IInventoryRequestManager.cs" />
+    <Compile Include="Interface\IInvoiceManager.cs" />
+    <Compile Include="Interface\IItemAdjustmentManager.cs" />
+    <Compile Include="Interface\IItemCategoryManager.cs" />
+    <Compile Include="Interface\IItemMasterManager.cs" />
+    <Compile Include="Interface\IItemsListingManager.cs" />
+    <Compile Include="Interface\IItemTypeManager.cs" />
+    <Compile Include="Interface\IConnectionManager.cs" />
+    <Compile Include="Interface\ILeadsManager.cs" />
+    <Compile Include="Interface\IMarketingListManager.cs" />
+    <Compile Include="Interface\ILocationTransferManager.cs" />
+    <Compile Include="Interface\IMeasurementUnitManager.cs" />
+    <Compile Include="Interface\INotificationManager.cs" />
+    <Compile Include="Interface\IOpportunityManager.cs" />
+    <Compile Include="Interface\IPaymentManager.cs" />
+    <Compile Include="Interface\IPaymentTermsManager.cs" />
+    <Compile Include="Interface\IProductsManager.cs" />
+    <Compile Include="Interface\IProjectContractVariationOrderManager.cs" />
+    <Compile Include="Interface\IProjectMasterContractManager.cs" />
+    <Compile Include="Interface\IProjectPaymentContractManager.cs" />
+    <Compile Include="Interface\IProjectPurchaseOrderManager.cs" />
+    <Compile Include="Interface\IPurchaseOrderApprovalManager.cs" />
+    <Compile Include="Interface\IPurchaseOrderCreationManager.cs" />
+    <Compile Include="Interface\IPurchaseOrderRequestApprovalManager.cs" />
+    <Compile Include="Interface\IPurchaseOrderRequestManager.cs" />
+    <Compile Include="Interface\IReportsManager.cs" />
+    <Compile Include="Interface\IRequestTypeManager.cs" />
+    <Compile Include="Interface\IRoleManagementManager.cs" />
+    <Compile Include="Interface\ISalesInvoiceManager.cs" />
+    <Compile Include="Interface\ISalesOrderManager.cs" />
+    <Compile Include="Interface\ISalesQuotationManager.cs" />
+    <Compile Include="Interface\ISchedulerNoManager.cs" />
+    <Compile Include="Interface\IServiceCategoryManager.cs" />
+    <Compile Include="Interface\IQuotationRequestManager.cs" />
+    <Compile Include="Interface\IServiceMasterManager.cs" />
+    <Compile Include="Interface\IServiceTypeManager.cs" />
+    <Compile Include="Interface\ISupplierCategoryManager.cs" />
+    <Compile Include="Interface\ISupplierManager.cs" />
+    <Compile Include="Interface\ISharedManager.cs" />
+    <Compile Include="Interface\ISupplierPaymentManager.cs" />
+    <Compile Include="Interface\ITaxGroupManager.cs" />
+    <Compile Include="Interface\ITaxManager.cs" />
+    <Compile Include="Interface\ISupplierServicesManager.cs" />
+    <Compile Include="Interface\ITicketManager.cs" />
+    <Compile Include="Interface\IUserManagementManager.cs" />
+    <Compile Include="Interface\IUserProfileManager.cs" />
+    <Compile Include="Interface\IWorkflowAuditTrailManager.cs" />
+    <Compile Include="Interface\IWorkFlowConfigurationManager.cs" />
+    <Compile Include="Interface\IWorkFlowReAssignmentManager.cs" />
+    <Compile Include="Managers\AccountCodeManager.cs" />
+    <Compile Include="Managers\AccountSubCategoryManager.cs" />
+    <Compile Include="Managers\AccountTypesManager.cs" />
+    <Compile Include="Managers\ActivityManager.cs" />
+    <Compile Include="Managers\AppViewsManager.cs" />
+    <Compile Include="Managers\AssetCategoryManager.cs" />
+    <Compile Include="Managers\AssetDepreciationManager.cs" />
+    <Compile Include="Managers\AssetDetailsManager.cs" />
+    <Compile Include="Managers\AssetDisposalManager.cs" />
+    <Compile Include="Managers\AssetMasterManager.cs" />
+    <Compile Include="Managers\AssetRegisterManager.cs" />
+    <Compile Include="Managers\AssetTransferManager.cs" />
+    <Compile Include="Managers\AssetTypeManager.cs" />
+    <Compile Include="Managers\AuditLogManager.cs" />
+    <Compile Include="Managers\CompanyManager.cs" />
+    <Compile Include="Managers\ContactsManager.cs" />
+    <Compile Include="Managers\ContractPurchaseOrderManager.cs" />
+    <Compile Include="Managers\CostCentreManager.cs" />
+    <Compile Include="Managers\CreditNoteManager.cs" />
+    <Compile Include="Managers\CurrencyManager.cs" />
+    <Compile Include="Managers\CustomerManager.cs" />
+    <Compile Include="Managers\CustomerPaymentManager.cs" />
+    <Compile Include="Managers\AdhocMasterManager.cs" />
+    <Compile Include="Managers\DealsManager.cs" />
+    <Compile Include="Managers\DeliveryTermsManager.cs" />
+    <Compile Include="Managers\DepartmentManager.cs" />
+    <Compile Include="Managers\DepreciationManager.cs" />
+    <Compile Include="Managers\EngineerManagementManager.cs" />
+    <Compile Include="Managers\ExpenseMasterManager.cs" />
+    <Compile Include="Managers\ExpensesPurchaseOrderManager.cs" />
+    <Compile Include="Managers\ExpenseTypeManager.cs" />
+    <Compile Include="Managers\FacilityManagementManager.cs" />
+    <Compile Include="Managers\FixedAssetPurchaseOrderManager.cs" />
+    <Compile Include="Managers\GenericManager.cs" />
+    <Compile Include="Managers\GoodsReceivedNotesManager.cs" />
+    <Compile Include="Managers\GoodsReturnedNotesManager.cs" />
+    <Compile Include="Managers\AccountsManager.cs" />
+    <Compile Include="Managers\EntityImportManager.cs" />
+    <Compile Include="Managers\InventoryCycleCountManager.cs" />
+    <Compile Include="Managers\InventoryDisposalRequestManager.cs" />
+    <Compile Include="Managers\InventoryRequestManager.cs" />
+    <Compile Include="Managers\InvoiceManager.cs" />
+    <Compile Include="Managers\MarketingListManager.cs" />
+    <Compile Include="Managers\OpportunityManager.cs" />
+    <Compile Include="Managers\ItemAdjustmentManager.cs" />
+    <Compile Include="Managers\ItemCategoryManager.cs" />
+    <Compile Include="Managers\ItemManager.cs" />
+    <Compile Include="Managers\ItemMasterManager.cs" />
+    <Compile Include="Managers\ItemsListingManager.cs" />
+    <Compile Include="Managers\ItemTypeManager.cs" />
+    <Compile Include="Managers\ConnectionManager.cs" />
+    <Compile Include="Managers\LeadsManager.cs" />
+    <Compile Include="Managers\LocationTransferManager.cs" />
+    <Compile Include="Managers\ManagerBase.cs" />
+    <Compile Include="Managers\MeasurementUnitManager.cs" />
+    <Compile Include="Managers\NotificationManager.cs" />
+    <Compile Include="Managers\PaymentManager.cs" />
+    <Compile Include="Managers\PaymentTermsManager.cs" />
+    <Compile Include="Managers\ProductsManager.cs" />
+    <Compile Include="Managers\ProjectContractVariationOrderManager.cs" />
+    <Compile Include="Managers\ProjectMasterContractManager.cs" />
+    <Compile Include="Managers\ProjectPaymentContractManager.cs" />
+    <Compile Include="Managers\ProjectPurchaseOrderManager.cs" />
+    <Compile Include="Managers\PurchaseOrderApprovalManager.cs" />
+    <Compile Include="Managers\PurchaseOrderCreationManager.cs" />
+    <Compile Include="Managers\PurchaseOrderRequestApprovalManager.cs" />
+    <Compile Include="Managers\PurchaseOrderRequestManager.cs" />
+    <Compile Include="Managers\ReportsManager.cs" />
+    <Compile Include="Managers\RequestTypeManager.cs" />
+    <Compile Include="Managers\RoleManagementManager.cs" />
+    <Compile Include="Managers\SalesInvoiceManager.cs" />
+    <Compile Include="Managers\SalesOrderManager.cs" />
+    <Compile Include="Managers\SalesQuotationManager.cs" />
+    <Compile Include="Managers\SchedulerNoManager.cs" />
+    <Compile Include="Managers\ServiceCategoryManager.cs" />
+    <Compile Include="Managers\QuotationRequestManager.cs" />
+    <Compile Include="Managers\ServiceMasterManager.cs" />
+    <Compile Include="Managers\ServiceTypeManager.cs" />
+    <Compile Include="Managers\SupplierCategoryManager.cs" />
+    <Compile Include="Managers\SupplierManager.cs" />
+    <Compile Include="Managers\SharedManager.cs" />
+    <Compile Include="Managers\SupplierPaymentManager.cs" />
+    <Compile Include="Managers\TaxGroupManager.cs" />
+    <Compile Include="Managers\TaxManager.cs" />
+    <Compile Include="Managers\SupplierServiceManager.cs" />
+    <Compile Include="Managers\TicketManager.cs" />
+    <Compile Include="Managers\UserManagementManager.cs" />
+    <Compile Include="Managers\UserProfileManager.cs" />
+    <Compile Include="Managers\WorkflowAuditTrailManager.cs" />
+    <Compile Include="Managers\WorkFlowConfigurationManager.cs" />
+    <Compile Include="Managers\WorkFlowReAssignmentManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UELPM.Model\UELPM.Model.csproj">
+      <Project>{b91f0a93-2096-4fe6-b40c-171d77620f72}</Project>
+      <Name>UELPM.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UELPM.Service\UELPM.Service.csproj">
+      <Project>{68e7399e-965d-4361-aca9-e0b89cc2a699}</Project>
+      <Name>UELPM.Service</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,522 @@
+<div class="container-fluid" ngbDropdown #myDrop="ngbDropdown">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+            <div class="flexrow space-between align-center">
+                <h3 class="item-heading"> Work Flow - Form </h3>
+                <div>
+                    <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickBack($event)">
+                        <i class="fa fa-arrow-left" ria-hidden="true" aria-hidden="true"></i> Back</button>
+                </div>
+
+            </div>
+
+ 
+        </div>
+    </div>
+    <!-- Workflow New/Edit Form Starts Here -->
+    <!-- <p>Workflow Edit Form Starts here</p> -->
+    <div class="row">
+        
+        <div #rightPanel class="rightPanel col-lg-12 col-md-12 enlargeRightPanel"
+            [class.expand-rightcol]="rightsection">
+            <div class="fullScreenLabel">
+                <app-header></app-header>
+            </div>
+            <link rel="stylesheet" type="text/css" href="/assets/lib.css">
+
+            <div class="main-container " (click)="hideautocomplete($event)">
+
+                <div id="workflow-container">
+                    <div id="workflow" class="workflow ">
+
+                        <div id="workflow-drag" class="workflow-drag hide-loading mobile-paddingnull">
+                            <!-- ngIf: branch -->
+                            <form [formGroup]="workflowInfoForm" class="form-horizontal" (ngSubmit)="onSubmit()"
+                                novalidate>
+                                <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+                                    <table cellpadding="0" cellspacing="0" border="0" ng-if="branch"
+                                        class="initialheight " style="padding-bottom: 100px;">
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <div
+                                                        class="circle btn-floating waves-effect waves-light white lighten-1 no-pointer">
+                                                        <div class="startcircle"></div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr class="lines">
+                                                <td>
+                                                    <table cellpadding="0" cellspacing="0" border="0">
+                                                        <tbody>
+                                                            <tr class="lines">
+                                                                <td class="startline lleft"></td>
+                                                                <td class="startline lright"></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="node" style="margin-bottom: 0px;">
+                                                    <div class="node teal" style="margin-bottom: 0px;">
+                                                        <div class="header margin-bottom-null" style="overflow:hidden">
+                                                            <Label>Title :</Label>
+                                                            <input type="text" formControlName="WorkFlowName"
+                                                                placeholder=""
+                                                                [ngClass]="(validateControl(workflowInfoForm.get('WorkFlowName')))?' form-control ng-touched':'form-control'">
+                                                            <Label>Document Name :</Label>
+                                                            <select class="form-control drp_dwn"
+                                                                formControlName="ProcessId"
+                                                                (change)="onDocumentChange($event)"
+                                                                [ngClass]="(validateControl(workflowInfoForm.get('ProcessId')))?'form-control ng-touched':'form-control'">
+                                                                <option
+                                                                    *ngFor="let workFlowProcess of workFlowProcesses"
+                                                                    [value]="workFlowProcess.ProcessId">
+                                                                    {{workFlowProcess.ProcessName}}
+                                                                </option>
+                                                            </select>
+                                                            <Label *ngIf="!isNonDepartment"> Department :</Label>
+                                                            <select *ngIf="!isNonDepartment"
+                                                                class="form-control drp_dwn"
+                                                                formControlName="LocationID"
+                                                                (change)="onDepartmentChange($event)"
+                                                                [ngClass]="(validateControl(workflowInfoForm.get('LocationID')))?'form-control ng-touched':'form-control'">
+                                                                <option *ngFor="let department of departments"
+                                                                    [value]="department.LocationID">
+                                                                    {{department.Name}}
+                                                                </option>
+                                                            </select>
+                                                            <div *ngIf="!mandatoryWorkflow">
+                                                                <Label> Enable Workflow :</Label>
+                                                                <select class="form-control drp_dwn"
+                                                                    formControlName="IsFollowWorkflow"
+                                                                    (change)="onEnableWorkflowChange($event)"
+                                                                    [ngClass]="(validateControl(workflowInfoForm.get('IsFollowWorkflow')))?'form-control ng-touched':'form-control'">
+                                                                    <option value="false"> No </option>
+                                                                    <option value="true"> Yes </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="button-container">
+
+                                                    <div style="position: relative; ">
+                                                        <div *ngIf="!isProcessExit" class="menu 11">
+                                                            <div style="position: relative; ">
+                                                                <input type="checkbox" class="menu-open"
+                                                                    name="menu-open">
+                                                                <label #flowOptions class="menu-open-button ng-pristine"
+                                                                    (click)="openOptions($event)">
+                                                                    <span class="addline addline-1"></span>
+                                                                    <span class="addline addline-2"></span>
+                                                                </label>
+                                                                <a class="menu-item hint--right hint--bounce check">
+                                                                    <i class="fa fa-check"
+                                                                        (click)="createProcessApproval($event)"></i>
+                                                                </a>
+                                                                <a class="menu-item hint--left hint--bounce edit"
+                                                                    style="visibility: hidden;">
+                                                                    <i class="fa fa-pencil"></i>
+                                                                </a>
+
+                                                                <a class="menu-item hint--right hint--bounce random"
+                                                                    (click)="createProcessComponent($event)">
+                                                                    <i class="fa fa-random"></i>
+                                                                </a>
+                                                                <div style="width: 50px; height:50px ;"
+                                                                    [class.disablediv]="!workflowInfoForm.get('IsFollowWorkflow').value">
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div formArrayName="WorkFlowProcess"
+                                                        *ngFor="let control of workflowInfoForm.get('WorkFlowProcess')['controls'];  let i = index;">
+                                                        <div layout-wrap [formGroupName]="i">
+                                                            <input type="test" #process formControlName="LevelOrder"
+                                                                style="display: none">
+                                                            <input type="test" #processIndex
+                                                                formControlName="ProcessIndex" style="display: none">
+                                                            <input type="test" #processId
+                                                                formControlName="WorkFlowProcessId"
+                                                                style="display: none">
+                                                            <table border="0">
+                                                                <tr class="dummyline">
+                                                                    <td>
+                                                                        <table border="0" cellpadding="0"
+                                                                            cellspacing="0">
+                                                                            <tbody>
+                                                                                <tr class="lines">
+                                                                                    <td>
+                                                                                        <table border="0"
+                                                                                            cellpadding="0"
+                                                                                            cellspacing="0">
+                                                                                            <tbody>
+                                                                                                <tr class="lines">
+                                                                                                    <td
+                                                                                                        class="line lleft">
+                                                                                                    </td>
+                                                                                                    <td
+                                                                                                        class="line lright">
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+
+                                                            <div class="guest-head"
+                                                                style="border: 1px solid  #ddd; background:#f9f9f9;  max-width: 450px; margin: 0px auto;margin-bottom:0px;">
+
+                                                                {{process.value}}
+
+
+                                                                <div formGroupName="WorkFlowLevels">
+                                                                    <div
+                                                                        *ngFor="let item of control.get('WorkFlowLevels').controls;  let j = index;">
+                                                                        <div style="position: relative;" layout-wrap
+                                                                            [formGroupName]="j">
+                                                                            <!---Approver-->
+                                                                            <input type="test" #condition
+                                                                                formControlName="IsCondition"
+                                                                                style="display: none">
+                                                                            <div class="node"
+                                                                                [ngClass]="condition.value === 'false' ? 'activenode' : 'condition'">
+
+                                                                                <div
+                                                                                    class="divsorting ui-draggable ui-draggable-handle">
+
+                                                                                    <div class="sortingcontent">
+
+                                                                                        <div
+                                                                                            class="header margin-bottom-null Approval-selected">
+
+                                                                                            <div class="col l1 padding-null delete-icon"
+                                                                                                style="height:25px; position: relative; text-align:right;  ">
+
+                                                                                                <div *ngIf="j === control.get('WorkFlowLevels').controls.length-1"
+                                                                                                    class="menu"
+                                                                                                    style="margin-top:-28px;right:98px; left:auto">
+                                                                                                    <input
+                                                                                                        type="checkbox"
+                                                                                                        class="menu-open"
+                                                                                                        name="menu-open">
+                                                                                                    <label
+                                                                                                        class="menu-open-button ng-pristine"
+                                                                                                        (click)="openOptions($event)">
+                                                                                                        <span
+                                                                                                            class="addline addline-1"></span>
+                                                                                                        <span
+                                                                                                            class="addline addline-2"></span>
+                                                                                                    </label>
+                                                                                                    <a
+                                                                                                        class="menu-item hint--right hint--bounce check">
+                                                                                                        <i class="fa fa-check"
+                                                                                                            (click)="createApproval(processId.value, processIndex.value)"></i>
+                                                                                                    </a>
+                                                                                                    <a class="menu-item hint--left hint--bounce edit"
+                                                                                                        style="visibility: hidden;">
+                                                                                                        <i
+                                                                                                            class="fa fa-pencil"></i>
+                                                                                                    </a>
+
+                                                                                                    <a class="menu-item hint--right hint--bounce random"
+                                                                                                        (click)="createComponent(processId.value, processIndex.value)">
+                                                                                                        <i
+                                                                                                            class="fa fa-random"></i>
+                                                                                                    </a>
+
+                                                                                                </div>
+
+
+                                                                                                <i class="fa fa-trash-o"
+                                                                                                    aria-hidden="true"
+                                                                                                    (click)="deleteComponent(i, j)"></i>
+
+                                                                                            </div>
+
+
+                                                                                            <div class="assignee gap-top15 margin-bottom-null"
+                                                                                                style="clear: both;">
+
+
+                                                                                                <div
+                                                                                                    *ngIf="condition.value === 'false'">
+                                                                                                    User Role :
+                                                                                                    <select
+                                                                                                        formControlName="RoleID"
+                                                                                                        (change)="onRoleChange(i, j)"
+                                                                                                        [ngClass]="(validateControl(item.get('RoleID')))?'form-control ng-touched':'form-control'">
+                                                                                                        <option
+                                                                                                            *ngFor="let role of userRoles"
+                                                                                                            [value]="role.RoleID">
+                                                                                                            {{role.RoleName}}
+                                                                                                        </option>
+                                                                                                    </select>
+                                                                                                    Select Approver :
+
+                                                                                                    <div
+                                                                                                        class="cutom-autocomplete">
+                                                                                                        <input
+                                                                                                            formControlName="ApproverUser"
+                                                                                                            (selectItem)="selectedItem($event, i, j)"
+                                                                                                            type="text"
+                                                                                                            class="form-control"
+                                                                                                            [inputFormatter]="usersInputFormater"
+                                                                                                            [ngbTypeahead]="searchFunctionFactory(i, j)"
+                                                                                                            [resultTemplate]="userTemplate"
+                                                                                                            [ngClass]="(validateControl(item.get('ApproverUser')))?' form-control ng-touched':'form-control'" />
+                                                                                                        <!-- <i class="fa fa-caret-down" (click)="autocompletepopup($event, j,i)" aria-hidden="true"></i> -->
+
+                                                                                                        <div id="{{ 'filter' + j }}"
+                                                                                                            [hidden]="true"
+                                                                                                            class="autocomplete-popup"
+                                                                                                            (click)="showautocomplete($event)"
+                                                                                                            *ngIf="levleIndex===j && procesIndex === i">
+                                                                                                            <div>
+
+                                                                                                                <!-- <form [formGroup]="workFlowFilterInfoForm" class="form-horizontal"> -->
+                                                                                                                <div
+                                                                                                                    class="form-group row">
+                                                                                                                    <label
+                                                                                                                        class="col-12 form-label">By
+                                                                                                                        Department</label>
+                                                                                                                    <div
+                                                                                                                        class="col-12">
+                                                                                                                        <input
+                                                                                                                            type="text"
+                                                                                                                            formControlName="DepartmentName"
+                                                                                                                            placeholder=""
+                                                                                                                            class="form-control">
+                                                                                                                    </div>
+                                                                                                                </div>
+
+                                                                                                                <!-- <div class="form-group row">
+                                                                                                                <label class="col-12 form-label">By Company</label>
+                                                                                                                <div class="col-12">
+                                                                                                                    <input type="text" formControlName="CompanyName" class="form-control">
+
+                                                                                                                </div>
+                                                                                                            </div> -->
+
+                                                                                                                <div
+                                                                                                                    class="form-group row">
+
+                                                                                                                    <div class="col-12"
+                                                                                                                        style="text-align: right">
+                                                                                                                        <button
+                                                                                                                            type="button"
+                                                                                                                            (click)="resetData(i, j)"
+                                                                                                                            class="btn btn-save">
+                                                                                                                            Reset
+                                                                                                                        </button>
+                                                                                                                        <button
+                                                                                                                            type="button"
+                                                                                                                            (click)="filterData(i, j)"
+                                                                                                                            class="btn btn-save">
+                                                                                                                            <i class="fa fa-search"
+                                                                                                                                ria-hidden="true"></i>
+                                                                                                                        </button>
+
+                                                                                                                    </div>
+                                                                                                                </div>
+
+                                                                                                                <!-- </form> -->
+
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+
+                                                                                                </div>
+
+                                                                                                <div
+                                                                                                    *ngIf="condition.value === 'true'">
+                                                                                                    Field :
+                                                                                                    <select
+                                                                                                        formControlName="FieldName"
+                                                                                                        [ngClass]="(validateControl(item.get('FieldName')))?'form-control ng-touched':'form-control'">
+                                                                                                        <option
+                                                                                                            [ngValue]="null">
+                                                                                                            --Select--
+                                                                                                        </option>
+                                                                                                        <option
+                                                                                                            *ngFor="let fieldName of fieldNames"
+                                                                                                            [value]="fieldName.Name">
+                                                                                                            {{fieldName.Name}}
+                                                                                                        </option>
+                                                                                                    </select>
+
+                                                                                                    Operator :
+                                                                                                    <select
+                                                                                                        formControlName="Operator"
+                                                                                                        [ngClass]="(validateControl(item.get('Operator')))?'form-control ng-touched':'form-control'">
+                                                                                                        <option
+                                                                                                            [ngValue]="null">
+                                                                                                            --Select--
+                                                                                                        </option>
+                                                                                                        <option
+                                                                                                            *ngFor="let operator of operators"
+                                                                                                            [value]="operator.Value">
+                                                                                                            {{operator.Label}}
+                                                                                                        </option>
+                                                                                                    </select>
+
+                                                                                                    Value :
+                                                                                                    <input type="text"
+                                                                                                        formControlName="Value"
+                                                                                                        placeholder=""
+                                                                                                        [ngClass]="(validateControl(item.get('Value')))?'form-control ng-touched':'form-control'">
+                                                                                                </div>
+
+
+                                                                                            </div>
+                                                                                        </div>
+
+
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <br clear="all">
+                                                                            </div>
+                                                                            <div
+                                                                                [class.disablediv]="!workflowInfoForm.get('IsFollowWorkflow').value">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+
+                                                            <div style="position: relative;">
+                                                                <div *ngIf="i === workflowInfoForm.get('WorkFlowProcess').controls.length-1"
+                                                                    class="menu 11">
+                                                                    <input type="checkbox" class="menu-open"
+                                                                        name="menu-open">
+                                                                    <label class="menu-open-button ng-pristine"
+                                                                        (click)="openOptions($event)">
+                                                                        <span class="addline addline-1"></span>
+                                                                        <span class="addline addline-2"></span>
+                                                                    </label>
+                                                                    <a class="menu-item hint--right hint--bounce check">
+                                                                        <i class="fa fa-check"
+                                                                            (click)="createProcessApproval()"></i>
+                                                                    </a>
+                                                                    <a class="menu-item hint--left hint--bounce edit"
+                                                                        style="visibility: hidden;">
+                                                                        <i class="fa fa-pencil"></i>
+                                                                    </a>
+
+                                                                    <a class="menu-item hint--right hint--bounce random"
+                                                                        (click)="createProcessComponent()">
+                                                                        <i class="fa fa-random"></i>
+                                                                    </a>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <!-- <app-menu-controls #child (createApproverClick)="onCreateApprover($event)" (createComponentClick)="onCreateComponent($event)" (removeComponentClick) = "onremoveComponent($event)"></app-menu-controls> -->
+                                                </td>
+                                            </tr>
+
+
+                                            <tr>
+                                                <td>
+
+
+                                                </td>
+                                            </tr>
+
+
+
+
+                                            <tr>
+                                                <td>
+                                                    <table cellpadding="0" cellspacing="0" border="0">
+                                                        <tbody>
+                                                            <tr class="lines">
+                                                                <td>
+                                                                    <table cellpadding="0" cellspacing="0" border="0">
+                                                                        <tbody>
+                                                                            <tr class="lines">
+                                                                                <td class="line lleft"></td>
+                                                                                <td class="line lright"></td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                            <!-- ngRepeat: step in branch.getList('Steps', 'Index') track by step.getValue('Id') -->
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div
+                                                        class="circle btn-floating waves-effect waves-light white lighten-1 no-pointer">
+                                                        <div class="startcircle endcircle"></div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                                <div class="form-group text-right btn-list">
+                                    <button type="submit" class="btn btn-save"
+                                        *ngIf="(canPost)||isLevelCreated && isAccessable">
+                                        <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+                                    <button type="button" (click)="DeleteWorkflow()" class="btn btn-danger"
+                                        *ngIf="workflowInfoForm.get('WorkFlowConfigurationId').value>0 && deletePermission">
+                                        <i class="fa fa-trash" aria-hidden="true"></i> Delete</button>
+                                    <button type="reset" (click)="cancelData($event)" class="btn btn-cancel"
+                                        *ngIf="(canPost)||isLevelCreated">
+                                        <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                                </div>
+                            </form>
+                            <!-- end ngIf: branch -->
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <!-- <p>Workflow Edit Form Ends here</p> -->
+    <!-- Workflow New/Edit Form Ends Here -->
+</div>
+<p-confirmDialog></p-confirmDialog>
+<ng-template #userTemplate let-r="result" let-t="term">
+    {{ r.UserName }}
+</ng-template>
+
+<ng-template #departmentTemplate let-r="result" let-t="term">
+    {{ r.Name }}
+</ng-template>
+
+<ng-template #processTemplate let-r="result" let-t="term">
+    {{ r.ProcessName }}
+</ng-template>

@@ -1,0 +1,39 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12 col-sm-12 padding-null tittlediv">
+      <div class="flexrow space-between align-center">
+        <h3 class="item-heading"> Purchase Order Creation </h3>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div #rightPanel class="rightPanel col-lg-12 col-md-12" style="padding: 0px; margin:0px; border:none;">
+      <form [formGroup]="assestPurchaseOrderForm" class="form-horizontal">
+        <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+          <div class="row">
+
+            <div class="col-sm-6">
+              <div class="form-group row">
+                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">PO Type</label>
+                <div class="col-xl-8 col-sm-6 col-6"><label class="col-form-label form-text">Fixed Asset PO</label>
+                </div>
+              </div>
+            </div>
+
+
+
+            <div class="col-sm-6">
+              <div class="form-group row">
+                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">PO Number</label>
+                <div class="col-xl-8 col-sm-6 col-6"><label class="col-form-label form-text">2301-00028</label></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

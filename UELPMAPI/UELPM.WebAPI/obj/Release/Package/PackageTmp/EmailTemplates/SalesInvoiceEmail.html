@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Sales Invoice</title>
+    <style></style>
+</head>
+<body>
+    <div style="font-family:tahoma;font-size:14px">
+        Dear Sirs,
+        <br> <br>
+        <div><b>Please find attached invoice for your attention. </b></div>
+        <br>
+        <table border="1" cellpadding="5" cellspacing="0" style="margin-top: 10px;">
+            <tbody>
+                <tr>
+                    <td style="color:#2672ec;">Invoice Number</td>
+                    <td style="color:#2672ec;">Invoice Date</td>
+                    <td style="color:#2672ec;">Subject</td>
+                    <td style="color:#2672ec;">Total Amount{{Currency}}</td>
+                </tr>
+                <tr>
+                    <td>{{DocumentCode}}</td>
+                    <td>{{CreatedDate}}</td>
+                    <td>{{DynamicProp1}}</td>
+                    <td>{{Total}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <div style="font-size:13px;padding:0 0 10px 0"> <b>If you are not the intended recipient, please assist to forward this email to the correct recipient/department.</b> <br></div>
+        <div style="font-size:13px;padding:0 0 10px 0">
+            Thank you.
+        </div>
+        Your Sincerly,
+        <br>
+        {{DynamicProp2}}
+    </div>
+</body>
+</html>

@@ -1,0 +1,523 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 col-sm-12 padding-null tittlediv">
+            <h3 class="item-heading">
+                <img src="../assets/images/icon1.png"> Purchase order > Purchase Order Request Approval </h3>
+        </div>
+        <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+            <img src="../assets/images/grid1.png" (click)="showFullScreen()">
+            <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+                <button class="btn btn-outline-primary" style="background:none;border:none;padding:0px;" id="dropdownBasic1" ngbDropdownToggle>
+                    <img src="../assets/images/grid2.png">
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <!-- <button class="dropdown-item">Email</button> -->
+                    <button class="dropdown-item" (click)="onPDFPrint()">Print</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+     <div  class="col-lg-3 col-md-4 leftdiv" [CustomSpinner]="showLeftPanelLoadingIcon" [class.collapse-leftcol]="leftSection">   
+    <div class="left-section" > 
+     <div class="filter-section" ngbDropdown #myDrop="ngbDropdown">
+      <div class="left-search">
+                <input type="text" [(ngModel)]="purchaseOrderSearchKey" placeholder="Search requests..." (keyup)="onSearchInputChange($event)"
+                    class="search-filter">
+                <i class="fa fa-search" aria-hidden="true"></i>
+                <div class="filter-popup" *ngIf="showFilterPopUp" ngbDropdownMenu aria-labelledby="dropdownManual" (click)="$event.stopPropagation(); myDrop.open();">
+                    <form [formGroup]="porFilterInfoForm" class="form-horizontal">
+                        <div class="form-group row">
+                            <label class="col-form-label col-6 form-label">POR Code</label>
+                            <div class="col-6">
+                                <input type="text" #porCode formControlName="PORCode" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-6 form-label">Supplier</label>
+                            <div class="col-6 autoComplete">                                  
+                                <input formControlName="SupplierCategory" type="text" class="form-control show" [inputFormatter]="supplierInputFormater"
+                                    [ngbTypeahead]="supplierSearch" [resultTemplate]="supplierTemplate" /> 
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12 error">
+                                {{filterMessage}}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12" style="text-align: right">
+                                <button type="submit" (click)="filterData()" class="btn btn-save">
+                                    <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+                            </div>
+     </div> 
+                    </form>
+                </div>
+            </div>
+            <!-- start filter code -->
+            <div class="filter-icon">
+                <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+          <i class="fa fa-filter" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div style="float:right;margin:0px;" class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+                <i class="fa fa-undo" aria-hidden="true"></i>
+      </div>
+             <!-- end filter code -->
+      <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"   class="filter-scroll" style="width:100%; float:left;">
+          <table class="table">
+            <tr [class.activerow]="record.PurchaseOrderRequestId==selectedPORDetails.PurchaseOrderRequestId" (click)="onRecordSelection(record.PurchaseOrderRequestId,record.POTypeId)"
+            *ngFor="let record of purchaseOrdersRequestList">
+                <td>
+                    <h5 class="sub-heading">{{ record.PurchaseOrderRequestCode }}</h5>
+                    <label class="label-text">Supplier</label> :
+                    <label class="label-value">{{ record.SupplierName }}</label>
+                </td>
+            </tr>
+          </table>
+          <div *ngIf="purchaseOrdersRequestList.length==0" class="col-12 error listErrorMessage">
+            {{errorMessage}}
+        </div>    
+        <ngb-pagination [maxSize]="5" *ngIf="purchaseOrdersRequestList.length>0" (pageChange)="pageChange($event)" [collectionSize]="purchaseOrderRequestApprovalPagerConfig.TotalRecords" class="d-flex justify-content-center" [pageSize]="purchaseOrderRequestApprovalPagerConfig.RecordsToFetch" [page]="1" [boundaryLinks]="true"></ngb-pagination>
+      </div>  
+      </div>
+     </div>
+     <div class="split-line" (click)="splite()"></div> 
+     </div><!-- left col end here-->
+      <div #rightPanel [CustomSpinner]="showRightPanelLoadingIcon"  class="rightPanel col-lg-9 col-md-8" [class.expand-rightcol]="rightSection">
+          <div>
+              <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="rightcol-scrroll">
+              <div class="row fullScreenLabel">
+                  <div class="col-12">
+                      <h3 class="item-heading" style="float:none;">Purchase Order Creation</h3>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-6">
+                      <div class="form-group row" >
+                          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Requestor</label>  
+                          <div class="col-xl-8 col-sm-6 col-6">
+                          <label class="col-form-label form-text" >{{ selectedPORDetails.RequestedByUserName }}</label>
+                          </div>
+                      </div>                     
+                      <div class="form-group row">
+                          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier Type</label>  
+                          <div class="col-xl-8 col-sm-6 col-6">
+                              <label class="col-form-label form-text" *ngIf="selectedPORDetails.Supplier!=null">{{ 
+                                  selectedPORDetails.Supplier.SupplierTypeID==1?"UEL Related Supplier":"External Supplier"          
+                              }}</label>
+                          </div>         
+                      </div>
+                      <div class="form-group row">
+                          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">PO Type</label>  
+                          <div class="col-xl-8 col-sm-6 col-6">
+                              <label class="col-form-label form-text" >{{ selectedPORDetails.PurchaseOrderType }}</label> 
+                          </div>      
+                      </div>
+                      <div class="form-group row">
+                          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier</label>  
+                          <div class="col-xl-8 col-sm-6 col-6">
+                              <label class="col-form-label form-text" *ngIf="selectedPORDetails.Supplier!=null">{{ selectedPORDetails.Supplier.SupplierName }}</label>
+                          </div>      
+                      </div>
+                      <div class="form-group row">
+                          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier Address</label>  
+                          <div class="col-xl-8 col-sm-6 col-6">
+                              <label class="col-form-label form-text" *ngIf="selectedPORDetails.Supplier!=null">{{ selectedPORDetails.Supplier.BillingAddress1 }}</label>
+                          </div>      
+                      </div>
+                      <div class="form-group row">
+                          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Delivery Address</label>  
+                          <div class="col-xl-8 col-sm-6 col-6">
+                              <label class="col-form-label form-text" >{{ selectedPORDetails.DeliveryAddress }}</label>
+                          </div>      
+                      </div>
+                      <div class="form-group row">
+                          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Fax</label>  
+                          <div class="col-xl-8 col-sm-6 col-6">
+                              <label class="col-form-label form-text" *ngIf="selectedPORDetails.Supplier!=null">{{ selectedPORDetails.Supplier.ShippingFax }}</label>  
+                          </div>      
+                      </div>
+                      <div class="form-group row">
+                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Currency Type</label>  
+                            <div class="col-xl-8 col-sm-6 col-6">
+                                <label class="col-form-label form-text" >{{ selectedPORDetails.CurrencyCode }}</label> 
+                            </div>      
+                        </div>
+                      <!-- <div class="form-group row">
+                              <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">No. of Entries</label>  
+                              <div class="col-xl-8 col-sm-6 col-6">
+                                  <label class="col-form-label form-text">{{ (selectedPORDetails==undefined||selectedPORDetails.PurchaseOrderRequestItems==undefined)?0:selectedPORDetails.PurchaseOrderRequestItems.length }}</label>
+                              </div>      
+                      </div> -->
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group row" >      
+                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">POR Number</label>  
+                        <div class="col-xl-8 col-sm-6 col-6">
+                        <label class="col-form-label form-text" >{{ selectedPORDetails.DraftCode }}</label>
+                        </div>
+                    </div>
+                    <div class="form-group row" >
+                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Created Date</label>  
+                        <div class="col-xl-8 col-sm-6 col-6">
+                            <label class="col-form-label form-text">{{ selectedPORDetails.CreatedDate|DisplayDateFormat }}</label>   
+                        </div>      
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Status</label>  
+                        <div class="col-xl-8 col-sm-6 col-6">
+                            <label class="col-form-label form-text">{{ selectedPORDetails.WorkFlowStatusText }}</label>    
+                        </div>      
+                    </div>
+                      <div class="form-group row" >      
+                          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Designation</label>  
+                          <div class="col-xl-8 col-sm-6 col-6">
+                          <label class="col-form-label form-text">{{ selectedPORDetails.Designation }}</label>
+                          </div>
+                      </div>
+                      
+                      <div class="form-group row">
+                          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Cost of Service</label>  
+                          <div class="col-xl-8 col-sm-6 col-6">
+                              <label class="col-form-label form-text" >{{ selectedPORDetails.CostOfService }}</label>
+                          </div>      
+                      </div>
+                      <div class="form-group row">
+                          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Department</label>  
+                          <div class="col-xl-8 col-sm-6 col-6">
+                              <label class="col-form-label form-text" >{{ selectedPORDetails.LocationName }}</label>
+                          </div>      
+                      </div>
+                      <div class="form-group row">
+                          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Expected Delivery</label>  
+                          <div class="col-xl-8 col-sm-6 col-6">
+                              <label class="col-form-label form-text" >{{ selectedPORDetails.ExpectedDeliveryDate|DisplayDateFormat }}</label>
+                          </div>      
+                      </div>
+                      <div class="form-group row">
+                          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">GST Required</label>  
+                          <div  class="col-xl-8 col-sm-6 col-6"> 
+                              <label class="col-form-label form-text" >{{ selectedPORDetails.IsGstRequired==true?'Yes':'No' }}</label> 
+                          </div>      
+                      </div>
+                      <div class="form-group row">
+                          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Vendor Reference</label>  
+                          <div class="col-xl-8 col-sm-6 col-6">
+                              <label class="col-form-label form-text" >{{ selectedPORDetails.VendorReferences }}</label>
+                          </div>      
+                      </div>
+                     
+                     
+                  </div>
+              </div>     
+              <div class="col-12 engineers-assigned" style="padding:0px;">
+                  <p-table   [columns]="gridColumns" (sortFunction)="customSort($event)" [customSort]="true" sortMode="single" [value]="selectedPORDetails.PurchaseOrderRequestItems">
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                    <td colspan="7" style='text-align: center;'>
+                                        <b>{{ gridNoMessageToDisplay }}</b>
+                                    </td> 
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="colgroup" let-columns>
+                              <colgroup>
+                                <col *ngIf="selectedPORDetails.POTypeId == purchaseOrderType.FixedAssetPo" style="width:6%;">
+                                <col style="width:5%;">
+                                <col style="width:15%;">
+                                <col style="width:25%;">
+                                <col *ngIf="(selectedPORDetails.POTypeId == purchaseOrderType.InventoryPo||selectedPORDetails.POTypeId == purchaseOrderType.ExpensePo)" style="width:7%;">
+                                <col style="width:10%;">
+                                <col style="width:10%;">
+                                <col style="width:10%;">
+                                <col style="width:10%;">
+                                <col style="width:10%;">
+                              </colgroup>
+                          </ng-template>
+                          <ng-template pTemplate="header" let-columns>
+                            <tr>
+                                <ng-template ngFor let-data [ngForOf]="columns" let-i="index">
+                                    <th *ngIf="(((selectedPORDetails.POTypeId == purchaseOrderType.InventoryPo || selectedPORDetails.POTypeId == purchaseOrderType.ExpensePo)&&data.field!='IsDetailed')||(selectedPORDetails.POTypeId ==  purchaseOrderType.FixedAssetPo &&data.field!='MeasurementUnitID'))"  [pSortableColumn]="data.field">
+                                    
+                                        <span *ngIf="(data.field=='Unitprice'||data.field=='ItemTotal') && selectedPORDetails.CurrencySymbol!=null">
+                                            &nbsp; ( {{ selectedPORDetails.CurrencySymbol }} )
+                                        </span>
+                                        <span *ngIf="selectedPORDetails.POTypeId ==  purchaseOrderType.FixedAssetPo && data.field=='Name'">
+                                                Asset
+                                        </span>
+                                        <span *ngIf="selectedPORDetails.POTypeId == purchaseOrderType.ExpensePo && data.field=='Name'">
+                                            Expense
+                                       </span>
+                                        <span *ngIf="(selectedPORDetails.POTypeId == purchaseOrderType.InventoryPo || selectedPORDetails.POTypeId == purchaseOrderType.ExpensePo || (selectedPORDetails.POTypeId ==  purchaseOrderType.FixedAssetPo &&data.field!='Name'))">
+                                            {{data.header}}
+                                        </span>
+                                        <p-sortIcon [field]="data.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                    </th>
+                                </ng-template>
+                            </tr>
+                          </ng-template>
+                          <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                  <tr>
+                                    <td *ngIf="selectedPORDetails.POTypeId==2">
+                                        <i style="color:green;" class="fa fa-check" *ngIf="rowData.IsDetailed==true"></i>
+                                    </td>
+                                    <td>
+                                        <span *ngIf="selectedPORDetails.POTypeId!=purchaseOrderType.FixedAssetPo">{{ i + 1 }}</span> 
+                                        <span *ngIf="selectedPORDetails.POTypeId==purchaseOrderType.FixedAssetPo">{{ rowData.Sno }}</span>
+                                    </td>          
+                                    <td>
+                                       <!-- <span *ngIf="selectedPORDetails.POTypeId == purchaseOrderType.InventoryPo">{{ rowData.Item.ItemName }}</span> 
+                                       <span *ngIf="selectedPORDetails.POTypeId == purchaseOrderType.ExpensePo">{{ rowData.Expense.ExpensesDetail }}</span>
+                                       <span *ngIf="selectedPORDetails.POTypeId == purchaseOrderType.FixedAssetPo">{{ rowData.Asset.AssetName }}</span>  -->
+
+                                       <span *ngIf="selectedPORDetails.POTypeId === purchaseOrderType.InventoryPo && rowData.TypeId === 4">{{ rowData.Item.ItemName }}</span> 
+                                       <span *ngIf="selectedPORDetails.POTypeId == purchaseOrderType.InventoryPo && rowData.TypeId === 1">{{ rowData.Service.Code }}</span> 
+                                       <span *ngIf="selectedPORDetails.POTypeId == purchaseOrderType.ExpensePo">{{ rowData.Expense.Code }}</span>
+                                       <span *ngIf="selectedPORDetails.POTypeId == purchaseOrderType.FixedAssetPo && rowData.TypeId === 5">{{ rowData.Asset.AssetName }}</span> 
+                                       <span *ngIf="selectedPORDetails.POTypeId == purchaseOrderType.FixedAssetPo && rowData.TypeId === 1">{{ rowData.Service.Code }}</span> 
+                                    </td>
+                                    <td>
+                                        <span class="descriptionStyle" [innerHtml]="rowData.ItemDescription|TextAreaContentDisplay"></span>
+                                    </td>
+                                    <td *ngIf="selectedPORDetails.POTypeId != purchaseOrderType.FixedAssetPo">
+                                        {{ rowData.MeasurementUnitCode }}
+                                    </td>
+                                      <td align="right">
+                                          {{ rowData.ItemQty  }}
+                                      </td>
+                                      <td align="right">
+                                          {{ rowData.Unitprice|number:'1.2-4'  }}
+                                      </td>
+                                      <td align="right">
+                                        {{ rowData.TaxName }}
+                                    </td>
+                                    <td align="right">
+                                        {{ rowData.TaxTotal|number:'1.2-4' }}
+                                    </td>
+                                      <td>
+                                          <div style="float:left;width:60%;text-align: right;">
+                                              <!-- {{ (rowData.ItemQty * rowData.Unitprice)+rowData.TaxAmount|number:'1.2-4'   }} -->
+                                              {{ rowData.ItemTotalPrice|number:'1.2-4' }}
+                                          </div>
+                                          <div class="gridIconsStyle" *ngIf="hideinput==true">
+                                              <i  class="fa fa-edit gridEditIcon" (click)="editGridItem(i)" aria-hidden="true"></i>
+                                                  &nbsp;&nbsp;&nbsp;
+                                              <i  class="fa fa-trash gridRemoveIcon" (click)="removeGridItem(i)" aria-hidden="true"></i>    
+                                          </div>
+                                      </td>
+                                  </tr>
+                          </ng-template>
+                  </p-table>
+                  <div class="row colorder">
+                      <div class="col-sm-5">
+                          <div class="row" style="margin-top:3em;">
+                              <div class="col-12 row">
+                                  <div class="col-5">
+                                      <h4 class="form-heading">Payment Terms</h4>
+                                  </div>
+                              </div>
+                              <div class="col-12" style="margin-top:1em;">
+                                  <span class="descriptionStyle" showmore [value]="selectedPORDetails.PaymentTerms"  ></span> 
+                              </div> 
+                          </div>
+                          <div class="row" style="margin-top:3em;">
+                            <div class="col-12"><h4 class="form-heading">Reasons For Purchase Request</h4></div>  
+                            <div class="col-12">
+                                <span class="descriptionStyle" showmore [value]="selectedPORDetails.Reasons"  ></span>
+                            </div>   
+                        </div>
+                          <div class="row" style="margin-top:3em;">
+                              <div class="col-12"><h4 class="form-heading">Instructions to vendor</h4></div>
+                              <div class="col-12">
+                                  <span class="descriptionStyle" showmore [value]="selectedPORDetails.Instructions"  ></span> 
+                              </div>   
+                          </div>
+                          <div class="row" style="margin-top:3em;">
+                              <div class="col-12"><h4 class="form-heading">Justifications</h4></div>  
+                              <div class="col-12">
+                                  <span class="descriptionStyle" showmore [value]="selectedPORDetails.Justifications" ></span>
+                              </div>   
+                          </div>
+                          <div class="row" style="margin-top:3em;">
+                              <div class="col-12"><h4 class="form-heading">Delivery Terms</h4></div>  
+                              <div class="col-12">
+                                  <span class="descriptionStyle" showmore [value]="selectedPORDetails.DeliveryTerm"  ></span>
+                              </div>   
+                          </div>
+
+
+                      </div>
+                      <div class="col-sm-4">
+                          <div class="row" style="margin-top:3em;">
+                                  <div class="col-12"><h4 class="form-heading">Attachments</h4></div>
+                                  <div class="col-12 attachments" *ngIf="selectedPORDetails!=undefined">
+                                      <ul>
+                                          <li *ngFor="let data of selectedPORDetails.Attachments;let i=index">
+                                              <span>
+                                                  <span class="displayFileName">
+                                                      {{ data.FileName }}
+                                                  </span>
+                                                  <a style="color:black;"  href="{{apiEndPoint}}/PurchaseOrderRequestFileDownload?AttachmentId={{ data.AttachmentId }}&AttachmentTypeId={{ data.AttachmentTypeId }}&FileName={{data.FileName|encodeURIComponent}}&RecordId={{data.RecordId}}">
+                                                      <i class="fa fa-download"></i>
+                                                  </a>
+                                              </span>
+                                          </li>
+                                      </ul>
+                                  </div>
+                          </div>
+                      </div>
+
+                      <div class="col-sm-3 mobilecol1">
+
+                          <table class="table table-subtotal" style="float:right;">
+                              <tr>
+                                  <td class="nowrap" width="50%" align="right">Sub Total</td>
+                                  <td align="right" >{{ selectedPORDetails.CurrencySymbol }} {{ ( selectedPORDetails.SubTotal)|number:'1.2-4' }}</td>   
+                              </tr>
+                              <tr>
+                                  <td class="nowrap"  align="right">Discount</td>
+                                  <td  align="right">{{ selectedPORDetails.CurrencySymbol  }} {{ (selectedPORDetails.Discount)|number:'1.2-4' }}</td>   
+                              </tr>
+                              <!-- <tr>
+                                  <td class="nowrap"  align="right">Tax Rate (%)</td>
+                                  <td  align="right">{{ selectedPORDetails.TaxRate }}</td>            
+                              </tr>
+                              <tr>
+                                  <td class="nowrap"  align="right">Total Tax</td>
+                                  <td  align="right">{{ selectedPORDetails.CurrencySymbol }} {{ (selectedPORDetails.TotalTax)|number:'1.2-4' }}</td>    
+                              </tr> -->
+                              <tr>
+                                  <td class="nowrap"  align="right">Shipping Charges</td>
+                                  <td  align="right">{{ selectedPORDetails.CurrencySymbol }} {{ (selectedPORDetails.ShippingCharges)|number:'1.2-4' }}</td>  
+                              </tr>
+                              <tr>
+                                  <td class="nowrap"  align="right">Others</td>
+                                  <td  align="right">{{ selectedPORDetails.CurrencySymbol }} {{ (selectedPORDetails.OtherCharges)|number:'1.2-4' }}</td>   
+                              </tr>   
+                          </table>
+                          <div style="clear: both;">
+                              <table  class="table table-totalamount" style="float:right;border: inherit">  
+                                  <tr>
+                                      <td class="nowrap" width="50%"  align="right">Total</td>
+                                      <td align="right">{{ selectedPORDetails.CurrencySymbol }} {{ (selectedPORDetails.TotalAmount)|number:'1.2-4' }}</td>    
+                                  </tr>              
+                              </table>
+                          </div>
+                      </div>
+                  </div>
+
+                  
+                           <!-- Start VendorReferences -->
+                           <div class="row" style="margin-top:2em;">
+                            <div class="col-12">
+                                <h4 class="form-heading">Quotation Details</h4>
+                            </div>
+                            <div class="col-12"> 
+                                <p-table [columns]="gridVendorColumns" (sortFunction)="customSort($event)" [customSort]="true" sortMode="single"
+                                    [value]="selectedPORDetails.PurchaseOrderRequestVendorItems">
+                                    <ng-template pTemplate="colgroup" let-columns>
+                                        <colgroup>
+                                            <col style="width:10%;">
+                                            <col style="width:30%;">
+                                            <col style="width:30%;">
+                                            <col style="width:30%;">
+                                        </colgroup>
+                                    </ng-template>
+                                    <ng-template pTemplate="header" let-columns>
+                                        <tr>
+                                            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                                {{col.header}}
+                                                <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                            </th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                        <tr [class.rowselected]="rowData.IsSelected== true">
+                                            <td>
+                                                {{ i + 1 }}
+                                            </td>
+                                            <td>
+                                                {{ rowData.QuotationSupplier.SupplierName }}
+                                            </td>
+                                            <td>
+                                                {{ rowData.QuotatedAmount }}
+                                            </td>
+                                            <td>
+                                                <div class="col-12 attachments" *ngIf="selectedPORDetails!=undefined">
+                                                    <ul>
+                                                        <li *ngFor="let data of selectedPORDetails.QuotationAttachment;let k=index">
+                                                            <span *ngIf="data.QuotationId==rowData.QuotationId">
+                                                                <span>
+                                                                    <span class="displayFileName">
+                                                                        {{ data.FileName }}
+                                                                    </span>
+                                                                    <a style="color:black;" href="{{apiEndPoint}}/PurchaseOrderRequestQuotationFileDownload?QuotationAttachmentId={{ data.QuotationAttachmentId }}&QuotationRequestId={{ data.QuotationRequestId }}&FileName={{data.FileName|encodeURIComponent}}&QuotationId={{data.QuotationId}}&RowId={{data.RowId}}">
+                                                                        <i class="fa fa-download"></i>
+                                                                    </a>
+                                                                    &nbsp;&nbsp;
+                                                                    <i *ngIf="hideinput" (click)="attachmentDelete(i)" class="fa fa-trash">
+                                                                    </i>
+                                                                </span>
+                                                            </span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>
+                        </div>
+                        <div class="col-12" style="margin-top:2em;" >
+                            <h4 class="form-heading">Remarks : </h4>
+                            <br/>
+                            <span class="displayFileName">
+                               {{selectedPORDetails.QuotationRequestRemarks}}
+                            </span>
+                        </div>
+                        <!-- END VendorReferences -->
+              </div>
+              <div class="col-12" style="margin-top:3em;">
+                    <div class="form-group row">
+                     <h4 class="form-heading">Approval Remarks</h4>  
+                     <div [formGroup]="purchaseOrderRequestForm" class="col-xl-12 col-sm-12 col-12">
+                        <textarea formControlName="Remarks" class="form-control" style="width:70%;display:inline-block ">
+                        </textarea>
+                        <button type="submit" (click)="updateStatus(2)" style="float:inherit;vertical-align: top;"  class="btn btn-edit">
+                            <i class="fa fa-envelope" aria-hidden="true"></i> 
+                            {{auditTrailComments|ApprovalButton}}
+                        </button>
+                        <div *ngIf="purchaseOrderRequestForm.get('Remarks') && purchaseOrderRequestForm.get('Remarks').errors!=null && purchaseOrderRequestForm.get('Remarks').touched==true">
+                            <span class="errorMessage" *ngIf="purchaseOrderRequestForm.get('Remarks').errors.required">Approval Remarks is Required</span>
+                        </div>
+                     </div>
+
+                     <div  class="col-xl-12 col-sm-12 col-12">
+                        <label class="col-form-label form-label">Previous Comments</label>
+                         <ul>
+                             <li  *ngFor="let record of auditTrailComments">
+                                 <span class='remarksUserName'>{{ record.UserName }}</span> - <span class='remarksDate'>{{ record.CreatedDate|date:'dd-MM-yyyy h:mm:ss a' }}</span>:
+                                 <br>
+                                 <span>{{ record.Remarks }}</span>    
+                             </li>
+                         </ul>
+                     </div> 
+                    </div>
+                </div>
+              </div>
+              <div class="row">
+                  <div class="col-12">
+                    <div *ngIf="purchaseOrdersRequestList.length>0" class="form-group text-right btn-list">
+                        <button type="submit" (click)="updateStatus(4)"   class="btn btn-approve"><i class="fa fa-check"  aria-hidden="true"></i>Approve</button>
+                        <button type="submit" (click)="updateStatus(5)"  class="btn btn-delete"><i class="fa fa-ban" aria-hidden="true"></i> Reject</button>        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- left col end here-->
+    </div>
+</div><ng-template #supplierTemplate let-r="result" let-t="term">
+    {{ r.SupplierName }}
+</ng-template>

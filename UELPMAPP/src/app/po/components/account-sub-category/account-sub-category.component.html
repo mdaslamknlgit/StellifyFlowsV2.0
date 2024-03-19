@@ -1,0 +1,116 @@
+<div class="container-fluid">
+  <div class="row">
+  <div class="col-md-12 col-sm-12 padding-null tittlediv">
+    <div class="flexrow space-between align-center">
+  <h3 class="item-heading">  Account Sub Category </h3>
+ 
+     
+  <div> 
+  <button class="btn  btn-transparent" (click)="addRecord()" *ngIf="newPermission"> New Record</button>
+  <button  class="btn btn-transparent" (clickOutside)="onClickedOutside($event)"   (click)="split()">  {{showfilterstext}}  </button> 
+   <img  style="display:none" src="../assets/images/grid1.png" (click)="showFullScreen()"> 
+    </div>
+      <!-- <img src="../assets/images/grid2.png">  -->
+      </div> 
+      <div class="left-section"  [class.display-filters]="!showfilters"  [CustomSpinner]="showLeftPanelLoadingIcon">  
+        <div class="filter-section"  ngbDropdown #myDrop="ngbDropdown" > 
+       <div class="left-search">
+       <input type="text"  [(ngModel)]="accountCodeCategorySearchKey" placeholder="Search requests..." class="search-filter" (keyup)="onSearchInputChange($event)">
+          </div> 
+           <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="filter-scroll" style="width:100%; float:left;">
+           <table class="table">
+           <tr  >
+                   <td  (click)="hidefilter()" style="padding: 0px;">
+
+                    <table class="listtable">
+                        <tr>
+                            <th>Account  Code  </th>
+                          <th>Description</th>   
+                              
+                        </tr>
+                        <tr  [class.activerow]="record.AccountCodeCategoryId==selectedaccountCodeCategoryRecord.AccountCodeCategoryId" (click)="onRecordSelection(record.AccountCodeCategoryId)" *ngFor="let record of accountCodeCategoryList">
+                            <td>{{record.AccountCodeName}}</td>
+                            <td>{{record.Description}}</td>
+                              
+                             
+                        </tr>
+                    </table>
+
+
+
+
+
+
+                      
+                   </td>
+           </tr>
+           </table>
+               <div *ngIf="accountCodeCategoryList.length==0" class="col-12 listErrorMessage">
+                       {{errorMessage}}
+                   </div> 
+             
+           </div>   
+           <ngb-pagination [maxSize]="5" *ngIf="accountCodeCategoryList.length>0" (pageChange)="pageChange($event)" [collectionSize]="accountCodeCategoryPagerConfig.TotalRecords" class="d-flex justify-content-center" [pageSize]="accountCodeCategoryPagerConfig.RecordsToFetch" [page]="1" [boundaryLinks]="true"></ngb-pagination>
+          </div>
+           </div> 
+  </div>
+  </div>
+  <div class="row"> 
+  <div  #rightPanel [CustomSpinner]="showRightPanelLoadingIcon" class="rightPanel col-lg-12 col-md-12"  [class.expand-rightcol]="rightsection">
+        <div class="fullScreenLabel">    <app-header></app-header> </div>
+  <div >
+      <form  [formGroup]="accountCodeCategoryForm" class="form-horizontal" >
+      <div   class="rightcol-scrroll">
+              <div class="row fullScreenLabel">
+                      <div class="col-12">
+                          <h3 class="item-heading" style="float:none;">Account Subcategory</h3>
+                      </div>
+                  </div>
+      <div class="form-group row">
+          <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Account Code Name <i class="fa fa-star mandatory-icon" *ngIf="hideinput" aria-hidden="true"></i></label>  
+          <div class="autoComplete col-xl-4 col-sm-6 col-6">
+                <label class="col-form-label form-text" *ngIf="hidetext">
+                   <b style="color:#01548e">{{selectedaccountCodeCategoryRecord.AccountCodeName}}</b> </label>
+
+                   <input formControlName="AccountCodeName" *ngIf="hideinput" type="text" class="form-control show"/>
+                <div *ngIf="accountCodeCategoryForm.get('AccountCodeName').errors==null&&selectedaccountCodeCategoryRecord.AccountCodeCategoryId==0">
+                    <span class="errorMessage" *ngIf="accountCodeCategoryForm.get('AccountCodeName').errors.AccountCodeName">Please Enter Code</span>
+                </div>
+                <div *ngIf="accountCodeCategoryForm.get('AccountCodeName').errors!=null">
+                    <span class="errorMessage" *ngIf="accountCodeCategoryForm.get('AccountCodeName').errors.DuplicateAccountCode">Duplicate AccountCode Name</span>
+                </div>
+          </div>
+      </div>
+      <div class="form-group row">
+          <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Description </label>
+          <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">{{selectedaccountCodeCategoryRecord.Description }}</label>
+              <input formControlName="Description" *ngIf="hideinput" type="text" class="form-control show" />
+          </div>
+      </div>
+    
+      
+      </div>
+  
+      <div class="form-group text-right btn-list">
+          <button type="submit" (click)="saveRecord()"  class="btn btn-save" *ngIf="hideinput"><i class="fa fa-check" aria-hidden="true"></i> Save</button>
+          <button type="submit" (click)="cancelRecord()"  class="btn btn-cancel" *ngIf="hideinput"><i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+          <button type="submit" (click)="editRecord()" class="btn btn-edit" *ngIf="hidetext && editPermission"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+          <button type="submit" (click)="deleteRecord()"  class="btn btn-delete" *ngIf="hidetext && deletePermission"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+  </div>
+  
+      </form>
+      <p-confirmDialog></p-confirmDialog> 
+  </div>
+  
+  
+  </div><!-- left col end here-->
+  
+  
+  </div>
+   
+  </div>
+ 
+  <ng-template #userTemplate let-r="result" let-t="term">          
+    {{ r.UserName }}
+  </ng-template>

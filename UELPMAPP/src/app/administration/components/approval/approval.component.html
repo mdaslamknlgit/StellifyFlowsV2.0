@@ -1,0 +1,52 @@
+<table cellpadding="0" cellspacing="0" border="0" [style.display]="ShowApprovalgrid()">
+    <tbody>
+        <tr class="lines">
+            <td>
+                <table cellpadding="0" cellspacing="0" border="0">
+                    <tbody>
+                        <tr class="lines">
+                            <td class="line lleft" style="height: 80px;"></td>
+                            <td class="line lright" style="height: 80px;"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+
+        <tr class="nodes sortable ng-scope">
+
+            <td class="node">
+                <!-- ngIf: (step.getValue('Type') == 'Approval' || step.getValue('Type') == 'ProvideInput') && toBeDeleted!=step.getValue('Id') -->
+               
+
+
+
+
+
+
+
+            </td>
+
+        </tr>
+        <tr>
+            <td class="button-container">
+                <!-- <app-menu-controls></app-menu-controls> -->
+                <app-menu-controls (createApproverClick)="onCreateApprover($event)" (createComponentClick)="onCreateComponent($event)" (reomveComponentClick)="onremoveComponent($event)"></app-menu-controls>
+            </td>
+        </tr>
+        <!-- end ngIf: step.getValue('IsSuspended') != 1.0 -->
+        <!-- ngIf: step.getValue('IsSuspended') != 1.0 -->
+        <tr class="lines">
+            <td>
+                <table cellpadding="0" cellspacing="0" border="0">
+                    <tbody>
+                        <tr class="lines">
+                            <td class="line lleft"></td>
+                            <td class="line lright"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>

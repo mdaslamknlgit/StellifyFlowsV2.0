@@ -1,0 +1,914 @@
+<block-ui message="Deafult Message"></block-ui>
+<div class="container-fluid">
+  <!-- <ng-container focusInvalidInput> -->
+  <form (ngSubmit)="onSubmit(LeadForm.value,myPanel,$event)" [formGroup]="LeadForm" #MyLeadFormEle
+      style="width: 100%;margin-top: 10px">
+  <div class="row">
+    <div class="col-md-12 col-sm-12 padding-null tittlediv">
+      <div class="flexrow space-between align-center">
+        <h3 class="item-heading"> CRM - Leads </h3>
+        <p *ngIf="IsQualified" style="color:red;">Lead Is Converted You Can't Edit</p>
+        <p>{{ContactId}} --  {{AccountId}}</p>
+        <!-- <p> {{ShowQualify}} -- {{ShowDisQualify}} -- {{disabledselect}} </p> -->
+        <!-- <p>{{LeadMode}} -- {{LeadId}} -- {{SelectedLeadSourceId}}</p> -->
+        <!-- <p>{{IsSummaryExpand}}  --{{IsDetailsExpand}} --{{ShowQualify}} -- {{IsQualified}} -- {{LeadStatusId}} --{{LeadStatusName}} </p> -->
+        <div>
+
+
+          <button type="submit" class="btn btn-save" [disabled]="IsQualified">
+            <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+          
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <button type="button" (click)="onCancel($event)" class="btn btn-cancel">
+            <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickBack($event)">
+            <i class="fa fa-arrow-left" ria-hidden="true" aria-hidden="true"></i> Back</button>
+        </div>
+      </div>
+      <hr style="margin-top: 0px;" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="container-fluid">
+      <div class="col-md-12 col-sm-12 padding-null tittlediv">
+        <div class="flexrow space-between align-center" style="padding-bottom: 10px;justify-content: center;">
+          <!-- <button type="button" (click)="ClickQualify($event)" class="btn btn-save" *ngIf="ShowQualify"
+            [disabled]="IsQualified">
+            <i class="fa fa-badge-check" ria-hidden="true"></i> Qualify</button> -->
+            <button type="button" (click)="ClickConvertNew($event)" class="btn btn-save" *ngIf="ShowQualify"
+            [disabled]="IsQualified"
+            >
+            <i class="fa fa-badge-check" ria-hidden="true"></i> Convert </button>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            
+            <!-- <button type="button" (click)="ClickConvert($event)" class="btn btn-save" *ngIf="ShowQualify"
+            [disabled]="IsQualified">
+            <i class="fa fa-badge-check" ria-hidden="true"></i> Convert</button> -->
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            
+            <button type="button" (click)="ClickDisQualify($event)" class="btn btn-save" *ngIf="ShowDisQualify"
+            [disabled]="IsQualified">
+            <i class="fa fa-badge-check" ria-hidden="true"></i>Dis Qualify</button>
+
+             <!-- <button type="button" (click)="ClickConvert($event)" class="btn btn-save" *ngIf="ShowQualify"
+            [disabled]="IsQualified">
+            <i class="fa fa-badge-check" ria-hidden="true"></i> Convert</button>  -->
+        </div>
+      </div>
+    </div>
+    <div style="clear: both;"></div>
+  </div>
+  
+  <div class="row">
+    <!-- <form (ngSubmit)="onSubmit(LeadForm.value,myPanel)" [formGroup]="LeadForm" novalidate
+      style="width: 100%;margin-top: 10px"> -->
+      <div class="container-fluid">
+        <mat-accordion [multi]="true">
+          <mat-expansion-panel [expanded]="IsSummaryExpand" #myPanel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Contact 
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Topic
+                  <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                  <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                    <input id="Topic" #Topic formControlName="Topic" placeholder="Topic" [readonly]="IsConvert" 
+                    tabindex="1" class="form-control" required />
+
+                    <div *ngIf="LeadForm.get('Topic') && LeadForm.get('Topic').errors!=null &&LeadForm.get('Topic').touched==true">
+                      <span class="errorMessage" *ngIf="LeadForm.get('Topic').errors.required">
+                        Topic is required</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row" style="border:1px solid black;border-radius: 6px;padding-top:10px;">
+              <div class="col-md-4">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Salutation</label>   
+                  <select (change)="OnSalutationChange($event)" formControlName="SalutationId" 
+                  class="form-control" style="width:130px;" tabindex="2">
+                    <option [ngValue]="0">--None--</option>
+                    <option *ngFor="let list of SalutationList" value={{list.SalId}}>
+                      {{ list.SalName }}
+                  </select>         
+                  <!-- <select formControlName="SalutationId" class="form-control" style="width:130px;">
+                    <option [ngValue]="0">--None--</option>
+                    <option [value]="1">Mr.</option>
+                    <option [value]="2">Mrs.</option>
+                    <option [value]="3">Ms.</option>
+                    <option [value]="4">Dr.</option>
+                  </select> -->
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">First Name
+                    <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                    <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                      <!-- <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                          <button class="btn btn-outline-secondary" type="button" (click)="SearchContact($event)" type="button">
+                            <i class="fa fa-wpforms" aria-hidden="true"></i>
+                          </button>
+                          
+                        </div>
+                      </div> -->
+
+                      <div class="input-group">
+                        <input id="FirstName" #FirstName formControlName="FirstName" placeholder="First Name" 
+                        [readonly]="IsConvert" tabindex="3" class="form-control" required />
+                        <div class="input-group-append">
+                          <!-- <button class="btn btn-outline-secondary" type="button" (click)="SearchContact($event)">
+                            <i class="fa fa-wpforms" aria-hidden="true"></i>
+                          </button> -->
+                          
+                        </div>
+
+                      </div>
+                      <div *ngIf="LeadForm.get('FirstName') && LeadForm.get('FirstName').errors!=null &&LeadForm.get('FirstName').touched==true">
+                        <span class="errorMessage" *ngIf="LeadForm.get('FirstName').errors.required">
+                          First Name is required</span>
+                      </div>
+                    </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Last Name<i
+                    class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                    <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                      <input id="LastName" #LastName type="text" formControlName="LastName" 
+                      [readonly]="IsConvert" placeholder="Last Name"
+                      autocomplete="off" required  tabindex="4" class="form-control">
+                      <div *ngIf="LeadForm.get('LastName') && LeadForm.get('LastName').errors!=null &&LeadForm.get('LastName').touched==true">
+                        <span class="errorMessage" *ngIf="LeadForm.get('LastName').errors.required">
+                          Last Name is required</span>
+                      </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                &nbsp;
+              </div>
+            </div>
+            <!-- <div class="row">
+              <div class="col-md-6">
+                <div class="input-group">
+                  <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" (click)="SearchContact($event)" type="button">
+                      <i class="fa fa-wpforms" aria-hidden="true"></i>
+                    </button>
+                    
+                  </div>
+                </div>
+              </div>
+            </div> -->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Job Title
+                    <!-- <i class="fa fa-star mandatory-icon" aria-hidden="true"></i> -->
+                  </label>
+                  <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                    <input id="JobTitle" #JobTitle formControlName="JobTitle" placeholder="Job Title" [readonly]="IsConvert" 
+                    tabindex="5" class="form-control" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Business Phone
+                    <!-- <i class="fa fa-star mandatory-icon" aria-hidden="true"></i> -->
+                    <!-- appPhoneMask -->
+                  </label>
+                  <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                    <input formControlName="BusinessPhone" placeholder="Business Phone" onlyNumber  
+                    [readonly]="IsConvert" maxlength="15"
+                    tabindex="6" class="form-control" />
+                  </div>
+                </div>
+              </div>              
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Mobile</label>
+                  <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                    <input formControlName="Mobile" placeholder="Mobile" onlyNumber [readonly]="IsConvert" 
+                    tabindex="7" class="form-control" maxlength="15" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <!-- pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" -->
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Email</label>
+                  <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                    <input id="Email" #Email type="email" formControlName="Email" [readonly]="IsConvert" required tabindex="8"
+                    placeholder="Email" autocomplete="off" class="form-control">
+                    <div *ngIf="LeadForm.get('Email') && LeadForm.get('Email').errors!=null && LeadForm.get('Email').touched==true">
+                      <span class="errorMessage" *ngIf="LeadForm.get('Email').errors.required">Email is
+                        required</span>
+                    </div>
+                    <div class="alert alert-danger" *ngIf="LeadForm.get('Email').hasError('pattern')">Invalid email</div>
+
+                    <!-- <mat-error *ngIf="LeadForm.get('Email').hasError('required')">
+                      <div class="alert alert-danger">Email is required</div>
+                    </mat-error>
+                    <mat-error *ngIf="LeadForm.get('Email').hasError('pattern')">
+                      <div class="alert alert-danger">Invalid email</div>
+                    </mat-error> -->
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Source Campaign</label>
+                    <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                      <input type="text" formControlName="SourceCampaign" [readonly]="IsConvert" 
+                      placeholder="Source Campaign" tabindex="9" class="form-control"
+                      autocomplete="off">
+                    </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Lead Source
+                  <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                  <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                  
+                    <select id="LeadSourceId" #LeadSourceId (change)="OnLeadSourceChange($event)" formControlName="LeadSourceId" 
+                    class="form-control" tabindex="10" required>
+                      <option [ngValue]="0">--None--</option>
+                      <option *ngFor="let list of LeadSourceList" value={{list.LeadSourceId}}>
+                        {{ list.SourceName }}
+                    </select>
+
+                    <div
+                      *ngIf="LeadForm.get('LeadSourceId') && LeadForm.get('LeadSourceId').errors!=null &&LeadForm.get('LeadSourceId').touched==true">
+                      <span class="errorMessage" *ngIf="LeadForm.get('LeadSourceId').errors.required">
+                        Lead Source is required</span>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Select Currency</label>
+                  <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                  
+                    <select (change)="OnCurrencyChange($event)" formControlName="CurId"
+                    tabindex="10"  class="form-control" tabindex="11">
+                      <option [ngValue]="undefined">--None--</option>
+                      <option *ngFor="let list of CurrencyList" value={{list.Id}}>
+                        {{ list.Name }}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Estimation Budget</label>
+                    <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                      <input type="text" formControlName="EstBudget" [readonly]="IsConvert" 
+                      placeholder="Estimation Budget" tabindex="11" class="form-control"
+                      autocomplete="off">
+                    </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Lead Status</label>
+                  <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                  
+                    <select (change)="OnLeadStatusChange($event)" formControlName="LeadStatId"
+                    tabindex="10"  class="form-control" tabindex="10" [disabled]="disabledselect" >
+                      <option [ngValue]="undefined">--None--</option>
+                      <option *ngFor="let list of LeadStatusDomainItemList" value={{list.LeadStatId}}>
+                        {{ list.LeadStatName }}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Lead Rating</label>
+                    <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                      <select id="LeadRatingId" #LeadRatingId (change)="OnLeadRatingChange($event)" formControlName="LeadRatingId" 
+                          class="form-control" tabindex="10" required>
+                            <option [ngValue]="0">--None--</option>
+                            <option *ngFor="let list of LeadRatingDomainItems" value={{list.LeadRatingId}}>
+                              {{ list.LeadRatingName }}
+                          </select>
+      
+                          <div
+                            *ngIf="LeadForm.get('LeadRatingId') && LeadForm.get('LeadRatingId').errors!=null &&LeadForm.get('LeadRatingId').touched==true">
+                            <span class="errorMessage" *ngIf="LeadForm.get('LeadRatingId').errors.required">
+                              Lead Rating is required</span>
+                          </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Created By
+                  </label>
+                  <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                    {{CreatedUser}}
+                    <!-- <input formControlName="CreatedBy" placeholder="Created By"  
+                     maxlength="15" readonly
+                    tabindex="6" class="form-control" /> -->
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row" *ngIf="!HideAssignedTo">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Lead Owner
+                  </label>
+                  <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                   <!-- {{AssignedUserId}}  -- {{AssignedUserName}} -->
+                    
+                    <button class="btn btn-save ng-star-inserted" type="button"  *ngIf="!HideAssignedTo"
+                    [disabled]="IsQualified"
+                    (click)="SelectReportingManager(OwnerId,$event)">
+                      <i class="fa fa-user" ria-hidden="true" aria-hidden="true"></i> Assigned To</button>
+                      {{OwnerName}} &nbsp;&nbsp;&nbsp;&nbsp;
+                    <!-- <input formControlName="OwnerId" placeholder="Lead Owner"  
+                     maxlength="15" readonly
+                    tabindex="6" class="form-control" /> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </mat-expansion-panel>
+          <mat-expansion-panel [expanded]="IsDetailsExpand">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Company Details
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div class="row">
+                <div class="col-md-6">
+                  <!-- <mat-form-field class="example-full-width" style="width:100%">
+                    <input id="CompanyName" #CompanyName matInput type="text" formControlName="CompanyName" [readonly]="IsConvert"
+                     placeholder="Company Name" tabindex="13"
+                      autocomplete="off">
+
+                      <div *ngIf="LeadForm.get('CompanyName') && LeadForm.get('CompanyName').errors!=null &&LeadForm.get('CompanyName').touched==true">
+                        <span class="errorMessage" *ngIf="LeadForm.get('CompanyName').errors.required">
+                          Company Name is required</span>
+                      </div>
+                  </mat-form-field> -->
+
+                  <div class="form-group row">
+                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Company Name
+                      <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                      <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                        <input id="CompanyName" #CompanyName formControlName="CompanyName" placeholder="Company Name" 
+                        [readonly]="IsConvert" tabindex="12" class="form-control" required />
+  
+                        <div *ngIf="LeadForm.get('CompanyName') && LeadForm.get('CompanyName').errors!=null &&LeadForm.get('CompanyName').touched==true">
+                          <span class="errorMessage" *ngIf="LeadForm.get('CompanyName').errors.required">
+                            Company Name is required</span>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              
+                <div class="col-md-6">
+                  <!-- <mat-form-field class="example-full-width" style="width:100%">
+                    <input matInput type="number" formControlName="AnnualRevenue" 
+                    [readonly]="IsConvert" placeholder="Annual Revenue" tabindex="14"
+                      autocomplete="off">
+                  </mat-form-field> -->
+                  <div class="form-group row">
+                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Annual Revenue</label>
+                      <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                        <input type="number" formControlName="AnnualRevenue" [readonly]="IsConvert" 
+                        placeholder="Annual Revenue" tabindex="13" class="form-control"
+                        autocomplete="off">
+                      </div>
+                  </div>
+                </div>
+              
+              </div>
+              
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Number Of Employees</label>
+                    <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                      <input type="number" formControlName="NoOfEmployee" [readonly]="IsConvert"
+                        placeholder="Number Of Employees" autocomplete="off" tabindex="14" class="form-control">
+                    </div>
+                  </div>
+                </div>
+              
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Web Site</label>
+                    <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                      <input type="text" formControlName="WebSite" [readonly]="IsConvert"
+                        placeholder="Web Site" autocomplete="off" tabindex="15" class="form-control">
+                    </div>
+                  </div>
+                </div>
+              
+              </div>
+              
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Street1</label>
+                    <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                      <input type="text" formControlName="Street1" [readonly]="IsConvert"
+                        placeholder="Street1" autocomplete="off" tabindex="16" class="form-control">
+                    </div>
+                  </div>
+                </div>
+              
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Street2</label>
+                    <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                      <input type="text" formControlName="Street2" [readonly]="IsConvert"
+                        placeholder="Street2" autocomplete="off" tabindex="17" class="form-control">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Street3</label>
+                    <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                      <input type="text" formControlName="Street3" [readonly]="IsConvert"
+                        placeholder="Street3" autocomplete="off" tabindex="18" class="form-control">
+                    </div>
+                  </div>
+                </div>
+              
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Industry
+                    <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                    <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                    
+                      <select id="LeadSourceId" #LeadSourceId (change)="OnLeadSourceChange($event)" formControlName="IndsId" 
+                      class="form-control" tabindex="10" required>
+                        <option [ngValue]="0">--None--</option>
+                        <option *ngFor="let list of IndustryList" value={{list.IndsId}}>
+                          {{ list.IndustryName }}
+                      </select>
+  
+                      <div
+                        *ngIf="LeadForm.get('LeadSourceId') && LeadForm.get('LeadSourceId').errors!=null &&LeadForm.get('LeadSourceId').touched==true">
+                        <span class="errorMessage" *ngIf="LeadForm.get('LeadSourceId').errors.required">
+                          Lead Source is required</span>
+                      </div>
+  
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-md-6">
+                  <mat-form-field class="example-full-width" style="width:100%">
+                    <input matInput type="text" formControlName="Country" [readonly]="IsConvert" 
+                    placeholder="Country" tabindex="20"
+                      autocomplete="off">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                  <mat-form-field class="example-full-width" style="width:100%">
+                    <input matInput type="text" formControlName="City" [readonly]="IsConvert" 
+                    placeholder="City" autocomplete="off" tabindex="21">
+                  </mat-form-field>
+                </div>
+
+              </div>
+              
+              <div class="row">
+                <div class="col-md-6">
+                  <mat-form-field class="example-full-width" style="width:100%">
+                    <input matInput type="text" formControlName="LandMark" [readonly]="IsConvert" 
+                    placeholder="Land Mark" tabindex="23"
+                      autocomplete="off">
+                  </mat-form-field>
+                </div>
+                                           
+               <div class="col-md-6">
+                  <mat-form-field class="example-full-width" style="width:100%">
+                    <input matInput type="number" formControlName="PinCode" [readonly]="IsConvert" 
+                    placeholder="Pin Code" tabindex="24"
+                      autocomplete="off">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <mat-form-field class="example-full-width" style="width:100%">
+                    <input matInput type="text" formControlName="Locality" [readonly]="IsConvert" 
+                    placeholder="State/Provence"  tabindex="22"
+                      autocomplete="off">
+                  </mat-form-field>
+                </div>
+              </div>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel *ngIf="ShowContactGroups" [expanded]="IsContactGroupsExpand">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Contact Groups  --  Total Selected Groups : {{TotalSelectedConnections}}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="row">
+              <div style="text-align: right;flex: auto;flex-direction: row;">
+                  <button type="button" class="btn btn-save" (click)="UpdateContactGroups($event)">
+                    <i class="fa fa-check" aria-hidden="true"></i> Update</button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12 col-md-12">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <p-table #ConnectionsListTable
+                      [globalFilterFields]="['ListName', 'ListDesc']" 
+                      [columns]="ConnectionsListsCols" 
+                      selectionMode="single | multiple"
+                      [value]="ConnectionsLists" [rows]="100"
+                      [scrollable]="true" [scrollHeight]="'calc(100vh - 500px)'" scrollWidth="600px"
+                      [virtualRowHeight]="30" [virtualScroll]="true" 
+                      [(selection)]="SelectedListItems"
+                      (sortFunction)="customSort($event)" [customSort]="true"
+                      responsiveLayout="scroll" [paginator]="false"
+                      (onRowSelect)="OnMarketingRowSelect($event)" (onRowUnselect)="OnMarketingRowUnSelect($event)"
+                      [rowsPerPageOptions]="[5,10,15,25,50,75,100]">
+                      <ng-template pTemplate="caption">
+                          <div style="text-align: right">
+                              <i class="pi pi-search" style="margin:4px 4px 0 0"> </i>
+                              <input type="text" pInputText size="50" placeholder="Search List Name ..."
+                                  (input)="ConnectionsListTable.filterGlobal($event.target.value, 'contains')" style="width:auto" />
+                          </div>
+                      </ng-template>
+                      <ng-template pTemplate="header" let-columns>
+                          <tr style="height: 40px;">
+                              <th style="width: 20px !important;">
+                                  <p-tableHeaderCheckbox (click)="onRowUnselect($event)">                    
+                                  </p-tableHeaderCheckbox>
+                              </th>
+                              <th style="width: 100px;" pSortableColumn="ListName">Name <p-sortIcon field="ListName"></p-sortIcon></th>
+                              <th style="width: 200px;" pSortableColumn="ListDesc">Description <p-sortIcon field="ListName"></p-sortIcon></th>
+                          </tr>
+                          <!-- <tr> 
+                              <th *ngFor="let col of cols"> 
+                                  <input pInputText type="text" (input)="ConnectionsListTable.filter($event.target.value, col.field, col.filterMatchMode)" /> 
+                              </th> 
+                          </tr>  -->
+                      </ng-template>
+                      <ng-template pTemplate="body" let-value let-people let-columns let-i="rowIndex">
+                          <tr style="height:30px" [pSelectableRow]="SelectedListItems">
+                              <td style="width: 20px;">
+                                  <p-tableCheckbox [value]="people"></p-tableCheckbox>
+                              </td>
+                              <td style="width: 100px;">{{value.ListName}}</td>
+                              <td style="width: 200px;">{{value.ListDesc }}</td>                        
+                          </tr>
+          
+                      </ng-template>
+                      <ng-template pTemplate="emptymessage" let-columns>
+                          <tr>
+                              <td [attr.colspan]="ConnectionsLists.length">
+                                  No records found
+                              </td>
+                          </tr>
+                      </ng-template>
+                      
+                  </p-table>
+              </div>            
+          </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+        <hr>
+        
+        <div class="rowgap" layout="row" layout-wrap fxLayout.xs="column" fxLayoutAlign="center"
+          style="text-align: center;padding-left: 16px">
+
+          <button type="submit" class="btn btn-save" [disabled]="IsQualified">
+            <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <button type="submit" (click)="onCancel($event)" class="btn btn-cancel">
+              <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+
+        </div>
+        <hr>
+        <div style="clear: both;"></div>
+        
+      </div>
+      <div style="clear: both;"></div>
+    <!-- </form> -->
+  </div>
+  </form>
+<!-- </ng-container> -->
+  <!-- <div cla="row">
+    <form (ngSubmit)="onSubmit(LeadForm.value,myPanel,$event)" [formGroup]="LeadForm" class="form-horizontal">
+      <div class="container-fluid">
+        <mat-accordion [multi]="true">
+          <mat-expansion-panel [expanded]="true" #myPanel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Summary
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="row">
+              <div class="col-md-12">
+                <mat-form-field class="example-full-width" style="width:100%">
+                  <input matInput type="text" formControlName="Topic" placeholder="Topic" [readonly]="IsConvert"
+                    autocomplete="off" required>
+                </mat-form-field>
+              </div>
+            </div>
+  
+            <div class="row">
+              <div class="col-md-2">
+                <mat-form-field class="example-full-width" style="width:100%">
+                  <mat-select disableOptionCentering panelClass="myPanelClass" placeholder="Salutation"
+                    formControlName="SalutationId" [disabled]="IsConvert" [(ngModel)]="SalutationId" required>
+                    <mat-option [value]=0>Mr.</mat-option>
+                    <mat-option [value]=1>Mrs.</mat-option>
+                    <mat-option [value]=2>Ms.</mat-option>
+                    <mat-option [value]=3>Dr.</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+  
+              <div class="col-md-5">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">First Name<i
+                      class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                  <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                    <input matInput type="text" formControlName="FirstName" [readonly]="IsConvert"
+                      placeholder="Firs tName" autocomplete="off" required>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Last Name<i
+                      class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                  <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                    <input matInput type="text" formControlName="LastName" [readonly]="IsConvert" placeholder="Last Name"
+                      autocomplete="off" required>
+                  </div>
+                </div>
+              </div>
+  
+            </div>
+  
+            <div class="row">
+  
+              <div class="col-md-6">
+                <mat-form-field class="example-full-width" style="width:100%">
+                  <input matInput type="text" formControlName="JobTitle" [readonly]="IsConvert" placeholder="Job Title"
+                    autocomplete="off" required>
+                </mat-form-field>
+              </div>
+  
+              <div class="col-md-6">
+                <mat-form-field class="example-full-width" style="width:100%">
+                  <input matInput type="number" formControlName="BusinessPhone" [readonly]="IsConvert"
+                    placeholder="Business Phone" autocomplete="off">
+                </mat-form-field>
+              </div>
+  
+            </div>
+  
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field class="example-full-width" style="width:100%">
+                  <input matInput type="number" formControlName="Mobile" [readonly]="IsConvert" placeholder="Mobile"
+                    autocomplete="off">
+                </mat-form-field>
+              </div>
+  
+              <div class="col-md-6">
+                <mat-form-field class="example-full-width" style="width:100%">
+                  <input matInput type="email" formControlName="Email" [readonly]="IsConvert" required placeholder="Email"
+                    autocomplete="off" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
+                  <mat-error *ngIf="LeadForm.get('Email').hasError('required')">
+                    <div class="alert alert-danger">Email is required</div>
+                  </mat-error>
+                  <mat-error *ngIf="LeadForm.get('Email').hasError('pattern')">
+                    <div class="alert alert-danger">Invalid email</div>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+  
+  
+            </div>
+  
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field class="example-full-width" style="width:100%">
+                  <input matInput type="text" formControlName="SourceCampaign" [readonly]="IsConvert"
+                    placeholder="Source Campaign" autocomplete="off">
+                </mat-form-field>
+              </div>
+  
+              <div class="col-md-6">
+                <mat-form-field class="example-full-width" style="width:100%;">
+                  <mat-select disableOptionCentering panelClass="myPanelClass" placeholder="Select Lead Source"
+                    formControlName="LeadSource" [disabled]="IsConvert" [(ngModel)]="SelectedLeadSourceId">
+                    <mat-option *ngFor="let list of LeadSourceList" [value]="list.LeadSourceId">
+                      {{list.SourceName}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+  
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field class="example-full-width" style="width:100%">
+                  <mat-select disableOptionCentering panelClass="myPanelClass" placeholder="Select Currency" required
+                    formControlName="CurId" [disabled]="IsConvert" [(ngModel)]="CurrencyIdSelected">
+                    <mat-option *ngFor="let list of CurrencyList" [value]="list.Id">
+                      {{list.Name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field class="example-full-width" style="width:100%">
+                  <input matInput type="number" formControlName="EstBudget" [readonly]="IsConvert"
+                    placeholder="Estimation Budget" autocomplete="off">
+                </mat-form-field>
+              </div>
+  
+            </div>
+          </mat-expansion-panel>
+  
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Details
+              </mat-panel-title>
+  
+            </mat-expansion-panel-header>
+  
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field class="example-full-width" style="width:100%">
+                  <input matInput type="text" formControlName="CompanyName" [readonly]="IsConvert"
+                    placeholder="Company Name" autocomplete="off">
+                </mat-form-field>
+              </div>
+  
+              <div class="col-md-6">
+                <mat-form-field class="example-full-width" style="width:100%">
+                  <input matInput type="number" formControlName="AnnualRevenue" [readonly]="IsConvert"
+                    placeholder="Annual Revenue" autocomplete="off">
+                </mat-form-field>
+              </div>
+  
+            </div>
+  
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field class="example-full-width" style="width:100%">
+                  <input matInput type="number" formControlName="NoOfEmployee" [readonly]="IsConvert"
+                    placeholder="Number Of Employees" autocomplete="off">
+                </mat-form-field>
+              </div>
+  
+              <div class="col-md-6">
+                <mat-form-field class="example-full-width" style="width:100%">
+                  <input matInput type="text" formControlName="WebSite" [readonly]="IsConvert" placeholder="Web Site"
+                    autocomplete="off">
+                </mat-form-field>
+              </div>
+  
+            </div>
+  
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field class="example-full-width" style="width:100%">
+                  <input matInput type="text" formControlName="Street1" [readonly]="IsConvert" placeholder="Street1"
+                    autocomplete="off">
+                </mat-form-field>
+              </div>
+  
+              <div class="col-md-6">
+                <mat-form-field class="example-full-width" style="width:100%">
+                  <input matInput type="text" formControlName="Street2" [readonly]="IsConvert" placeholder="Street2"
+                    autocomplete="off">
+                </mat-form-field>
+              </div>
+            </div>
+  
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field class="example-full-width" style="width:100%">
+                  <input matInput type="text" formControlName="Street3" [readonly]="IsConvert" placeholder="Street3"
+                    autocomplete="off">
+                </mat-form-field>
+              </div>
+  
+              <div class="col-md-6">
+                <mat-form-field class="example-full-width" style="width:100%">
+                  <input matInput type="text" formControlName="Country" [readonly]="IsConvert" placeholder="Country"
+                    autocomplete="off">
+                </mat-form-field>
+              </div>
+            </div>
+  
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field class="example-full-width" style="width:100%">
+                  <input matInput type="text" formControlName="City" [readonly]="IsConvert" placeholder="City"
+                    autocomplete="off">
+                </mat-form-field>
+              </div>
+  
+              <div class="col-md-6">
+                <mat-form-field class="example-full-width" style="width:100%">
+                  <input matInput type="text" formControlName="Locality" [readonly]="IsConvert"
+                    placeholder="State/Provence" autocomplete="off">
+                </mat-form-field>
+              </div>
+            </div>
+  
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field class="example-full-width" style="width:100%">
+                  <input matInput type="text" formControlName="LandMark" [readonly]="IsConvert" placeholder="Land Mark"
+                    autocomplete="off">
+                </mat-form-field>
+              </div>
+  
+              <div class="col-md-6">
+                <mat-form-field class="example-full-width" style="width:100%">
+                  <input matInput type="number" formControlName="PinCode" [readonly]="IsConvert" placeholder="Pin Code"
+                    autocomplete="off">
+                </mat-form-field>
+              </div>
+            </div>
+  
+          </mat-expansion-panel>
+        </mat-accordion>
+  
+        <hr>
+  
+      </div>
+      <div class="rowgap" layout="row" layout-wrap fxLayout.xs="column" fxLayoutAlign="center"
+        style="text-align: center;padding-left: 16px">
+        <button type="button" class="btn btn-danger" [routerLink]="['/crm/leads/0/1']" (click)="onCancel($event)">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-success" [disabled]="IsConvert">
+          Save
+        </button>
+      </div>
+    </form>
+  </div> -->
+
+
+</div>

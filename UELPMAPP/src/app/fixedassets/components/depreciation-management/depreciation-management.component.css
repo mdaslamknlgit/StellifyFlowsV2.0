@@ -1,0 +1,15 @@
+.selectedRow
+{
+   background: #67b167 !important; 
+   color:white !important;
+}
+.gridSearch.left-search
+{
+    float: none;
+    width:30%;
+}
+.gridView
+{
+    font-size: 16px;
+    cursor: pointer;
+}

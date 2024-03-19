@@ -1,0 +1,27 @@
+.snocolumn{
+    width: 3%;
+}
+.aligncenter{
+    text-align: center;
+}
+ :host /deep/ .ui-multiselect {
+    min-width: 200px;
+}
+:host /deep/ .ui-multiselect-label { margin-bottom: 0px;}
+.flexrow{ display: flex; align-items: center;}
+.labeltext{ width: 150px;}
+:host ::ng-deep .ui-table-thead > tr > th {
+   word-break:  break-all
+}
+:host /deep/ .ui-multiselect-panel .ui-multiselect-item label {
+    display: inline-block;
+    vertical-align: sub;
+}
+:host /deep/  .ui-table-scrollable-body { max-height: calc(100vh - 335px) !important;}
+:host /deep/ .ui-table .ui-table-thead > tr > th{    background-color: #dceaf6;  }
+:host /deep/  td[align="0"] { text-align: left;}
+:host /deep/  td[align="1"] { text-align: right;}
+:host /deep/  td[align="2"] { text-align: center;}
+ 
+
+ 

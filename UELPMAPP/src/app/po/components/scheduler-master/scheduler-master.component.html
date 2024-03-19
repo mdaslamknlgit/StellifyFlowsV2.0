@@ -1,0 +1,189 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12 col-sm-12 padding-null tittlediv">
+      <div class="flexrow space-between align-center">
+      <h3 class="item-heading"> Schedule </h3>
+ 
+      <div>
+        <!-- <button class="btn btn-transparent" (click)="addRecord()" *ngIf="!AddNew && AddPermission"> New Record</button> -->
+
+        <button class="btn btn-save ng-star-inserted" type="button" (click)="addRecord()" *ngIf="!AddNew && AddPermission">
+          <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> New</button>
+
+        </div>
+ 
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12 col-md-12 rightPanel "> <!--enlargeRightPanel-->
+      <div class="enlargeRightPanelMargin">
+        <form class="form-horizontal" [formGroup]="SchedulerForm">
+          <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+            <div class="row fullScreenLabel">
+              <div class="col-12">
+                <h3 class="item-heading" style="float:none;">Schedule</h3>
+              </div>
+            </div>
+            <div class="form-group row" *ngIf="AddNew">
+              <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Schedule Category
+                <i class="fa fa-star mandatory-icon" aria-hidden="true"></i>
+              </label>
+              <div class="col-xl-4 col-sm-6 col-12">
+                <div>
+                  <select formControlName="ScheduleCategoryId" class="form-control">
+                    <option [ngValue]="undefined">--Select--</option>
+                    <option *ngFor="let record of scheduleCategories" [style.color]="record.IsActive?'': 'lightgray'"
+                      [disabled]="!record.IsActive" [ngValue]="record.ScheduleCategoryId">
+                      {{record.ScheduleCategoryName}}
+                  </select>
+                </div>
+                <div
+                  *ngIf="SchedulerForm.get('ScheduleCategoryId').invalid && (SchedulerForm.get('ScheduleCategoryId').dirty || SchedulerForm.get('ScheduleCategoryId').touched)">
+                  <span class="errorMessage" *ngIf="SchedulerForm.get('ScheduleCategoryId').errors.required">
+                    Schedule Category required </span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group row" *ngIf="AddNew">
+              <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Schedule Type
+                <i class="fa fa-star mandatory-icon" aria-hidden="true"></i>
+              </label>
+              <div class="col-xl-4 col-sm-6 col-12">
+                <div>
+                  <select formControlName="ScheduleTypeId" class="form-control">
+                    <option [ngValue]="undefined">--Select--</option>
+                    <option *ngFor="let record of scheduleTypes" [style.color]="record.IsActive?'': 'lightgray'"
+                      [disabled]="!record.IsActive" [ngValue]="record.ScheduleTypeId">
+                      {{record.ScheduleTypeName}}
+                  </select>
+                </div>
+                <div
+                  *ngIf="SchedulerForm.get('ScheduleTypeId').invalid && (SchedulerForm.get('ScheduleTypeId').dirty || SchedulerForm.get('ScheduleTypeId').touched)">
+                  <span class="errorMessage" *ngIf="SchedulerForm.get('ScheduleTypeId').errors.required">Schedule Type
+                    required </span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group row" *ngIf="AddNew">
+              <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Schedule No
+                <i class="fa fa-star mandatory-icon" aria-hidden="true"></i>
+              </label>
+              <div class="col-xl-4 col-sm-6 col-12">
+
+                <!-- <input type="text" class="form-control"  formControlName="SchedulerNumber" *ngIf="!AddNew"> -->
+                <div *ngIf="!SchedulerId">
+                  <input type="text" class="form-control" formControlName="SchedulerNumber">
+                </div>
+                <div *ngIf="SchedulerId">
+                  <input type="text" class="form-control" formControlName="SchedulerNumber"
+                    (change)="CheckSchedulerno()">
+                </div>
+                <div
+                  *ngIf="SchedulerForm.get('SchedulerNumber').invalid && (SchedulerForm.get('SchedulerNumber').dirty || SchedulerForm.get('SchedulerNumber').touched)">
+                  <span class="errorMessage" *ngIf="SchedulerForm.get('SchedulerNumber').errors.required">
+                    Schedule Number is required</span>
+                </div>
+
+                <span class="errorMessage"
+                  *ngIf="SchedulerForm.get('SchedulerNumber')!=null &&  SchedulerForm.get('SchedulerNumber').errors!=null ">
+                  <span *ngIf="SchedulerForm.get('SchedulerNumber').errors.Schedulererror">
+                    Duplicate Schedule Number
+                  </span>
+                </span>
+
+              </div>
+            </div>
+
+            <div class="form-group row" *ngIf="AddNew">
+              <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Description
+                <i class="fa fa-star mandatory-icon" aria-hidden="true"></i>
+              </label>
+
+              <div class="col-xl-4 col-sm-6 col-12">
+                <!-- <label class="col-form-label  form-text" *ngIf="!AddNew">
+                  <b style="color:#01548e">Service - 1</b>
+                </label> -->
+                <textarea rows="4" cols="50" class="form-control" formControlName="SchedulerDescription">
+                  </textarea>
+                <div
+                  *ngIf="SchedulerForm.get('SchedulerDescription').invalid && (SchedulerForm.get('SchedulerDescription').dirty || SchedulerForm.get('SchedulerDescription').touched)">
+                  <span class="errorMessage" *ngIf="SchedulerForm.get('SchedulerDescription').errors.required">Schedule
+                    Description is required</span>
+                </div>
+                <!-- <label *ngIf="hideText" class="col-form-label descriptionStyle" [innerHtml]="selectedServiceCategory.CategoryDescription|TextAreaContentDisplay"></label> -->
+              </div>
+            </div>
+
+            <div class="row" *ngIf="!AddNew">
+              <div class="col-xl-12">
+                <h4 class="form-heading">Schedule Details </h4>
+              </div>
+              <div class="col-xl-12">
+                <div class="table-responsive" [ngStyle]="{'max-width.px': screenWidth}">
+                
+                    <p-table #dt [columns]="SchedulerColumns" [value]="schedulerNoDetails" [rows]="1"
+                      scrollHeight="270px" [virtualRowHeight]="30" [virtualScroll]="true">
+
+                      <ng-template pTemplate="header" let-columns>
+                        <tr>
+                          <th *ngFor="let col of SchedulerColumns">
+                            {{col.header}}
+                          </th>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="colgroup" let-columns>
+                        <colgroup>
+                          <col *ngFor="let col of columns" [style.width]="col.width">
+                        </colgroup>
+                      </ng-template>
+                      <ng-template pTemplate="body" let-value let-columns let-i="rowIndex">
+                        <tr style="height:30px">
+                          <td>{{i+1}}</td>
+                          <td>{{value.ScheduleCategoryName}}</td>
+                          <td>{{value.ScheduleTypeName}}</td>
+                          <td>{{value.SchedulerNumber}}</td>
+                          <td>{{value.SchedulerDescription}}</td>
+                          <td>
+                            <mat-slide-toggle [checked]="value.IsActive" (change)="ChangeStatus(value)">
+                            </mat-slide-toggle>
+                          </td>
+                          <td>
+                            <button type="button" class="btn" (click)="EditSchedulerDetails(value.SchedulerNoId)">
+                              <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                            </button>&nbsp;
+                            <!-- <button type="button" class="btn" (click)="DeleteScheduler(value.SchedulerNoId)">
+                              <i class="fa fa-trash" aria-hidden="true"></i>
+                            </button> -->
+                          </td>
+                        </tr>
+
+
+                      </ng-template>
+                    </p-table>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group text-right btn-list" *ngIf="AddNew">
+            <button type="submit" *ngIf="SchedulerId==0" class="btn btn-save" (click)="InsertRecords()">
+              <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+            <button type="submit" *ngIf="SchedulerId>0 && EditPermission" class="btn btn-save"
+              (click)="InsertRecords()">
+              <i class="fa fa-check" aria-hidden="true"></i> Update</button>
+            <button type="submit" (click)="cancelRecord()" class="btn btn-cancel">
+              <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+            <!-- <button type="submit" (click)="editRecord()" class="btn btn-edit" *ngIf="hideText && editPermission">
+              <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+            <button type="submit" (click)="deleteRecord()" class="btn btn-delete" *ngIf="hideText && deletePermission">
+              <i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button> -->
+          </div>
+        </form>
+        <p-confirmDialog></p-confirmDialog>
+      </div>
+    </div>
+    <!-- left col end here-->
+  </div>
+
+</div>

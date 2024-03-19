@@ -1,0 +1,287 @@
+<div class="container-fluid">
+        <div class="row">
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+            <div class="flexrow space-between align-center"> 
+            <h3 class="item-heading">Engineer Management </h3>
+                     
+              <div>
+                <button class="btn  btn-transparent" (click)="addRecord()" *ngIf="hideText"> New Record</button>
+                <button  class="btn btn-transparent" (clickOutside)="onClickedOutside($event)"  (click)="split()">  {{showfilterstext}}  </button> 
+
+   
+                <img style="display: none;"  src="../assets/images/grid1.png" (click)="showFullScreen()">
+                <img style="display: none;" src="../assets/images/grid2.png">
+            </div> 
+            </div>
+
+
+            <div class="left-section"    [class.display-filters]="!showfilters" > 
+        
+                <div class="filter-section"  ngbDropdown #myDrop="ngbDropdown" >
+               
+               <div class="left-search">
+                       <input type="text"  [(ngModel)]="engineerSearchKey" placeholder="Search requests..." class="search-filter" (keyup)="onSearchInputChange($event)">
+                       <i class="fa fa-search" aria-hidden="true"></i>
+                       <div class="filter-popup" *ngIf="initDone" ngbDropdownMenu aria-labelledby="dropdownManual" (click)="$event.stopPropagation(); myDrop.open();">
+                           
+                               <form [formGroup]="engineerManagementFilterInfoForm" class="form-horizontal">
+               
+                                   <div class="form-group row">
+                                       <label class="col-form-label col-6 form-label">Engineer Name</label>
+                                       <div  class="col-6">        
+                                           <input  type="text" #engineerName formControlName="EngineerName" class="form-control">        
+                                       </div>
+                                   </div>
+       
+                                   <div class="form-group row">
+                                       <label class="col-form-label col-6 form-label">Engineer Code</label>
+                                       <div  class="col-6">        
+                                           <input  type="text" #engineerName formControlName="EngineerCode" class="form-control">        
+                                       </div>
+                                   </div>
+               
+                                   <div class="form-group row">
+                                       <label class="col-form-label col-6 form-label">Job Category </label>
+                                       <div class="col-6">
+                                           <input  type="text" formControlName="JobCategory" class="form-control">  
+                                       </div>
+                                   </div>  
+       
+                                   <div class="form-group row">
+                                       <label class="col-form-label col-6 form-label">Facility</label>
+                                       <div class="col-6">
+                                           <input  type="text" formControlName="Facility" class="form-control">  
+                                       </div>
+                                   </div>  
+               
+                                   <div class="form-group row">
+                                       <div class="col-12 error">
+                                           {{filterMessage}}
+                                       </div>
+                                   </div>
+               
+                                   <div class="form-group row">
+               
+                                       <div class="col-12" style="text-align: right">
+                                           <button type="submit" (click)="filterData()" class="btn btn-save">
+                                               <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                           <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                               <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+               
+                                       </div>
+                                   </div>
+                               </form>
+                       </div>
+               
+                   </div>
+               
+                    <!-- start filter code -->
+                    <div class="filter-icon">
+                           <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                               <i class="fa fa-filter" aria-hidden="true"></i>
+                           </button>
+                       </div>
+               
+                       <div style="float:right;margin:0px;" class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+                           <i class="fa fa-undo" aria-hidden="true"></i>
+                 </div>
+               
+                       
+                     <!-- end filter code -->
+               
+               
+                   <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="filter-scroll" style="width:100%; float:left;">
+                   <table class="table">
+                       <tr [class.activerow]="record.EngineerId==selectedEngineerManagementRecord.EngineerId" (click)="onRecordSelection(record.EngineerId)" *ngFor="let record of EngineerManagementList">
+                               <td>
+                                   <h5 class="sub-heading"> {{record.Name}}</h5>
+                                   <label class="label-text">Engineer Code</label> :<label class="label-value">{{record.EngineerCode}}</label>
+                                   <label class="label-text">Job Category</label> :
+                                   <label class="label-value">{{ record.JobCategoryName | slice:0:25}}<span *ngIf="record.JobCategoryName!= null && record.JobCategoryName.length>25">...</span></label>
+                                   <label class="label-text">Facility</label> :
+                                   <label class="label-value">{{ record.FacilityName | slice:0:25}}<span *ngIf="record.FacilityName!= null && record.FacilityName.length>25">...</span></label>
+       
+                               </td>
+                       </tr>
+                   </table>
+                       <div *ngIf="EngineerManagementList.length==0" class="col-12 listErrorMessage">
+                               {{errorMessage}}
+                           </div> 
+                        <ngb-pagination [maxSize]="5" *ngIf="EngineerManagementList.length>0" (pageChange)="pageChange($event)" [collectionSize]="EngineerManagementPagerConfig.TotalRecords" class="d-flex justify-content-center" [pageSize]="EngineerManagementPagerConfig.RecordsToFetch" [page]="1" [boundaryLinks]="true"></ngb-pagination> 
+                   </div>  
+               
+                
+                  </div>
+                   </div>
+
+
+
+
+
+
+        </div>
+        </div>
+        <div class="row">
+            
+        
+        
+        <div  #rightPanel [CustomSpinner]="showRightPanelLoadingIcon" class="rightPanel col-lg-12 col-md-12"  [class.expand-rightcol]="rightSection">
+        
+        <div >
+            <form  [formGroup]="engineerManagementForm" class="form-horizontal" >
+            <div   malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+                
+                    <div class="row fullScreenLabel">
+                        <div class="col-12">
+                            <h3 class="item-heading" style="float:none;">Engineer Management</h3>
+                        </div>
+                    </div>
+
+            
+                <div class="row"> 
+                    <div   class="col-sm-6">
+                    
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">First Name </label>  
+                            <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                                <label class="col-form-label form-text" *ngIf="hideText">{{selectedEngineerManagementRecord.FirstName}} </label>
+                
+                                <input type="text" formControlName="FirstName" 
+                                    [ngClass]="(validateControl(engineerManagementForm.get('FirstName')))?'form-control ng-touched':'form-control'"
+                                    placeholder="First Name"  *ngIf="hideInput" class="form-control">
+                
+                            </div>
+                        </div>
+                
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Last Name</label>
+                            <div class="col-xl-8 col-sm-6 col-6">
+                                <label class="col-form-label form-text" *ngIf="hideText">{{selectedEngineerManagementRecord.LastName }}</label>
+                                <input type="text" formControlName="LastName" 
+                                        [ngClass]="(validateControl(engineerManagementForm.get('LastName')))?'form-control ng-touched':'form-control'"
+                                        placeholder="Last Name"  *ngIf="hideInput" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Job Category</label>
+                            <div class="col-xl-8 col-sm-6 col-6">
+                                <label class="col-form-label form-text" *ngIf="hideText">{{selectedEngineerManagementRecord.JobCategoryName }}</label>
+                            
+                                <ng-multiselect-dropdown class="multiselect form-control"  *ngIf="hideInput" formControlName="JobCategory" 
+                                        [placeholder]="'Job Category'"
+                                        [data]="dropdownList"                                      
+                                        [settings]="dropdownSettings">                                       
+                                </ng-multiselect-dropdown>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Facility</label>
+                            <div class="col-xl-8 col-sm-6 col-6">
+                                <label class="col-form-label form-text" *ngIf="hideText">{{selectedEngineerManagementRecord.FacilityName }}</label>
+
+                                <ng-multiselect-dropdown class="multiselect form-control" *ngIf="hideInput" formControlName="Facility" 
+                                        [placeholder]="'Facility'"
+                                        [data]="facilitydropdownList"                                         
+                                        [settings]="facilitydropdownSettings"  >
+                                </ng-multiselect-dropdown>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Status</label>  
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text" *ngIf="hideText">{{selectedEngineerManagementRecord.IsActive==true?"Active":"InActive"}} </label>
+                                    <label class="col-form-label form-text"  *ngIf="hideInput">
+                                    <mat-slide-toggle formControlName="IsActive"  (change)="matselect($event)"></mat-slide-toggle>
+                                            <label *ngIf="slideActive">Active</label>        
+                                    </label>        
+                                </div>               
+                        </div> 
+
+
+                        <h4 class="form-heading">Contact Details </h4>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Contact No.</label>
+                            <div class="col-xl-8 col-sm-6 col-6">
+                                <label class="col-form-label form-text" *ngIf="hideText">{{selectedEngineerManagementRecord.Contact }}</label>
+                                <input type="text" formControlName="Contact" 
+                                        [ngClass]="(validateControl(engineerManagementForm.get('Contact')))?'form-control ng-touched':'form-control'"
+                                        placeholder="Contact"  *ngIf="hideInput" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Alternate Contact No.</label>  
+                            <div class="col-xl-8 col-sm-6 col-6">
+                                <label class="col-form-label form-text" *ngIf="hideText">{{selectedEngineerManagementRecord.AltContact }}</label>
+                                <input type="text" formControlName="AltContact" 
+                                        [ngClass]="(validateControl(engineerManagementForm.get('AltContact')))?'form-control ng-touched':'form-control'"
+                                        placeholder="Alternate Contact"  *ngIf="hideInput" class="form-control">
+                            </div>
+                        </div>
+                
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Email</label>
+                            <div class="col-xl-8 col-sm-6 col-6">
+                                <label class="col-form-label form-text" *ngIf="hideText">{{selectedEngineerManagementRecord.Email }}</label>
+                                <input type="text" formControlName="Email" 
+                                        [ngClass]="(validateControl(engineerManagementForm.get('Email')))?'form-control ng-touched':'form-control'"
+                                        placeholder="Email"  *ngIf="hideInput" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Address</label>
+                            <div class="col-xl-8 col-sm-6 col-6">
+                                <label class="col-form-label form-text" *ngIf="hideText">{{selectedEngineerManagementRecord.Address }}</label>
+                                <input type="text" formControlName="Address" 
+                                        [ngClass]="(validateControl(engineerManagementForm.get('Address')))?'form-control ng-touched':'form-control'"
+                                        placeholder="Address"  *ngIf="hideInput" class="form-control">
+                            </div>
+                        </div>          
+                    </div>
+
+
+                    <div   class="col-sm-6">
+                        <div class="form-group row" *ngIf="hideText">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Engineer Code</label>
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text"><b style="color:#01548e">{{ selectedEngineerManagementRecord.EngineerCode }}</b></label>
+                                </div>
+                        </div>  
+                        
+                   
+
+                    </div>
+                </div>
+            </div>
+        
+            <div class="form-group text-right btn-list">
+                <button type="submit" (click)="saveRecord()"  class="btn btn-save" *ngIf="hideInput"><i class="fa fa-check" aria-hidden="true"></i> Save</button>
+                <button type="submit" (click)="cancelRecord()"  class="btn btn-cancel" *ngIf="hideInput"><i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                <button type="submit" (click)="editRecord()" class="btn btn-edit" *ngIf="hideText"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                <button type="submit" (click)="deleteRecord()"  class="btn btn-delete" *ngIf="hideText"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+            </div>
+        
+            </form>
+            <!-- <p-confirmDialog></p-confirmDialog>  -->
+        </div>
+        
+        
+        </div><!-- left col end here-->
+        
+        
+        </div>
+         
+        </div>
+       
+        <ng-template #jobCategoryTemplate let-r="result" let-t="term">          
+           {{ r.ServiceName }}
+        </ng-template>
+
+        <ng-template #facilityTemplate let-r="result" let-t="term">
+            {{ r.UnitNumber }}
+        </ng-template>

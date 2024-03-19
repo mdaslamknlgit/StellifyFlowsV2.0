@@ -1,0 +1,36 @@
+Scripts Order:
+
+When creating DB Schema need to run below two sps in at top of others.
+
+dbo.usp_ProcessCode
+WorkFlowAuditTrail_CRUD
+
+
+ContractPurchaseOrderItem_CRUD
+
+Master Tables (Default)
+
+1.UserProfile
+2.WorkFlowStatus
+3.WorkFlowProcess
+4.UsersInRoles
+5.Roles
+6.PurchaseOrderTypes
+7.PurchaseOrderStatus
+8.Priority
+9.PaymentType
+10. Organization
+11.JVACode
+12.JobStatus
+13.GSTStatus
+14.DocumentStatus
+15.Currencies
+16.Countries
+17.COAAccountType
+18.BillingType
+19.BillingFrequency -- Manual
+20.AttachmentTypes
+21.AccountCodeCategory -- Manual
+22.CostofService -- Manual
+
+

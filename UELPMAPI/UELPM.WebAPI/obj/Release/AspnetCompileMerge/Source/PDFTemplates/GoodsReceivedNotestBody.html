@@ -1,0 +1,217 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500" rel="stylesheet" />
+    <title>Goods Received Notes</title>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            padding: 0px;
+            margin: 0px
+        }
+
+        .form-label {
+            color: #01548e;
+        }
+        .form-size {
+            font-size: 10px;
+            font-family: Arial;
+        }
+        .form-table td {
+            height: 30px;
+            vertical-align: top;
+        }
+
+        .form-heading {
+            color: #01548e;
+            font-size: 18px;
+            display: inline-block;
+            border-bottom: 1px solid #01548e;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .footer td {
+            background: #111;
+            color: #fff;
+            position: relative;
+            z-index: 99;
+            text-align: right;
+            height: 61px;
+            line-height: 61px;
+            width: 100%;
+            font-size: 12px;
+            font-weight: 300;
+        }
+
+        .nowrap {
+            white-space: nowrap
+        }
+    </style>
+</head>
+
+<body>
+    <table style="width:100%" align="center" border="0">
+        <tr>
+            <td width="50%" valign="top">
+                <table class="form-table form-size" style="width:100%">  
+					<tr class="form-group row" style="font-family:Arial;font-size:11px;">
+                        <td >Company Reg. Number </td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word"><b>[[CompanyRegNumber]]</b> </td>
+                    </tr>				
+                    <tr class="form-group row form-size">
+                        <td >Requestor </td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[RequestedByUserName]] </td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td width="45%" >Department </td>
+                        <td width="2%">:</td>
+                        <td width="53%" style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[Location]] </td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td>Supplier Name</td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[SupplierName]]</td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td>Supplier Address </td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[SupplierAddress]]</td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td>Delivery Address </td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[DeliveryAddress]]</td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td>Cost of Service </td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[CostOfService]]</td>
+                    </tr>
+
+                </table>
+            </td>
+
+            <td width="50%" valign="top">
+                <table style="width:100%" class="form-table form-size">
+                    <tr class="form-group row" style="display:none;"></tr>
+                    <tr class="form-group row">
+                        <td>GRN Number </td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[GRNCode]]</td>
+                    </tr>
+
+                    <tr class="form-group row">
+                        <td>Supplier DO Number</td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[SupplierDoNumber]]</td>
+                    </tr>
+                    <tr class="form-group row">
+                        <td width="45%">PO Number </td>
+                        <td width="2%">:</td>
+                        <td width="53%" style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[PurchaseOrderCode]]</td>
+                    </tr>
+                    <tr class="form-group row">
+                        <td width="45%">Status </td>
+                        <td width="2%">:</td>
+                        <td width="53%" style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[WorkFlowStatus]]</td>
+                    </tr>
+                    <tr class="form-group row">
+                        <td >Date </td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[CreatedDate]]</td>
+                    </tr>
+                    <tr class="form-group row">
+                        <td width="45%">PO Type </td>
+                        <td width="2%">:</td>
+                        <td width="53%" style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[PurchaseOrderType]]</td>
+                    </tr>
+
+
+
+                </table>
+            </td>
+
+        </tr>
+        <tr class="form-size">
+            <td colspan="2" class="form-size">
+                <br />    <br />
+                <h4 class="form-heading form-size" style="text-decoration:underline;">Item Details</h4>
+            </td>
+        </tr>
+
+
+        <tr>
+            <td colspan="2" class="form-size">
+                <table class="form-size" style="width:100%; margin-bottom:20px" border="1" cellpadding="3" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th width="8%" class="reportField textHeader">S.no</th>                           
+                            <th width="37%" class="reportField textHeader">Description</th>
+                            <th width="7%" class="reportField textHeader">UOM</th>
+                            <th width="12%" class="reportField textHeader">Original Qty</th>
+                            <th width="12%" class="reportField textHeader">Total Received Qty</th>
+                            <th width="12%" class="reportField textHeader">Open Qty</th>
+                            <th width="12%" class="reportField textHeader">GRN Qty</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each GRNNotesDetails}}
+                        <tr class="form-size">
+                            <td class="reportField">{{ItemId}}</td>
+                            <td class="reportField">
+                                <div style="color: #01548e;padding-bottom:10px;">{{ItemName}} </div>
+                                {{ItemDescription}}
+                            </td>
+                            <td class="reportField">{{MeasurementUnitCode}}</td>
+                            <td align="right" class="reportField">{{OriginalQty}}</td>
+                            <td align="right" class="reportField">{{TotalReceivedQty}}</td>
+                            <td align="right" class="reportField">{{OpenQty}}</td>
+                            <td align="right" class="reportField">{{GRNQty}}</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="2"></td>
+        </tr>
+
+        <tr class="row">
+
+            <td colspan="2">
+
+
+                <table style="width:100%" border="0" class="form-size">
+                    <tr>
+                        <td style="white-space:nowrap" class="form-size" width="50%">
+                            <div class="row form-size" style="margin-bottom:10px;">
+                                <h4 class="form-heading form-size"  style="margin:0px;padding:0px; text-decoration:underline; margin-bottom:10px">Remarks</h4>
+                                <div> [[GRNRemarks]]</div>
+                                <br />
+                                <br />
+                            </div>
+                            <!--<div class="row" style="margin-bottom:10px;">
+                                <h4 class="form-heading"  style="margin:0px;padding:0px; text-decoration:underline; margin-bottom:10px">Delivery Terms</h4>
+                                <div>  [[DeliveryTerm]]</div>
+                                <br />
+                                <br />
+                            </div>-->
+
+                        </td>
+                    </tr>
+                </table>
+
+            </td>
+        </tr>
+
+    </table>
+
+</body>
+</html>

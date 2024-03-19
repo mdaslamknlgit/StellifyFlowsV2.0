@@ -1,0 +1,38 @@
+﻿<html >
+<head>
+    <title>Clarification for $$MailTitle Approval</title>
+</head>
+<body >
+<div  style="font-family:tahoma;font-size:14px">
+Dear $$Name,
+<br/> <br/> 
+<div style="font-size:13px;">Return For Clarifications of New $$MailTitle .</div>  
+<br/>
+<div><b>POP Contract details :</b> </div>  
+<br/> 
+<table border="1" cellpadding="5" cellspacing="0">
+<tr>
+<th style="color:#2672ec;">Request Number</th>
+<th style="color:#2672ec;">Supplier</th>
+<th style="color:#2672ec;">$$AmountHeaderText($$DocumentCurrencySymbol)</th>
+<th style="color:#2672ec;">Clarifications</th>
+</tr>
+<tr>
+<td><a href="$$SiteLogin" style="color:#0645AD; text-decoration: underline;">$$DocumentCode</a></td>
+<td>$$Supplier</td>
+<td style="text-align: right;">$$DocumentValue</td>
+<td>$$Clarification</td>
+</tr>
+</table>
+<br/> 
+<div style="font-size:13px;">For more details, Click below to login. <br/>
+</div> 
+<br/>
+Best regards,
+<br/> 
+$$Sender
+</div>
+</div>
+</body>
+</html>
+

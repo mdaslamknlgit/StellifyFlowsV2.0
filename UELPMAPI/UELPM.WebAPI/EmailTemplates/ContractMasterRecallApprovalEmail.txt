@@ -1,0 +1,42 @@
+﻿<html >
+<head>
+    <title>Purchase Order Approval Recall</title>
+</head>
+<body >
+<div  style="font-family:tahoma;font-size:14px">
+Dear $$Name,
+<br/> <br/> 
+<div style="font-size:13px;">Request for Approval of $$Title $$PurchaseOrderRequestNumber has been Recalled</div>  
+<br/>
+<div><b>$$MailSubTitle details are given below,</b> </div>  
+<br/> 
+<table border="1" cellspacing="0">
+<tr>
+<th style="color:#2672ec;">Request Number</th>
+<th style="color:#2672ec;">Type</th>
+<th style="color:#2672ec;">Supplier</th>
+<th style="color:#2672ec;">Total Amount($$DocumentCurrencySymbol)</th>
+<th style="color:#2672ec;">Contract Start Date</th>
+<th style="color:#2672ec;">Contract End Date</th>
+<th style="color:#2672ec;">Status</th>
+</tr>
+<tr>
+<td>$$PurchaseOrderRequestNumber</td>
+<td>$$PurchaseOrderType</td>
+<td>$$Supplier</td>
+<td>$$TotalAmount</td>
+<td>$$ContractStartDate</td>
+<td>$$DeliveryDate</td>
+<td>$$Status</td>
+</tr>
+</table>
+ <br/> 
+<br/>
+Best regards,
+<br/> 
+$$Sender
+</div>
+</div>
+</body>
+</html>
+

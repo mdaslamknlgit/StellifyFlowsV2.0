@@ -1,0 +1,38 @@
+.linesToAdd
+{
+    width: 5%;
+    height: 24px;
+    padding: 3px;
+    display:inline-block;
+    font-size: 12px;
+}
+.addLine
+{
+    background: #01548e;
+    color: white;
+    border: 1px solid #01548e;
+    cursor: pointer;
+    border-radius: 3px;
+    margin-left: 3px;
+
+}
+.gridIconsStyle
+{
+    float: left;
+     position: relative;
+    left: 7%;
+}
+.table tr .gridIconsStyle
+{
+    display:none;
+}
+.table tr:hover .gridIconsStyle
+{
+    display:block;
+}
+.multiselect.form-control
+{
+    padding: 0px;
+    height:auto;
+
+}

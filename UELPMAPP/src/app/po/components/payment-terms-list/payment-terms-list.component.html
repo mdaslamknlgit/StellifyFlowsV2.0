@@ -1,0 +1,182 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12 col-sm-12 padding-null tittlediv">
+      <div class="flexrow space-between align-center">
+        <h3 class="item-heading"> Payment Terms List</h3>
+
+        <div>
+          <!-- <button class="btn  btn-transparent" (click)="addRecord()" 
+        *ngIf="hideText && newPermission"> New Record</button> -->
+
+          <!-- <button class="btn btn-save ng-star-inserted" style="margin-right: 20px;" type="button" 
+          (click)="addRecord()">
+            <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> New</button> -->
+
+            <button class="btn btn-save ng-star-inserted" style="margin-right: 20px;" type="button" 
+            (click)="ClickNew($event)">
+              <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> New</button>
+
+          <!-- <button  class="btn btn-transparent" (clickOutside)="onClickedOutside($event)"    
+        (click)="split()">  {{showfilterstext}}  </button>  -->
+
+          <img style="display: none;" src="../assets/images/grid1.png" (click)="showFullScreen()">
+          <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+            <button class="btn customdropdown btn-transparent" style="background:none;border:none;padding:0px;"
+              id="dropdownBasic1" ngbDropdownToggle>
+              <i class="fa-solid fa-bars"></i>
+            </button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+              <button (click)="onPrintScreen($event)" class="dropdown-item">Print</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="left-section1" [class.display-filters]="!showfilters" ngbDropdown #myDrop="ngbDropdown">
+        <div class="filter-section">
+          <div class="flexrow space-between">
+            <div class="left-search">
+              <input type="text" placeholder="Search requests..." class="search-filter" (keyup)="onSearch($event)">
+              <i class="fa fa-search" aria-hidden="true"></i>
+              <div class="filter-popup" *ngIf="initDone" ngbDropdownMenu aria-labelledby="dropdownManual"
+                (click)="$event.stopPropagation(); myDrop.open();">
+
+                <form [formGroup]="paymenttermFilterInfoForm" class="form-horizontal">
+
+                  <div class="form-group row">
+                    <label class="col-form-label col-6 form-label">Code </label>
+                    <div class="col-6">
+                      <input type="text" #Code formControlName="Code" placeholder="" class="form-control">
+                    </div>
+                  </div>
+
+
+                  <div class="form-group row">
+                    <label class="col-form-label col-6 form-label">No. of Days</label>
+                    <div class="col-6">
+
+                      <input type="text" formControlName="Days" placeholder="" class="form-control">
+
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-12 error">
+                      {{filterMessage}}
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+
+                    <div class="col-12" style="text-align: right">
+                      <button type="submit" (click)="filterData()" class="btn btn-save">
+                        <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                      <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                        <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div class="filter-icon">
+              <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                <i class="fa fa-filter" aria-hidden="true"></i>
+              </button>
+            </div>
+
+            <div class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+              <i class="fa fa-undo" aria-hidden="true"></i>
+            </div>
+          </div>
+          <div class="respnsive-table tablescroll p-datatable-wrapper">
+              <p-table #ContactsListTable [globalFilterFields]="['Code','NoOfDays','Description','CreatedDate']"
+                [columns]="paymentTermsListCols" selectionMode="single | multiple" [value]="paymentTermsList"
+                [rows]="this.paymentTermPagerConfig.RecordsToFetch" [scrollable]="true" [scrollHeight]="'calc(100vh - 400px)'"
+                scrollWidth="96%" [virtualRowHeight]="30" [virtualScroll]="true" [(selection)]="selectedItems"
+                (sortFunction)="customSort($event)" [customSort]="true" responsiveLayout="scroll" [paginator]="false"
+                (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
+                [rowsPerPageOptions]="[5,10,15,25,50,75,100]">
+                <ng-template pTemplate="header" let-columns>
+                  <tr style="height: 40px;">
+                    <!-- <th style="width: 36px;">
+                      <p-tableHeaderCheckbox (click)="onRowUnselect($event)">
+                      </p-tableHeaderCheckbox>
+                    </th> -->
+                    <th style="width: 100px;" pSortableColumn="Code">Code <p-sortIcon field="Code"></p-sortIcon></th>
+                    <th style="width: 100px;" pSortableColumn="NoOfDays">No Of Days <p-sortIcon
+                        field="NoOfDays"></p-sortIcon></th>
+                    <th style="width: 100px;" pSortableColumn="Description">Description <p-sortIcon
+                        field="Description"></p-sortIcon></th>
+                    <th style="width: 100px;" pSortableColumn="CreatedDate">Created On <p-sortIcon field="CreatedDate"></p-sortIcon>
+                    </th>
+                    <th style="width: 50px;">Action</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-value let-people let-rowData let-columns let-i="rowIndex">
+                  <tr style="height:30px" [pSelectableRow]="paymentTermsList"
+                  [class.activerow]="value.PaymentTermsId==selectedPaymentTerms.PaymentTermsId">
+                    <!-- <td style="width: 36px;">
+                      <p-tableCheckbox [value]="people"></p-tableCheckbox>
+                    </td> -->
+                    <td style="width: 100px;">{{value.Code }}</td>
+                    <td style="width: 100px;">{{value.NoOfDays}}</td>
+                    <td style="width: 100px;">{{value.Description}}</td>
+                    <td style="width: 100px;">{{value.CreatedDate | date: 'yyyy-MM-dd'}}</td>
+                    <td style="width: 50PX;" class="aligncenter">
+                      <button type="button" class="btn" (click)="ClickEdit(value.PaymentTermsId)">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                      </button>
+                    </td>
+                  </tr>
+              
+                </ng-template>
+                <ng-template pTemplate="emptymessage" let-columns>
+                  <tr>
+                    <td [attr.colspan]="paymentTermsList.length">
+                      No records found
+                    </td>
+                  </tr>
+                </ng-template>
+              
+              </p-table>
+              <div *ngIf="paymentTermsList.length==0">
+                <div class="col-12 error errorMessage">
+                  <p class="errorMessage">
+                    {{filterMessage}}
+                  </p>
+                </div>
+              </div>
+              <div style="clear: both;"></div>
+              <ngb-pagination *ngIf="paymentTermsList.length>0" (pageChange)="pageChange($event)" style="z-index: auto;"
+                [collectionSize]="paymentTermPagerConfig.TotalRecords" class="d-flex justify-content-center"
+                [pageSize]="paymentTermPagerConfig.RecordsToFetch" [maxSize]="5" [(page)]="currentPage" [boundaryLinks]="true">
+                <ng-template ngbPaginationPages let-page let-pages="pages">
+                  10 of 100
+                </ng-template>
+              </ngb-pagination>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+ <ng-template #filters>
+  <div class="flter-popover">
+    <form [formGroup]="filterForm" class="form-horizontal" (ngSubmit)="onSubmit()">
+      <div class="form-group row">
+        <label class="col-form-label col-4 form-label">Name </label>
+        <div class="col-8">
+          <input type="text" id="orderlevel" name="orderlevel" formControlName="orderlevel" placeholder="Re-Order Level"
+            class="form-control">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-form-label col-4 form-label">Category</label>
+        <div class="col-8">
+          <input type="text" id="alertqty" name="alertqty" formControlName="alertqty" placeholder="Low Alert Qty"
+            class="form-control">
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>

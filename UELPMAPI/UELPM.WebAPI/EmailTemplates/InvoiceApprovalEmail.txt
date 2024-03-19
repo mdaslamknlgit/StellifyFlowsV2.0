@@ -1,0 +1,49 @@
+﻿<html >
+<head>
+    <title>Invoice Approval Confirmation</title>
+</head>
+<body >
+<div  style="font-family:tahoma;font-size:14px">
+Dear $$Name,
+<br/> <br/> 
+<div style="font-size:13px;">Invoice Number: $$InvoiceCode is $$PreviousApproverStatus .</div>  
+<br/>
+<div><b>$$MailSubTitle details are given below,</b> </div>  
+<br/> 
+<table style='width:50%;'>
+	<tr>
+		<td style="width:20%;color:#2672ec;font-weight:bold;">Supplier Name</td>
+		<td style="width:30%;">$$Supplier</td>
+		<td style="width:20%;color:#2672ec;font-weight:bold;">Invoice Code </td>
+		<td style="width:30%;">$$InvoiceCode</td>
+		
+	</tr>
+	<tr>
+		
+		<td style="width:20%;color:#2672ec;font-weight:bold;">Invoice Total($$DocumentCurrencySymbol)</td>
+		<td style="width:30%;">$$TotalAmount</td>
+		<td style="width:20%;color:#2672ec;font-weight:bold;display:$$poWorkflowShow">WorkFlowStatus</td>
+		<td style="width:30%;display:$$poWorkflowShow">$$WorkFlowStatus</td>
+	</tr>	
+</table>
+<table border="1" cellpadding="5" cellspacing="0" style="margin-top:1%;">
+	<tr>
+	   <th style="color:#2672ec;">S No</th>
+	   <th style="color:#2672ec;">Item Type</th>
+	   <th style="color:#2672ec;display:$$poTitleShow">$$TitlePO</th>
+	   <th style="color:#2672ec;">Description</th>
+	   <th style="color:#2672ec;">Amount($$DocumentCurrencySymbol)</th>
+	</tr>
+	 $$itemsListDetails
+</table>
+<br/> 
+<div style="font-size:13px;">For more details, Click below to login. <br/>
+<a href="$$SiteLogin" style="color:#0645AD; text-decoration: underline;">$$InvoiceCode</a></div> 
+<br/>
+Best regards,
+<br/> 
+$$Sender
+</div>
+</div>
+</body>
+</html>

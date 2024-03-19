@@ -1,0 +1,408 @@
+<div class="container-fluid" >
+    <div class="row">
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+            <div class="flexrow space-between align-center"> 
+            <h3 class="item-heading">
+             Item Master </h3>
+    
+             <div>
+                <input #file style="visibility: hidden;width:0px" type="file" accept="xlsx/*" (click)="file.value = null" (change)="uploadFile($event)">
+                <button  class="btn btn-transparent"   *ngIf="importPermission" #upload (click)="file.click()">Import Items </button>
+             <!-- <button  #upload (click)="file.click()" class="btn btn-edit">Import Items</button> -->
+             <button  class="btn btn-transparent"  (click)="addRecord();" *ngIf="isDisplayMode!=false && newPermission">Add New</button> 
+   
+         <img src="../assets/images/grid1.png" style="display: none;" (click)="showFullScreen()">
+         <button  class="btn btn-transparent" (clickOutside)="onClickedOutside($event)"  [exclude]="'.filter-section,.submenu '" (click)="split()">  {{showfilterstext}}  </button>  
+     </div> 
+            <!-- <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+                    <button class="btn btn-outline-primary" style="background:none;border:none;padding:0px;" id="dropdownBasic1" ngbDropdownToggle>
+                      <img src="../assets/images/grid2.png">
+                    </button>                   
+                  </div> -->
+                  
+        </div>    
+    
+        <div class="left-section"   [class.display-filters]="!showfilters"  ngbDropdown #myDrop="ngbDropdown">
+
+            <div class="filter-section">
+                <div class="flexrow space-between"> 
+                <div class="left-search">
+                    <input type="text" #searchInput placeholder="Search requests..." (keyup)="onSearch($event)" class="search-filter">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </div>
+
+                <div> 
+                <div class="filter-popup" *ngIf="initDone" ngbDropdownMenu aria-labelledby="dropdownManual" (click)="$event.stopPropagation(); myDrop.open();">
+
+                    <form [formGroup]="itemMasterFilterInfoForm" class="form-horizontal">
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-6 form-label">Item Name </label>
+                            <div class="col-6">
+                                <input type="text" #ItemName formControlName="ItemName" placeholder="" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-6 form-label">Item Type</label>
+                            <div class="col-6">
+
+                                <input formControlName="ItemType" type="text" class="form-control" [inputFormatter]="itemMasterInputFormater" [ngbTypeahead]="itemMasterSearch"
+                                    [resultTemplate]="itemMasterTemplate" />
+
+                            </div>
+                        </div>
+                        <!-- <div class="form-group row">
+                            <label class="col-form-label col-6 form-label">Item Location</label>
+                            <div class="col-6">
+
+                                <input formControlName="ItemLocation" type="text" class="form-control" [inputFormatter]="itemMasterLocationInputFormater" [ngbTypeahead]="itemMasterLocationSearch"
+                                    [resultTemplate]="itemMasterLocationTemplate" />
+
+                            </div>
+                        </div> -->
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-6 form-label">Item Code</label>
+                            <div class="col-6">
+
+                                <input type="text" formControlName="ItemCode" placeholder="" class="form-control">
+
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12 error">
+                                {{filterMessage}}
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+
+                            <div class="col-12" style="text-align: right">
+                                <button type="submit" (click)="filterData()" class="btn btn-save">
+                                    <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+
+                            </div>
+                        </div>
+
+                    </form>
+
+
+
+                </div>
+                <div class="filter-icon">
+                    <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                        <i class="fa fa-filter" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <div class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+                    <i class="fa fa-undo" aria-hidden="true"></i>
+                </div>
+            </div>
+</div>
+
+
+                <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="filter-scroll" style="width:100%; float:left;">
+                    <div class="table">
+                        <div  >
+                            <table class="listtable">
+                                <tr>
+                                    <th>Record Name </th>
+                                  <th>Category</th>  <th>Item Type</th> 
+                                  <th>Qty in Hand </th> 
+                                      
+                                </tr>
+                                <tr (click)="onItemRecordSelection(record)" *ngFor="let record of filteredItemMasters">
+                                    <td>{{record.Name}}</td>
+                                    <td>{{record.ItemCategoryName}}</td>
+                                      <td>{{record.ItemTypeName}}</td> 
+                                      <td>{{record.OpeningStockValue}} </td>
+                                     
+                                </tr>
+                            </table>
+                            
+                        </div>
+                    </div>
+                    <div *ngIf="filteredItemMasters.length==0" class="col-12 error listErrorMessage">
+                        {{errorMessage}}
+                    </div> 
+                   
+
+                </div>
+
+                <ngb-pagination [maxSize]="5" *ngIf="filteredItemMasters.length>0" (pageChange)="pageChange($event)"
+                    [collectionSize]="itemMasterPagerConfig.TotalRecords" class="d-flex justify-content-center"
+                    [pageSize]="itemMasterPagerConfig.RecordsToFetch" [page]="currentPage" [boundaryLinks]="true"></ngb-pagination>
+            </div>
+        </div>
+    
+    
+    </div>
+    </div>
+    <div class="row">
+    
+        <!-- left col end here-->
+
+        <div  #rightPanel class="rightPanel col-lg-12 col-md-12" [class.expand-rightcol]="rightsection">
+
+            <div *ngIf="isDisplayMode!=null">
+
+                <form [formGroup]="signupForm" class="form-horizontal" (ngSubmit)="onSubmit()">
+                    <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+                        <div class="row fullScreenLabel">
+                                <div class="col-12">
+                                    <h3 class="item-heading" style="float:none;">Item Master</h3>
+                                </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Name <i class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"   aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <input type="text" formControlName="Name" placeholder="Name" *ngIf="isDisplayMode==false" class="form-control" [ngClass]="(validateControl(signupForm.get('Name')))?'form-control ng-touched':'form-control'">
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true">
+                                    <b>{{selectedItemMasterRecord.Name}}</b>
+                                </label>
+                                <div *ngIf="signupForm.get('Name').errors!=null && isDisplayMode==false">
+                                    <span class="errorMessage" *ngIf="signupForm.get('Name').errors.Duplicate">Duplicate Name</span>
+                                </div>
+                            </div>
+
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Expiry Date <i class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"  aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true">
+                                    <b>{{selectedItemMasterRecord.ExpiryDate| date:"yyyy/MM/dd"}}</b>
+                                </label>
+                                <div class="input-group" *ngIf="isDisplayMode==false">
+                                    <input class="form-control" formControlName="ExpiryDate" ngbDatepicker #d="ngbDatepicker" [ngClass]="(validateControl(signupForm.get('ExpiryDate')))?'form-control ng-touched':'form-control'">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+                                            <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Item Code <i class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"  aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true">{{selectedItemMasterRecord.ItemMasterCode}}</label>
+                                <input type="text" formControlName="ItemMasterCode" [ngClass]="(validateControl(signupForm.get('ItemMasterCode')))?'form-control ng-touched':'form-control'"
+                                    placeholder="Item Code" *ngIf="isDisplayMode==false" class="form-control">
+
+                            </div>
+
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Department <i class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"  aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <select formControlName="LocationId" [ngClass]="(validateControl(signupForm.get('LocationId')))?'form-control ng-touched':'form-control'"
+                                    placeholder="location" *ngIf="isDisplayMode==false" class="form-control">
+                                    <option *ngFor="let record of locationtypes" value={{record.LocationID}}>
+                                        {{record.Name}}
+                                </select>
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true"> {{selectedItemMasterRecord.LocationName}} </label>
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Type <i class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"  aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <select formControlName="ItemTypeID" [ngClass]="(validateControl(signupForm.get('ItemTypeID')))?'form-control ng-touched':'form-control'"
+                                    placeholder="Type" (change)="onChange($event.target.value)" *ngIf="isDisplayMode==false"
+                                    class="form-control">
+                                    <option *ngFor="let record1 of itemtypes" value={{record1.ItemTypeID}}>
+                                        {{record1.Name}}
+                                </select>
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true"> {{selectedItemMasterRecord.ItemTypeName}} </label>
+                            </div>
+
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Category </label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true"> {{selectedItemMasterRecord.ItemCategoryName}} </label>
+                                <input type="text" disabled=true formControlName="ItemCategoryName" placeholder="Category" *ngIf="isDisplayMode==false"
+                                    class="form-control">
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Item Price <i class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"  aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true">{{selectedItemMasterRecord.Price}} </label>
+                                <input type="text" formControlName="Price" [ngClass]="(validateControl(signupForm.get('Price')))?'form-control ng-touched':'form-control'"
+                                    placeholder="Item Price" *ngIf="isDisplayMode==false" class="form-control">
+
+                            </div>
+
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Status </label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true">{{selectedItemMasterRecord.Status==true?"Active":"InActive"}} </label>
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==false">
+                                    <mat-slide-toggle formControlName="Status" (change)="matselect($event)"></mat-slide-toggle>
+                                    <label *ngIf="slideactive">Active</label>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Track Inventory </label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true">{{selectedItemMasterRecord.TrackInventory==true?"Active":"InActive"}} </label>
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==false">
+                                    <mat-slide-toggle formControlName="TrackInventory" (change)="matselect($event)"></mat-slide-toggle>
+                                    <label *ngIf="slideactive">Active</label>
+                                </label>
+                            </div>
+                        </div>
+                        <h4 class="form-heading">Details</h4>
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Manufacturer <i class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"  aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true">{{selectedItemMasterRecord.Manufacturer}} </label>
+                                <input type="text" formControlName="Manufacturer" [ngClass]="(validateControl(signupForm.get('Manufacturer')))?'form-control ng-touched':'form-control'"
+                                    placeholder="Manufacturer" *ngIf="isDisplayMode==false" class="form-control">
+
+                            </div>
+
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Brand <i class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"  aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true">{{selectedItemMasterRecord.Brand}} </label>
+                                <input type="text" formControlName="Brand" [ngClass]="(validateControl(signupForm.get('Brand')))?'form-control ng-touched':'form-control'"
+                                    placeholder="Brand" *ngIf="isDisplayMode==false" class="form-control">
+
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label *ngIf="isDisplayMode==false"  class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Opening Stock <br/> Value <i class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"  aria-hidden="true"></i></label>
+                            <label *ngIf="isDisplayMode==true"  class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Opening Stock Value </label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true">{{selectedItemMasterRecord.OpeningStockValue}} </label>
+                                <input type="text" formControlName="OpeningStockValue" [ngClass]="(validateControl(signupForm.get('OpeningStockValue')))?'form-control ng-touched':'form-control'"
+                                    placeholder="Opening Stock Value" *ngIf="isDisplayMode==false" class="form-control">
+
+                            </div>
+
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">UOM <i class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"  aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <select formControlName="MeasurementUnitID" [ngClass]="(validateControl(signupForm.get('MeasurementUnitID')))?'form-control ng-touched':'form-control'"
+                                    placeholder="UOM" *ngIf="isDisplayMode==false" class="form-control">
+                                    <!-- <option value="0">--Select--</option> -->
+                                    <option *ngFor="let record of uomtypes" value={{record.MeasurementUnitID}}>
+                                        {{record.Name}}
+
+                                </select>
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true"> {{selectedItemMasterRecord.UOMName}} </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">GL Code <i class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"  aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true">{{selectedItemMasterRecord.GLCode}} </label>
+                                <input type="text" formControlName="GLCode" [ngClass]="(validateControl(signupForm.get('GLCode')))?'form-control ng-touched':'form-control'"
+                                    placeholder="GL Code" *ngIf="isDisplayMode==false" class="form-control">
+                                    <div *ngIf="signupForm.get('GLCode').errors!=null && isDisplayMode==false">
+                                        <span class="errorMessage" *ngIf="signupForm.get('GLCode').errors.Duplicate">Duplicate GL Code</span>
+                                    </div>
+
+                            </div>
+                        </div>
+
+                        <h4 class="form-heading">Description </h4>
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-12 col-12 form-label">Description </label>
+                            <div class="col-sm-12 col-sm-12 col-12">
+                                <textarea rows="4" cols="50" formControlName="Description" *ngIf="isDisplayMode==false" class="form-control">
+                                </textarea>
+                                <label class="col-form-label form-text descriptionStyle" *ngIf="isDisplayMode==true">{{ selectedItemMasterRecord.Description }}</label>
+
+                            </div>
+                        </div>
+
+                        <h4 class="form-heading">Settings </h4>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-md-6 col-12 form-label">Re-Order Level <i class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"  aria-hidden="true"></i> </label>
+                            <div class="col-xl-4 col-md-6 col-12">
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true">{{selectedItemMasterRecord.ReOrderLevel}} </label>
+                                <input type="text" formControlName="ReOrderLevel" [ngClass]="(validateControl(signupForm.get('ReOrderLevel')))?'form-control ng-touched':'form-control'"
+                                    placeholder="Re-Order Level" *ngIf="isDisplayMode==false" class="form-control">
+
+                            </div>
+
+                            <label class="col-form-label col-xl-2 col-md-6 col-12 form-label">Low Alert Qty <i class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"  aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-md-6 col-12">
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true">{{selectedItemMasterRecord.LowAlertQuantity}} </label>
+                                <input type="text" formControlName="LowAlertQuantity" [ngClass]="(validateControl(signupForm.get('LowAlertQuantity')))?'form-control ng-touched':'form-control'"
+                                    placeholder="Low Alert Qty" *ngIf="isDisplayMode==false" class="form-control">
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="form-group text-right btn-list">
+                        <button type="submit" (click)="saveRecord()" class="btn btn-save" *ngIf="isDisplayMode==false">
+                            <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+                        <button type="submit" (click)="cancelRecord()" class="btn btn-cancel" *ngIf="isDisplayMode==false">
+                            <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                        <button type="submit" (click)="editRecord()" class="btn btn-edit" *ngIf="isDisplayMode==true && editPermission">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                        <button type="submit" (click)="deleteRecord()" class="btn btn-delete" *ngIf="isDisplayMode==true && deletePermission">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                    </div>
+                </form>
+            </div>
+            <p-confirmDialog></p-confirmDialog>
+
+
+        </div>
+        <!-- left col end here-->
+
+
+    </div>
+
+</div>
+<ng-template #filters>
+    <div class="flter-popover">
+
+        <form [formGroup]="signupForm" class="form-horizontal" (ngSubmit)="onSubmit()">
+
+            <div class="form-group row">
+                <!-- <label class="col-form-label col-4 form-label">Name </label>   -->
+                <div class="col-8">
+
+                    <input type="text" formControlName="orderlevel" placeholder="Re-Order Level" class="form-control">
+
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-4 form-label">Category</label>
+                <div class="col-8">
+
+                    <input type="text" formControlName="alertqty" placeholder="Low Alert Qty" class="form-control">
+
+                </div>
+            </div>
+
+
+        </form>
+
+    </div>
+</ng-template>
+
+
+
+<ng-template #itemMasterTemplate let-r="result" let-t="term">
+    {{ r.Name }}
+</ng-template>
+
+<ng-template #itemMasterLocationTemplate let-r="result" let-t="term">
+    {{ r.Name }}
+</ng-template>

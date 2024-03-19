@@ -1,0 +1,7 @@
+:host /deep/ .ng-dropdown-panel .ng-dropdown-panel-items { 
+    max-height: 140px; 
+}
+:host /deep/ ng-select {
+     padding: 0px;
+}
+ 

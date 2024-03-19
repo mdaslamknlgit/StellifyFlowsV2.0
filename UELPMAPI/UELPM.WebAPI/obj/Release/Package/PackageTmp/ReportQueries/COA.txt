@@ -1,0 +1,10 @@
+﻿SELECT * FROM
+(SELECT entity.CompanyId,entity.CompanyName as Entity,                  
+      CAT.AccountTypeText as AccountType,           
+      ac.AccountCodeName as SubCategory,  
+      a.AccountCode,  
+         a.Description    
+      FROM [dbo].[AccountCode] a  
+      inner join Company as entity on entity.CompanyId = a.CompanyId                  
+      LEFT JOIN AccountCodeCategory ac ON a.AccountCodeCategoryId = ac.AccountCodeCategoryId                  
+      INNER JOIN COAAccountType CAT ON A.ACCOUNTTYPEID = CAT.COAAccountTypeId) AS T1

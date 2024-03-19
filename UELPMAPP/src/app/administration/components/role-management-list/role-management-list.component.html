@@ -1,0 +1,520 @@
+<div class="container-fluid" ngbDropdown #myDrop="ngbDropdown">
+  <div class="row">
+    <div class="col-md-12 col-sm-12 padding-null tittlediv">
+      <div class="flexrow space-between align-center">
+        <h3 class="item-heading"> Role Management List</h3>
+        <!-- {{ShowEditForm}} --{{HideDetails}} -->
+        <div class="divnewbutton">
+          <!-- Hide Details : {{HideDetails}} -- Display Mode : {{isDisplayMode}} -- Edit Permission : {{editPermission}} -->
+          <button class="btn btn-save ng-star-inserted" type="button" (click)="addData()"
+            *ngIf="hideText && newPermission">
+            <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> New</button>
+          <!-- <button class="btn  btn-transparent"  (click)="addData();" *ngIf="hideText && newPermission"> New Record</button> -->
+          <!-- <button  class="btn btn-transparent" (clickOutside)="onClickedOutside($event)"   
+        (click)="split()">  {{showfilterstext}}  </button>  -->
+        </div>
+        
+      </div>
+      <hr style="margin-top: 0px;" />
+
+
+      <!-- <div class="left-section"     [class.display-filters]="!showfilters" >  -->
+      <div *ngIf="!ShowEditForm">
+      <div class="left-section1" [class.display-filters]="!showfilters">
+        <div class="filter-section">
+          <div class="left-search">
+            <input type="text" #searchInput placeholder="Search roles..." (keyup)="onChange($event)"
+              class="search-filter">
+            <i class="fa fa-search" aria-hidden="true"></i>
+
+            <div class="filter-popup" *ngIf="initDone" ngbDropdownMenu aria-labelledby="dropdownManual"
+              (click)="$event.stopPropagation(); myDrop.open();">
+
+              <form [formGroup]="roleFilterInfoForm" class="form-horizontal">
+
+                <div class="form-group row">
+                  <label class="col-form-label col-6 form-label">Role Name </label>
+                  <div class="col-6">
+                    <input type="text" #RoleName formControlName="RoleName" placeholder="" class="form-control">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-12 error">
+                    {{filterMessage}}
+                  </div>
+                </div>
+
+                <div class="form-group row">
+
+                  <div class="col-12" style="text-align: right">
+                    <button type="submit" (click)="filterData()" class="btn btn-save">
+                      <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                    <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                      <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+
+                  </div>
+                </div>
+
+              </form>
+
+            </div>
+            <!--filterpopup end here-->
+          </div>
+
+
+          <div style="display: none;" class="filter-icon" *ngIf="!isFilterApplied">
+            <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+              <i class="fa fa-filter" aria-hidden="true"></i>
+            </button>
+          </div>
+
+          <div class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+            <i class="fa fa-undo" aria-hidden="true"></i>
+          </div>
+
+          <div malihu-scrollbar [scrollbarOptions]="RolesListsCols" class="filter-scroll"
+            style="width:100%; float:left;">
+            <p-table #PurchaseOrderListTable dataKey="RoleName" [rowHover]="true" [filterDelay]="0"
+              [globalFilterFields]="['RoleName', 'Description']" [columns]="RolesListsCols" [value]="roles" [rows]="1"
+              [scrollable]="true" [scrollHeight]="'calc(100vh - 300px)'" scrollWidth="100%" [virtualRowHeight]="30"
+              [virtualScroll]="true" sortMode="multiple" responsiveLayout="scroll"
+              [rowsPerPageOptions]="[10,25,50,75,100]">
+              <ng-template pTemplate="caption">
+
+              </ng-template>
+
+              <ng-template pTemplate="header" let-columns>
+                <tr style="height: 40px;">
+                  <th *ngFor="let col of RolesListsCols;let i=index" [pSortableColumn]="col.field">
+                    {{col.header}}
+                    <p-sortIcon [hidden]="i==0" *ngIf="i!=RolesListsCols.length-1"
+                      [field]="col.field"></p-sortIcon>
+                  </th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="colgroup" let-columns>
+                <colgroup>
+                  <col *ngFor="let col of columns" [style.width]="col.width">
+                </colgroup>
+              </ng-template>
+              <ng-template pTemplate="body" let-value let-columns let-i="rowIndex">
+                <tr style="height:30px" [pSelectableRow]="rowData">
+                  <td>{{value.RoleName}}</td>
+                  <!-- <td>{{value.CreatedDate | date: 'yyyy-MM-dd'}}</td> -->
+                  <td>{{value.Description }}</td>
+                  <td class="aligncenter">
+                    <button type="button" class="btn" (click)="onRecordSelected(value)">
+                      <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    </button>
+                  </td>
+                </tr>
+
+              </ng-template>
+              <ng-template pTemplate="emptymessage" let-columns>
+                <tr>
+                  <td [attr.colspan]="roles.length">
+                    No records found
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+            <div *ngIf="roles.length==0" class="col-12 listErrorMessage">
+              {{errorMessage}}
+            </div>
+
+          </div>
+          <div style="clear: both;"></div>
+          <ngb-pagination [maxSize]="5" *ngIf="roles.length>0" (pageChange)="pageChange($event)"
+            [collectionSize]="rolePagerConfig.TotalRecords" class="d-flex justify-content-center"
+            [pageSize]="rolePagerConfig.RecordsToFetch" [page]="1" [boundaryLinks]="true"></ngb-pagination>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="row">
+        <!-- Adding New Roles -->
+
+  <div *ngIf="ShowEditForm">
+        
+        <div #rightPanel *ngIf="HideDetails" class="rightPanel col-lg-12 col-md-12 enlargeRightPanel"
+          [class.expand-rightcol]="rightsection">
+          <div class="enlargeRightPanelMargin">
+            <form [formGroup]="roleInfoForm" class="form-horizontal" (ngSubmit)="onSubmit()" novalidate>
+
+              <div class="row fullScreenLabel">
+                <div class="col-12">
+                  <h3 class="item-heading" style="float:none;">Manage Roles</h3>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-5">
+                  <div class="form-group row">
+                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Role Name <i
+                        class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i></label>
+                    <div class="col-xl-8 col-sm-6 col-6">
+                      <label class="col-form-label form-text" *ngIf="hideText">{{defaultRole.RoleName }}</label>
+                      <input appAutofocus type="text" id="rolename" name="rolename" formControlName="RoleName"
+                        placeholder="" *ngIf="hideInput" class="form-control"
+                        [ngClass]="(validateControl(roleInfoForm.get('RoleName')))?'form-control ng-touched':'form-control'">
+
+                    </div>
+                  </div>
+
+
+
+                </div>
+                <div class="col-md-7">
+
+                  <div class="form-group row">
+                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Role Description <i
+                        class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i></label>
+                    <div class="col-xl-8 col-sm-6 col-6">
+                      <label class="col-form-label form-text" *ngIf="hideText">{{defaultRole.Description }} </label>
+                      <input type="text" id="description" name="description" formControlName="Description" placeholder=""
+                        *ngIf="hideInput" class="form-control"
+                        [ngClass]="(validateControl(roleInfoForm.get('Description')))?'form-control ng-touched':'form-control'">
+                    </div>
+                  </div>
+
+
+                  <!-- <div *ngIf="hideText" class="form-group row">
+                          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Created Date</label>
+                          <div class="col-xl-8 col-sm-6 col-6">
+                            <label class="col-form-label form-text">{{ defaultRole.CreatedDate|DisplayDateFormat }}</label>
+                          </div>
+                        </div>-->
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12">
+                  <div [innerHtml]="message" style="color:red; text-align:center"></div>
+                </div>
+              </div>
+
+              <div class="row" style="margin-top: 20px">
+                <div class="col-xl-12">
+                  <h4 class="form-heading">Access Levels </h4>
+                  <div style="text-align: right;padding-bottom: 10px;">
+                    <button type="submit" class="btn btn-save" *ngIf="!isDisplayMode">
+                      <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+    
+                    <button type="reset" (click)="cancleData()" class="btn btn-cancel" *ngIf="!isDisplayMode">
+                      <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                  </div>
+                </div>
+                <!-- Access Levels Tree Table Starts Here -->
+                <div class="col-xl-12">
+
+                  <div class="table-responsive" [ngStyle]="{'max-width.px': screenWidth}">
+
+                    <fieldset *ngIf="hideInput">
+                      <p-treeTable [columns]="gridColumns" class="acceslevels" [scrollable]="true" scrollHeight="320px"
+                        [style]="{width:'100%'}" sortMode="single" [value]="pageModules" [loading]="loading">
+                        <ng-template pTemplate="colgroup" let-columns>
+                          <colgroup>
+                            <col style="width:200px;">
+                          </colgroup>
+                        </ng-template>
+                        <ng-template pTemplate="header" let-columns>
+                          <tr>
+                            <th class="grid-Header" *ngFor="let col of columns; let i = index">
+                              <input *ngIf="col.header!='Page Name'" [attr.id]="i" [checked]="isChecked"
+                                (change)="onHeaderCheckboxChecked($event, col.header, i)" type="checkbox" />
+                              <br>
+                              {{col.header}}
+                            </th>
+                          </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowNode let-i="rowIndex" let-rowData="rowData">
+                          <tr *ngIf="hideInput">
+                            <td>
+                              <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                              {{ rowData.PageName }}
+                            </td>
+                            <td class="grid-Header">
+                              <input type="checkbox" *ngIf="!rowData.IsPageModule"
+                                (change)="onIsViewChecked($event, rowData)" [(ngModel)]="rowData.IsView"
+                                [ngModelOptions]="{standalone: true}" />
+                            </td>
+                            <td class="grid-Header">
+                              <input type="checkbox" *ngIf="!rowData.IsPageModule && rowData.IsAddEnable "
+                                (change)="onIsAddChecked($event, rowData)" [(ngModel)]="rowData.IsAdd"
+                                [ngModelOptions]="{standalone: true}" />
+                            </td>
+                            <td class="grid-Header">
+                              <input type="checkbox" *ngIf="!rowData.IsPageModule && rowData.IsEditEnable "
+                                (change)="onIsEditChecked($event, rowData)" [(ngModel)]="rowData.IsEdit"
+                                [ngModelOptions]="{standalone: true}" />
+                            </td>
+                            <td class="grid-Header">
+                              <input type="checkbox" *ngIf="!rowData.IsPageModule && rowData.IsDeleteEnable"
+                                (change)="onIsDeleteChecked($event, rowData)" [(ngModel)]="rowData.IsDelete"
+                                [ngModelOptions]="{standalone: true}" />
+                            </td>
+                            <td class="grid-Header">
+                              <input type="checkbox" *ngIf="!rowData.IsPageModule && rowData.IsEmailEnable"
+                                (change)="onIsEmailChecked($event, rowData)" [(ngModel)]="rowData.IsEmail"
+                                [ngModelOptions]="{standalone: true}" />
+                            </td>
+                            <td class="grid-Header">
+                              <input type="checkbox" *ngIf="!rowData.IsPageModule && rowData.IsPrintEnable"
+                                (change)="onIsPrintChecked($event, rowData)" [(ngModel)]="rowData.IsPrint"
+                                [ngModelOptions]="{standalone: true}" />
+                            </td>
+                            <td class="grid-Header">
+                              <input type="checkbox" *ngIf="!rowData.IsPageModule && rowData.IsVerifyEnable"
+                                (change)="onIsVerifyChecked($event, rowData)" [(ngModel)]="rowData.IsVerify"
+                                [ngModelOptions]="{standalone: true}" />
+                            </td>
+                            <td class="grid-Header">
+                              <input type="checkbox" *ngIf="!rowData.IsPageModule && rowData.IsApproveEnable"
+                                (change)="onIsApproveChecked($event, rowData)" [(ngModel)]="rowData.IsApprove"
+                                [ngModelOptions]="{standalone: true}" />
+                            </td>
+                            <td class="grid-Header">
+                              <input type="checkbox" *ngIf="!rowData.IsPageModule && rowData.IsVoidEnable"
+                                (change)="onIsVoidChecked($event, rowData)" [(ngModel)]="rowData.IsVoid"
+                                [ngModelOptions]="{standalone: true}" />
+                            </td>
+                            <td class="grid-Header">
+                              <input type="checkbox" *ngIf="!rowData.IsPageModule && rowData.IsImportEnable"
+                                (change)="onIsImportChecked($event, rowData)" [(ngModel)]="rowData.IsImport"
+                                [ngModelOptions]="{standalone: true}" />
+                            </td>
+                            <td class="grid-Header">
+                              <input type="checkbox" *ngIf="!rowData.IsPageModule && rowData.IsExportEnable"
+                                (change)="onIsExportChecked($event, rowData)" [(ngModel)]="rowData.IsExport"
+                                [ngModelOptions]="{standalone: true}" />
+                            </td>
+                            <td class="grid-Header">
+                              <input type="checkbox" *ngIf="!rowData.IsPageModule && rowData.IsGeneratePOCEnable"
+                                (change)="onIsGeneratePOCChecked($event, rowData)" [(ngModel)]="rowData.IsGeneratePOC"
+                                [ngModelOptions]="{standalone: true}" />
+                            </td>
+                            <td class="grid-Header">
+                              <input type="checkbox" *ngIf="!rowData.IsPageModule && rowData.IsGenerateReportEnable"
+                                (change)="onIsGenerateReportChecked($event, rowData)" [(ngModel)]="rowData.IsGenerateReport"
+                                [ngModelOptions]="{standalone: true}" />
+                            </td>
+                          </tr>
+                        </ng-template>
+                      </p-treeTable>
+                    </fieldset>
+                    <p-treeTable *ngIf="hideText" [columns]="gridColumns" class="acceslevels" [scrollable]="true"
+                      scrollHeight="400px" [style]="{width:'100%'}" sortMode="single" [value]="rolePageModules"
+                      [loading]="loading">
+                      <ng-template pTemplate="emptymessage">
+                        <tr>
+                          <td colspan="9" style='text-align: center;'>
+                            <b>{{gridNoMessageToDisplay}}</b>
+                          </td>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="colgroup" let-columns>
+                        <colgroup>
+                          <col style="width:200px;">
+                          <!-- <col style="width:70px;">
+                              <col style="width:70px;">
+                              <col style="width:70px;">
+                              <col style="width:70px;">
+                              <col style="width:70px;">
+                              <col style="width:70px;">
+                              <col style="width:70px;">
+                              <col style="width:70px;">
+                              <col style="width:120px;">
+                              <col style="width:70px;">
+                              <col style="width:70px;">
+                              <col style="width:70px;"> -->
+                          <!-- <col style="width:70px;"> -->
+                        </colgroup>
+                      </ng-template>
+                      <ng-template pTemplate="header" let-columns>
+                        <tr>
+                          <th class="grid-Header" *ngFor="let col of columns">
+                            {{col.header}}
+                            <!-- <p-sortIcon *ngIf='col.field!="SNo"' [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order"
+                                  ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon> -->
+                          </th>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="body" let-rowNode let-i="rowIndex" let-rowData="rowData">
+                        <tr>
+                          <td>
+                            <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                            {{ rowData.PageName }}
+                          </td>
+                          <td class="grid-Header">
+                            <span *ngIf="!rowData.IsPageModule">
+                              <span *ngIf="rowData.IsView">
+                                <i class="fa fa-check-circle green" aria-hidden="true"></i>
+                              </span>
+                              <span *ngIf="!rowData.IsView">
+                                <i class="fa fa-times-circle red" aria-hidden="true"></i>
+                              </span>
+
+                            </span>
+                          </td>
+                          <td class="grid-Header">
+                            <span *ngIf="!rowData.IsPageModule && rowData.IsAddEnable ">
+                              <span *ngIf="rowData.IsAdd ">
+                                <i class="fa fa-check-circle green" aria-hidden="true"></i>
+                              </span>
+                              <span *ngIf="!rowData.IsAdd">
+                                <i class="fa fa-times-circle red" aria-hidden="true"></i>
+                              </span>
+                            </span>
+                          </td>
+                          <td class="grid-Header">
+                            <span *ngIf="!rowData.IsPageModule && rowData.IsEditEnable">
+                              <span *ngIf="rowData.IsEdit">
+                                <i class="fa fa-check-circle green" aria-hidden="true"></i>
+                              </span>
+                              <span *ngIf="!rowData.IsEdit">
+                                <i class="fa fa-times-circle red" aria-hidden="true"></i>
+                              </span>
+                            </span>
+                          </td>
+                          <td class="grid-Header">
+                            <span *ngIf="!rowData.IsPageModule && rowData.IsDeleteEnable">
+                              <span *ngIf="rowData.IsDelete">
+                                <i class="fa fa-check-circle green" aria-hidden="true"></i>
+                              </span>
+                              <span *ngIf="!rowData.IsDelete">
+                                <i class="fa fa-times-circle red" aria-hidden="true"></i>
+                              </span>
+                            </span>
+                          </td>
+                          <td class="grid-Header">
+                            <span *ngIf="!rowData.IsPageModule && rowData.IsEmailEnable">
+                              <span *ngIf="rowData.IsEmail">
+                                <i class="fa fa-check-circle green" aria-hidden="true"></i>
+                              </span>
+                              <span *ngIf="!rowData.IsEmail">
+                                <i class="fa fa-times-circle red" aria-hidden="true"></i>
+                              </span>
+                            </span>
+                          </td>
+                          <td class="grid-Header">
+                            <span *ngIf="!rowData.IsPageModule && rowData.IsPrintEnable">
+                              <span *ngIf="rowData.IsPrint">
+                                <i class="fa fa-check-circle green" aria-hidden="true"></i>
+                              </span>
+                              <span *ngIf="!rowData.IsPrint">
+                                <i class="fa fa-times-circle red" aria-hidden="true"></i>
+                              </span>
+                            </span>
+                          </td>
+                          <td class="grid-Header">
+                            <span *ngIf="!rowData.IsPageModule && rowData.IsVerifyEnable">
+                              <span *ngIf="rowData.IsVerify">
+                                <i class="fa fa-check-circle green" aria-hidden="true"></i>
+                              </span>
+                              <span *ngIf="!rowData.IsVerify">
+                                <i class="fa fa-times-circle red" aria-hidden="true"></i>
+                              </span>
+                            </span>
+                          </td>
+                          <td class="grid-Header">
+                            <span *ngIf="!rowData.IsPageModule && rowData.IsApproveEnable">
+                              <span *ngIf="rowData.IsApprove">
+                                <i class="fa fa-check-circle green" aria-hidden="true"></i>
+                              </span>
+                              <span *ngIf="!rowData.IsApprove">
+                                <i class="fa fa-times-circle red" aria-hidden="true"></i>
+                              </span>
+                            </span>
+                          </td>
+                          <td class="grid-Header">
+                            <span *ngIf="!rowData.IsPageModule && rowData.IsVoidEnable">
+                              <span *ngIf="rowData.IsVoid">
+                                <i class="fa fa-check-circle green" aria-hidden="true"></i>
+                              </span>
+                              <span *ngIf="!rowData.IsVoid">
+                                <i class="fa fa-times-circle red" aria-hidden="true"></i>
+                              </span>
+                            </span>
+                          </td>
+                          <td class="grid-Header">
+                            <span *ngIf="!rowData.IsPageModule && rowData.IsImportEnable">
+                              <span *ngIf="rowData.IsImport">
+                                <i class="fa fa-check-circle green" aria-hidden="true"></i>
+                              </span>
+                              <span *ngIf="!rowData.IsImport">
+                                <i class="fa fa-times-circle red" aria-hidden="true"></i>
+                              </span>
+                            </span>
+                          </td>
+                          <td class="grid-Header">
+                            <span *ngIf="!rowData.IsPageModule && rowData.IsExportEnable">
+                              <span *ngIf="rowData.IsExport">
+                                <i class="fa fa-check-circle green" aria-hidden="true"></i>
+                              </span>
+                              <span *ngIf="!rowData.IsExport">
+                                <i class="fa fa-times-circle red" aria-hidden="true"></i>
+                              </span>
+                            </span>
+                          </td>
+                          <td class="grid-Header">
+                            <span *ngIf="!rowData.IsPageModule && rowData.IsGeneratePOCEnable">
+                              <span *ngIf="rowData.IsGeneratePOC">
+                                <i class="fa fa-check-circle green" aria-hidden="true"></i>
+                              </span>
+                              <span *ngIf="!rowData.IsGeneratePOC">
+                                <i class="fa fa-times-circle red" aria-hidden="true"></i>
+                              </span>
+                            </span>
+                          </td>
+                          <td class="grid-Header">
+                            <span *ngIf="!rowData.IsPageModule && rowData.IsGenerateReportEnable">
+                              <span *ngIf="rowData.IsGenerateReport">
+                                <i class="fa fa-check-circle green" aria-hidden="true"></i>
+                              </span>
+                              <span *ngIf="!rowData.IsGenerateReport">
+                                <i class="fa fa-times-circle red" aria-hidden="true"></i>
+                              </span>
+                            </span>
+                          </td>
+                        </tr>
+                      </ng-template>
+                    </p-treeTable>
+                  </div>
+
+                </div>
+                <!-- Access Levels Tree Table Ends Here -->
+              </div>
+
+              <div class="row" style="margin-top: 20px">
+                <!-- col2 end here-->
+                <div class="col-12">
+                  <div lclass="form-group">
+                    <div class="error">
+                      {{ formError }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group text-right btn-list">
+                <button type="submit" class="btn btn-save" *ngIf="!isDisplayMode">
+                  <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+
+                <button type="reset" (click)="cancleData()" class="btn btn-cancel" *ngIf="!isDisplayMode">
+                  <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+
+                <button type="reset" (click)="editData()" class="btn btn-edit" *ngIf="isDisplayMode && editPermission">
+                  <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                <button type="button" (click)="deleteRecord()" class="btn btn-delete"
+                  *ngIf="isDisplayMode && deletePermission">
+                  <i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+
+              </div>
+            </form>
+
+            <p-confirmDialog></p-confirmDialog>
+          </div>
+        </div>
+  </div>
+  </div>
+</div>

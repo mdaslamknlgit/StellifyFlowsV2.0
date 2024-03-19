@@ -1,0 +1,15 @@
+.transition{
+    -webkit-transition: opacity 1500ms ease-in-out,margin-left 700ms ease-in-out;
+    -moz-transition: opacity 1500ms ease-in-out,margin-left 700ms ease-in-out;
+    -ms-transition: opacity 1500ms ease-in-out,margin-left 700ms ease-in-out ;
+    -o-transition: opacity 1500ms ease-in-out,margin-left 700ms ease-in-out;
+    transition: opacity 1500ms ease-in-out,margin-left 700ms ease-in-out;
+    /* margin-left: 1500px;
+    width: 200px; */
+    opacity: 0;
+  }
+  
+  .transition{
+    opacity: 100;
+    margin-left: 0;
+  }

@@ -1,0 +1,2180 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+            <div class="flexrow space-between align-center">
+                <h3 class="item-heading"> {{ moduleHeading }} </h3>
+
+                <div *ngIf="hideLeftPanel===false">
+
+
+                    <img style="display: none;" src="../assets/images/grid1.png" (click)="showFullScreen()">
+
+                    <!-- <button class="btn  btn-transparent" (click)="addRecord();" (click)="showInvoiceDialog()"
+                        *ngIf="hideText&&isApprovalPage==false && newPermission"> New Record</button>
+                    <button class="btn btn-transparent" (clickOutside)="onClickedOutside($event)"
+                        [exclude]="'.left-section'" (click)="split()"> {{showfilterstext}} </button> -->
+
+
+                    <!-- <div *ngIf="!showfilters" ngbDropdown placement="bottom-right" style="padding:0px;"
+                        class="d-inline-block">
+                        <button class="btn customdropdown btn-transparent"
+                            style="background:none;border:none;padding:0px;" id="dropdownBasic1" ngbDropdownToggle>
+                            <i class="fa-solid fa-bars"></i>
+                        </button>
+
+                        <div ngbDropdownMenu aria-labelledby="dropdownBasic1"
+                            *ngIf="hideText &&(printPermission || exportPermission)||viewLogPermission  ">
+                            <button (click)="ExportAsExcel()"
+                                *ngIf="hideText && exportPermission && selectedInvoiceDetails.WorkFlowStatusId == workFlowStatus.Completed"
+                                class="dropdown-item">Export</button>
+                            <button class="dropdown-item" *ngIf="hideText && printPermission"
+                                (click)="onPDFPrint()">Print</button>
+                            <button class="dropdown-item" *ngIf="viewLogPermission" (click)="displayLogPopUp()">View
+                                Log</button>
+                        </div>
+
+                    </div> -->
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="row">
+
+        <!-- left col end here-->
+        <div #rightPanel [ngClass]="hideLeftPanel==true?'col-lg-12 col-md-12':'col-lg-12 col-md-12'"
+            class="InvoiceRightPanel rightPanel" [class.expand-rightcol]="rightSection">
+            <div class="fullScreenLabel">
+                <app-header></app-header>
+            </div>
+            <div>
+
+                <form [ngClass]="{'hideRightPanel':(invoicesList.length==0 && hideText==true)}"
+                    [formGroup]="InvoiceForm" class="form-horizontal">
+                    <div class="row fullScreenLabel">
+                        <div class="col-12">
+                            <h3 class="item-heading" style="float:none;">Supplier Invoice</h3>
+                        </div>
+                    </div>
+                    <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"
+                        [ngClass]="hideLeftPanel==true?'rightcol-scrroll3':'rightcol-scrroll'">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Supplier
+                                        Type</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text"
+                                            *ngIf="selectedInvoiceDetails.Supplier!=null">{{
+                                            selectedInvoiceDetails.Supplier.SupplierTypeID==1?"Internal":"External" }}
+                                        </label>
+                                        <label class="col-form-label"
+                                            *ngIf="hideInput&&selectedInvoiceDetails.Supplier==null">
+                                            <input type="radio" (change)="supplierTypeChange($event)" value="1"
+                                                formControlName="SupplierTypeID" /> Internal
+                                        </label>
+                                        <label class="col-form-label" style="margin-left: 5px;"
+                                            *ngIf="hideInput&&selectedInvoiceDetails.Supplier==null">
+                                            <input type="radio" (change)="supplierTypeChange($event)" value="2"
+                                                formControlName="SupplierTypeID" /> External
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6" *ngIf="selectedInvoiceTypeId==1">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Is POC</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text"
+                                            *ngIf="selectedInvoiceDetails.InvoiceId!=null">{{
+                                            selectedInvoiceDetails.IsPOC?"YES":"NO" }}
+                                        </label>
+                                        <label class="col-form-label"
+                                            *ngIf="hideInput&&selectedInvoiceDetails.InvoiceId==null">
+                                            <input type="radio" (change)="IsPOCTypeChange($event)" value="1"
+                                                formControlName="IsPOC" /> YES
+                                        </label>
+                                        <label class="col-form-label" style="margin-left: 5px;"
+                                            *ngIf="hideInput&&selectedInvoiceDetails.InvoiceId==null">
+                                            <input type="radio" (change)="IsPOCTypeChange($event)" value="2"
+                                                formControlName="IsPOC" /> NO
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Supplier
+                                        <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12 autoComplete">
+                                        <label class="col-form-label form-text"
+                                            *ngIf="selectedInvoiceDetails.Supplier!=null">{{
+                                            selectedInvoiceDetails.Supplier.SupplierName }}
+                                            <!-- <span
+                                                *ngIf="(selectedInvoiceDetails.WorkFlowStatusId!=workFlowStatus.Approved || selectedInvoiceDetails.WorkFlowStatusId!=workFlowStatus.Completed) && (selectedInvoiceDetails.Supplier.PreviousSupplierName!=null && selectedInvoiceDetails.Supplier.PreviousSupplierName!=selectedInvoiceDetails.Supplier.SupplierName)"
+                                                class="icon-popover">i
+                                                <span class="popover-info">
+                                                    <b style="color: #01548e;">Previous Supplier Name:</b> {{
+                                                    selectedInvoiceDetails.Supplier.PreviousSupplierName
+                                                    }}</span>
+                                            </span> -->
+                                        </label>
+                                        <input #selectedSupplierNameInput formControlName="Supplier" type="text"
+                                            *ngIf="hideInput&&selectedInvoiceDetails.Supplier==null"
+                                            class="form-control show" [inputFormatter]="supplierInputFormater"
+                                            (selectItem)="onSupplierChange($event)" [ngbTypeahead]="supplierSearch"
+                                            [resultTemplate]="supplierTemplate" />
+                                        <div
+                                            *ngIf="InvoiceForm.get('Supplier') && InvoiceForm.get('Supplier').errors!=null && InvoiceForm.get('Supplier').touched==true">
+                                            <span class="errorMessage"
+                                                *ngIf="InvoiceForm.get('Supplier').errors.required">Supplier is
+                                                required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6" *ngIf="selectedInvoiceTypeId==2 ">
+                                <div class="form-group row">
+                                    <label *ngIf="isSupplierSelected"
+                                        class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Supplier
+                                        SubCode</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedInvoiceDetails.SupplierSubCode!=null ?
+                                            selectedInvoiceDetails.SupplierSubCode.SubCode + " ( " +
+                                            selectedInvoiceDetails.SupplierSubCode.SubCodeDescription +" ) " : ""
+                                            }}</label>
+
+                                        <select *ngIf="hideInput && isSupplierSelected "
+                                            formControlName="SupplierSubCodeId" class="form-control">
+                                            <option [ngValue]="null">--Select--</option>
+                                            <option *ngFor="let subCode of supplierSubCodes"
+                                                value={{subCode.SubCodeId}}>
+                                                {{subCode.SubCodeDescription}}
+                                        </select>
+                                        <div
+                                            *ngIf="InvoiceForm.get('SupplierSubCodeId') && InvoiceForm.get('SupplierSubCodeId').errors!=null && InvoiceForm.get('SupplierSubCodeId').touched==true && isSupplierSelected ">
+                                            <span class="errorMessage"
+                                                *ngIf="InvoiceForm.get('SupplierSubCodeId').errors.required">Supplier
+                                                Sub Code is required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row"
+                            *ngIf="hideInput && selectedInvoiceTypeId==1 && PurchaseOrderTypeIds !=5  && (selectedInvoiceDetails!=undefined && selectedInvoiceDetails.InvoiceId==null)">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">PO Type</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedInvoiceDetails.PurchaseOrderType }}</label>
+                                        <select (change)="onPoTypeChange($event)" formControlName="PurchaseOrderTypeId"
+                                            class="form-control">
+                                            <option *ngFor="let record of purchaseOrderTypesList"
+                                                value={{record.PurchaseOrderTypeId}}>
+                                                {{record.PurchaseOrderType}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div *ngIf="hideInput && (selectedInvoiceDetails!=undefined && selectedInvoiceDetails.InvoiceId==null)"
+                                    class="col-lg-12 padding-null">
+                                    <div *ngIf="selectedInvoiceTypeId==1 && PurchaseOrderTypeIds !=5 && poSupplierId >0"
+                                        class="form-group row">
+                                        <label class="col-form-label col-xl-2 col-sm-6 col-6 form-label">PO
+                                            Number</label>
+                                        <div class="col-xl-6 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="hideText"></label>
+
+                                            <p-multiSelect #cmp [showHeader]="true" styleClass="grnMultiSelect"
+                                                (onChange)="poSelection($event.value)" [style]="{'width':'100%'}"
+                                                [filter]="false" [options]="poList">
+                                                <ng-template let-data let-i="index" pTemplate="item">
+                                                    <div style="float:right;width:90%;">
+                                                        <div *ngIf="i==0" style="width:100%;">
+                                                            <div
+                                                                style="display:inline-block;width:25%;font-weight:bold">
+                                                                PO No.</div>
+                                                            <div
+                                                                style="display:inline-block;width:30%;font-weight:bold">
+                                                                Requestor</div>
+                                                            <div
+                                                                style="display:inline-block;width:30%;font-weight:bold">
+                                                                Total</div>
+                                                            <div
+                                                                style="display:inline-block;width:20%;font-weight:bold">
+                                                                Date</div>
+                                                        </div>
+                                                        <div *ngIf="i>0">
+                                                            <div style="display:inline-block;width:25%;">
+                                                                {{ data.value.PurchaseOrderCode }}</div>
+                                                            <div style="display:inline-block;width:30%;">
+                                                                {{ data.value.FirstName }}</div>
+                                                            <div style="display:inline-block;width:30%;">
+                                                                {{ data.value.TotalAmount }}</div>
+                                                            <div style="display:inline-block;width:30%;">
+                                                                {{ data.value.CreatedDate |DisplayDateFormat }}</div>
+                                                        </div>
+                                                    </div>
+                                                </ng-template>
+                                            </p-multiSelect>
+
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="selectedInvoiceTypeId==1 && PurchaseOrderTypeIds ==5"
+                                        class="form-group row">
+                                        <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">PO
+                                            Number</label>
+                                        <div class="col-xl-6 col-sm-6 col-12">
+                                            <label class="col-form-label form-text" *ngIf="hideText"></label>
+                                            <div class="autoComplete3">
+                                                <input *ngIf="hideInput" appAutofocus type="text"
+                                                    class="form-control show" [inputFormatter]="poInputFormatter"
+                                                    [ngbTypeahead]="poSearch" (selectItem)="cpoSelection($event.item)"
+                                                    [resultTemplate]="poTemplate" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <!-- start GRN grid -->
+                                    <div *ngIf="selectedInvoiceTypeId==1 && PurchaseOrderTypeIds !=5 && isNewRecord "
+                                        class="form-group row">
+                                        <label
+                                            class="col-form-label col-xl-2 col-sm-6 col-12 form-label">{{title}}</label>
+                                        <div class="col-xl-6 col-sm-6 col-12">
+                                            <label class="col-form-label form-text" *ngIf="hideText"></label>
+
+
+                                            <div class="table-responsive" [ngStyle]="{'max-width.px': screenWidth}">
+                                                <fieldset *ngIf="hideInput" formArrayName="SupplierInvoiceGRNDetails">
+                                                    <p-table [columns]="grnGridColumns"
+                                                        [value]="InvoiceForm.controls.SupplierInvoiceGRNDetails.controls">
+                                                        <ng-template pTemplate="emptymessage">
+                                                        </ng-template>
+                                                        <ng-template pTemplate="colgroup" let-columns>
+                                                            <colgroup>
+                                                                <col style="width:5%;">
+                                                                <col style="width:19%;">
+                                                                <col style="width:19%;">
+                                                                <col style="width:19%;">
+                                                            </colgroup>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="header" let-columns>
+                                                            <tr>
+                                                                <th *ngFor="let col of columns"
+                                                                    [pSortableColumn]="col.field">
+                                                                    {{col.header}}
+                                                                    <p-sortIcon
+                                                                        *ngIf="col.field!='IsDetailed'&&col.field!='Sno'"
+                                                                        [field]="col.field" ariaLabel="Activate to sort"
+                                                                        ariaLabelDesc="Activate to sort in descending order"
+                                                                        ariaLabelAsc="Activate to sort in ascending order">
+                                                                    </p-sortIcon>
+                                                                </th>
+                                                            </tr>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="body" let-rowData let-i="rowIndex"
+                                                            let-columns="columns">
+                                                            <tr *ngIf="hideInput" [formGroupName]="i">
+                                                                <!-- start grn -->
+                                                                <td align="center">
+                                                                    <input type="checkbox" formControlName="Checked"
+                                                                        (ngModelChange)="onGRNSelection($event,InvoiceForm.get('SupplierInvoiceGRNDetails').controls[0].get('goodsReceivedNotes').value[i])">
+                                                                </td>
+                                                                <td>
+                                                                    {{InvoiceForm.get('SupplierInvoiceGRNDetails').controls[0].get('goodsReceivedNotes').value[i]['PONO']
+                                                                    }}
+                                                                </td>
+                                                                <td>
+                                                                    {{InvoiceForm.get('SupplierInvoiceGRNDetails').controls[0].get('goodsReceivedNotes').value[i]['GRNCode']
+                                                                    }}
+                                                                </td>
+                                                                <td>
+                                                                    {{InvoiceForm.get('SupplierInvoiceGRNDetails').controls[0].get('goodsReceivedNotes').value[i]['SupplierDoNumber']
+                                                                    }}
+                                                                </td>
+                                                            </tr>
+                                                        </ng-template>
+                                                    </p-table>
+                                                </fieldset>
+
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <!-- end grn grid-->
+
+                                    <!-- start CPO Grid -->
+                                    <div *ngIf="selectedInvoiceTypeId==1 && PurchaseOrderTypeIds !=5 && isCPORecord "
+                                        class="form-group row">
+                                        <label
+                                            class="col-form-label col-xl-2 col-sm-6 col-6 form-label">{{title}}</label>
+                                        <div class="col-xl-6 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="hideText"></label>
+
+
+                                            <div class="table-responsive" [ngStyle]="{'max-width.px': screenWidth}">
+                                                <fieldset *ngIf="hideInput" formArrayName="SupplierInvoiceGRNDetails">
+                                                    <p-table [columns]="cpoGridColumns"
+                                                        [value]="InvoiceForm.controls.SupplierInvoiceGRNDetails.controls">
+                                                        <ng-template pTemplate="emptymessage">
+                                                        </ng-template>
+                                                        <ng-template pTemplate="colgroup" let-columns>
+                                                            <colgroup>
+                                                                <col style="width:5%;">
+                                                                <col style="width:19%;">
+                                                                <col style="width:19%;">
+                                                                <col style="width:19%;">
+                                                            </colgroup>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="header" let-columns>
+                                                            <tr>
+                                                                <th *ngFor="let col of columns"
+                                                                    [pSortableColumn]="col.field">
+                                                                    {{col.header}}
+                                                                    <!-- <p-sortIcon *ngIf="col.field!='IsDetailed'&&col.field!='Sno'" [field]="col.field" ariaLabel="Activate to sort" 
+                                                                     ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon> -->
+                                                                </th>
+                                                            </tr>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="body" let-rowData let-i="rowIndex"
+                                                            let-columns="columns">
+                                                            <tr *ngIf="hideInput" [formGroupName]="i">
+                                                                <!-- start grn -->
+                                                                <td align="center">
+                                                                    <input type="checkbox" formControlName="Checked"
+                                                                        (ngModelChange)="onGRNSelection($event,InvoiceForm.get('SupplierInvoiceGRNDetails').controls[0].get('contractPOCList').value[i])">
+                                                                </td>
+                                                                <td>
+                                                                    {{InvoiceForm.get('SupplierInvoiceGRNDetails').controls[0].get('contractPOCList').value[i]['CPONo']
+                                                                    }}
+                                                                </td>
+                                                                <td>
+                                                                    {{InvoiceForm.get('SupplierInvoiceGRNDetails').controls[0].get('contractPOCList').value[i]['CPONumber']
+                                                                    }}
+                                                                </td>
+                                                                <td>
+                                                                    {{InvoiceForm.get('SupplierInvoiceGRNDetails').controls[0].get('contractPOCList').value[i]['PODate']|DisplayDateFormat
+                                                                    }}
+                                                                </td>
+
+                                                            </tr>
+                                                        </ng-template>
+                                                    </p-table>
+                                                </fieldset>
+
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <!-- end CPO Grid -->
+
+                                    <div *ngIf="selectedInvoiceTypeId==1&& PurchaseOrderTypeIds ==5 && isNewRecord"
+                                        [ngClass]="{'hideGrnCntrl':goodsReceivedNotesList.length==0}"
+                                        class="form-group row">
+                                        <label
+                                            class="col-form-label col-xl-2 col-sm-6 col-6 form-label">{{title}}</label>
+                                        <div class="col-xl-6 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="hideText"></label>
+                                            <p-multiSelect [showHeader]="true" styleClass="grnMultiSelect"
+                                                formControlName="selectedGrns" #CPOPMS
+                                                (onChange)="onCPOSelection($event.value)" [style]="{'width':'100%'}"
+                                                [filter]="false" [options]="goodsReceivedNotesList">
+                                                <ng-template let-data let-i="index" pTemplate="item">
+                                                    <div *ngIf="purchaseOrderTypeId===5 || purchaseOrderTypeId===6"
+                                                        style="float:right;width:90%;">
+                                                        <div *ngIf="i==0" style="width:100%;">
+                                                            <div
+                                                                style="display:inline-block;width:50%;font-weight:bold">
+                                                                POC Id</div>
+                                                            <div
+                                                                style="display:inline-block;width:50%;font-weight:bold">
+                                                                POC Date</div>
+                                                        </div>
+                                                        <div *ngIf="i>0">
+                                                            <div style="display:inline-block;width:50%;">
+                                                                {{ data.value.CPONumber }}</div>
+                                                            <div style="display:inline-block;width:50%;">
+                                                                {{ data.value.PODate |DisplayDateFormat }}</div>
+                                                        </div>
+                                                    </div>
+                                                </ng-template>
+                                            </p-multiSelect>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row"
+                                    *ngIf="hideText&&selectedInvoiceDetails.SubCodeDescription!=null">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Subcode</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text">{{
+                                            selectedInvoiceDetails.SubCodeDescription }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row" *ngIf="hideText">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Requestor</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text">{{
+                                            selectedInvoiceDetails.RequestedByUserName }}</label>
+                                    </div>
+                                </div>
+                                <div *ngIf="hideText && selectedInvoiceTypeId!=2" class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">PO Number</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text">{{
+                                            selectedInvoiceDetails.PurchaseOrderCode }}</label>
+                                    </div>
+                                </div>
+                                <div *ngIf="hideText && selectedInvoiceTypeId!=2 && (selectedInvoiceDetails.POTypeId!=5 && selectedInvoiceDetails.POTypeId!=6)"
+                                    class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">GRN Number</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text">{{ selectedInvoiceDetails.GRNCode
+                                            }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row" *ngIf="hideText">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Supplier
+                                        Id</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text">{{
+                                            selectedInvoiceDetails.Supplier==undefined?"":selectedInvoiceDetails.Supplier.SupplierCode
+                                            }}</label>
+                                    </div>
+                                </div>
+
+                                <!-- <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier<i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i></label>
+                                    <div class="col-xl-8 col-sm-6 col-6 autoComplete">
+                                        <label class="col-form-label form-text" *ngIf="hideText&&selectedInvoiceDetails.Supplier!=null">{{ selectedInvoiceDetails.Supplier.SupplierName }}</label>
+                                        <input formControlName="Supplier" type="text" *ngIf="hideInput" class="form-control show" [inputFormatter]="supplierInputFormater"
+                                            (selectItem)="onSupplierChange($event)" [ngbTypeahead]="supplierSearch" [resultTemplate]="supplierTemplate"
+                                        />
+                                        <div *ngIf="InvoiceForm.get('Supplier') && InvoiceForm.get('Supplier').errors!=null && InvoiceForm.get('Supplier').touched==true">
+                                            <span class="errorMessage" *ngIf="InvoiceForm.get('Supplier').errors.required">Supplier is required</span>
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Supplier
+                                        Address</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText && !enableOnVerify"
+                                            [innerText]="InvoiceForm.get('SupplierAddress').value"> </label>
+                                        <textarea formControlName="SupplierAddress" *ngIf="hideInput || enableOnVerify"
+                                            [readonly]="!enableOnVerify" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Delivery Address
+                                        <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedInvoiceDetails.DeliveryAddress }}</label>
+                                        <textarea formControlName="DeliveryAddress" rows="{{rows}}" *ngIf="hideInput"
+                                            class="form-control"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Fax</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text"
+                                            *ngIf="hideText&&selectedInvoiceDetails.Supplier!=null">{{
+                                            selectedInvoiceDetails.Supplier.BillingFax }}</label>
+                                        <input formControlName="ShippingFax" *ngIf="hideInput" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Invoice
+                                        Description
+                                        <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText"
+                                            style="word-wrap:break-word">{{selectedInvoiceDetails.InvoiceDescription}}</label>
+                                        <input formControlName="InvoiceDescription" *ngIf="hideInput"
+                                            class="form-control" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Due Date</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedInvoiceDetails.DueDate|DisplayDateFormat }}</label>
+                                        <label class="col-form-label form-text" *ngIf="hideInput">{{
+                                            (InvoiceForm.get('DueDate').value==undefined||InvoiceForm.get('DueDate').value==null)?"":
+                                            InvoiceForm.get('DueDate').value|DisplayDateFormat }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">
+                                        Schedule No
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">
+                                            {{ selectedInvoiceDetails.SchedulerNumber == 0 ? '' :
+                                            selectedInvoiceDetails.SchedulerNumber }}
+                                        </label>
+                                        <select *ngIf="hideInput" formControlName="SchedulerId" class="form-control">
+                                            <option value="0">--Select--</option>
+                                            <option *ngFor="let record of schedulerNoDetails"
+                                                value={{record.SchedulerNoId}}>
+                                                {{ record.SchedulerNumber }}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Status</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <!-- <label class="col-form-label form-text">{{ selectedInvoiceDetails.WorkFlowStatus }}</label> -->
+                                        <label
+                                            *ngIf="selectedInvoiceDetails.WorkFlowStatus!=''&&selectedInvoiceDetails.WorkFlowStatus!=null"
+                                            class="col-form-label form-text">{{ selectedInvoiceDetails.WorkFlowStatus
+                                            }}&nbsp;
+                                            <span
+                                                *ngIf="selectedInvoiceDetails.CurrentApproverUserName!=''&&selectedInvoiceDetails.CurrentApproverUserName!=null">[{{
+                                                selectedInvoiceDetails.CurrentApproverUserName }}]</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row" *ngIf="hideText">
+                                    <label
+                                        class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Designation</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text">{{ selectedInvoiceDetails.Designation
+                                            }}</label>
+                                    </div>
+                                </div>
+                                <div *ngIf="hideText && selectedInvoiceDetails.PurchaseOrderId> '0'"
+                                    class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Purchase Order
+                                        Type</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text">{{
+                                            selectedInvoiceDetails.PurchaseOrderType }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row" *ngIf="hideText">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Invoice
+                                        Number</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text">{{
+                                            (selectedInvoiceDetails.WorkFlowStatusId != workFlowStatus.Draft &&
+                                            selectedInvoiceDetails.WorkFlowStatusId != workFlowStatus.CancelDraft ) ?
+                                            selectedInvoiceDetails.InvoiceCode:selectedInvoiceDetails.DraftCode
+                                            }}</label>
+                                        <!-- <input appAutofocus *ngIf="hideInput&&selectedInvoiceDetails.InvoiceId==null" #InvoiceCode formControlName="InvoiceCode" type="text" class="form-control" />
+                                        <div *ngIf="InvoiceForm.get('InvoiceCode').errors!=null">
+                                            <span class="errorMessage" *ngIf="InvoiceForm.get('InvoiceCode').errors.Duplicate">Duplicate Invoice Number</span>
+                                        </div> -->
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Created
+                                        Date</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text">{{
+                                            selectedInvoiceDetails.CreatedDate|DisplayDateFormat }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Supplier Invoice
+                                        No. <i class="fa fa-star mandatory-icon" *ngIf="hideInput"
+                                            aria-hidden="true"></i></label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText"
+                                            style="word-wrap:break-word">{{ selectedInvoiceDetails.SupplierRefNo
+                                            }}</label>
+                                        <input type="text" *ngIf="hideInput" class="form-control"
+                                            formControlName="SupplierRefNo" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Department
+                                        <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedInvoiceDetails.Location }}</label>
+                                        <select formControlName="LocationId" *ngIf="hideInput" class="form-control">
+                                            <option [ngValue]="undefined">--Select--</option>
+                                            <option *ngFor="let record of departments" value={{record.LocationID}}>
+                                                {{record.Name}}
+                                        </select>
+                                        <div
+                                            *ngIf="InvoiceForm.get('LocationId') && InvoiceForm.get('LocationId').errors!=null &&InvoiceForm.get('LocationId').touched==true">
+                                            <span class="errorMessage"
+                                                *ngIf="InvoiceForm.get('LocationId').errors.required">Department is
+                                                required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Currency
+                                        Type</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedInvoiceDetails.CurrencyCode }}</label>
+                                        <select (change)="onCurrencyChange($event)" formControlName="CurrencyId"
+                                            *ngIf="hideInput" class="form-control">
+                                            <option [ngValue]="undefined">--Select--</option>
+                                            <option *ngFor="let record of currencies" value={{record.Id}}>
+                                                {{ record.Code }}
+                                        </select>
+                                        <div
+                                            *ngIf="InvoiceForm.get('CurrencyId') && InvoiceForm.get('CurrencyId').errors!=null && InvoiceForm.get('CurrencyId').touched==true ">
+                                            <span class="errorMessage"
+                                                *ngIf="InvoiceForm.get('CurrencyId').errors.required">Currency Code is
+                                                required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Invoice Date
+                                        <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedInvoiceDetails.InvoiceDate|DisplayDateFormat }}</label>
+                                        <div class="input-group" *ngIf="hideInput">
+                                            <input class="form-control" formControlName="InvoiceDate"
+                                                (dateSelect)="updateDueDate($event)" ngbDatepicker
+                                                #invoiceDatePicker="ngbDatepicker">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary"
+                                                    (click)="invoiceDatePicker.toggle()" type="button">
+                                                    <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <div class="col-12 engineers-assigned" style="padding:0px;">
+                            <div class="table-responsive" [ngStyle]="{'max-width.px': screenWidth}">
+                                <fieldset *ngIf="hideInput&&selectedInvoiceTypeId==1" formArrayName="InvoiceItems">
+                                    <div style="text-align: center;">
+                                        <span class="errorMessage"
+                                            *ngIf="showGridErrorMessage &&(selectedInvoiceDetails.InvoiceItems==undefined|| selectedInvoiceDetails.InvoiceItems.length==0)">
+                                            Please enter Supplier Invoice items
+                                        </span>
+                                    </div>
+                                    <p-table [columns]="gridColumns" (sortFunction)="customSort($event)"
+                                        [customSort]="true" sortMode="single"
+                                        [value]="InvoiceForm.controls.InvoiceItems.controls">
+                                        <ng-template pTemplate="emptymessage">
+                                            <tr *ngIf="purchaseOrderTypeId!=5 && purchaseOrderTypeId!=6">
+                                                <td colspan="10" style='text-align: center;'>
+                                                    <b>{{gridNoMessageToDisplay}}</b>
+                                                </td>
+                                            </tr>
+                                            <tr *ngIf="purchaseOrderTypeId ===5 || purchaseOrderTypeId ===6">
+                                                <td colspan="5" style='text-align: center;'>
+                                                    <b>{{gridNoMessageToDisplay}}</b>
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <!-- <ng-template pTemplate="colgroup" let-columns>
+                                        <colgroup>
+                                            <col style="width:5%;">
+                                            <col style="width:9%;">
+                                            <col style="width:18%;">
+                                            <col *ngIf="purchaseOrderTypeId!=5" style="width:8%;">
+                                            <col *ngIf="purchaseOrderTypeId!=5" style="width:12%;">
+                                            <col *ngIf="purchaseOrderTypeId!=5" style="width:12%;">
+                                            <col *ngIf="purchaseOrderTypeId!=5" style="width:12%;">
+                                            <col *ngIf="purchaseOrderTypeId!=5" style="width:12%;">
+                                            <col style="width:12%;">
+                                        </colgroup>
+                                    </ng-template> -->
+                                        <ng-template pTemplate="colgroup" let-columns>
+                                            <colgroup>
+                                                <col *ngFor="let col of columns" [style.width]="col.width">
+                                            </colgroup>
+                                        </ng-template>
+                                        <ng-template pTemplate="header" let-columns>
+                                            <tr>
+                                                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                                    {{col.header}}
+
+                                                    <span
+                                                        *ngIf="(col.field=='Unitprice'||col.field=='ItemTotal'||col.field=='Totalprice'||col.field=='TotalbefTax')&&selectedInvoiceDetails.CurrencySymbol!=null">
+                                                        &nbsp; ( {{ selectedInvoiceDetails.CurrencySymbol }} )
+                                                    </span>
+                                                    <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
+                                                        ariaLabelDesc="Activate to sort in descending order"
+                                                        ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                                </th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-rowData let-i="rowIndex"
+                                            let-columns="columns">
+                                            <tr [formGroupName]="i">
+                                                <td>
+                                                    {{ i + 1 }}
+                                                </td>
+                                                <td *ngIf="purchaseOrderTypeId===5 || purchaseOrderTypeId===6">
+                                                    {{
+                                                    InvoiceForm.get('InvoiceItems').controls[i].get('AccountCodeName').value
+                                                    }}
+                                                </td>
+                                                <td>
+                                                    {{ InvoiceForm.get('InvoiceItems').controls[i].get('ItemType').value
+                                                    }}
+                                                </td>
+                                                <td *ngIf="purchaseOrderTypeId===5 || purchaseOrderTypeId===6">
+                                                    {{
+                                                    InvoiceForm.get('InvoiceItems').controls[i].get('CPONumber').value
+                                                    }}
+                                                </td>
+                                                <td *ngIf="purchaseOrderTypeId!=5 && purchaseOrderTypeId!=6">
+                                                    <!-- <input type="text" readonly=true formControlName="GlDescription"   class="form-control" style="height:80px"/> -->
+                                                    {{
+                                                    InvoiceForm.get('InvoiceItems').controls[i].get('GlDescription').value
+                                                    }}
+
+                                                </td>
+                                                <td>
+                                                    <textarea formControlName="ItemDescription" type="text"
+                                                        class="form-control" style="height:80px">
+                                                </textarea>
+                                                </td>
+                                                <td *ngIf="purchaseOrderTypeId!=5 && purchaseOrderTypeId!=6">
+                                                    <input type="number" *ngIf="selectedInvoiceTypeId==1" disabled
+                                                        style="text-align: right;" class="form-control"
+                                                        (change)="calculateTotalPrice($event)" min="0"
+                                                        (keydown)=restrictMinus($event) formControlName="ItemQty" />
+                                                    <input type="number" *ngIf="selectedInvoiceTypeId==2"
+                                                        style="text-align: right;" class="form-control"
+                                                        (change)="calculateTotalPrice($event)" min="0"
+                                                        (keydown)=restrictMinus($event) formControlName="ItemQty" />
+                                                </td>
+                                                <td *ngIf="purchaseOrderTypeId!=5">
+                                                    <!-- <td> -->
+                                                    <input type="number" style="text-align: right;" class="form-control"
+                                                        (change)="calculateTotalPrice($event)" min="0"
+                                                        formControlName="Unitprice" />
+                                                </td>
+                                                <td *ngIf="purchaseOrderTypeId!=5 && purchaseOrderTypeId!=6">
+                                                    <!-- <td> -->
+                                                    <span>{{ (
+                                                        InvoiceForm.get('InvoiceItems').controls[i].get('ItemQty').value
+                                                        *
+                                                        InvoiceForm.get('InvoiceItems').controls[i].get('Unitprice').value
+                                                        ) | number:'1.4-4' }}</span>
+                                                </td>
+                                                <!-- <td *ngIf="purchaseOrderTypeId===5">
+                                                <span>{{ InvoiceForm.get('InvoiceItems').controls[i].get('Unitprice').value }}</span>
+                                            </td> -->
+                                                <td *ngIf="purchaseOrderTypeId!=5 && purchaseOrderTypeId!=6">
+                                                    <input type="number" style="text-align: right;" class="form-control"
+                                                        (change)="calculateTotalPrice($event)" min="0"
+                                                        (keydown)=restrictMinus($event) formControlName="Discount" />
+                                                    <div
+                                                        *ngIf="InvoiceForm.get('InvoiceItems').controls[i].get('ItemQty').value > 0; then thenBlock else elseBlock">
+                                                    </div>
+                                                    <ng-template #thenBlock>
+                                                        <span *ngIf="((InvoiceForm.get('InvoiceItems').controls[i].get('ItemQty').value * InvoiceForm.get('InvoiceItems').controls[i].get('Unitprice').value
+                                                        )+InvoiceForm.get('InvoiceItems').controls[i].get('TaxTotal').value) < InvoiceForm.get('InvoiceItems').controls[i].get('Discount').value
+                                                        " class="errorMessage">Discount Can not be Greater Than
+                                                            Total</span>
+                                                    </ng-template>
+                                                    <ng-template #elseBlock>
+
+                                                    </ng-template>
+
+                                                </td>
+                                                <td *ngIf="purchaseOrderTypeId!=5 && purchaseOrderTypeId!=6">
+                                                    <!-- <td> -->
+                                                    <span>{{ (
+                                                        InvoiceForm.get('InvoiceItems').controls[i].get('Totalprice').value
+                                                        -
+                                                        InvoiceForm.get('InvoiceItems').controls[i].get('Discount').value
+                                                        ) | number:'1.4-4' }}</span>
+                                                </td>
+
+                                                <td *ngIf="purchaseOrderTypeId!=5 && purchaseOrderTypeId!=6">
+                                                    <select formControlName="TaxGroupId" *ngIf="hideInput"
+                                                        (change)="getTaxTypesByTaxGroup($event.target.value, i)"
+                                                        class="form-control">
+                                                        <option [ngValue]="0">--Select--</option>
+                                                        <option *ngFor="let record of taxGroups"
+                                                            value={{record.TaxGroupId}}>
+                                                            {{ record.TaxGroupName }}
+                                                    </select>
+                                                </td>
+
+                                                <td *ngIf="purchaseOrderTypeId!=5 && purchaseOrderTypeId!=6">
+                                                    <select formControlName="TaxID"
+                                                        (change)="setTaxAmount($event.target.value,i)"
+                                                        class="form-control">
+                                                        <option [ngValue]="undefined">--Select--</option>
+                                                        <!-- <option *ngFor="let record of taxTypes" value={{record.TaxId}}> -->
+                                                        <option
+                                                            *ngFor="let record of InvoiceForm.get('InvoiceItems').controls[i].get('Taxes').value ; "
+                                                            value={{record.TaxId}}>
+                                                            {{ record.TaxName }}
+                                                        </option>
+                                                    </select>
+                                                </td>
+                                                <td *ngIf="purchaseOrderTypeId!=5 && purchaseOrderTypeId!=6">
+                                                    <!-- <td> -->
+                                                    <span>{{
+                                                        (InvoiceForm.get('InvoiceItems').controls[i].get('TaxTotal').value)
+                                                        | number:'1.4-4' }}</span>
+                                                </td>
+                                                <td>
+                                                    <div style="float:left;width:60%;text-align: right;">
+
+                                                        <div
+                                                            *ngIf="(InvoiceForm.get('IsPOC').value==='1'); then thenBlock else elseBlock">
+                                                        </div>
+                                                        <ng-template #thenBlock>
+                                                            {{
+                                                            InvoiceForm.get('InvoiceItems').controls[i].get('ItemQty').value
+                                                            > 0 ? ( ((
+                                                            InvoiceForm.get('InvoiceItems').controls[i].get('ItemQty').value
+                                                            *
+                                                            InvoiceForm.get('InvoiceItems').controls[i].get('Unitprice').value
+                                                            )-InvoiceForm.get('InvoiceItems').controls[i].get('Discount').value
+                                                            )|number:'1.4-4'):0 }}
+                                                        </ng-template>
+                                                        <ng-template #elseBlock>
+                                                            {{
+                                                            InvoiceForm.get('InvoiceItems').controls[i].get('ItemQty').value
+                                                            > 0 ? ( ((
+                                                            InvoiceForm.get('InvoiceItems').controls[i].get('ItemQty').value
+                                                            *
+                                                            InvoiceForm.get('InvoiceItems').controls[i].get('Unitprice').value
+                                                            )+InvoiceForm.get('InvoiceItems').controls[i].get('TaxTotal').value-InvoiceForm.get('InvoiceItems').controls[i].get('Discount').value
+                                                            )|number:'1.4-4'):0 }}
+                                                        </ng-template>
+
+
+
+
+                                                        <!-- {{ InvoiceForm.get('InvoiceItems').controls[i].get('ItemQty').value > 0 ? ( (( InvoiceForm.get('InvoiceItems').controls[i].get('ItemQty').value
+                                                    * InvoiceForm.get('InvoiceItems').controls[i].get('Unitprice').value
+                                                    )+InvoiceForm.get('InvoiceItems').controls[i].get('TaxTotal').value-InvoiceForm.get('InvoiceItems').controls[i].get('Discount').value
+                                                    )|number:'1.2-4'):0 }} -->
+
+                                                    </div>
+                                                    <div class="gridIconsStyle"
+                                                        *ngIf="hideInput && (selectedInvoiceTypeId==2 || ((selectedInvoiceDetails.PurchaseOrderId==null || selectedInvoiceDetails.PurchaseOrderId==0)&&selectedInvoiceDetails.InvoiceId>0))">
+                                                        <i class="fa fa-trash gridRemoveIcon"
+                                                            (click)="removeGridItem(i)" aria-hidden="true"></i>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                    <div
+                                        *ngIf="hideInput && (selectedInvoiceTypeId==2 || ((selectedInvoiceDetails.PurchaseOrderId==null || selectedInvoiceDetails.PurchaseOrderId==0)&&selectedInvoiceDetails.InvoiceId>0))">
+                                        <input type="number" [(ngModel)]="linesToAdd"
+                                            [ngModelOptions]="{standalone: true}" class="form-control linesToAdd">
+                                        <button type="submit" (click)="addGridItem(linesToAdd)" class="addLine">
+                                            <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Line
+                                        </button>
+                                    </div>
+                                </fieldset>
+                                <p-table *ngIf="hideText&&selectedInvoiceTypeId==1" [columns]="gridColumns"
+                                    (sortFunction)="customSort($event)" [customSort]="true" sortMode="single"
+                                    [value]="selectedInvoiceDetails.InvoiceItems">
+                                    <ng-template pTemplate="emptymessage">
+                                        <tr *ngIf="purchaseOrderTypeId!=5 && purchaseOrderTypeId!=6">
+                                            <td colspan="10" style='text-align: center;'>
+                                                <b>{{gridNoMessageToDisplay}}</b>
+                                            </td>
+                                        </tr>
+                                        <tr *ngIf="purchaseOrderTypeId ===5 || purchaseOrderTypeId===6">
+                                            <td colspan="5" style='text-align: center;'>
+                                                <b>{{gridNoMessageToDisplay}}</b>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                    <!-- <ng-template pTemplate="colgroup" let-columns>
+                                    <colgroup>
+                                        <col style="width:5%;">
+                                        <col style="width:9%;">
+                                        <col style="width:18%;">
+                                        <col style="width:8%;">
+                                        <col style="width:12%;">
+                                        <col style="width:12%;">
+                                        <col style="width:12%;">
+                                        <col style="width:12%;">
+                                        <col style="width:12%;">
+                                    </colgroup>
+                                </ng-template> -->
+                                    <ng-template pTemplate="colgroup" let-columns>
+                                        <colgroup>
+                                            <col *ngFor="let col of columns" [style.width]="col.width">
+                                        </colgroup>
+                                    </ng-template>
+                                    <ng-template pTemplate="header" let-columns>
+                                        <tr>
+                                            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                                {{col.header}}
+
+                                                <span
+                                                    *ngIf="(col.field=='Unitprice'||col.field=='ItemTotal' || col.field == 'TaxTotal'  || col.field == 'Totalprice'|| col.field == 'TotalbefTax'
+                                            || col.field == 'TaxRate' || col.field == 'Discount')&&selectedInvoiceDetails.CurrencySymbol!=null">
+                                                    &nbsp; ( {{ selectedInvoiceDetails.CurrencySymbol }} )
+                                                </span>
+                                                <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
+                                                    ariaLabelDesc="Activate to sort in descending order"
+                                                    ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                            </th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                        <tr>
+                                            <td>
+                                                {{ i + 1 }}
+                                            </td>
+                                            <td *ngIf="purchaseOrderTypeId===5 || purchaseOrderTypeId===6"
+                                                style="word-wrap: break-word">
+                                                {{ rowData.AccountCodeName }}
+                                            </td>
+                                            <td style="word-wrap: break-word">
+                                                {{ rowData.ItemType }}
+                                            </td>
+                                            <td *ngIf="purchaseOrderTypeId===5 || purchaseOrderTypeId===6"
+                                                style="word-wrap: break-word">
+                                                {{ rowData.CPONumber }}
+                                            </td>
+                                            <td *ngIf="purchaseOrderTypeId!=5 && purchaseOrderTypeId!=6"
+                                                style="word-wrap: break-word">
+                                                {{ rowData.Item.ItemName!= null? rowData.Item.ItemName:
+                                                rowData.Service.AccountCodeName }}
+                                                <!-- <span class="descriptionStyle" [innerHtml]="rowData.ItemDescription|TextAreaContentDisplay"></span> -->
+                                            </td>
+                                            <td style="word-wrap: break-word">
+                                                {{rowData.ItemDescription}}
+                                            </td>
+                                            <td *ngIf="purchaseOrderTypeId!=5 && purchaseOrderTypeId!=6" align="right"
+                                                style="word-wrap: break-word">
+                                                {{ rowData.ItemQty }}
+                                            </td>
+                                            <td align="right" style="word-wrap: break-word">
+                                                {{ rowData.Unitprice|number:'1.4-4' }}
+                                            </td>
+                                            <td *ngIf="purchaseOrderTypeId!=5 && purchaseOrderTypeId!=6" align="right"
+                                                style="word-wrap: break-word">
+                                                {{ rowData.Totalprice|number:'1.4-4' }}
+                                            </td>
+                                            <td *ngIf="purchaseOrderTypeId!=5 && purchaseOrderTypeId!=6" align="right"
+                                                style="word-wrap: break-word">
+                                                {{ rowData.Discount|number:'1.2-4' }}
+                                            </td>
+                                            <td *ngIf="purchaseOrderTypeId!=5 && purchaseOrderTypeId!=6" align="right"
+                                                style="word-wrap: break-word">
+                                                {{ rowData.TotalbefTax|number:'1.4-4' }}
+                                            </td>
+                                            <td *ngIf="purchaseOrderTypeId!=5 && purchaseOrderTypeId!=6" align="right"
+                                                style="word-wrap: break-word">
+                                                {{ rowData.TaxAuthority}}
+                                            </td>
+                                            <td *ngIf="purchaseOrderTypeId!=5 && purchaseOrderTypeId!=6" align="right"
+                                                style="word-wrap: break-word">
+                                                {{ rowData.TaxName }}
+                                            </td>
+                                            <td *ngIf="purchaseOrderTypeId!=5 && purchaseOrderTypeId!=6" align="right"
+                                                style="word-wrap: break-word">
+                                                <!-- <td> -->
+                                                {{ rowData.TaxTotal|number:'1.4-4' }}
+                                            </td>
+                                            <td *ngIf="purchaseOrderTypeId!=5 && purchaseOrderTypeId!=6" align="right"
+                                                style="word-wrap: break-word">
+                                                {{ rowData.ItemTotalPrice|number:'1.4-4' }}
+                                            </td>
+                                            <td
+                                                *ngIf="selectedInvoiceDetails.WorkFlowStatus=='Open' && verifyPermission">
+                                                <button class="btn btn-edit"
+                                                    (click)="OpenGlcodepopup(i + 1, rowData.Item.ItemName,rowData.Service.AccountCodeName,rowData.ItemType, rowData.Item.ItemMasterId, rowData.POTypeId, rowData.TypeId, rowData.InvoiceId, rowData.InvoiceItemId, selectedInvoiceDetails.InvoiceTypeId, rowData.AccountCodeName)">Edit</button>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>
+
+                            <p-dialog header="Edit GL Code" class="modalheightauto" width="700" height="500"
+                                modal='true' [(visible)]="showGlCodeDialog">
+                                <form [formGroup]="GlcodeInfoForm" class="form-horizontal">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Sno</label>
+                                        <div class="col-xl-8 col-sm-6 col-12">
+                                            {{serialNumber}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Selected GL
+                                            Code</label>
+                                        <div class="col-xl-8 col-sm-6 col-12">
+                                            {{Itemdescription}}
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="(selectedInvoiceDetails.POTypeId==3 || selectedInvoiceDetails.POTypeId==5 || selectedInvoiceDetails.POTypeId==6 )&& selectedInvoiceDetails.InvoiceTypeId==1"
+                                        class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Account
+                                            Type</label>
+                                        <div class="col-xl-8 col-sm-6 col-12">
+                                            <select class="form-control" #AccountType
+                                                (change)="onTypeSelection($event.target.value)"
+                                                formControlName="AccountTypeId">
+                                                <option [ngValue]="null">--Select--</option>
+                                                <option [value]="record.AccountTypeId"
+                                                    *ngFor="let record of accountTypes">
+                                                    {{ record.AccountTypeName }}
+                                                </option>
+                                            </select>
+                                            <!-- <div *ngIf="GlcodeInfoForm.get('AccountTypeId')  && GlcodeInfoForm.get('AccountTypeId').errors!=null &&GlcodeInfoForm.get('AccountTypeId').touched==true">
+                                                <span class="errorMessage" *ngIf="GlcodeInfoForm.get('AccountTypeId').errors.required">Account Type is required</span>
+                                            </div> -->
+
+                                            <span class="error" *ngIf="errmesagevisible">Please Select Account
+                                                Type</span>
+                                        </div>
+
+
+
+                                    </div>
+
+                                    <div *ngIf="(selectedInvoiceDetails.POTypeId==3 || selectedInvoiceDetails.POTypeId==5 || selectedInvoiceDetails.POTypeId==6) && selectedInvoiceDetails.InvoiceTypeId==1 "
+                                        class="form-group row">
+                                        <label
+                                            class="col-form-label col-6  col-xl-4 col-sm-12 form-label">SubCategory</label>
+                                        <div class="col-xl-8 col-sm-6 col-12">
+                                            <select class="form-control" #SubCategory
+                                                formControlName="AccountCodeCategoryId">
+                                                <option [ngValue]="null">--Select--</option>
+                                                <option *ngFor="let category of accountCodeCategories"
+                                                    [value]="category.AccountCodeCategoryId">
+                                                    {{category.AccountCodeCategoryName}}
+                                                </option>
+                                            </select>
+                                            <span class="error" *ngIf="errmesagevisible">Please Select
+                                                SubCategory</span>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-12  col-xl-4 col-sm-6 form-label">GL
+                                            Code</label>
+                                        <div class="col-12  col-xl-8 col-sm-6 autoComplete autocompletewidth">
+                                            <input formControlName="Item" type="text" class="form-control"
+                                                [inputFormatter]="itemInputFormater"
+                                                (selectItem)="itemMasterSelectionGlCode($event)"
+                                                [ngbTypeahead]="itemMasterSearchGlCode"
+                                                [resultTemplate]="itemMasterTemplategl" />
+                                            <span class="error" *ngIf="errmesagevisible">Please Select the GL
+                                                Code</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" style="text-align: right">
+                                        <button (click)="SaveGlcode('save')" class="btn btn-save">
+                                            Save
+                                        </button>
+                                    </div>
+                                </form>
+                            </p-dialog>
+                            <div class="tablescroll" [class.hidescroll]="showdropdown">
+                                <!-- select invoice type 2 -->
+                                <fieldset *ngIf="hideInput&&selectedInvoiceTypeId==2" formArrayName="InvoiceItems">
+                                    <div style="text-align: center;">
+                                        <span class="errorMessage"
+                                            *ngIf="showGridErrorMessage &&(selectedInvoiceDetails.InvoiceItems==undefined|| selectedInvoiceDetails.InvoiceItems.length==0)">
+                                            Please enter Supplier Invoice items
+                                        </span>
+                                    </div>
+                                    <p-table [columns]="gridColumns" (sortFunction)="customSort($event)"
+                                        [customSort]="true" sortMode="single"
+                                        [value]="InvoiceForm.controls.InvoiceItems.controls">
+                                        <ng-template pTemplate="emptymessage">
+                                            <tr>
+                                                <td colspan="11" style='text-align: center;'>
+                                                    <b>{{gridNoMessageToDisplay}}</b>
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <!-- <ng-template pTemplate="colgroup" let-columns>
+                                        <colgroup>
+                                            <col style="width:5%;">
+                                            <col style="width:9%;">
+                                            <col style="width:18%;">
+                                            <col *ngIf="purchaseOrderTypeId!=5" style="width:8%;">
+                                            <col *ngIf="purchaseOrderTypeId!=5" style="width:12%;">
+                                            <col *ngIf="purchaseOrderTypeId!=5" style="width:12%;">
+                                            <col *ngIf="purchaseOrderTypeId!=5" style="width:12%;">
+                                            <col *ngIf="purchaseOrderTypeId!=5" style="width:12%;">
+                                            <col style="width:12%;">
+                                        </colgroup>
+                                    </ng-template> -->
+                                        <ng-template pTemplate="colgroup" let-columns>
+                                            <colgroup>
+                                                <col *ngFor="let col of columns" [style.width]="col.width">
+                                            </colgroup>
+                                        </ng-template>
+                                        <ng-template pTemplate="header" let-columns>
+                                            <tr>
+                                                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                                    {{col.header}}
+
+                                                    <span
+                                                        *ngIf="(col.field=='Unitprice'||col.field=='ItemTotal'||col.field=='Totalprice'||col.field=='TotalbefTax')&&selectedInvoiceDetails.CurrencySymbol!=null">
+                                                        &nbsp; ( {{ selectedInvoiceDetails.CurrencySymbol }} )
+                                                    </span>
+                                                    <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
+                                                        ariaLabelDesc="Activate to sort in descending order"
+                                                        ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                                </th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-rowData let-i="rowIndex"
+                                            let-columns="columns">
+                                            <tr [formGroupName]="i">
+                                                <td>
+                                                    {{ i + 1 }}
+                                                </td>
+                                                <td>
+                                                    <select formControlName="TypeId" *ngIf="hideInput"
+                                                        class="form-control"
+                                                        (change)="onItemTypeChange($event.target.value,i)">
+                                                        <option *ngFor="let type of itemTYpes" value={{type.Id}}>
+                                                            {{ type.Value }}
+                                                    </select>
+                                                </td>
+                                                <td (clickOutside)="onClickedOutside($event)">
+                                                    <input
+                                                        *ngIf="InvoiceForm.get('InvoiceItems').controls[i].get('TypeId').value === 1"
+                                                        formControlName="Item" type="text" (click)="itemClick(i)"
+                                                        class="form-control" [inputFormatter]="itemMasterInputFormater"
+                                                        (selectItem)="itemMasterSelection($event,i)"
+                                                        [ngbTypeahead]="itemMasterSearch"
+                                                        [resultTemplate]="itemMasterTemplate" />
+
+                                                    <input
+                                                        *ngIf="InvoiceForm.get('InvoiceItems').controls[i].get('TypeId').value === 2"
+                                                        formControlName="Service" type="text" (click)="itemClick(i)"
+                                                        class="form-control"
+                                                        [inputFormatter]="serviceMasterInputFormater"
+                                                        (selectItem)="serviceMasterSelection($event,i)"
+                                                        [ngbTypeahead]="serviceMasterSearch"
+                                                        [resultTemplate]="serviceMasterTemplate" />
+
+                                                    <input
+                                                        *ngIf="InvoiceForm.get('InvoiceItems').controls[i].get('TypeId').value === 3"
+                                                        formControlName="Service" type="text" (click)="itemClick(i)"
+                                                        class="form-control"
+                                                        [inputFormatter]="ExpenseMasterInputFormater"
+                                                        (selectItem)="ExpenseMasterSelection($event,i)"
+                                                        [ngbTypeahead]="ExpenseMasterSearch"
+                                                        [resultTemplate]="ExpenseMasterTemplate" />
+                                                </td>
+                                                <td>
+                                                    <textarea formControlName="ItemDescription" class="form-control"
+                                                        type="text" style="height:80px">
+                                                </textarea>
+                                                </td>
+                                                <td>
+                                                    <!-- <input type="number" *ngIf="selectedInvoiceTypeId==1" disabled style="text-align: right;" class="form-control" (change)="calculateTotalPrice($event)" min="0" (keydown)=restrictMinus($event) formControlName="ItemQty" /> -->
+                                                    <input type="number" style="text-align: right;" class="form-control"
+                                                        (change)="calculateTotalPrice($event)" min="0"
+                                                        (keydown)=restrictMinus($event) formControlName="ItemQty" />
+                                                </td>
+                                                <td>
+                                                    <input type="number" style="text-align: right;" class="form-control"
+                                                        (change)="calculateTotalPrice($event)" min="0"
+                                                        (keydown)=restrictMinus($event) formControlName="Unitprice" />
+                                                </td>
+                                                <td>
+                                                    <!-- <td> -->
+                                                    <span>{{ (
+                                                        InvoiceForm.get('InvoiceItems').controls[i].get('ItemQty').value
+                                                        *
+                                                        InvoiceForm.get('InvoiceItems').controls[i].get('Unitprice').value
+                                                        ) | number:'1.4-4' }}</span>
+                                                </td>
+
+                                                <td>
+                                                    <input type="number" style="text-align: right;" class="form-control"
+                                                        (change)="calculateTotalPrice($event)" min="0"
+                                                        (keydown)=restrictMinus($event) formControlName="Discount" />
+                                                    <span *ngIf="((InvoiceForm.get('InvoiceItems').controls[i].get('ItemQty').value * InvoiceForm.get('InvoiceItems').controls[i].get('Unitprice').value
+                                                    )+InvoiceForm.get('InvoiceItems').controls[i].get('TaxTotal').value) < InvoiceForm.get('InvoiceItems').controls[i].get('Discount').value
+                                                    " class="errorMessage">Discount Can not be Greater Than
+                                                        Total</span>
+                                                </td>
+                                                <td>
+                                                    <!-- <td> -->
+                                                    <span>{{ (
+                                                        InvoiceForm.get('InvoiceItems').controls[i].get('Totalprice').value
+                                                        -
+                                                        InvoiceForm.get('InvoiceItems').controls[i].get('Discount').value
+                                                        ) | number:'1.4-4' }}</span>
+                                                </td>
+                                                <td>
+                                                    <select formControlName="TaxGroupId" *ngIf="hideInput"
+                                                        (change)="getTaxTypesByTaxGroup($event.target.value, i)"
+                                                        class="form-control">
+                                                        <option [ngValue]="0">--Select--</option>
+                                                        <option *ngFor="let record of taxGroups"
+                                                            value={{record.TaxGroupId}}>
+                                                            {{ record.TaxGroupName }}
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select formControlName="TaxID"
+                                                        (change)="setTaxAmount($event.target.value,i)"
+                                                        class="form-control">
+                                                        <option [ngValue]="0">--Select--</option>
+                                                        <!-- <option *ngFor="let record of taxTypes" value={{record.TaxId}}> -->
+                                                        <option
+                                                            *ngFor="let record of InvoiceForm.get('InvoiceItems').controls[i].get('Taxes').value ; "
+                                                            value={{record.TaxId}}>
+                                                            {{ record.TaxName }}
+                                                        </option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <span>{{
+                                                        (InvoiceForm.get('InvoiceItems').controls[i].get('TaxTotal').value)
+                                                        | number:'1.4-4' }}</span>
+                                                </td>
+                                                <td>
+                                                    <div style="float:left;width:60%;text-align: right;">
+
+                                                        {{
+                                                        InvoiceForm.get('InvoiceItems').controls[i].get('ItemQty').value
+                                                        > 0 ? ( ((
+                                                        InvoiceForm.get('InvoiceItems').controls[i].get('ItemQty').value
+                                                        *
+                                                        InvoiceForm.get('InvoiceItems').controls[i].get('Unitprice').value
+                                                        )+InvoiceForm.get('InvoiceItems').controls[i].get('TaxTotal').value-InvoiceForm.get('InvoiceItems').controls[i].get('Discount').value
+                                                        )|number:'1.4-4'):0 }}
+
+                                                    </div>
+                                                    <div class="gridIconsStyle"
+                                                        *ngIf="hideInput && (selectedInvoiceTypeId==2 || ((selectedInvoiceDetails.PurchaseOrderId==null || selectedInvoiceDetails.PurchaseOrderId==0)&&selectedInvoiceDetails.InvoiceId>0))">
+                                                        <i class="fa fa-trash gridRemoveIcon"
+                                                            (click)="removeGridItem(i)" aria-hidden="true"></i>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                    <div
+                                        *ngIf="hideInput && (selectedInvoiceTypeId==2 || ((selectedInvoiceDetails.PurchaseOrderId==null || selectedInvoiceDetails.PurchaseOrderId==0)&&selectedInvoiceDetails.InvoiceId>0))">
+                                        <input type="number" [(ngModel)]="linesToAdd"
+                                            [ngModelOptions]="{standalone: true}" class="form-control linesToAdd">
+                                        <button type="submit" (click)="addGridItem(linesToAdd)" class="addLine">
+                                            <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Line
+                                        </button>
+                                    </div>
+                                </fieldset>
+                                <div class="table-responsive" [ngStyle]="{'max-width.px': screenWidth}">
+                                    <p-table *ngIf="hideText&&selectedInvoiceTypeId==2" [columns]="gridColumns"
+                                        (sortFunction)="customSort($event)" [customSort]="true" sortMode="single"
+                                        [value]="selectedInvoiceDetails.InvoiceItems">
+                                        <ng-template pTemplate="emptymessage">
+                                            <tr>
+                                                <td colspan="11" style='text-align: center;'>
+                                                    <b>{{gridNoMessageToDisplay}}</b>
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <!-- <ng-template pTemplate="colgroup" let-columns>
+                                    <colgroup>
+                                        <col style="width:5%;">
+                                        <col style="width:9%;">
+                                        <col style="width:18%;">
+                                        <col style="width:8%;">
+                                        <col style="width:12%;">
+                                        <col style="width:12%;">
+                                        <col style="width:12%;">
+                                        <col style="width:12%;">
+                                        <col style="width:12%;">
+                                    </colgroup>
+                                </ng-template> -->
+                                        <ng-template pTemplate="colgroup" let-columns>
+                                            <colgroup>
+                                                <col *ngFor="let col of columns" [style.width]="col.width">
+                                            </colgroup>
+                                        </ng-template>
+                                        <ng-template pTemplate="header" let-columns>
+                                            <tr>
+                                                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                                    {{col.header}}
+
+                                                    <span
+                                                        *ngIf="(col.field=='Unitprice'||col.field=='ItemTotal' || col.field == 'TaxTotal'  || col.field=='Totalprice' || col.field=='TotalbefTax'
+                                             || col.field == 'TaxRate' || col.field == 'Discount')&&selectedInvoiceDetails.CurrencySymbol!=null">
+                                                        &nbsp; ( {{ selectedInvoiceDetails.CurrencySymbol }} )
+                                                    </span>
+                                                    <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
+                                                        ariaLabelDesc="Activate to sort in descending order"
+                                                        ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                                </th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-rowData let-i="rowIndex"
+                                            let-columns="columns">
+                                            <tr>
+                                                <td>
+                                                    {{ i + 1 }}
+                                                </td>
+                                                <td>
+                                                    <span *ngIf="rowData.TypeId ==1">
+                                                        Item
+                                                    </span>
+                                                    <span *ngIf="rowData.TypeId ==2">
+                                                        Service
+                                                    </span>
+                                                    <span *ngIf="rowData.TypeId ==3">
+                                                        Expense
+                                                    </span>
+                                                    <!-- {{ rowData.TypeId === 1 || rowData.TypeId === 0? "Item":"Service" }} -->
+                                                </td>
+                                                <td *ngIf="rowData.TypeId === 1" style="word-wrap: break-word">
+                                                    {{ rowData.Item.ItemName }}
+                                                </td>
+                                                <td *ngIf="(rowData.TypeId === 2)" style="word-wrap: break-word">
+                                                    {{ rowData.Service.Code }}
+                                                </td>
+                                                <td *ngIf="(rowData.TypeId === 3)" style="word-wrap: break-word">
+                                                    {{ rowData.Service.AccountCodeName }}
+                                                </td>
+                                                <!-- <td>
+                                                {{ rowData.Item.ItemName!= null? rowData.Item.ItemName: rowData.Service.AccountCodeName }}
+                                         <span class="descriptionStyle" [innerHtml]="rowData.ItemName|TextAreaContentDisplay"></span> -->
+                                                <!-- </td> -->
+                                                <td style="word-wrap: break-word">
+                                                    {{rowData.ItemDescription}}
+                                                </td>
+                                                <td align="right" style="word-wrap: break-word">
+                                                    {{ rowData.ItemQty }}
+                                                </td>
+                                                <td align="right" style="word-wrap: break-word">
+                                                    {{ rowData.Unitprice|number:'1.4-4' }}
+                                                </td>
+                                                <td align="right" style="word-wrap: break-word">
+                                                    {{ rowData.Totalprice|number:'1.4-4' }}
+                                                </td>
+                                                <td align="right" style="word-wrap: break-word">
+                                                    {{ rowData.Discount|number:'1.2-4' }}
+                                                </td>
+                                                <td align="right" style="word-wrap: break-word">
+                                                    {{ rowData.TotalbefTax|number:'1.4-4' }}
+                                                </td>
+                                                <td align="right" style="word-wrap: break-word">
+                                                    {{ rowData.TaxAuthority}}
+                                                </td>
+                                                <td align="right" style="word-wrap: break-word">
+                                                    {{ rowData.TaxName }}
+                                                </td>
+                                                <td align="right" style="word-wrap: break-word">
+                                                    {{ rowData.TaxTotal|number:'1.4-4' }}
+                                                </td>
+                                                <td align="right" style="word-wrap: break-word">
+                                                    {{ rowData.ItemTotalPrice|number:'1.4-4' }}
+                                                </td>
+                                                <td
+                                                    *ngIf="selectedInvoiceDetails.WorkFlowStatus=='Open' && verifyPermission">
+                                                    <button class="btn btn-edit"
+                                                        (click)="OpenGlcodepopup(i + 1, rowData.Item.ItemName,rowData.Service.AccountCodeName,rowData.ItemType, rowData.Item.ItemMasterId, rowData.POTypeId, rowData.TypeId, rowData.InvoiceId, rowData.InvoiceItemId, selectedInvoiceDetails.InvoiceTypeId, rowData.AccountCodeName,accountTypes.AccountCodeName,0,0)">Edit</button>
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                </div>
+                            </div>
+
+
+                            <div class="row colorder">
+                                <div class="col-md-5">
+                                    <div class="row" style="margin-top:3em;">
+                                        <div class="col-12 row">
+                                            <div class="col-sm-5">
+                                                <h4 class="form-heading">Payment Terms
+                                                    <i class="fa fa-star mandatory-icon" *ngIf="hideInput"
+                                                        aria-hidden="true"></i>
+                                                </h4>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <select (change)="onPaymentTermChange($event)"
+                                                    formControlName="PaymentTermId" *ngIf="hideInput"
+                                                    class="form-control">
+                                                    <option [ngValue]="0">--Select--</option>
+                                                    <option *ngFor="let record of paymentTerms"
+                                                        value={{record.PaymentTermsId}}>
+                                                        {{ record.Code }}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-12" style="margin-top:1em;">
+                                            <textarea *ngIf="hideInput" class="form-control" autoresize
+                                                formControlName="PaymentTerms"></textarea>
+                                            <span class="descriptionStyle" showmore
+                                                [value]="selectedInvoiceDetails.PaymentTerms" *ngIf="hideText"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top:3em;">
+                                        <div class="col-12 row">
+                                            <div class="col-5">
+                                                <h4 class="form-heading">Remarks</h4>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <textarea *ngIf="hideInput" class="form-control" autoresize
+                                                formControlName="RemarksInvoice">
+                                            </textarea>
+                                            <div
+                                                *ngIf="hideInput&&InvoiceForm.get('RemarksInvoice') && InvoiceForm.get('RemarksInvoice').errors!=null">
+                                                <span class="errorMessage"
+                                                    *ngIf="InvoiceForm.get('RemarksInvoice').errors.required">Remarks
+                                                    required </span>
+                                            </div>
+                                            <span class="descriptionStyle" showmore
+                                                [value]="selectedInvoiceDetails.RemarksInvoice" *ngIf="hideText"></span>
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="(selectedInvoiceDetails.WorkFlowStatusId == workFlowStatus.Void)&&hideText==true"
+                                        class="row" style="margin-top:3em;">
+                                        <div class="col-12 row">
+                                            <div class="col-12">
+                                                <h4 class="form-heading">Reasons To Void</h4>
+                                            </div>
+                                            <div class="col-12" style="margin-top:1em;">
+                                                <!-- <span class="descriptionStyle" showmore [value]='{{ selectedInvoiceDetails.ReasonstoVoid==null?'':selectedInvoiceDetails.ReasonstoVoid }}'></span> -->
+                                                <label class="col-form-label form-text">{{
+                                                    selectedInvoiceDetails.ReasonstoVoid==null?"":selectedInvoiceDetails.ReasonstoVoid
+                                                    }}</label>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="(selectedInvoiceDetails.WorkFlowStatusId == workFlowStatus.Rejected)&&hideText==true"
+                                        class="row" style="margin-top:3em;">
+                                        <div class="col-12 row">
+                                            <div class="col-12">
+                                                <h4 class="form-heading">Reasons To Reject</h4>
+                                            </div>
+                                            <div class="col-12" style="margin-top:1em;">
+                                                <span class="descriptionStyle" showmore
+                                                    [value]="selectedInvoiceDetails.ReasonsToReject"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row" style="margin-top:3em;"
+                                        *ngIf="selectedInvoiceDetails.WorkFlowStatusId!= workFlowStatus.Void && ((selectedInvoiceDetails.POTypeId ==5 || selectedInvoiceDetails.POTypeId==6))">
+                                        <div class="col-12">
+                                            <h4 class="form-heading">Accrual Transaction</h4>
+                                        </div>
+                                        <div class="table-responsive" [ngStyle]="{'max-width.px': screenWidth}">
+                                            <div class="col-12 engineers-assigned" style="width:100%">
+                                                <p-table scrollable="true" scrollHeight="150px" class="tablebg"
+                                                    [columns]="accrualgridColumns" [value]="accrualAccountCode">
+                                                    <ng-template pTemplate="colgroup" let-columns>
+                                                        <colgroup>
+                                                            <col style="width:10%;">
+                                                            <col style="width:25%;">
+                                                            <col style="width:15%;">
+                                                        </colgroup>
+                                                    </ng-template>
+                                                    <ng-template pTemplate="header" let-columns>
+                                                        <tr>
+                                                            <th *ngFor="let col of columns" style="text-align: center"
+                                                                [pSortableColumn]="col.field">
+                                                                {{col.header}}
+                                                            </th>
+                                                        </tr>
+                                                    </ng-template>
+                                                    <ng-template pTemplate="body" let-rowData let-i="rowIndex"
+                                                        let-columns="columns">
+                                                        <tr [ngStyle]="{'background-color': rowData.Color }">
+                                                            <td>
+                                                                {{ rowData.Name }}
+                                                            </td>
+                                                            <td>
+                                                                {{ rowData.AccountCodeName }}
+                                                            </td>
+                                                            <td style="text-align: right">
+                                                                {{ rowData.Amount }}
+                                                            </td>
+                                                        </tr>
+                                                    </ng-template>
+                                                </p-table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-9">
+                                        <div class="row" style="margin-top:3em;">
+                                            <div class="col-12">
+                                                <h4 class="form-heading">Attachments</h4>
+                                            </div>
+                                            <div class="col-12 attachments" *ngIf="selectedInvoiceDetails!=undefined">
+                                                <ul>
+                                                    <ng-template ngFor let-data
+                                                        [ngForOf]="selectedInvoiceDetails.Attachments" let-i="index">
+                                                        <li *ngIf="data.IsDelete!=true||data.IsDelete==undefined">
+                                                            <span class="attcmnts_sppinv">
+                                                                <span class="displayFileName">
+                                                                    {{ data.FileName }}
+                                                                </span>
+                                                                <a style="color:black;" target="_blank" *ngIf="hideText"
+                                                                    href="{{apiEndPoint}}/InvoiceFileDownload?AttachmentId={{ data.AttachmentId }}&AttachmentTypeId={{ data.AttachmentTypeId }}&FileName={{data.FileName|encodeURIComponent}}&RecordId={{data.RecordId}}">
+                                                                    <i class="fa fa-download"></i>
+                                                                </a>
+                                                                &nbsp;&nbsp;
+                                                                <i *ngIf="hideInput" (click)="attachmentDelete(i)"
+                                                                    class="fa fa-trash">
+                                                                </i>
+                                                            </span>
+                                                        </li>
+                                                    </ng-template>
+                                                </ul>
+                                            </div>
+                                            <div class="col-12" *ngIf="hideInput">
+                                                <div class="col-12">
+                                                    <input type="file" style="width:100%;" multiple
+                                                        (change)="onFileUploadChange($event)" name="file">
+                                                </div>
+                                                <div class="col-12">
+                                                    <ul class="fileList">
+                                                        <li *ngFor="let data of uploadedFiles;let i = index">
+                                                            <span>
+                                                                <span class="fileName">
+                                                                    {{ data.name }}
+                                                                </span>
+                                                                <i class="fa fa-close" (click)="onFileClose(i)"></i>
+                                                            </span>
+                                                            <br>
+                                                            <span class="fileSize">{{ data.size/1024 }} KB</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-3 mobilecol1">
+
+                                    <table class="table table-subtotal" style="float:right;">
+                                        <!-- <tr>
+                                            <td class="nowrap" width="50%" align="right">Sub Total</td>
+                                            <td align="right" *ngIf="hideInput" *ngIf="">
+                                                {{ selectedInvoiceDetails.CurrencySymbol }} {{ ( InvoiceForm.get('SubTotal').value)|number:'1.2-2' }}</td>
+                                            <td align="right" *ngIf="hideText">{{ selectedInvoiceDetails.CurrencySymbol }} {{ ( selectedInvoiceDetails.SubTotal)|number:'1.2-2'
+                                                }}
+                                            </td>
+                                        </tr> -->
+                                        <tr>
+                                            <td class="nowrap" width="50%" align="right">Sub Total</td>
+                                            <td align="right" *ngIf="hideInput && selectedInvoiceTypeId==1">
+                                                {{ selectedInvoiceDetails.CurrencySymbol }} {{ ((purchaseOrderTypeId===5
+                                                || purchaseOrderTypeId===6) ? InvoiceForm.get('SubTotal').value:
+                                                (InvoiceForm.get('PriceSubTotal').value) )|number:'1.2-2'}}
+                                            </td>
+                                            <td align="right" *ngIf="hideInput && selectedInvoiceTypeId==2">
+                                                {{ selectedInvoiceDetails.CurrencySymbol }}
+                                                {{(InvoiceForm.get('PriceSubTotal').value)|number:'1.2-2'}}
+                                            </td>
+
+                                            <td align="right" *ngIf="hideText">
+                                                {{ selectedInvoiceDetails.CurrencySymbol }}
+                                                {{ ((purchaseOrderTypeId===5 || purchaseOrderTypeId===6) ?
+                                                (selectedInvoiceDetails.SubTotal):
+                                                (selectedInvoiceDetails.PriceSubTotal))|number:'1.2-2'}}
+                                            </td>
+                                        </tr>
+
+                                        <tr
+                                            *ngIf="(purchaseOrderTypeId!=5 && purchaseOrderTypeId!=6) || selectedInvoiceTypeId ==2">
+                                            <td class="nowrap" align="right">Discount</td>
+                                            <td *ngIf="hideInput && (selectedInvoiceTypeId!=2)" align="right">
+                                                <!-- min="0" step="0.01" -->
+                                                <div *ngIf="(selectedInvoiceTypeId==='1' || selectedInvoiceTypeId===1) && (purchaseOrderTypeId === 1 || purchaseOrderTypeId === 2 
+                                                    || purchaseOrderTypeId == 3); then thenBlock1 else elseBlock1">
+                                                </div>
+                                                <ng-template #thenBlock1 style="text-align: right !important;">
+                                                    {{ selectedInvoiceDetails.CurrencySymbol }}
+                                                    {{ (InvoiceForm.get('Discount').value) |number:'1.2-2' }}
+                                                </ng-template>
+                                                <ng-template #elseBlock1>
+                                                    <input type="number" style="text-align: right;" min="0"
+                                                        (keydown)=restrictMinus($event)
+                                                        (change)="calculateTotalPrice($event)"
+                                                        formControlName="Discount" class="form-control">
+                                                </ng-template>
+
+                                            </td>
+                                            <td *ngIf="hideInput && (selectedInvoiceTypeId ==2 )" align="right">
+                                                {{ selectedInvoiceDetails.CurrencySymbol }}
+                                                {{ (InvoiceForm.get('Discount').value) |number:'1.2-2' }}
+                                            </td>
+                                            <td *ngIf="hideText" align="right">
+                                                {{ selectedInvoiceDetails.CurrencySymbol }}
+                                                {{ (selectedInvoiceDetails.Discount)|number:'1.2-2'}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="nowrap" width="50%" align="right">Total Before Tax</td>
+                                            <!-- *ngIf="hideInput" -->
+                                            <td align="right" *ngIf="hideInput && selectedInvoiceTypeId==1">
+                                                {{ selectedInvoiceDetails.CurrencySymbol }} {{ ((purchaseOrderTypeId===5
+                                                || purchaseOrderTypeId===6) ? InvoiceForm.get('SubTotal').value -
+                                                InvoiceForm.get('Discount').value:
+                                                (InvoiceForm.get('TotalbefTaxSubTotal').value ))|number:'1.2-2'}}
+                                            </td>
+                                            <td align="right" *ngIf="hideInput && selectedInvoiceTypeId==2">
+                                                {{ selectedInvoiceDetails.CurrencySymbol }}
+                                                {{(InvoiceForm.get('TotalbefTaxSubTotal').value)|number:'1.2-2'}}
+                                            </td>
+                                            <td align="right" *ngIf="hideText">
+                                                {{ selectedInvoiceDetails.CurrencySymbol }} {{ ((purchaseOrderTypeId===5
+                                                || purchaseOrderTypeId===6) ?
+                                                (selectedInvoiceDetails.SubTotal-selectedInvoiceDetails.Discount):
+                                                (selectedInvoiceDetails.TotalbefTaxSubTotal))|number:'1.2-2'}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="nowrap" width="50%" align="right">Total GST Amount</td>
+                                            <td align="right" *ngIf="hideInput">
+                                                {{ selectedInvoiceDetails.CurrencySymbol }}
+                                                {{ (InvoiceForm.get('TotalTax').value)|number:'1.2-2'}}
+                                            </td>
+                                            <td align="right" *ngIf="hideText">
+                                                {{ selectedInvoiceDetails.CurrencySymbol }}
+                                                {{ (selectedInvoiceDetails.TotalTax)|number:'1.2-2'}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="nowrap" align="right">GST Adjustment</td>
+                                            <td *ngIf="hideInput">
+                                                <input type="number" style="text-align: right;" min="0" step="0.01"
+                                                    (change)="calculateTotalPrice($event)"
+                                                    formControlName="GSTAdjustment" class="form-control">
+                                            </td>
+                                            <td *ngIf="hideText" align="right">
+                                                {{ selectedInvoiceDetails.CurrencySymbol }}
+                                                {{ (selectedInvoiceDetails.GSTAdjustment)|number:'1.2-2' |
+                                                negativeInParenthesis}}
+                                            </td>
+                                        </tr>
+                                        <!-- <tr>
+                                            <td class="nowrap" align="right">Tax Rate (%)</td>
+                                            <td *ngIf="hideInput">
+                                                <input type="number" style="text-align: right;" (change)="calculateTotalPrice($event)"
+                                                    formControlName="TaxRate" class="form-control">
+                                            </td>
+                                            <td *ngIf="hideText" align="right">{{ selectedInvoiceDetails.TaxRate }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="nowrap" align="right">Total Tax</td>
+                                            <td *ngIf="hideInput" align="right">{{ selectedInvoiceDetails.CurrencySymbol }} {{ (InvoiceForm.get('TaxTotal').value)|number:'1.2-4'
+                                                }}</td>
+                                            <td *ngIf="hideText" align="right">{{ selectedInvoiceDetails.CurrencySymbol }} {{ (selectedInvoiceDetails.TaxTotal)|number:'1.2-4'
+                                                }}</td>
+                                        </tr> -->
+                                        <!-- <tr>
+                                            <td class="nowrap" align="right">Total Tax</td>
+                                            <td *ngIf="hideInput" align="right">{{ selectedInvoiceDetails.CurrencySymbol }} {{ (InvoiceForm.get('TaxTotal').value)|number:'1.2-4'
+                                                }}</td>
+                                            <td *ngIf="hideText" align="right">{{ selectedInvoiceDetails.CurrencySymbol }} {{ (selectedInvoiceDetails.TaxTotal)|number:'1.2-4'
+                                                }}</td>
+                                        </tr> -->
+                                        <!-- <tr>
+                                            <td class="nowrap" align="right">Shipping Charges</td>
+                                            <td *ngIf="hideInput">
+                                                <input type="number" min="0" (keydown)=restrictMinus($event) style="text-align: right;" (change)="calculateTotalPrice($event)"
+                                                    formControlName="ShippingCharges" class="form-control">
+                                            </td>
+                                            <td *ngIf="hideText" align="right">{{ selectedInvoiceDetails.CurrencySymbol }} {{ (selectedInvoiceDetails.ShippingCharges)|number:'1.2-4'
+                                                }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="nowrap" align="right">Others</td>
+                                            <td *ngIf="hideInput">
+                                                <input type="number" min="0" (keydown)=restrictMinus($event) style="text-align: right;" (change)="calculateTotalPrice($event)"
+                                                    formControlName="OtherCharges" class="form-control">
+                                            </td>
+                                            <td *ngIf="hideText" align="right">{{ selectedInvoiceDetails.CurrencySymbol }} {{ (selectedInvoiceDetails.OtherCharges)|number:'1.2-4'
+                                                }}</td>
+                                        </tr> -->
+                                        <tr>
+                                            <td class="nowrap" width="50%" align="right">Net Total</td>
+                                            <td *ngIf="hideInput" align="right">
+                                                {{ selectedInvoiceDetails.CurrencySymbol }}
+                                                {{ (InvoiceForm.get('NetTotal').value)|number:'1.2-2'}}</td>
+                                            <td *ngIf="hideText" align="right">
+                                                {{ selectedInvoiceDetails.CurrencySymbol }}
+                                                {{ (selectedInvoiceDetails.NetTotal)|number:'1.2-2'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="nowrap" align="right">Total Adjustment</td>
+                                            <td *ngIf="hideInput">
+                                                <input type="number" style="text-align: right;" min="0" step="0.01"
+                                                    (change)="calculateTotalPrice($event)" formControlName="Adjustment"
+                                                    class="form-control">
+                                            </td>
+                                            <td *ngIf="hideText" align="right">
+                                                {{ selectedInvoiceDetails.CurrencySymbol }}
+                                                {{ (selectedInvoiceDetails.Adjustment)|number:'1.2-2'|
+                                                negativeInParenthesis }}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <div style="clear: both;">
+                                        <table class="table table-totalamount" style="float:right;border: inherit">
+                                            <tr>
+                                                <td class="nowrap" width="50%" align="right">Invoice Total</td>
+                                                <td *ngIf="hideInput" align="right">
+                                                    {{ selectedInvoiceDetails.CurrencySymbol }} {{
+                                                    (InvoiceForm.get('TotalAmount').value)|number:'1.2-2'
+                                                    }}
+                                                </td>
+                                                <td *ngIf="hideText" align="right">
+                                                    {{ selectedInvoiceDetails.CurrencySymbol }} {{
+                                                    (selectedInvoiceDetails.TotalAmount)|number:'1.2-2'
+                                                    }}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-xl-12 col-sm-12 col-12"
+                                *ngIf="(isApprovalPage==true||(isApprovalPage==false && (selectedInvoiceDetails.WorkFlowStatusId==workFlowStatus.AskedForClarification||selectedInvoiceDetails.WorkFlowStatusId==workFlowStatus.WaitingForApproval)))">
+                                <h4 class="form-heading">Approval Remarks</h4>
+                                <div>
+                                    <textarea formControlName="Remarks" class="form-control"
+                                        style="width:70%;display:inline-block ">
+                                    </textarea>
+                                    <button type="submit" style="float:inherit;vertical-align: top;"
+                                        class="btn btn-edit"
+                                        (click)="updateStatus(isApprovalPage==true?workFlowStatus.AskedForClarification:workFlowStatus.WaitingForApproval)">
+                                        <i class="fa fa-envelope" aria-hidden="true"></i>
+                                        <span *ngIf="isApprovalPage==true">
+                                            {{ selectedInvoiceDetails.WorkFlowComments|ApprovalButton }}
+                                        </span>
+                                        <span *ngIf="isApprovalPage==false">
+                                            Reply
+                                        </span>
+                                    </button>
+                                </div>
+                                <div
+                                    *ngIf="InvoiceForm.get('Remarks') && InvoiceForm.get('Remarks').errors!=null && InvoiceForm.get('Remarks').touched==true">
+                                    <span class="errorMessage"
+                                        *ngIf="InvoiceForm.get('Remarks').errors.required">Approval Remarks is
+                                        Required</span>
+                                </div>
+                            </div>
+                            <div *ngIf="selectedInvoiceDetails.WorkFlowComments!=undefined && selectedInvoiceDetails.WorkFlowComments.length >0"
+                                class="col-xl-12 col-sm-12 col-12">
+                                <label class="col-form-label form-label">Previous Comments</label>
+                                <ul>
+                                    <li *ngFor="let record of selectedInvoiceDetails.WorkFlowComments">
+                                        <span class='remarksUserName'>{{ record.UserName }}</span> -
+                                        <span class='remarksDate'>{{ record.CreatedDate|date:'dd-MM-yyyy h:mm:ss a'
+                                            }}</span>:
+                                        <br>
+                                        <span>{{ record.Remarks }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <app-payment-details [DocumentId]="selectedInvoiceDetails.InvoiceId" [ProcessId]="21"
+                            [CompanyId]="companyId" [changing]="changingValue"
+                            [CurrencySymbol]="selectedInvoiceDetails.CurrencySymbol">
+                        </app-payment-details>
+
+
+                        <div *ngIf="creditNotes.length>0" class="form-group row">
+                            <div class="col-sm-5">
+                                <h4 class="form-heading">Credit Notes</h4>
+                            </div>
+                            <div class="col-xl-12 col-sm-12 col-12 table-responsive"
+                                [ngStyle]="{'max-width.px': screenWidth}">
+                                <p-table [columns]="CNColumns" [scrollable]="true" class="footerbg" sortMode="multiple"
+                                    [value]="creditNotes">
+                                    <ng-template pTemplate="header" let-columns>
+                                        <tr style="height: 40px;">
+                                            <th *ngFor="let col of columns;let i=index" [pSortableColumn]="col.field">
+                                                {{col.header}}
+                                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                                            </th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-creditnote let-i="rowIndex">
+                                        <tr>
+                                            <td>
+                                                <a (click)="redirectToCNDetails(creditnote)"
+                                                    style="color:#0645AD; cursor: pointer; text-decoration: underline;">
+                                                    {{creditnote.DocumentCode}}
+                                                </a>
+                                            </td>
+                                            <td> {{creditnote.SupplierCreditNoteNo}} </td>
+                                            <td> {{creditnote.CreatedDate | date:"dd/MM/yyyy"}} </td>
+                                            <td align="right"> {{creditnote.CreditNoteTotal | number:'1.2-2'}} </td>
+                                            <td> {{creditnote.WorkFlowStatus}} </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="hideLeftPanel===false" class="row">
+                        <div class="col-12">
+                            <!-- {{
+                                    purchaseOrderTypeId
+                                }}      
+                                {{
+                                    sumSubtotal
+                                }}
+                                                        
+                                {{
+                                    InvoiceForm.get('SubTotal').value
+                                }}
+                                
+                                {{
+                                    selectedInvoiceDetails.SubTotal
+                                }}
+                                
+                                {{
+                                    selectedInvoiceDetails.WorkFlowStatusId
+                                }} -->
+                            <div *ngIf="requestType=='request'" class="form-group text-right btn-list">
+                                <p>
+                                    Parameters {{hideInput}}
+                                </p>
+                                
+                                <button type="submit" (click)="cancelRecord()" class="btn btn-save">
+                                <i class="fa fa-stop" aria-hidden="true"></i> Cancel</button>
+
+                                <button type="submit" (click)="saveRecord(workFlowStatus.Draft)" class="btn btn-save"
+                                    *ngIf="hideInput">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+
+                                <button type="submit"
+                                    *ngIf="(hideText&&((selectedInvoiceDetails.WorkFlowStatusId==workFlowStatus.WaitingForApproval||selectedInvoiceDetails.WorkFlowStatusId==workFlowStatus.AskedForClarification)))  && isSameUSer"
+                                    (click)="recallInvoiceApproval()" class="btn btn-cancel">
+                                    <i class="fa fa-times-circle" aria-hidden="true"></i> Cancel Approval
+                                </button>
+                                
+                                <button type="submit" (click)="displayVoidPopUp(true)" class="btn btn-void"
+                                    *ngIf="((selectedInvoiceDetails.WorkFlowStatusId==workFlowStatus.Completed||selectedInvoiceDetails.WorkFlowStatusId==workFlowStatus.Approved) && voidPermission) && canVoid && !enableOnVerify">
+                                    <i class="fa fa-ban" aria-hidden="true"></i> Void</button>
+
+
+                                <button class="btn btn-edit"
+                                    *ngIf="selectedInvoiceDetails.WorkFlowStatus=='Open' && verifyPermission && canVoid && !enableOnVerify"
+                                    (click)="editVerify()">Verify</button>
+
+                                <button class="btn btn-edit"
+                                    *ngIf="selectedInvoiceDetails.WorkFlowStatus=='Open' && verifyPermission && enableOnVerify"
+                                    (click)="VerifyInvoice()">Update</button>
+
+
+                                <!-- <button type="submit" *ngIf="((purchaseOrderTypeId===6
+                                    &&(selectedInvoiceDetails.SubTotal>sumSubtotal||InvoiceForm.get('SubTotal').value>sumSubtotal)&& 
+                                    (selectedInvoiceDetails.WorkFlowStatusId==undefined || selectedInvoiceDetails.WorkFlowStatusId==null ||selectedInvoiceDetails.WorkFlowStatusId==workFlowStatus.Draft) )
+                                    ||(selectedInvoiceDetails.WorkFlowStatusId==workFlowStatus.CancelledApproval))"
+                                    (click)="saveRecord(workFlowStatus.WaitingForApproval)" 
+                                    class="btn btn-approve">
+                                <i class="fa fa-check" aria-hidden="true"></i> Send for Approval</button> -->
+
+
+
+                                <!-- <button type="submit" *ngIf="(((InvoiceForm.get('IsPOC').value==1||selectedInvoiceDetails.IsPOC==1)                                                        
+                                &&(selectedInvoiceDetails.SubTotal>sumSubtotal||InvoiceForm.get('SubTotal').value>sumSubtotal)&& 
+                                (selectedInvoiceDetails.WorkFlowStatusId==undefined || selectedInvoiceDetails.WorkFlowStatusId==null ||selectedInvoiceDetails.WorkFlowStatusId==workFlowStatus.Draft) )
+                                ||(selectedInvoiceDetails.WorkFlowStatusId==workFlowStatus.CancelledApproval))"
+                                (click)="saveRecord(workFlowStatus.WaitingForApproval)" 
+                                class="btn btn-approve">
+                                <i class="fa fa-check" aria-hidden="true"></i> Send for Approval</button>
+
+                                <button type="submit" (click)="submit()" 
+                                *ngIf="(hideInput&&(selectedInvoiceDetails.SubTotal<=sumSubtotal||InvoiceForm.get('SubTotal').value<=sumSubtotal))
+                                ||(hideInput&&selectedInvoiceDetails.WorkFlowStatusId==workFlowStatus.Draft&&sumSubtotal==undefined)"
+                                 class="btn btn-approve">
+                                 <i class="fa fa-check" aria-hidden="true"></i> Submit</button> -->
+                                <!-- 
+                                 <button type="submit" *ngIf="(((hideInput&&(InvoiceForm.get('IsPOC').value===1))||(hideText&&selectedInvoiceDetails.IsPOC===true))
+                                 &&(hideInput&&(InvoiceForm.get('SubTotal').value > sumSubtotal) ) || ( hideText&&(selectedInvoiceDetails.SubTotal > sumSubtotal ))&&
+                                 ((hideInput||hideText)&&(selectedInvoiceDetails.WorkFlowStatusId==undefined || selectedInvoiceDetails.WorkFlowStatusId==null ||
+                                 selectedInvoiceDetails.WorkFlowStatusId==workFlowStatus.Draft ||
+                                 selectedInvoiceDetails.WorkFlowStatusId==workFlowStatus.CancelledApproval)))"
+                                 (click)="saveRecord(workFlowStatus.WaitingForApproval)" 
+                                 class="btn btn-approve">
+                                <i class="fa fa-check" aria-hidden="true"></i> Send for Approval</button>
+                            
+                            *ngIf="((this.selectedInvoiceTypeId==1&&purchaseOrderTypeId!=5 &&(subTotal>sumSubtotal||
+                            -->
+                                <button type="submit" class="btn btn-approve"
+                                    *ngIf="selectedInvoiceDetails.WorkFlowStatusId!=3 && (((approvePermission&&((selectedInvoiceTypeId==1&&purchaseOrderTypeId<5 &&(subTotal > POSubtotal||
+                                (hideInput&&(subTotal) > POSubtotal)))||selectedInvoiceTypeId==2)&&
+                                (selectedInvoiceDetails.WorkFlowStatusId==undefined || selectedInvoiceDetails.WorkFlowStatusId==null ||
+                                 selectedInvoiceDetails.WorkFlowStatusId==workFlowStatus.Draft ||
+                                 selectedInvoiceDetails.WorkFlowStatusId==workFlowStatus.CancelledApproval)) && isSameUSer) ||(purchaseOrderTypeId==6 && (totalbeforgstamount > POSubtotal) ))"
+                                    (click)="saveRecord(workFlowStatus.WaitingForApproval)">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Send for Approval</button>
+
+                                <button type="submit" (click)="submit()" *ngIf="this.selectedInvoiceTypeId==1&&hideInput&&
+                                ((subTotal <= POSubtotal)||(purchaseOrderTypeId==5 &&subTotal > POSubtotal))"
+                                    class="btn btn-approve">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Submit</button>
+
+                                <button type="button" (click)="cancelRecord()" class="btn btn-cancel"
+                                    *ngIf="hideInput || enableOnVerify">
+                                    <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+
+                                <button type="button" (click)="editRecord()"
+                                    *ngIf="(hideText&&(selectedInvoiceDetails.WorkFlowStatusId==workFlowStatus.Draft||
+                                                    selectedInvoiceDetails.WorkFlowStatusId==workFlowStatus.CancelledApproval) && editPermission) && isSameUSer"
+                                    class="btn btn-edit">
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+
+                                <button type="button" (click)="cancelDraft()" class="btn btn-cancel"
+                                    *ngIf="(hideText&&(selectedInvoiceDetails.WorkFlowStatusId==workFlowStatus.Draft) && selectedInvoiceTypeId==1) && (isSameUSer || cancelDraftPermission)">
+                                    <i class="fa fa-ban" aria-hidden="true"></i> Cancel Draft</button>
+
+                                <!-- <button type="button" (click)="deleteRecord()" *ngIf="hideText&&selectedInvoiceDetails.WorkFlowStatusId==workFlowStatus.Draft" class="btn btn-delete">
+                                    <i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button> -->
+                            </div>
+                            <div *ngIf="requestType=='approval' && isApproverUser"
+                                class="form-group text-right btn-list">
+                                <button type="submit" (click)="updateStatus(workFlowStatus.Completed)"
+                                    *ngIf="approvePermission" class="btn btn-approve">
+                                    <i class="fa fa-check" aria-hidden="true"></i>Approve</button>
+                                <button type="submit" (click)="displayVoidPopUp(false)" *ngIf="approvePermission"
+                                    class="btn btn-delete">
+                                    <i class="fa fa-ban" aria-hidden="true"></i> Reject</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <p-confirmDialog></p-confirmDialog>
+            <!-- <void-purchase-order-popup *ngIf="showVoidPopUp" [isVoid]="isVoid" [purchaseOrderCode]="purchaseOrderCode" (reject)="reject($event)" 
+            [purchaseOrderTypeId]="selectedInvoiceDetails.POTypeId" [purchaseOrderId]="selectedInvoiceDetails.ExpensesPurchaseOrderId" (onStatusUpdate)="onStatusUpdate($event)" 
+            (hideVoidPopUp)="hideVoidPopUp($event)" [showVoidPopUp]="showVoidPopUp"></void-purchase-order-popup> -->
+            <p-dialog [modal]="true" [(visible)]="showVoidPopUp">
+                <p-header>
+                    {{pmoduleHeading}}
+                    <!-- Supplier Invoice Void Confirmation -->
+                </p-header>
+                <div [style.display]="voidPopUpTabId==1?'block':'none'">
+                    <span>
+                        {{pmoduleMessage}}
+                        <!-- Are you sure to void this Invoice ?? -->
+                    </span>
+                </div>
+                <div [style.display]="voidPopUpTabId==3?'block':'none'">
+                    <span>Document cannot be "Voided" as it is "Exported" or "Paid"</span>
+                </div>
+                <div [style.display]="voidPopUpTabId==2?'block':'none'">
+                    <form [formGroup]="invoiceVoidForm">
+                        <div>
+                            <label class="form-label">Reasons</label>
+                            <textarea rows="4" cols="50" class="form-control" formControlName="Reasons">
+                                </textarea>
+                        </div>
+                        <div
+                            *ngIf="invoiceVoidForm.get('Reasons') && invoiceVoidForm.get('Reasons').errors!=null && invoiceVoidForm.get('Reasons').touched==true">
+                            <span class="errorMessage" *ngIf="invoiceVoidForm.get('Reasons').errors.required">Reasons is
+                                Required</span>
+                        </div>
+                    </form>
+                </div>
+                <p-footer>
+                    <button type="button" *ngIf="isApprovalPage==false&&voidPopUpTabId==2" class="btn"
+                        (click)="voidRecord()">Ok</button>
+                    <button type="button" *ngIf="isApprovalPage==true&&voidPopUpTabId==2" class="btn"
+                        (click)="updateRejectStatus(workFlowStatus.Rejected)">Ok</button>
+                    <button type="button" *ngIf="voidPopUpTabId==3" class="btn"
+                        (click)="showVoidPopUp=false">Ok</button>
+                    <button type="button" *ngIf="voidPopUpTabId==1" class="btn" (click)="voidPopUpTabId=2">Yes</button>
+                    &nbsp;
+                    <button type="button" *ngIf="voidPopUpTabId==1" class="btn"
+                        (click)="showVoidPopUp=false">No</button>
+                </p-footer>
+            </p-dialog>
+        </div>
+        <!-- left col end here-->
+    </div>
+</div>
+
+
+<p-dialog header="Select Invoice Type" width="400" modal='true' [(visible)]="showInvoiceTypeDialog">
+    <div class="form-group row">
+        <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Invoice Type</label>
+        <div class="col-xl-8 col-sm-6 col-12">
+            <select #purchaseOrderDropDown class="form-control">
+                <option value=1>
+                    With PO
+                </option>
+                <option value=2>
+                    Without PO
+                </option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <button style='left:84%;position: relative;' (click)="invoiceSelectionOk(purchaseOrderDropDown.value)"
+            class="btn btn-save">
+            Ok
+        </button>
+    </div>
+</p-dialog>
+
+<!-- <p-dialog [modal]="true" [(visible)]="showVoidPopUp">
+    <p-header>
+        {{pmoduleHeading}} -->
+<!-- Supplier Invoice Void Confirmation -->
+<!-- </p-header>
+    <div [style.display]="voidPopUpTabId==1?'block':'none'">
+        <span>
+            {{pmoduleMessage}} -->
+<!-- Are you sure to void this Invoice ?? -->
+<!-- </span>
+    </div>
+    <div [style.display]="voidPopUpTabId==3?'block':'none'">
+        <span>Document cannot be "Voided" as it is "Exported" or "Paid"</span>
+    </div>
+    <div [style.display]="voidPopUpTabId==2?'block':'none'">
+        <form [formGroup]="invoiceVoidForm">
+            <div>
+                <label class="form-label">Reasons</label>
+                <textarea rows="4" cols="50" class="form-control" formControlName="Reasons">
+                    </textarea>
+            </div>
+            <div *ngIf="invoiceVoidForm.get('Reasons') && invoiceVoidForm.get('Reasons').errors!=null && invoiceVoidForm.get('Reasons').touched==true">
+                <span class="errorMessage" *ngIf="invoiceVoidForm.get('Reasons').errors.required">Reasons is Required</span>
+            </div>
+        </form>
+    </div>
+    <p-footer>
+        <button type="button" *ngIf="isApprovalPage==false&&voidPopUpTabId==2" class="btn" (click)="voidRecord()">Ok</button>
+        <button type="button" *ngIf="isApprovalPage==true&&voidPopUpTabId==2" class="btn" (click)="updateRejectStatus(workFlowStatus.Rejected)">Ok</button>
+        <button type="button" *ngIf="voidPopUpTabId==3" class="btn" (click)="showVoidPopUp=false">Ok</button>
+        <button type="button" *ngIf="voidPopUpTabId==1" class="btn" (click)="voidPopUpTabId=2">Yes</button>
+        &nbsp;
+        <button type="button" *ngIf="voidPopUpTabId==1" class="btn" (click)="showVoidPopUp=false">No</button>
+    </p-footer>
+</p-dialog> -->
+
+
+<ng-template #poTemplate let-r="result" let-i="index" let-t="term">
+    <table class="autoCompleteTable" style="width: 99%;">
+        <thead *ngIf='r.index==0'>
+            <tr>
+                <th style="width: 20%">
+                    PO Number
+                </th>
+                <th style="width: 25%">
+                    Requestor
+                </th>
+                <th style="width: 20%">
+                    Total
+                </th>
+                <th style="width: 20%">
+                    Date
+                </th>
+            </tr>
+        </thead>
+        <tr>
+            <td style="width: 20%">{{ r.PurchaseOrderCode }}</td>
+            <td style="width: 25%; white-space: pre-wrap; word-wrap: break-word; ">{{ r.FirstName }}</td>
+            <td style="width: 20%">{{ r.TotalAmount }}</td>
+            <td style="width: 20%">{{ r.CreatedDate |DisplayDateFormat }}</td>
+        </tr>
+    </table>
+</ng-template>
+
+<ng-template #itemMasterTemplate let-r="result" let-t="term">
+    <div style="max-height: 100px; overflow: auto">
+        {{ r.ItemName }}
+    </div>
+</ng-template>
+<ng-template #itemMasterTemplategl let-r="result" let-t="term">
+    <div style="max-height: 100px; overflow: auto">
+        {{ r.ItemName }}
+    </div>
+</ng-template>
+
+<ng-template #serviceMasterTemplate let-r="result" let-t="term">
+    <div style="max-height: 100px; overflow: auto">
+        {{ r.AccountCodeName }}
+    </div>
+</ng-template>
+<ng-template #ExpenseMasterTemplate let-r="result" let-t="term">
+    <div style="max-height: 100px; overflow: auto">
+        {{ r.AccountCodeName }}
+    </div>
+</ng-template>
+
+<ng-template #supplierTemplate let-r="result" let-t="term">
+    <!-- {{ r.SupplierName }} -->
+    <!-- <div [ngClass]="ngb-disabled">
+        <span [ngClass]="{disabled : r.WorkFlowStatus!='Approved'}"> {{ r.WorkFlowStatus!='Approved'? r.SupplierName + " ( " + r.WorkFlowStatus + " ) " : r.SupplierName}}</span>
+    </div> -->
+    <div [ngClass]="ngb-disabled">
+        <span [ngClass]="{disabled : r.WorkFlowStatus!='Approved' || r.IsFreezed===true}">
+            {{ r.WorkFlowStatus!='Approved' ? r.SupplierName + " ( " + r.WorkFlowStatus + " ) " :
+            r.SupplierName}}</span>
+    </div>
+</ng-template>
+<app-auditlog *ngIf="showLogPopUp" (hideLogPopUp)="hideLogPopUp($event)" [DocumentId]="SelectedInvoiceId"
+    [DocumentNumber]="InvoiceCode" [PageName]="'SupplierInvoice'" [DocType]="'Invoice'" [showLogPopUp]="showLogPopUp">
+</app-auditlog>

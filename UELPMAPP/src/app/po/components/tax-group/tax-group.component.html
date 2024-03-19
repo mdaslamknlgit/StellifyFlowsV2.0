@@ -1,0 +1,168 @@
+<div class="container-fluid">
+  <div class="row">
+  <div class="col-md-6 col-sm-12 padding-null tittlediv">
+  <h3 class="item-heading"> <img src="../assets/images/icon1.png"> Purchases > Tax Group </h3>
+  </div>
+  <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+    <div class="leftmenuline"  (click)="showLeftCol($event)"    >
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <img src="../assets/images/add-new.png" (click)="addRecord();" *ngIf="hidetext && newPermission"> 
+      <img src="../assets/images/grid1.png" (click)="showFullScreen()"> 
+      <!-- <img src="../assets/images/grid2.png">  -->
+  </div>
+  </div>
+  <div class="row">
+      
+   <div class="col-lg-3 col-md-4 leftdiv"   [CustomSpinner]="showLeftPanelLoadingIcon" [class.collapse-leftcol]="leftsection">   
+  <div class="left-section" > 
+  
+   <div class="filter-section"  ngbDropdown #myDrop="ngbDropdown" >
+  
+  <div class="left-search">
+          <input type="text"  [(ngModel)]="taxGroupSearchKey" placeholder="Search requests..." class="search-filter" (keyup)="onSearchInputChange($event)">
+          <!-- <i class="fa fa-search" aria-hidden="true"></i> -->
+         <!-- <div class="filter-popup" *ngIf="initDone" ngbDropdownMenu aria-labelledby="dropdownManual" (click)="$event.stopPropagation(); myDrop.open();"> -->
+              
+                  <!-- <form [formGroup]="UserFilterInfoForm" class="form-horizontal">
+  
+                      <div class="form-group row">
+                          <label class="col-form-label col-6 form-label">User Name</label>
+                          <div  class="col-6"> 
+
+                              <input #userName formControlName="UserName"
+                              type="text" class="form-control show" [inputFormatter]="userInputFormater"
+                             [ngbTypeahead]="userSearch" [resultTemplate]="userTemplate"/>
+  
+                          </div>
+                      </div>
+  
+                      <div class="form-group row">
+                          <label class="col-form-label col-6 form-label">User Roles</label>
+                          <div class="col-6">
+                                  <input  type="text" formControlName="UserRoles" class="form-control">  
+                          </div>
+                      </div>  
+  
+                      <div class="form-group row">
+                          <div class="col-12 error">
+                              {{filterMessage}}
+                          </div>
+                      </div>
+  
+                      <div class="form-group row">
+  
+                          <div class="col-12" style="text-align: right">
+                              <button type="submit" (click)="filterData()" class="btn btn-save">
+                                  <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                              <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                  <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+  
+                          </div>
+                      </div>
+                  </form> -->
+          <!-- </div> -->
+  
+      </div>
+  
+       <!-- start filter code -->
+       <!-- <div class="filter-icon">
+              <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                  <i class="fa fa-filter" aria-hidden="true"></i>
+              </button>
+          </div>
+  
+          <div style="float:right;margin:0px;" class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+              <i class="fa fa-undo" aria-hidden="true"></i>
+    </div> -->
+  
+          
+        <!-- end filter code -->
+  
+  
+      <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="filter-scroll" style="width:100%; float:left;">
+      <table class="table">
+      <tr [class.activerow]="record.TaxGroupId==selectedtaxGroupManagementRecord.TaxGroupId" (click)="onRecordSelection(record.TaxGroupId)" *ngFor="let record of taxGroupManagementList">
+              <td  (click)="hidefilter()">
+                  <h5 class="sub-heading"> {{record.TaxGroupName}}</h5>
+                  <label class="label-text">Description</label> :
+                  <label class="label-value">{{record.Description}}</label>       
+                  <!-- <label class="label-text">Status</label> :
+                  <label class="label-value">{{record.Status==1?"Active":"InActive"}}</label>        -->
+                              
+              </td>
+      </tr>
+      </table>
+          <div *ngIf="taxGroupManagementList.length==0" class="col-12 listErrorMessage">
+                  {{errorMessage}}
+              </div> 
+          <ngb-pagination [maxSize]="5" *ngIf="taxGroupManagementList.length>0" (pageChange)="pageChange($event)" [collectionSize]="taxGroupPagerConfig.TotalRecords" class="d-flex justify-content-center" [pageSize]="taxGroupPagerConfig.RecordsToFetch" [page]="1" [boundaryLinks]="true"></ngb-pagination>
+      </div>  
+  
+   
+     </div>
+      </div>
+      <div class="split-line" (click)="split()"></div> 
+   </div><!-- left col end here-->
+  
+  <div  #rightPanel [CustomSpinner]="showRightPanelLoadingIcon" class="rightPanel col-lg-9 col-md-8"  [class.expand-rightcol]="rightsection">
+        <div class="fullScreenLabel">    <app-header></app-header> </div>
+  
+  <div >
+      <form  [formGroup]="taxGroupForm" class="form-horizontal" >
+      <div   class="rightcol-scrroll">
+              <div class="row fullScreenLabel">
+                      <div class="col-12">
+                          <h3 class="item-heading" style="float:none;">Tax Group</h3>
+                      </div>
+                  </div>
+      <div class="form-group row">
+          <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">TaxGroup Name <i class="fa fa-star mandatory-icon" *ngIf="hideinput" aria-hidden="true"></i></label>  
+          <div class="autoComplete col-xl-4 col-sm-6 col-6">
+                <label class="col-form-label form-text" *ngIf="hidetext">
+                   <b style="color:#01548e">{{selectedtaxGroupManagementRecord.TaxGroupName}}</b> </label>
+
+                   <input formControlName="TaxGroupName" *ngIf="hideinput" type="text" class="form-control show"/>
+                <div *ngIf="taxGroupForm.get('TaxGroupName').errors==null&&selectedtaxGroupManagementRecord.TaxGroupId==0">
+                    <span class="errorMessage" *ngIf="taxGroupForm.get('TaxGroupName').errors.EmptyTaxGroupName">Please Enter Name</span>
+               </div>
+                <div *ngIf="taxGroupForm.get('TaxGroupName').errors!=null">
+                    <span class="errorMessage" *ngIf="taxGroupForm.get('TaxGroupName').errors.DuplicateTaxGroup">Duplicate TaxGroup Name</span>
+                </div>
+          </div>
+      </div>
+      <div class="form-group row">
+          <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Description </label>
+          <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">{{selectedtaxGroupManagementRecord.Description }}</label>
+              <input formControlName="Description" *ngIf="hideinput" type="text" class="form-control show" />
+          </div>
+      </div>
+    
+      
+      </div>
+  
+      <div class="form-group text-right btn-list">
+          <button type="submit" (click)="saveRecord()"  class="btn btn-save" *ngIf="hideinput"><i class="fa fa-check" aria-hidden="true"></i> Save</button>
+          <button type="submit" (click)="cancelRecord()"  class="btn btn-cancel" *ngIf="hideinput"><i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+          <button type="submit" (click)="editRecord()" class="btn btn-edit" *ngIf="hidetext && editPermission"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+          <button type="submit" (click)="deleteRecord()"  class="btn btn-delete" *ngIf="hidetext && deletePermission"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+  </div>
+  
+      </form>
+      <p-confirmDialog></p-confirmDialog> 
+  </div>
+  
+  
+  </div><!-- left col end here-->
+  
+  
+  </div>
+   
+  </div>
+ 
+  <ng-template #userTemplate let-r="result" let-t="term">          
+    {{ r.UserName }}
+  </ng-template>

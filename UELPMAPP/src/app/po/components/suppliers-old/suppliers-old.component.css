@@ -1,0 +1,112 @@
+.error{float:left; width:100%;  color:red;}
+.error-message{ color: red;}
+.align-text-top img{ margin: 0px 2px;}
+.box-red{ border: 1px solid red;}
+.toast-message-view.error-message { border: 1px solid red; }
+.enlargeRightPanel:-webkit-full-screen 
+{  
+  min-width: 100%;  
+  min-height: 100%;  
+}
+.enlargeRightPanelMargin{
+    margin-top:3%;
+}
+.addLine
+{
+    background: #01548e;
+    color: white;
+    border: 1px solid #01548e;
+    cursor: pointer;
+    border-radius: 3px;
+    margin-left: 3px;
+}
+.linesToAdd
+{
+    width: 5%;
+    height: 24px;
+    padding: 3px;
+    display:inline-block;
+    font-size: 12px;
+}
+.gridRemoveIcon
+{
+    font-size:18px;
+    cursor: pointer;
+    position: relative;
+}
+.gridIconsStyle
+{
+    float: left;
+    top: 5px;
+    position: relative;
+    left: 7%;
+}
+.table tr .gridIconsStyle
+{
+    display:none;
+}
+.table tr:hover .gridIconsStyle
+{
+    display:block;
+}
+
+.multiselect.form-control
+{
+    padding: 0px;
+    height:auto;
+}
+
+.autoCompleteTable td{    
+    border-collapse: separate;
+}
+.autoCompleteTable
+{
+    table-layout: fixed;
+}
+
+.fileList
+{   
+    width:100%;
+}
+.fileList li
+{
+    padding: 1em;
+    background-color: #fff;
+    border:1px solid #e6e6e6; 
+}
+.fileList .fileName
+{
+    font-weight: bold;
+}
+.fileList .fileSize
+{
+    color:#afa5a5;
+}
+.fileList .fa.fa-close
+{
+    font-size: 16px;
+    float: right;
+    color:#afa5a5;
+    cursor: pointer;
+}
+
+.displayFileName
+{
+    display: inline-block;
+    padding:1em;
+}
+.attachments .fa
+{
+    font-size:16px;
+    cursor: pointer;
+}
+/*
+:host ::ng-deep .dropdown-item { padding: 0px;}
+:host ::ng-deep .dropdown-menu.show { min-width: 500px;}
+*/
+.multiselect{ position: relative;}
+::ng-deep.mat-menu-panel {
+    /* These numbers are my requirement, put something which suits yours */
+    transform: translate(0px, 28px);
+ }
+ 

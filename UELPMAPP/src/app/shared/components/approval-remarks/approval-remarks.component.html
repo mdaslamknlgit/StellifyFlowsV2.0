@@ -1,0 +1,39 @@
+<div class="row" *ngIf="(IsApprovalPage && IsSendForClarification) || 
+(!IsApprovalPage && IsReplyForClarification && WorkFlowStatus.WorkFlowStatusid == 2 && WorkFlowComments.length > 0)">
+  <div class="col-12">
+    <h4 class="form-heading">Approval/Requester Remarks</h4>
+  </div>
+  <div class="col-12">
+    <div style="display: flex; align-items: center;">
+      <textarea class="form-control" [(ngModel)]="Remarks" style="width:70%;display:inline-block "></textarea>
+      <button type="submit" *ngIf="IsApprovalPage && IsSendForClarification" (click)="SendForClarification()"
+        class="btn btn-edit">
+        <i _ngcontent-c9="" aria-hidden="true" class="fa fa-envelope"></i> Send for Clarification </button>
+      <button type="submit"
+        *ngIf="!IsApprovalPage && IsReplyForClarification && WorkFlowStatus.WorkFlowStatusid == 2 && WorkFlowComments.length > 0"
+        (click)="ReplyForClarification()" class="btn btn-edit"> Reply </button>
+    </div>
+  </div>
+</div>
+<div class="row" style="margin-top:3em;" *ngIf="WorkFlowComments.length>0">
+  <div class="col-12 row">
+    <div class="col-12">
+      <h4 class="form-heading">Previous Comments</h4>
+    </div>
+  </div>
+  <div class="col-12 row">
+    <div class="col-12">
+      <ul>
+        <li *ngFor="let record of WorkFlowComments">
+          <span class='remarksUserName'>{{ record.UserName }}</span> -
+          <span class='remarksDate'>
+            {{ record.CreatedDate|date:'dd-MM-yyyy h:mm:ss a' }}</span>:
+          <br>
+          <span>{{ record.Remarks }}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<br>
+<br>

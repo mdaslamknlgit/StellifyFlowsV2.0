@@ -1,0 +1,1729 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 col-sm-12 padding-null tittlediv">
+            <h3 class="item-heading">
+                <img src="../assets/images/icon1.png"> {{ moduleHeading }}
+            </h3>
+        </div>
+        <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+            <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+                <button class="btn btn-outline-primary" style="background:none;border:none;padding:0px;"
+                    id="dropdownBasic1" ngbDropdownToggle>
+                    <img src="../assets/images/grid2.png">
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button class="dropdown-item" *ngIf="creditNoteDetails.ButtonPreferences.Print && printPermission"
+                        (click)="onPDFPrint()">Print</button>
+                    <button class="dropdown-item" *ngIf="creditNoteDetails.ButtonPreferences.Export && exportPermission"
+                        (click)="exportDocument()">Export</button>
+                    <button class="dropdown-item" *ngIf="viewLogPermission" (click)="displayLogPopUp()">
+                        View Log
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div #rightPanel class="rightPanel col-lg-12 col-md-12">
+            <div class="fullScreenLabel">
+                <app-header></app-header>
+            </div>
+            <div>
+                <form class="form-horizontal" [formGroup]="creditNoteForm">
+                    <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div *ngIf="creditNoteForm.get('CreditNoteId').value > 0" class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Requestor
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        {{creditNoteForm.get('CreditNoteRequestor').value}}
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier Type
+                                        <i class="fa fa-star mandatory-icon"></i>
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6" *ngIf="!InViewMode && !hideType">
+                                        <label for="fixed" class="col-form-label">
+                                            <input type="radio" id="fixed" name="SupplierType"
+                                                [(ngModel)]="mySelectedItem" formControlName="SupplierType"
+                                                [value]="supplierCategoryType[0]"
+                                                (change)="OnChangeSupplierType('Internal')">
+                                            Internal
+                                        </label>&nbsp;&nbsp;
+
+                                        <label for="variable" class="col-form-label">
+                                            <input type="radio" name="SupplierType" id="external"
+                                                [value]="supplierCategoryType[1]" formControlName="SupplierType"
+                                                (change)="OnChangeSupplierType('External')">
+                                            External
+                                        </label>
+                                        <div
+                                            *ngIf="creditNoteForm.get('SupplierType').invalid && (creditNoteForm.get('SupplierType').dirty || creditNoteForm.get('SupplierType').touched)">
+                                            <span class="errorMessage"
+                                                *ngIf="creditNoteForm.get('SupplierType').errors.required">Supplier Type
+                                                required</span>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-xl-8 col-sm-6 col-6" *ngIf="!InViewMode && hideType">
+                                        <label class="col-form-label form-text">
+                                            {{creditNoteForm.controls['SupplierType'].value === 1?
+                                            "Internal":"External"}} </label>
+                                    </div>
+                                    <div class="col-xl-8 col-sm-6 col-6" *ngIf="InViewMode">
+                                        <label
+                                            class="col-form-label form-text">{{creditNoteForm.controls['SupplierType'].value
+                                            === 1? "Internal":"External"}}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">CRN Type
+                                        <i class="fa fa-star mandatory-icon"></i>
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6" *ngIf="CreditnoteId == 0">
+                                        <select class="form-control" (change)="OnChangeCRNType($event.target.value)"
+                                            formControlName="CRNType">
+                                            <option value="" selected>--Select CRN Type--</option>
+                                            <option *ngFor="let type of crnTypes" [disabled]="type.disable"
+                                                value={{type.value}}>
+                                                {{type.text}}
+                                            </option>
+                                        </select>
+                                        <div style="padding-top: 0px;"
+                                            *ngIf="creditNoteForm.get('CRNType').invalid && (creditNoteForm.get('CRNType').dirty || creditNoteForm.get('CRNType').touched)">
+                                            <span class="errorMessage"
+                                                *ngIf="creditNoteForm.get('CRNType').errors.required">
+                                                CRN Type is required
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-8 col-sm-6 col-6" style="padding-top: 0px;"
+                                        *ngIf="CreditnoteId > 0">
+                                        <div *ngIf="creditNoteDetails">
+                                            <label class="col-form-label form-text">
+                                                <span *ngIf="creditNoteDetails.InvoiceId>0">With Invoice</span>
+                                                <span
+                                                    *ngIf="creditNoteDetails.InvoiceId < 0 ||creditNoteDetails.InvoiceId ==''">
+                                                    With Out Invoice
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier
+                                        <i class="fa fa-star mandatory-icon"></i>
+                                    </label>
+                                    <div *ngIf="InViewMode" class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text">
+                                            {{creditNoteForm.controls['SupplierName'].value}}</label>
+                                    </div>
+                                    <div *ngIf="hideInput" class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text">
+                                            {{creditNoteForm.controls['SupplierName'].value}}</label>
+                                    </div>
+                                    <div class="col-xl-8 col-sm-6 col-6" *ngIf="!InViewMode && !hideInput">
+                                        <input formControlName="Supplier" type="text" class="show form-control"
+                                            [inputFormatter]="supplierInputFormater"
+                                            (selectItem)="onSupplierChange($event)" [ngbTypeahead]="supplierSearch"
+                                            [resultTemplate]="supplierTemplate" />
+                                        <div
+                                            *ngIf="creditNoteForm.get('Supplier').invalid && (creditNoteForm.get('Supplier').dirty || creditNoteForm.get('Supplier').touched)">
+                                            <span class="errorMessage"
+                                                *ngIf="creditNoteForm.get('Supplier').errors.required">Supplier is
+                                                required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier ID
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6" *ngIf="!InViewMode">
+                                        <input type="text" formControlName="SupplierCode" type="text"
+                                            class="form-control" disabled>
+                                    </div>
+                                    <div class="col-xl-8 col-sm-6 col-6" *ngIf="InViewMode">
+                                        <label class="col-form-label form-text">
+                                            {{creditNoteForm.controls['SupplierCode'].value}} </label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier Address
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6" *ngIf="!InViewMode">
+                                        <textarea formControlName="SupplierAddress" class="form-control"></textarea>
+                                    </div>
+                                    <div class="col-xl-8 col-sm-6 col-6" *ngIf="InViewMode">
+                                        <label class="col-form-label form-text"
+                                            [innerText]="creditNoteForm.controls['SupplierAddress'].value">
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group row" *ngIf="creditNoteForm.get('CreditNoteId').value>0">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                        Credit Note Id
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text">
+                                            {{creditNoteForm.controls['DocumentCode'].value}} </label>
+                                    </div>
+                                </div>
+                                <div class="form-group row" *ngIf="creditNoteForm.get('CreditNoteId').value>0">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Creation
+                                        Date</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text">
+                                            {{creditNoteForm.controls['CreationDate'].value|DisplayDateFormat}} </label>
+                                    </div>
+                                </div>
+                                <div class="form-group row" *ngIf="creditNoteForm.get('CreditNoteId').value>0">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Status</label>
+                                    <div class="col-xl-8 col-sm-6 col-6" style="padding-top: 0px;"
+                                        *ngIf="creditNoteDetails">
+                                        <label class="col-form-label form-text">{{ creditNoteDetails.WorkFlowStatus ==
+                                            'Completed' ? 'Open' : creditNoteDetails.WorkFlowStatus}}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Department
+                                        <i class="fa fa-star mandatory-icon" aria-hidden="false"></i>
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6" *ngIf="!InViewMode && !isReVerifing">
+                                        <select formControlName="LocationID" (change)="onDeptChange()"
+                                            class="form-control">
+                                            <option value="">--Select--</option>
+                                            <option *ngFor="let record of departments"
+                                                [style.color]="record.HasWorkflow?'': 'lightgray'"
+                                                [disabled]="!record.HasWorkflow" value={{record.LocationID}}>
+                                                {{record.Name}}
+                                        </select>
+                                        <div
+                                            *ngIf="creditNoteForm.get('LocationID').invalid && (creditNoteForm.get('LocationID').dirty || creditNoteForm.get('LocationID').touched)">
+                                            <span class="errorMessage"
+                                                *ngIf="creditNoteForm.get('LocationID').errors.required">
+                                                Department is required
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-8 col-sm-6 col-6" *ngIf="InViewMode || isReVerifing">
+                                        <label class="col-form-label form-text"> {{creditNoteForm.get('Name').value}}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div *ngIf="!InViewMode && creditNoteForm.get('CRNType').value == 'WithOutinvoice'"
+                                    class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier SubCode
+                                        <i class="fa fa-star mandatory-icon" aria-hidden="false"></i>
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <select formControlName="SubCodeId"
+                                            (change)="subCodeChange($event.target.value)" class="form-control">
+                                            <option value="">--Select--</option>
+                                            <option *ngFor="let subCode of supplierSubCodes"
+                                                value={{subCode.SubCodeId}}>
+                                                {{subCode.SubCodeDescription}}
+                                        </select>
+                                        <div
+                                            *ngIf="creditNoteForm.get('SubCodeId').invalid && (creditNoteForm.get('SubCodeId').dirty || creditNoteForm.get('SubCodeId').touched)">
+                                            <span class="errorMessage"
+                                                *ngIf="creditNoteForm.get('SubCodeId').errors.required">
+                                                Supplier Subcode is required
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Currency Type
+                                        <i class="fa fa-star mandatory-icon" aria-hidden="false"></i>
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6" *ngIf="!InViewMode">
+                                        <select formControlName="CurrencyType" class="form-control">
+                                            <option value="">--Select--</option>
+                                            <option *ngFor="let record of currencies" value={{record.Id}}>
+                                                {{ record.Code }}
+                                        </select>
+                                        <div
+                                            *ngIf="creditNoteForm.get('CurrencyType').invalid && (creditNoteForm.get('CurrencyType').dirty || creditNoteForm.get('CurrencyType').touched)">
+                                            <span class="errorMessage"
+                                                *ngIf="creditNoteForm.get('CurrencyType').errors.required">
+                                                Currency Type is required
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-8 col-sm-6 col-6" *ngIf="InViewMode">
+                                        <label class="col-form-label form-text"> {{creditNoteForm.get('Code').value}}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                        Supplier’s CN No
+                                        <i class="fa fa-star mandatory-icon" aria-hidden="false"></i>
+
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <div class="input-group" *ngIf="!InViewMode">
+                                            <div style="display: flex;width: 100%;  align-items: baseline;">
+                                                <input class="form-control" (change)="ValidateCNNo()"
+                                                    formControlName="SupplierCreditNoteNo">
+                                            </div>
+
+                                        </div>
+                                        <div class="errorMessage"
+                                            *ngIf="creditNoteForm.get('SupplierCreditNoteNo').invalid && (creditNoteForm.get('SupplierCreditNoteNo').dirty || creditNoteForm.get('SupplierCreditNoteNo').touched)">
+                                            <span *ngIf="creditNoteForm.get('SupplierCreditNoteNo').errors.required">
+                                                Supplier’s CN No is required</span>
+                                            <span
+                                                *ngIf="creditNoteForm.get('SupplierCreditNoteNo').hasError('invaliddata')">
+                                                Required valid data
+                                            </span>
+                                        </div>
+                                        <div *ngIf="InViewMode">
+                                            <label class="col-form-label form-text">
+                                                {{creditNoteForm.controls['SupplierCreditNoteNo'].value}} </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                        Supplier’s CN Date
+                                        <i class="fa fa-star mandatory-icon" aria-hidden="false"></i>
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <div class="input-group" *ngIf="!InViewMode">
+                                            <div style="display: flex;width: 100%;  align-items: baseline;">
+                                                <input class="form-control" formControlName="SupplierCreditNoteDate"
+                                                    placeholder="yyyy-mm-dd" ngbDatepicker #d="ngbDatepicker"
+                                                    (change)="OnChangeDate($event.target.value)">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-secondary" (click)="d.toggle()"
+                                                        type="button"><i _ngcontent-c12="" class="fa fa-calendar"
+                                                            style="cursor: pointer;"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div *ngIf="creditNoteForm.get('SupplierCreditNoteDate').invalid && (creditNoteForm.get('SupplierCreditNoteDate').dirty || creditNoteForm.get('SupplierCreditNoteDate').touched)"
+                                            class="errorMessage">
+                                            <span *ngIf="creditNoteForm.get('SupplierCreditNoteDate').errors.required">
+                                                Supplier’s CN Date is required</span>
+                                            <span
+                                                *ngIf="creditNoteForm.get('SupplierCreditNoteDate').hasError('invaliddata')">
+                                                Required valid data
+                                            </span>
+                                        </div>
+                                        <div *ngIf="InViewMode">
+                                            <label class="col-form-label form-text">
+                                                {{creditNoteForm.get('SupplierCreditNoteDate').value
+                                                |DisplayDateFormat}}</label>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="!hasCRNType">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div>
+                                        <h4 class="form-heading">Invoice Details</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Invoice
+                                            <i class="fa fa-star mandatory-icon" aria-hidden="false"></i>
+                                        </label>
+                                        <div class="autoComplete3 quotationReqAutoComplete  col-xl-8 col-sm-6 col-6"
+                                            *ngIf="!InViewMode && !hideInput">
+                                            <input formControlName="InvoiceId" type="text" class="show form-control"
+                                                [inputFormatter]="porInputFormater"
+                                                (selectItem)="onInvoiceSelection($event)" [ngbTypeahead]="porSearch"
+                                                [resultTemplate]="CRNTemplate" />
+                                            <div
+                                                *ngIf="creditNoteForm.get('InvoiceId').invalid && (creditNoteForm.get('InvoiceId').dirty || creditNoteForm.get('InvoiceId').touched)">
+                                                <span class="errorMessage"
+                                                    *ngIf="creditNoteForm.get('InvoiceId').errors.required">Invoice is
+                                                    required</span>
+                                            </div>
+                                        </div>
+                                        <div class="autoComplete3 quotationReqAutoComplete  col-xl-8 col-sm-6 col-6"
+                                            *ngIf="InViewMode || hideInput">
+                                            {{creditNoteForm.get('InvoiceCode').value}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Supplier’s Invoice No
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                {{creditNoteForm.controls['SupplierCreditNoteInvoiceNo'].value}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Total
+                                            Amount</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                {{ creditNoteForm.get('CurrencySymbol').value }} {{
+                                                creditNoteForm.get('InvoiceTotalAmount').value|number:'1.2-2' }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Outstanding
+                                            Amount</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            {{ creditNoteForm.get('CurrencySymbol').value }} {{
+                                            creditNoteForm.get('InvoiceOSAmount').value|number:'1.2-2' }}
+                                        </div>
+                                    </div> -->
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Supplier’s Invoice Date
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                {{creditNoteForm.controls['SupplierCreditNoteInvoiceDate'].value
+                                                |DisplayDateFormat}}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top: 1%;">
+                            <div class="col-lg-6">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Schedule No
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6" *ngIf="InViewMode">
+                                        <label class="col-form-label form-text">
+                                            {{ creditNoteForm.get('SchedulerNumber').value == 0 ? '' :
+                                            creditNoteForm.get('SchedulerNumber').value }}</label>
+                                    </div>
+                                    <div class="col-xl-8 col-sm-6 col-6" *ngIf="!InViewMode">
+                                        <!-- <input type="text" class="form-control" formControlName="SchedulerNo"> -->
+                                        <select formControlName="SchedulerNo" class="form-control">
+                                            <option value="0">--Select--</option>
+                                            <option *ngFor="let record of schedulerNoDetails"
+                                                [style.color]="record.IsActive?'': 'lightgray'"
+                                                [disabled]="!record.IsActive" value={{record.SchedulerNoId}}>
+                                                {{ record.SchedulerNumber }}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-12" style="margin-top:2%;">
+                                <div class="respnsive-table tablescroll" [class.hidescroll]="showdropdown">
+                                    <fieldset formArrayName="CreditNoteLineItems">
+                                        <div style="text-align: center;">
+                                            <span class="errorMessage" *ngIf="showGridErrorMessage">
+                                                Please enter Credit Note items
+                                            </span>
+                                        </div>
+                                        <p-table sortMode="single" [columns]="CreditNoteGridColumns"
+                                            [value]="creditNoteForm.get('CreditNoteLineItems')['controls']">
+                                            <ng-template pTemplate="emptymessage">
+                                                <tr>
+                                                    <td colspan="15" style='text-align: center;'>
+                                                        <b>{{ gridNoMessageToDisplay }}</b>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="colgroup" let-columns>
+                                                <colgroup>
+                                                    <col *ngFor="let col of columns" [style.width]="col.width">
+                                                </colgroup>
+                                            </ng-template>
+                                            <ng-template pTemplate="header" let-columns>
+                                                <tr>
+                                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                                        {{col.header}}
+                                                    </th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns>
+                                                <tr [formGroupName]="i">
+                                                    <td> {{ i+1 }} </td>
+
+                                                    <td *ngIf='HasPOTypeId == 5 || HasPOTypeId == 6'>
+                                                        <div> {{ rowData.get('AccountCodeName').value }} </div>
+                                                    </td>
+                                                    <td>
+                                                        <!-- *ngIf='HasPOTypeId == 5 || HasPOTypeId == 6 || HasPOTypeId == 3 || HasPOTypeId == 2' -->
+                                                        <!-- <div *ngIf="HasPOTypeId == 5 || HasPOTypeId == 6">
+                                                            {{ rowData.get('ItemType').value }}
+                                                        </div> -->
+                                                        <!-- <div *ngIf='HasPOTypeId == 3 ||  HasPOTypeId == 2'>
+                                                            {{ rowData.get('GlDescription').value }}
+                                                        </div> -->
+                                                        <div *ngIf="InViewMode && !hasCRNType">
+                                                            {{ rowData.get('ItemType').value }}
+                                                        </div>
+                                                        <div *ngIf="InViewMode && hasCRNType">
+                                                            {{ rowData.get('ItemType').value }}
+                                                        </div>
+                                                        <div *ngIf="!InViewMode && !hasCRNType">
+                                                            {{ rowData.get('ItemType').value }}
+                                                        </div>
+                                                        <div *ngIf="!InViewMode && hasCRNType">
+                                                            <select formControlName="TypeId" class="form-control"
+                                                                (change)="onItemTypeChange($event.target.value,i)">
+                                                                <option *ngFor="let type of itemTYpes" value={{type.Id}}
+                                                                    selected>
+                                                                    {{ type.Value }}
+                                                            </select>
+                                                        </div>
+                                                    </td>
+
+                                                    <td *ngIf='HasPOTypeId == 5 || HasPOTypeId == 6'>
+                                                        <div> {{ rowData.get('CPONumber').value }} </div>
+                                                    </td>
+
+                                                    <td *ngIf="HasPOTypeId != 5 && HasPOTypeId != 6">
+                                                        <div
+                                                            *ngIf="(HasPOTypeId == null || HasPOTypeId == 0) && hasCRNType && !IsEditClicked && InViewMode">
+                                                            {{ rowData.get('GlDescription').value }}
+                                                        </div>
+                                                        <!-- {{HasPOTypeId}} -->
+                                                        <div
+                                                            *ngIf="HasPOTypeId == 2 && HasPOTypeId != 5 && HasPOTypeId != 6 && !hasCRNType">
+                                                            {{ rowData.get('GlDescription').value }}
+                                                        </div>
+                                                        <div
+                                                            *ngIf="HasPOTypeId == 2 && HasPOTypeId != 5 && HasPOTypeId != 6 && hasCRNType && InViewMode">
+                                                            {{ rowData.get('GlDescription').value }}
+                                                        </div>
+                                                        <div
+                                                            *ngIf='HasPOTypeId == 3 && HasPOTypeId != 5 && HasPOTypeId != 6 && !hasCRNType'>
+                                                            {{rowData.get('GlDescription').value}}
+                                                        </div>
+                                                        <div
+                                                            *ngIf="HasPOTypeId != 5 && HasPOTypeId != 6 && HasPOTypeId != 3 && HasPOTypeId != 2">
+                                                            <!-- <div
+                                                                *ngIf="HasPOTypeId != 0 && HasPOTypeId != 5 && HasPOTypeId != 6 && HasPOTypeId != 3 && HasPOTypeId != 2 && !hasCRNType">
+                                                                {{ rowData.get('ItemDescription').value }}
+                                                            </div> -->
+                                                            <div
+                                                                *ngIf="HasPOTypeId == 0 && HasPOTypeId != 5 && HasPOTypeId != 6 && HasPOTypeId != 3 && HasPOTypeId != 2 && !hasCRNType">
+                                                                {{ rowData.get('GlDescription').value }}
+                                                            </div>
+                                                            <div>
+                                                                <div
+                                                                    *ngIf="!InViewMode && !hasCRNType && HasPOTypeId != 0">
+                                                                    {{ rowData.get('GlDescription').value }}
+                                                                </div>
+                                                                <div
+                                                                    *ngIf="InViewMode && !hasCRNType && HasPOTypeId > 0">
+                                                                    {{ rowData.get('GlDescription').value }}
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div *ngIf="rowData.get('TypeId').value === 1 && hasCRNType && creditNoteForm.get('CreditNoteId').value == 0 && !InViewMode"
+                                                                (clickOutside)="onClickedOutside($event)">
+                                                                <!-- {{ rowData.get('GlDescription').value }} -->
+                                                                <input formControlName="Item" type="text"
+                                                                    (click)="itemClick(i)"
+                                                                    class="show form-control Item{{i}}"
+                                                                    [inputFormatter]="itemMasterInputFormater"
+                                                                    (selectItem)="itemMasterSelection($event,i)"
+                                                                    [ngbTypeahead]="itemMasterSearch"
+                                                                    [resultTemplate]="itemMasterTemplate" />
+                                                            </div>
+                                                            <div *ngIf="rowData.get('TypeId').value === 1 && hasCRNType && creditNoteForm.get('CreditNoteId').value > 0 && IsEditClicked"
+                                                                (clickOutside)="onClickedOutside($event)">
+                                                                <!-- {{ rowData.get('GlDescription').value }} -->
+                                                                <input formControlName="Item" type="text"
+                                                                    (click)="itemClick(i)"
+                                                                    class="form-control Item{{i}}"
+                                                                    [inputFormatter]="itemMasterInputFormater"
+                                                                    (selectItem)="itemMasterSelection($event,i)"
+                                                                    [ngbTypeahead]="itemMasterSearch"
+                                                                    [resultTemplate]="itemMasterTemplate" />
+                                                            </div>
+                                                            <div *ngIf="rowData.get('TypeId').value === 2 && hasCRNType && creditNoteForm.get('CreditNoteId').value == 0 && !InViewMode"
+                                                                (clickOutside)="onClickedOutside($event)">
+                                                                <input formControlName="Service" type="text"
+                                                                    (click)="itemClick(i)"
+                                                                    class="form-control Item{{i}}"
+                                                                    [inputFormatter]="serviceMasterInputFormater"
+                                                                    (selectItem)="serviceMasterSelection($event,i)"
+                                                                    [ngbTypeahead]="serviceMasterSearch"
+                                                                    [resultTemplate]="serviceMasterTemplate" />
+                                                            </div>
+                                                            <div *ngIf="rowData.get('TypeId').value === 2 && hasCRNType && creditNoteForm.get('CreditNoteId').value > 0 && IsEditClicked"
+                                                                (clickOutside)="onClickedOutside($event)">
+                                                                <input formControlName="Service" type="text"
+                                                                    (click)="itemClick(i)"
+                                                                    class="form-control Item{{i}}"
+                                                                    [inputFormatter]="serviceMasterInputFormater"
+                                                                    (selectItem)="serviceMasterSelection($event,i)"
+                                                                    [ngbTypeahead]="serviceMasterSearch"
+                                                                    [resultTemplate]="serviceMasterTemplate" />
+                                                            </div>
+                                                            <div *ngIf="rowData.get('TypeId').value === 3 && hasCRNType && creditNoteForm.get('CreditNoteId').value == 0 && !InViewMode"
+                                                                (clickOutside)="onClickedOutside($event)">
+                                                                <input formControlName="Service" type="text"
+                                                                    (click)="itemClick(i)"
+                                                                    class="form-control Item{{i}}"
+                                                                    [inputFormatter]="ExpenseMasterInputFormater"
+                                                                    (selectItem)="ExpenseMasterSelection($event,i)"
+                                                                    [ngbTypeahead]="ExpenseMasterSearch"
+                                                                    [resultTemplate]="ExpenseMasterTemplate" />
+                                                            </div>
+                                                            <div *ngIf="rowData.get('TypeId').value === 3 && hasCRNType && creditNoteForm.get('CreditNoteId').value > 0 && IsEditClicked"
+                                                                (clickOutside)="onClickedOutside($event)">
+                                                                <input formControlName="Service" type="text"
+                                                                    (click)="itemClick(i)"
+                                                                    class="form-control Item{{i}}"
+                                                                    [inputFormatter]="ExpenseMasterInputFormater"
+                                                                    (selectItem)="ExpenseMasterSelection($event,i)"
+                                                                    [ngbTypeahead]="ExpenseMasterSearch"
+                                                                    [resultTemplate]="ExpenseMasterTemplate" />
+                                                            </div>
+                                                        </div>
+
+                                                    </td>
+                                                    <td>
+                                                        <div *ngIf="!hasCRNType">
+                                                            {{ rowData.get('ItemDescription').value }}
+                                                        </div>
+                                                        <div *ngIf="hasCRNType">
+                                                            <div *ngIf="InViewMode">
+                                                                {{ rowData.get('ItemDescription').value }}
+                                                            </div>
+                                                            <div *ngIf="!InViewMode">
+                                                                <input type="text" formControlName="ItemDescription"
+                                                                    class="form-control" />
+                                                            </div>
+                                                        </div>
+
+                                                    </td>
+                                                    <td align="right" *ngIf="!hasCRNType">
+                                                        <div *ngIf="!hasCRNType"> {{ rowData.get('OriginaltemQty').value
+                                                            }}
+                                                        </div>
+                                                        <div *ngIf="hasCRNType">
+                                                            <div *ngIf="InViewMode">
+                                                                {{ rowData.get('OriginaltemQty').value }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td align="right">
+                                                        <div *ngIf="!hasCRNType"> {{ rowData.get('ItemQty').value }}
+                                                        </div>
+                                                        <div *ngIf="hasCRNType">
+                                                            <div *ngIf="InViewMode">
+                                                                {{ rowData.get('ItemQty').value }}
+                                                            </div>
+                                                            <div *ngIf="!InViewMode">
+                                                                <input type="text" formControlName="ItemQty"
+                                                                    class="form-control QTY{{i}}"
+                                                                    (change)="OnChangeItemQty($event.target.value,'qty',i)" />
+                                                                <span class="errorMessage" *ngIf="rowData.get('ItemQty')!=null &&
+                                                                           rowData.get('ItemQty').errors!=null ">
+                                                                    <span
+                                                                        *ngIf="rowData.get('ItemQty').errors.ItemQtyerror">
+                                                                        Item Quantity can not be less than Return
+                                                                        Quantity
+                                                                    </span>
+                                                                </span>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </td>
+                                                    <td align="right" *ngIf="!hasCRNType">
+                                                        <div *ngIf="!hasCRNType">
+                                                            {{ rowData.get('OriginalUnitprice').value|number:'1.4-4' }}
+                                                        </div>
+                                                        <div *ngIf="hasCRNType">
+                                                            <div *ngIf="InViewMode">
+                                                                {{ rowData.get('OriginalUnitprice').value|number:'1.4-4'
+                                                                }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td align="right">
+                                                        <div *ngIf="!hasCRNType">
+                                                            {{ rowData.get('Unitprice').value|number:'1.4-4' }}
+                                                        </div>
+                                                        <div *ngIf="hasCRNType">
+                                                            <div *ngIf="InViewMode">
+                                                                {{ rowData.get('Unitprice').value|number:'1.4-4' }}
+                                                            </div>
+                                                            <div *ngIf="!InViewMode">
+                                                                <input type="text" formControlName="Unitprice"
+                                                                    class="form-control UPrice{{i}}"
+                                                                    (change)="OnChangeUnitprice($event.target.value,i)" />
+                                                                <span class="errorMessage" *ngIf="rowData.get('Unitprice')!=null &&
+                                                                    rowData.get('Unitprice').errors!=null ">
+                                                                    <span
+                                                                        *ngIf="rowData.get('Unitprice').errors.DecreaseInerror">
+                                                                        Unitprice should not less than Decrease In Unit
+                                                                        Price
+                                                                    </span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+
+                                                    <td align="right">
+                                                        <div *ngIf="InViewMode || (isReVerifing && !hasCRNType)">
+                                                            {{ rowData.get('ReturnQty').value }}
+                                                        </div>
+                                                        <div *ngIf="!InViewMode && !isReVerifing && !hasCRNType">
+                                                            <div>
+                                                                <div *ngIf="HasPOTypeId != 5 && HasPOTypeId != 6">
+                                                                    <input type="number" class="form-control" min="0"
+                                                                        (keydown)=restrictMinusValue($event)
+                                                                        formControlName="ReturnQty"
+                                                                        (change)="decQtyOrPrice('qty',i,$event.target.value,'0')" />
+
+                                                                    <span class="errorMessage" *ngIf="rowData.get('ReturnQty')!=null &&
+                                                                               rowData.get('ReturnQty').errors!=null ">
+                                                                        <span
+                                                                            *ngIf="rowData.get('ReturnQty').errors.qtyerror">
+                                                                            Return Quantity should not greater than Item
+                                                                            Quantity
+                                                                        </span>
+                                                                    </span>
+                                                                    <span class="errorMessage" *ngIf="rowData.get('ReturnQty')!=null &&
+                                                                               rowData.get('ReturnQty').errors!=null ">
+                                                                        <span
+                                                                            *ngIf="rowData.get('ReturnQty').errors.qtydisocunterror">
+                                                                            Total cannot be lesser than Discount
+                                                                        </span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <div *ngIf="HasPOTypeId == 5 && HasPOTypeId == 6">
+                                                                <input type="text" name="" id="" class="form-control"
+                                                                    readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div *ngIf="!InViewMode && !isReVerifing && hasCRNType">
+                                                            <div>
+                                                                <div *ngIf="HasPOTypeId != 5 && HasPOTypeId != 6">
+                                                                    <input type="number" class="form-control" min="0"
+                                                                        (keydown)=restrictMinusValue($event)
+                                                                        formControlName="ReturnQty"
+                                                                        (change)="decQtyOrPrice('qty',i,$event.target.value,'0')" />
+
+                                                                    <span class="errorMessage" *ngIf="rowData.get('ReturnQty')!=null &&
+                                                                               rowData.get('ReturnQty').errors!=null ">
+                                                                        <span
+                                                                            *ngIf="rowData.get('ReturnQty').errors.qtyerror">
+                                                                            Return Quantity should not greater than Item
+                                                                            Quantity
+                                                                        </span>
+                                                                    </span>
+                                                                    <span class="errorMessage" *ngIf="rowData.get('ReturnQty')!=null &&
+                                                                               rowData.get('ReturnQty').errors!=null ">
+                                                                        <span
+                                                                            *ngIf="rowData.get('ReturnQty').errors.qtydisocunterror">
+                                                                            Total cannot be lesser than Discount
+
+                                                                        </span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <div *ngIf="HasPOTypeId == 5 && HasPOTypeId == 6">
+                                                                <input type="text" name="" id="" class="form-control"
+                                                                    readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div *ngIf="!InViewMode && isReVerifing && hasCRNType">
+                                                            <div>
+                                                                <div *ngIf="HasPOTypeId != 5 && HasPOTypeId != 6">
+                                                                    <input type="number" class="form-control" min="0"
+                                                                        (keydown)=restrictMinusValue($event)
+                                                                        formControlName="ReturnQty"
+                                                                        (change)="decQtyOrPrice('qty',i,$event.target.value,'0')" />
+
+                                                                    <span class="errorMessage" *ngIf="rowData.get('ReturnQty')!=null &&
+                                                                               rowData.get('ReturnQty').errors!=null ">
+                                                                        <span
+                                                                            *ngIf="rowData.get('ReturnQty').errors.qtyerror">
+                                                                            Return Quantity should not greater than Item
+                                                                            Quantity
+                                                                        </span>
+                                                                    </span>
+                                                                    <span class="errorMessage" *ngIf="rowData.get('ReturnQty')!=null &&
+                                                                               rowData.get('ReturnQty').errors!=null ">
+                                                                        <span
+                                                                            *ngIf="rowData.get('ReturnQty').errors.qtydisocunterror">
+                                                                            Total cannot be lesser than Discount
+
+                                                                        </span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <div *ngIf="HasPOTypeId == 5 && HasPOTypeId == 6">
+                                                                <input type="text" name="" id="" class="form-control"
+                                                                    readonly>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td align="right">
+                                                        <div *ngIf="InViewMode || (isReVerifing && !hasCRNType)">
+                                                            {{ rowData.get('DecreaseInUnitPrice').value|number:'1.4-4'
+                                                            }}
+                                                        </div>
+                                                        <div *ngIf="!InViewMode && !isReVerifing && !hasCRNType">
+                                                            <div>
+                                                                <input type="number" class="form-control" min="0"
+                                                                    (keydown)=restrictMinusValue($event)
+                                                                    (change)="decQtyOrPrice('price',i,$event.target.value,'0')"
+                                                                    formControlName="DecreaseInUnitPrice" />
+
+                                                                <span class="errorMessage"
+                                                                    *ngIf="rowData.get('DecreaseInUnitPrice')!=null && rowData.get('DecreaseInUnitPrice').errors!=null ">
+                                                                    <span
+                                                                        *ngIf="rowData.get('DecreaseInUnitPrice').errors.unitpriceerror">
+                                                                        Decrease in Price should not be greater than
+                                                                        Unit
+                                                                        price
+                                                                    </span>
+                                                                    <span class="errorMessage"
+                                                                        *ngIf="rowData.get('DecreaseInUnitPrice')!=null && rowData.get('DecreaseInUnitPrice').errors!=null ">
+                                                                        <span
+                                                                            *ngIf="rowData.get('DecreaseInUnitPrice').errors.discountDIPErr">
+                                                                            Total cannot be lesser than Discount
+
+                                                                        </span>
+                                                                    </span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div *ngIf="!InViewMode && isReVerifing && hasCRNType">
+                                                            <div>
+                                                                <input type="number" class="form-control" min="0"
+                                                                    (keydown)=restrictMinusValue($event)
+                                                                    (change)="decQtyOrPrice('price',i,$event.target.value,'0')"
+                                                                    formControlName="DecreaseInUnitPrice" />
+
+                                                                <span class="errorMessage"
+                                                                    *ngIf="rowData.get('DecreaseInUnitPrice')!=null && rowData.get('DecreaseInUnitPrice').errors!=null ">
+                                                                    <span
+                                                                        *ngIf="rowData.get('DecreaseInUnitPrice').errors.unitpriceerror">
+                                                                        Decrease in Price should not be greater than
+                                                                        Unit
+                                                                        price
+                                                                    </span>
+                                                                    <span class="errorMessage"
+                                                                        *ngIf="rowData.get('DecreaseInUnitPrice')!=null && rowData.get('DecreaseInUnitPrice').errors!=null ">
+                                                                        <span
+                                                                            *ngIf="rowData.get('DecreaseInUnitPrice').errors.discountDIPErr">
+                                                                            Total cannot be lesser than Discount
+
+                                                                        </span>
+                                                                    </span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div *ngIf="!InViewMode && !isReVerifing && hasCRNType">
+                                                            <div>
+                                                                <input type="number" class="form-control" min="0"
+                                                                    (keydown)=restrictMinusValue($event,i)
+                                                                    (change)="decQtyOrPrice('price',i,$event.target.value,'0')"
+                                                                    formControlName="DecreaseInUnitPrice" />
+
+                                                                <span class="errorMessage"
+                                                                    *ngIf="rowData.get('DecreaseInUnitPrice')!=null && rowData.get('DecreaseInUnitPrice').errors!=null ">
+                                                                    <span
+                                                                        *ngIf="rowData.get('DecreaseInUnitPrice').errors.unitpriceerror">
+                                                                        Decrease in Price should not be greater than
+                                                                        Unit
+                                                                        price
+                                                                    </span>
+                                                                </span>
+                                                                <span class="errorMessage"
+                                                                    *ngIf="rowData.get('DecreaseInUnitPrice')!=null && rowData.get('DecreaseInUnitPrice').errors!=null ">
+                                                                    <span
+                                                                        *ngIf="rowData.get('DecreaseInUnitPrice').errors.discountDIPErr">
+                                                                        Total cannot be lesser than Discount
+
+                                                                    </span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+
+                                                    </td>
+                                                    <!-- <td align="right">
+                                                        <div *ngIf="!InViewMode">
+                                                            {{ rowData.get('ReturnQty').value *
+                                                            rowData.get('Unitprice').value |number:'1.4-4'}}
+                                                        </div>
+                                                        <div *ngIf="InViewMode">
+                                                            {{ rowData.get('ReturnValue').value|number:'1.4-4' }}
+                                                        </div>
+
+                                                    </td> -->
+
+                                                    <td align="right">
+                                                        <!-- {{ _Total|number:'1.2-4'}} -->
+                                                        <!-- <div *ngIf="InViewMode">
+                                                            {{rowData.get('Total').value |number:'1.4-4'}}
+                                                        </div>
+                                                        <div *ngIf="!InViewMode"> -->
+                                                        <div *ngIf="rowData.get('DecreaseInUnitPrice').value >0">
+                                                            {{((rowData.get('ItemQty').value) *
+                                                            (rowData.get('DecreaseInUnitPrice').value))|number:'1.4-4'}}
+                                                        </div>
+                                                        <div *ngIf="rowData.get('ReturnQty').value >0">
+                                                            {{((rowData.get('ReturnQty').value) *
+                                                            (rowData.get('Unitprice').value))|number:'1.4-4'}}
+                                                        </div>
+                                                        <!-- </div> -->
+                                                    </td>
+
+                                                    <td *ngIf="HasPOTypeId != 5 && HasPOTypeId != 6">
+                                                        <div *ngIf="!InViewMode && !isReVerifing && !hasCRNType">
+                                                            <div>
+                                                                <input type="text" currencyMask class="form-control"
+                                                                    [options]="options2precision"
+                                                                    formControlName="Discount"
+                                                                    (blur)="OnChangeDiscount($event.target.value,i)">
+                                                                <span class="errorMessage"
+                                                                    *ngIf="rowData.get('Discount')!=null && rowData.get('Discount').errors!=null ">
+                                                                    <span
+                                                                        *ngIf="rowData.get('Discount').errors.discountErr">
+                                                                        Discount should not be greater than Original
+                                                                        Discount
+                                                                    </span>
+                                                                </span>
+                                                                <span class="errorMessage"
+                                                                    *ngIf="rowData.get('Discount')!=null && rowData.get('Discount').errors!=null ">
+                                                                    <span
+                                                                        *ngIf="rowData.get('Discount').errors.discountTotalErr">
+                                                                        Discount should not be greater than Total
+                                                                    </span>
+                                                                </span>
+                                                                <span class="errorMessage"
+                                                                    *ngIf="rowData.get('Discount')!=null && rowData.get('Discount').errors!=null ">
+                                                                    <span
+                                                                        *ngIf="rowData.get('Discount').errors.NegativediscountErr">
+                                                                        Discount Cannot be negative
+                                                                    </span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div *ngIf="!InViewMode && isReVerifing && hasCRNType">
+                                                            <div>
+                                                                <input type="text" currencyMask class="form-control"
+                                                                    [options]="options2precision"
+                                                                    formControlName="Discount"
+                                                                    (blur)="OnChangeDiscount($event.target.value,i)">
+                                                                <span class="errorMessage"
+                                                                    *ngIf="rowData.get('Discount')!=null && rowData.get('Discount').errors!=null ">
+                                                                    <span
+                                                                        *ngIf="rowData.get('Discount').errors.discountErr">
+                                                                        Discount should not be greater than Original
+                                                                        Discount
+                                                                    </span>
+                                                                </span>
+                                                                <span class="errorMessage"
+                                                                    *ngIf="rowData.get('Discount')!=null && rowData.get('Discount').errors!=null ">
+                                                                    <span
+                                                                        *ngIf="rowData.get('Discount').errors.discountTotalErr">
+                                                                        Discount should not be greater than Total
+                                                                    </span>
+                                                                </span>
+                                                                <span class="errorMessage"
+                                                                    *ngIf="rowData.get('Discount')!=null && rowData.get('Discount').errors!=null ">
+                                                                    <span
+                                                                        *ngIf="rowData.get('Discount').errors.NegativediscountErr">
+                                                                        Discount Cannot be negative
+                                                                    </span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div *ngIf="!InViewMode && !isReVerifing && hasCRNType">
+                                                            <div>
+                                                                <input type="text" currencyMask
+                                                                    formControlName="Discount"
+                                                                    [options]="options2precision" class="form-control"
+                                                                    (blur)="OnChangeDiscount($event.target.value,i)">
+                                                                <span class="errorMessage"
+                                                                    *ngIf="rowData.get('Discount')!=null && rowData.get('Discount').errors!=null ">
+                                                                    <span
+                                                                        *ngIf="rowData.get('Discount').errors.discountErr">
+                                                                        Discount should not be greater than Original
+                                                                        Discount
+                                                                    </span>
+                                                                </span>
+                                                                <span class="errorMessage"
+                                                                    *ngIf="rowData.get('Discount')!=null && rowData.get('Discount').errors!=null ">
+                                                                    <span
+                                                                        *ngIf="rowData.get('Discount').errors.discountTotalErr">
+                                                                        Discount should not be greater than Total
+                                                                    </span>
+                                                                </span>
+                                                                <span class="errorMessage"
+                                                                    *ngIf="rowData.get('Discount')!=null && rowData.get('Discount').errors!=null ">
+                                                                    <span
+                                                                        *ngIf="rowData.get('Discount').errors.NegativediscountErr">
+                                                                        Discount Cannot be negative
+                                                                    </span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div *ngIf="InViewMode || (isReVerifing && !hasCRNType)"
+                                                            align="right">
+                                                            {{rowData.get('Discount').value |number:'1.2-2'}}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div *ngIf="InViewMode">
+                                                            {{rowData.get('TotalbefTax').value |number:'1.4-4'}}
+                                                            <span class="errorMessage"
+                                                                *ngIf="rowData.get('TotalbefTax')!=null && rowData.get('TotalbefTax').errors!=null ">
+                                                                <span
+                                                                    *ngIf="rowData.get('TotalbefTax').errors.TotalbefTaxErr">
+                                                                    Total Before Tax value should not be negative.
+                                                                </span>
+                                                            </span>
+                                                        </div>
+                                                        <div *ngIf="!InViewMode">
+                                                            <div *ngIf="rowData.get('DecreaseInUnitPrice').value >0">
+                                                                {{(((rowData.get('ItemQty').value) *
+                                                                (rowData.get('DecreaseInUnitPrice').value)) -
+                                                                (rowData.get('Discount').value))|number:'1.4-4'}}
+                                                            </div>
+                                                            <div *ngIf="rowData.get('ReturnQty').value >0">
+                                                                {{(((rowData.get('ReturnQty').value) *
+                                                                (rowData.get('Unitprice').value)) -
+                                                                (rowData.get('Discount').value))|number:'1.4-4'}}
+                                                                <div *ngIf="rowData.get('Tax').value < 0">
+                                                                    <span class="errorMessage"
+                                                                        *ngIf="rowData.get('TotalbefTax')!=null && rowData.get('TotalbefTax').errors!=null ">
+                                                                        <span
+                                                                            *ngIf="rowData.get('TotalbefTax').errors.TotalbefTaxErr">
+                                                                            Total Before Tax value should not be
+                                                                            negative.
+                                                                        </span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </td>
+                                                    <td>
+                                                        <div *ngIf="InViewMode">
+                                                            <!-- {{rowData.get('TaxGroupName').value}} -->
+                                                            <div *ngIf="InViewMode">
+                                                                <select class="form-control"
+                                                                    (change)="getTaxesByTaxGroup($event.target.value)"
+                                                                    formControlName="TaxGroupName" disabled>
+                                                                    <option [ngValue]="null">--Select--</option>
+                                                                    <option *ngFor="let taxGroup of taxGroups"
+                                                                        [value]="taxGroup.TaxGroupId">
+                                                                        {{ taxGroup.TaxGroupName }}
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div *ngIf="!InViewMode">
+                                                            <div *ngIf="hasCRNType">
+                                                                <select class="form-control"
+                                                                    (change)="getTaxesByTaxGroup($event.target.value)"
+                                                                    formControlName="TaxGroupName">
+                                                                    <option [ngValue]="null">--Select--</option>
+                                                                    <option *ngFor="let taxGroup of taxGroups"
+                                                                        [value]="taxGroup.TaxGroupId">
+                                                                        {{ taxGroup.TaxGroupName }}
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                            <div *ngIf="!hasCRNType">
+                                                                <select class="form-control"
+                                                                    (change)="getTaxesByTaxGroup($event.target.value)"
+                                                                    formControlName="TaxGroupName" disabled>
+                                                                    <option [ngValue]="null">--Select--</option>
+                                                                    <option *ngFor="let taxGroup of taxGroups"
+                                                                        [value]="taxGroup.TaxGroupId">
+                                                                        {{ taxGroup.TaxGroupName }}
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div *ngIf="InViewMode">
+                                                            <select formControlName="TaxID" class="form-control"
+                                                                disabled>
+                                                                <option [ngValue]="undefined">--Select--</option>
+                                                                <option *ngFor="let record of taxTypes"
+                                                                    value={{record.TaxId}}>
+                                                                    {{ record.TaxName }}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                        <div *ngIf="!InViewMode">
+                                                            <div *ngIf="hasCRNType">
+                                                                <select formControlName="TaxID"
+                                                                    (change)="setTaxAmount($event.target.value,i)"
+                                                                    class="form-control">
+                                                                    <option [ngValue]="undefined">--Select--</option>
+                                                                    <option *ngFor="let record of taxTypes"
+                                                                        value={{record.TaxId}}>
+                                                                        {{ record.TaxName }}
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                            <div *ngIf="!hasCRNType">
+                                                                <select formControlName="TaxID"
+                                                                    (change)="setTaxAmount($event.target.value,i)"
+                                                                    class="form-control" disabled>
+                                                                    <option [ngValue]="undefined">--Select--</option>
+                                                                    <option *ngFor="let record of taxTypes"
+                                                                        value={{record.TaxId}}>
+                                                                        {{ record.TaxName }}
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </td>
+                                                    <td align="right">
+                                                        <!-- {{Tax |number:'1.2-4'}} -->
+                                                        {{rowData.get('Tax').value|number:'1.4-4'}}
+                                                    </td>
+                                                    <td align="right">
+                                                        <div *ngIf="InViewMode && !hasCRNType">
+                                                            {{
+                                                            rowData.get('CNTotalValue').value|number:'1.4-4'
+                                                            }}
+                                                        </div>
+                                                        <div *ngIf="!InViewMode">
+                                                            <div
+                                                                *ngIf="!hasCRNType && (rowData.get('ItemQty').value || rowData.get('Unitprice').value) > 0">
+                                                                <div
+                                                                    *ngIf="rowData.get('DecreaseInUnitPrice').value > 0">
+                                                                    {{((((rowData.get('ItemQty').value) *
+                                                                    (rowData.get('DecreaseInUnitPrice').value)) -
+                                                                    (rowData.get('Discount').value)) +
+                                                                    rowData.get('Tax').value)
+                                                                    |number:'1.4-4'}}
+                                                                </div>
+                                                                <div *ngIf="rowData.get('ReturnQty').value > 0">
+                                                                    {{((((rowData.get('ReturnQty').value) *
+                                                                    (rowData.get('Unitprice').value)) -
+                                                                    (rowData.get('Discount').value)) +
+                                                                    rowData.get('Tax').value)|number:'1.4-4'}}
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                *ngIf="!hasCRNType && (rowData.get('ItemQty').value || rowData.get('Unitprice').value) <= 0">
+                                                                {{0}}
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div *ngIf="InViewMode && hasCRNType">
+                                                            {{ rowData.get('CNTotalValue').value |number:'1.4-4'}}
+                                                        </div>
+                                                        <div *ngIf="!InViewMode && hasCRNType">
+                                                            {{ rowData.get('CNTotalValue').value |number:'1.4-4'}}
+                                                        </div>
+                                                    </td>
+                                                    <!-- <td align="right">
+                                                        <div *ngIf="!InViewMode && !hasCRNType">
+                                                             {{PrevTax|number:'1.2-4'}} 
+                                                            {{ rowData.get('GSTAmount').value |number:'1.4-4'}}
+                                                        </div>
+                                                        <div *ngIf="hasCRNType && InViewMode">
+                                                            <label>0.00</label>
+                                                        </div>
+                                                        <div *ngIf="InViewMode && !hasCRNType">
+                                                            {{ rowData.get('GSTAmount').value |number:'1.4-4'}}
+                                                        </div>
+                                                    </td>
+
+                                                    <td align="right">
+                                                        <div *ngIf="!InViewMode && !hasCRNType">
+                                                             {{GSTAdjust|number:'1.2-4'}} 
+                                                            <span *ngIf="rowData.get('DecreaseInUnitPrice').value > 0 ">
+                                                                {{(((rowData.get('ItemQty').value)
+                                                                *
+                                                                (rowData.get('Unitprice').value))
+                                                                *
+                                                                ((rowData.get('TaxAmount').value)
+                                                                / 100)) -
+                                                                (((rowData.get('ItemQty').value)
+                                                                *
+                                                                (rowData.get('DecreaseInUnitPrice').value))
+                                                                *
+                                                                ((rowData.get('TaxAmount').value)
+                                                                / 100))|number:'1.4-4'}}
+                                                            </span>
+                                                            <span *ngIf="rowData.get('ReturnQty').value > 0">
+                                                                {{(((rowData.get('ItemQty').value)
+                                                                *
+                                                                (rowData.get('Unitprice').value))
+                                                                *
+                                                                ((rowData.get('TaxAmount').value)
+                                                                / 100)) -
+                                                                (((rowData.get('ReturnQty').value)
+                                                                *
+                                                                (rowData.get('Unitprice').value))
+                                                                *
+                                                                ((rowData.get('TaxAmount').value)
+                                                                / 100))|number:'1.4-4'}}
+                                                            </span>
+                                                        </div>
+                                                        <div *ngIf="hasCRNType && InViewMode">
+                                                            <label>0.00</label>
+                                                        </div>
+                                                        <div *ngIf="InViewMode && !hasCRNType">
+                                                            {{
+                                                            rowData.get('GSTAdjustment').value
+                                                            |number:'1.4-4'}}
+                                                        </div>
+
+                                                    </td> -->
+
+                                                    <td style="text-align: right">
+
+                                                        <div
+                                                            *ngIf="creditNoteDetails.WorkFlowStatus != 'Completed' && !InViewMode && hasCRNType">
+                                                            <span class="gridIconsStyle">
+                                                                <i class="fa fa-trash gridRemoveIcon"
+                                                                    (click)="removeGridItem(i)" aria-hidden="true"></i>
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                        <div *ngIf="IsAdditem && hasCRNType">
+                                            <input (keydown)="restrictMinusValue($event)" min="0"
+                                                [(ngModel)]="linesToAddCostCategory"
+                                                [ngModelOptions]="{standalone: true}" class="form-control linesToAdd">
+                                            <button type="submit" (click)="addGridItem(linesToAddCostCategory)"
+                                                class="addLine">
+                                                <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Line
+                                            </button>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row colorder">
+                            <div class="col-6">
+
+                                <div class="row" style="margin-top:3em;">
+                                    <div class="col-12">
+                                        <h4 class="form-heading">Reason For Credit</h4>
+                                        <i class="fa fa-star mandatory-icon" aria-hidden="false"></i>
+                                    </div>
+                                    <div class="col-12" *ngIf="InViewMode">
+                                        <label class="col-form-label form-text"></label>
+                                        <textarea class="form-control" autoresize formControlName="Reasons"
+                                            readonly></textarea>
+                                    </div>
+                                    <div class="col-12" *ngIf="!InViewMode">
+                                        <label class="col-form-label form-text"></label>
+                                        <textarea class="form-control" autoresize formControlName="Reasons"></textarea>
+                                    </div>
+                                    <div class="col-12 errorMessage"
+                                        *ngIf="creditNoteForm.get('Reasons').invalid && (creditNoteForm.get('Reasons').dirty || creditNoteForm.get('Reasons').touched)">
+                                        <span *ngIf="creditNoteForm.get('Reasons').errors.required">
+                                            Reasons are required
+                                        </span>
+                                        <span *ngIf="creditNoteForm.get('Reasons').hasError('invaliddata')">
+                                            Required valid data
+                                        </span>
+                                    </div>
+                                </div>
+                                <div *ngIf="(creditNoteDetails.WorkFlowStatusId == 12)" class="row"
+                                    style="margin-top:3em;">
+                                    <div class="col-12 row">
+                                        <div class="col-12">
+                                            <h4 class="form-heading">Reasons To Void</h4>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="col-form-label form-text">
+                                                {{ creditNoteDetails.ReasonsToVoid }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="(isApprovalPage && creditNoteDetails.ButtonPreferences.SendForClarification)||
+                                (!isApprovalPage && creditNoteDetails.ButtonPreferences.ReplyForClarification)"
+                                    class="row" style="margin-top:3em;">
+                                    <div class="col-12">
+                                        <h4 class="form-heading">Approval/Requester Remarks</h4>
+                                    </div>
+                                    <div class="col-12">
+                                        <div style="display: flex; align-items: center;">
+                                            <textarea formControlName="Remarks" class="form-control"
+                                                style="width:70%;display:inline-block ">
+                                            </textarea>
+                                            <button type="submit"
+                                                *ngIf="isApprovalPage && creditNoteDetails.ButtonPreferences.SendForClarification"
+                                                (click)="SendForClarification()" class="btn btn-edit">
+                                                <i _ngcontent-c9="" aria-hidden="true" class="fa fa-envelope"></i>
+                                                Send for Clarification
+                                            </button>
+                                            <button type="submit"
+                                                *ngIf="!isApprovalPage && creditNoteDetails.ButtonPreferences.ReplyForClarification"
+                                                (click)="ReplyForClarification()" class="btn btn-edit">
+                                                Reply
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:3em;">
+                                    <div class="col-12 row">
+                                        <div class="col-12">
+                                            <label class="col-form-label form-label">Previous Comments</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 row"
+                                        *ngIf="creditNoteDetails.WorkFlowComments!=undefined && creditNoteDetails.WorkFlowComments.length >0">
+                                        <div class="col-12">
+                                            <ul>
+                                                <li *ngFor="let record of creditNoteDetails.WorkFlowComments">
+                                                    <span class='remarksUserName'>{{ record.UserName }}</span> -
+                                                    <span class='remarksDate'>
+                                                        {{ record.CreatedDate|date:'dd-MM-yyyy h:mm:ss a' }}</span>:
+                                                    <br>
+                                                    <span>{{ record.Remarks }}</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="row" style="margin-top:3em;">
+                                    <div class="col-12">
+                                        <h4 class="form-heading">Attachments</h4>
+                                    </div>
+                                    <div class="col-12 attachments" *ngIf="creditNoteDetails">
+                                        <ul>
+                                            <ng-template ngFor let-data [ngForOf]="creditNoteDetails.Attachments"
+                                                let-i="index">
+                                                <li *ngIf="data.IsDelete!=true||data.IsDelete==undefined && InViewMode">
+                                                    <span>
+                                                        <span class="displayFileName">
+                                                            {{ data.FileName }}
+                                                        </span>
+                                                        <a style="color:black;" target="_blank"
+                                                            href="{{apiEndPoint}}/DownloadAttachedFiles?AttachmentId={{ data.AttachmentId }}&AttachmentTypeId={{ data.AttachmentTypeId }}&FileName={{data.FileName}}&RecordId={{data.RecordId}}">
+                                                            <i class="fa fa-download"></i>
+                                                        </a>
+                                                        &nbsp;&nbsp;
+                                                        <i *ngIf="hideInput" (click)="attachmentDelete(i)"
+                                                            class="fa fa-trash">
+                                                        </i>
+                                                    </span>
+                                                </li>
+                                            </ng-template>
+                                        </ul>
+                                    </div>
+                                    <div class="col-12" *ngIf="!InViewMode">
+                                        <div class="col-12">
+                                            <input type="file" multiple name="file" multiple
+                                                (change)="onFileUploadChange($event)" style="color: transparent">
+                                        </div>
+                                        <div class="col-12">
+                                            <ul class="fileList">
+                                                <li *ngFor="let data of uploadedFiles;let i = index">
+                                                    <span>
+                                                        <span class="fileName">
+                                                            {{ data.name }}
+                                                        </span>
+                                                        <i class="fa fa-close" (click)="onFileClose(i)"></i>
+                                                    </span>
+                                                    <br>
+                                                    <span class="fileSize">{{ data.size/1024 }} KB</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 mobilecol1">
+
+                                <table class="table table-subtotal" style="float:right;">
+                                    <tr *ngIf="HasPOTypeId != 5 && HasPOTypeId != 6">
+                                        <td class="nowrap" width="50%" align="right">Total Before Discount</td>
+                                        <td align="right">
+                                            <div *ngIf="InViewMode">
+                                                {{creditNoteForm.controls['SubTotal'].value|number:'1.2-2'}}
+                                            </div>
+                                            <div *ngIf="!InViewMode">
+                                                {{_InvoiceDetails.CurrencySymbol}} {{_Total|number:'1.2-2'}}
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr *ngIf="HasPOTypeId != 5 && HasPOTypeId != 6">
+                                        <td class="nowrap" align="right">Discount</td>
+                                        <td align="right">
+                                            <div *ngIf="(HasPOTypeId == 5 || HasPOTypeId == 6); else lable">
+                                                <input class="form-control" type="text">
+                                            </div>
+                                            <ng-template #lable>
+                                                <div *ngIf="InViewMode">
+                                                    {{_InvoiceDetails.CurrencySymbol}}
+                                                    {{creditNoteForm.controls['Discount'].value |number:'1.2-2'}}
+                                                </div>
+                                                <div *ngIf="!InViewMode">
+                                                    {{_InvoiceDetails.CurrencySymbol}}
+                                                    {{creditNoteForm.controls['Discount'].value |number:'1.2-2'}}
+                                                </div>
+                                            </ng-template>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="nowrap" width="50%" align="right">Total Before Tax</td>
+                                        <!-- *ngIf="hideInput" -->
+                                        <td align="right">
+                                            <div *ngIf="InViewMode">
+                                                {{_Total- creditNoteForm.controls['Discount'].value|number:'1.2-2'}}
+                                            </div>
+                                            <div *ngIf="!InViewMode">
+                                                {{_InvoiceDetails.CurrencySymbol}}
+                                                {{_Total-creditNoteForm.controls['Discount'].value|number:'1.2-2'}}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="nowrap" width="50%" align="right">Tax {{SupplierTaxAmount}}%</td>
+                                        <td align="right">
+                                            <div *ngIf="InViewMode">
+                                                {{creditNoteForm.controls['TotalGSTAmount'].value|number:'1.2-2'}}
+                                            </div>
+                                            <div *ngIf="!InViewMode">
+                                                {{_InvoiceDetails.CurrencySymbol}}
+                                                {{creditNoteForm.controls['TotalGSTAmount'].value|number:'1.2-2'}}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- <tr>
+                                        <td class="nowrap" width="50%" align="right">Sub Total</td>
+                                        <td align="right">
+                                            <div *ngIf="InViewMode">
+                                                {{creditNoteForm.controls['SubTotalDiscount'].value|number:'1.2-2'}}
+                                            </div>
+                                            <div *ngIf="!InViewMode">
+                                                {{_InvoiceDetails.CurrencySymbol}}
+                                                {{creditNoteForm.controls['SubTotalDiscount'].value|number:'1.2-2'}}
+                                            </div>
+                                        </td>
+                                    </tr> -->
+                                    <tr>
+                                        <td class="nowrap" align="right">Tax Adjustment</td>
+                                        <td align="right">
+                                            <div *ngIf="!InViewMode">
+                                                <input style="text-align: right;"
+                                                    (change)="calculateNetTotal($event.target.value,'NetTotal')"
+                                                    formControlName="SubItemGSTAdjustment" class="form-control">
+                                                <span class="errorMessage"
+                                                    *ngIf="creditNoteForm.get('SubItemGSTAdjustment')!=null && creditNoteForm.get('SubItemGSTAdjustment').errors!=null ">
+                                                    <span
+                                                        *ngIf="creditNoteForm.get('SubItemGSTAdjustment').errors.TaxAdjustErr">
+                                                        Tax Adjustment should not be greater than 0.99.
+                                                    </span>
+                                                </span>
+                                                <span class="errorMessage"
+                                                    *ngIf="creditNoteForm.get('SubItemGSTAdjustment')!=null && creditNoteForm.get('SubItemGSTAdjustment').errors!=null ">
+                                                    <span
+                                                        *ngIf="creditNoteForm.get('SubItemGSTAdjustment').errors.TaxAdjustMinusErr">
+                                                        Tax Adjustment should not be less than -0.99.
+                                                    </span>
+                                                </span>
+                                                <span class="errorMessage"
+                                                    *ngIf="creditNoteForm.get('SubItemGSTAdjustment')!=null && creditNoteForm.get('SubItemGSTAdjustment').errors!=null ">
+                                                    <span
+                                                        *ngIf="creditNoteForm.get('SubItemGSTAdjustment').errors.ProperinputErr">
+                                                        Please give proper format
+                                                    </span>
+                                                </span>
+                                                <!-- <span class="errorMessage"
+                                                    *ngIf="creditNoteForm.get('SubItemGSTAdjustment')!=null && creditNoteForm.get('SubItemGSTAdjustment').errors!=null ">
+                                                    <span
+                                                        *ngIf="creditNoteForm.get('SubItemGSTAdjustment').errors.NegNettotalErr">
+                                                        Net Total should not negative
+                                                    </span>
+                                                </span> -->
+
+                                            </div>
+                                            <div *ngIf="InViewMode">
+                                                {{_InvoiceDetails.CurrencySymbol}}{{(creditNoteForm.controls['SubItemGSTAdjustment'].value)|number:'1.2-2'
+                                                | negativeInParenthesis}}
+
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="nowrap" width="50%" align="right">Net Total</td>
+                                        <td align="right">
+                                            <div *ngIf="_Total + _Tax > 0 && !OnGSTAdjchange">
+                                                {{_InvoiceDetails.CurrencySymbol}}
+                                                {{creditNoteForm.controls['NetTotal'].value|number:'1.2-2'}}
+                                            </div>
+                                            <div *ngIf="OnGSTAdjchange">
+                                                {{_InvoiceDetails.CurrencySymbol}}
+                                                {{creditNoteForm.controls['NetTotal'].value|number:'1.2-2'}}
+                                            </div>
+                                            <span class="errorMessage"
+                                                *ngIf="creditNoteForm.get('NetTotal')!=null && creditNoteForm.get('NetTotal').errors!=null ">
+                                                <span *ngIf="creditNoteForm.get('NetTotal').errors.NegNettotalErr">
+                                                    Net Total should not be negative
+                                                </span>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="nowrap" align="right">Total Adjustment</td>
+                                        <td align="right">
+                                            <div *ngIf="!InViewMode">
+                                                <input style="text-align: right;"
+                                                    (blur)="calculateNetTotal($event.target.value,'CreditNoteTotal')"
+                                                    formControlName="TotalAdjustment" class="form-control">
+                                                <span class="errorMessage"
+                                                    *ngIf="creditNoteForm.get('TotalAdjustment')!=null && creditNoteForm.get('TotalAdjustment').errors!=null ">
+                                                    <span
+                                                        *ngIf="creditNoteForm.get('TotalAdjustment').errors.TotalAdjustErr">
+                                                        Total Adjustment should not be greater than 0.99.
+                                                    </span>
+                                                </span>
+                                                <span class="errorMessage"
+                                                    *ngIf="creditNoteForm.get('TotalAdjustment')!=null && creditNoteForm.get('TotalAdjustment').errors!=null ">
+                                                    <span
+                                                        *ngIf="creditNoteForm.get('TotalAdjustment').errors.TotalAdjustMinusErr">
+                                                        Total Adjustment should not be less than -0.99.
+                                                    </span>
+                                                </span>
+                                                <span class="errorMessage"
+                                                    *ngIf="creditNoteForm.get('TotalAdjustment')!=null && creditNoteForm.get('TotalAdjustment').errors!=null ">
+                                                    <span
+                                                        *ngIf="creditNoteForm.get('TotalAdjustment').errors.ProperinputErr">
+                                                        Please give proper format
+                                                    </span>
+                                                </span>
+
+                                            </div>
+                                            <div *ngIf="InViewMode">
+                                                {{_InvoiceDetails.CurrencySymbol}}{{(creditNoteForm.controls['TotalAdjustment'].value)|number:'1.2-2'|
+                                                negativeInParenthesis}}
+                                            </div>
+                                        </td>
+                                    </tr>
+
+
+                                    <tr class="table table-totalamount" style="border: inherit">
+                                        <td align="right" width="60%" class="nowrap">Credit Note Total</td>
+                                        <td *ngIf="_Total + _Tax > 0" align="right">
+                                            <div *ngIf="OnTotalAdjchange">
+                                                {{_InvoiceDetails.CurrencySymbol}}
+                                                {{creditNoteForm.controls['CreditNoteTotal'].value|number:'1.2-2'}}
+                                            </div>
+                                            <div *ngIf="!OnTotalAdjchange">
+                                                {{_InvoiceDetails.CurrencySymbol}}
+                                                {{creditNoteForm.controls['CreditNoteTotal'].value|number:'1.2-2'}}
+                                            </div>
+                                            <span class="errorMessage"
+                                                *ngIf="creditNoteForm.get('CreditNoteTotal')!=null && creditNoteForm.get('CreditNoteTotal').errors!=null ">
+                                                <span
+                                                    *ngIf="creditNoteForm.get('CreditNoteTotal').errors.CRNnegativeErr">
+                                                    Credit Note Total should not be negative
+                                                </span>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group text-right btn-list">
+                                <div *ngIf="!isApprovalPage">
+                                    <button type="submit" *ngIf="(CreditnoteId==0 || (CreditnoteId>0 && IsEditClicked))"
+                                        class="btn btn-save" (click)="AddCreditNote('Save')">
+                                        <i class="fa fa-check" aria-hidden="true"></i> Save
+                                    </button>
+                                    <button type="submit" *ngIf="followWorkflow && sendForApprovalPermission && (creditNoteDetails.ButtonPreferences.SendForApproval || CreditnoteId == 0)
+                                        && (creditNoteDetails.CreatedBy == userDetails.UserID)" class="btn btn-save"
+                                        (click)="Send_Approval('Send')">
+                                        <i class="fa fa-check" aria-hidden="true"></i> Send for approval
+                                    </button>
+                                    <button type="submit" class="btn btn-cancel"
+                                        (click)="ShowRemarksPopUp(workFlowStatus.CancelledApproval)"
+                                        *ngIf="creditNoteDetails.ButtonPreferences.CancelApproval && (creditNoteDetails.CreatedBy == userDetails.UserID)">
+                                        <i class="fa fa-times-circle" aria-hidden="true"></i> Cancel Approval</button>
+                                    <button type="submit"
+                                        *ngIf="!followWorkflow && sendForApprovalPermission && (creditNoteDetails.ButtonPreferences.Submit || CreditnoteId == 0)"
+                                        class="btn btn-approve" (click)=SubmitCreditNote()>
+                                        <i class="fa fa-check" aria-hidden="true"></i> Submit
+                                    </button>
+                                    <button type="submit" class="btn btn-edit" (click)="EditCreditNote()"
+                                        *ngIf="creditNoteDetails.ButtonPreferences.Edit && EditPermission && !IsEditClicked">
+                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
+                                    </button>
+                                    <button type="submit" class="btn btn-approve"
+                                        *ngIf="creditNoteDetails.ButtonPreferences.CancelDraft && CreditnoteId > 0 && (creditNoteDetails.CreatedBy == userDetails.UserID)"
+                                        (click)=CancelDraftRecord()>
+                                        <i class="fa fa-check" aria-hidden="true"></i> Cancel Draft
+                                    </button>
+                                    <button type="submit" class="btn btn-save" (click)="Reverify()"
+                                        *ngIf="creditNoteDetails.ButtonPreferences.ReVerify && reVerifyPermission && !IsEditClicked">
+                                        <i class="fa fa-check" aria-hidden="true"></i> Reverify
+                                    </button>
+                                    <button type="submit" class="btn btn-void"
+                                        (click)="ShowRemarksPopUp(workFlowStatus.Void)"
+                                        *ngIf="creditNoteDetails.ButtonPreferences.Void && VoidPermission && creditNoteDetails.CanVoid">
+                                        <i class="fa fa-ban" aria-hidden="true"></i> Void
+                                    </button>
+                                    <button type="submit" class="btn btn-save" (click)=Close()>
+                                        <i class="fa fa-window-close" aria-hidden="true"></i> Close
+                                    </button>
+                                </div>
+                                <div *ngIf="isApprovalPage">
+                                    <button type="submit" *ngIf="IsEditClicked" class="btn btn-save"
+                                        (click)="SaveCreditNote('verify')">
+                                        <i class="fa fa-check" aria-hidden="true"></i> Save
+                                    </button>
+                                    <button type="submit" (click)="EditCreditNote()" class="btn btn-save"
+                                        *ngIf="creditNoteDetails.ButtonPreferences.Verify && verifyPermission && !IsEditClicked && (creditNoteDetails.CurrentApproverUserId == userDetails.UserID)">
+                                        <i class="fa fa-check" aria-hidden="true"></i> Verify
+                                    </button>
+                                    <button type="submit" (click)="onApproveClick()"
+                                        *ngIf="creditNoteDetails.ButtonPreferences.Approve && approvePermission && (creditNoteDetails.CurrentApproverUserId == userDetails.UserID) "
+                                        class="btn btn-approve">
+                                        <i class="fa fa-check" aria-hidden="true"></i>Approve
+                                    </button>
+                                    <button type="submit" (click)="ShowRemarksPopUp(workFlowStatus.Rejected)"
+                                        *ngIf="creditNoteDetails.ButtonPreferences.Reject && approvePermission && (creditNoteDetails.CurrentApproverUserId == userDetails.UserID)"
+                                        class="btn btn-delete">
+                                        <i class="fa fa-ban" aria-hidden="true"></i> Reject
+                                    </button>
+                                    <button type="submit" class="btn btn-save" (click)=Close() style="float: right;">
+                                        <i class="fa fa-window-close" aria-hidden="true"></i> Close
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <p-confirmDialog></p-confirmDialog>
+                <p-dialog [modal]="true" [(visible)]="showRemarksPopUp">
+                    <p-header>
+                        {{pmoduleHeading}}
+                    </p-header>
+                    <div>
+                        <form [formGroup]="CreditNoteRemarksForm">
+                            <div>
+                                <label class="form-label">Reasons</label>
+                                <textarea rows="4" cols="50" class="form-control" formControlName="Reasons">
+                                </textarea>
+                            </div>
+                            <div class="errorMessage"
+                                *ngIf="CreditNoteRemarksForm.get('Reasons') && CreditNoteRemarksForm.get('Reasons').errors!=null && CreditNoteRemarksForm.get('Reasons').touched==true">
+                                <span *ngIf="CreditNoteRemarksForm.get('Reasons').errors.required">
+                                    Reasons is Required
+                                </span>
+                                <span *ngIf="CreditNoteRemarksForm.get('Reasons').hasError('invaliddata')">
+                                    Required valid data
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+                    <p-footer>
+                        <button type="button" class="btn" (click)="ProceedRemarks()">Yes</button>
+                        &nbsp;
+                        <button type="button" class="btn" (click)="showRemarksPopUp=false">No</button>
+                    </p-footer>
+                </p-dialog>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #CRNTemplate let-r="result" let-i="index" let-t="term">
+    <table class="autoCompleteTable" style="width: 99%;">
+        <thead *ngIf='r.index==0'>
+            <tr>
+                <th style="width: 30%">
+                    Invoice Code
+                </th>
+                <th style="width: 25%">
+                    Invoice No(s)
+                </th>
+                <th style="width: 25%">
+                    Invoice Date(s)
+                </th>
+                <th style="width: 20%">
+                    Total
+                </th>
+            </tr>
+        </thead>
+        <tr>
+            <td style="width: 30%; white-space: pre-wrap; word-wrap: break-word;">{{ r.InvoiceCode }}</td>
+            <td style="width: 25%; white-space: pre-wrap; word-wrap: break-word; ">{{ r.SupplierRefNo }}</td>
+            <td style="width: 25%">{{ r.InvoiceDate |DisplayDateFormat }}</td>
+            <td style="width: 20%;text-align: left">{{ r.TotalAmount |number:'1.2-2' }}</td>
+        </tr>
+    </table>
+</ng-template>
+
+<ng-template #supplierTemplate let-r="result" let-t="term">
+    <div [ngClass]="ngb-disabled">
+        <span [ngClass]="{disabled : r.WorkFlowStatus!='Approved'}"> {{
+            r.WorkFlowStatus!='Approved' ? r.SupplierName + " ( " + r.WorkFlowStatus + " ) " : r.SupplierName}}</span>
+    </div>
+</ng-template>
+<ng-template #itemMasterTemplate let-r="result" let-t="term">
+    <div style="max-height: 100px; overflow: auto">
+        {{ r.ItemName }}
+    </div>
+</ng-template>
+<ng-template #serviceMasterTemplate let-r="result" let-t="term">
+    <div style="max-height: 100px; overflow: auto">
+        {{ r.AccountCodeName }}
+    </div>
+</ng-template>
+<ng-template #ExpenseMasterTemplate let-r="result" let-t="term">
+    <div style="max-height: 100px; overflow: auto">
+        {{ r.AccountCodeName }}
+    </div>
+</ng-template>
+<app-auditlog *ngIf="showLogPopUp" (hideLogPopUp)="hideLogPopUp($event)" [DocumentId]="creditNoteDetails.CreditNoteId"
+    [CompanyId]="creditNoteDetails.CompanyId" [DocumentNumber]="creditNoteDetails.DocumentCode"
+    [PageName]="'CreditNote'" [showLogPopUp]="showLogPopUp">
+</app-auditlog>

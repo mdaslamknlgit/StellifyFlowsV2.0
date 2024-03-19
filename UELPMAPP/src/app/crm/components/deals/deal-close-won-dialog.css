@@ -1,0 +1,24 @@
+:host /deep/ .ClassAccount
+{
+    height:700px;
+    overflow: scroll;
+    /* overflow-x: hidden; */
+}
+
+:host /deep/ .mat-dialog-container {
+ overflow: hidden !important;   
+}
+.mat-dialog-content {
+    overflow:hidden !important;
+}
+.ui-treetable .ui-treetable-toggler {
+    vertical-align: middle;
+  
+    cursor: hand;
+  
+    text-decoration: none;
+  
+  }
+.ui-treetable td {
+    cursor: pointer;
+}

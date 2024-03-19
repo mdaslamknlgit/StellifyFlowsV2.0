@@ -1,0 +1,770 @@
+<div class="row">
+  <div *ngIf="salesOrderList.length > 0 || salesInvoicesList.length > 0" #rightPanel [CustomSpinner]="showLoadingIcon" style='background: white'
+    class="rightPanel col-lg-12 col-md-12" [class.expand-rightcol]="rightsection">
+    <div class="fullScreenLabel">    <app-header></app-header> </div>
+
+    <div>
+      <form [formGroup]="salesOrderForm" class="form-horizontal">
+        <div class="row fullScreenLabel">
+          <div class="col-12">
+            <h3 class="item-heading" style="float:none;">{{pageTitle}}</h3>
+          </div>
+        </div>
+        <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+          <div *ngIf="hideInput && (selectedSODetails!=undefined && selectedSODetails.SalesInvoiceId==null) && type==='invoice'" class="col-lg-12 padding-null">
+            <div class="form-group row" style="margin-bottom: 0px">
+              <label class="col-lg-4 form-label"> </label>
+              <div class="col-lg-4">
+                <label class="col-form-label" style="font-size:14px" *ngIf="hideInput">
+                  <input type="radio" (change)="invoiceTypeChange($event)" value="Sales Order" formControlName="InvoiceType" /> Sales Order
+                </label>
+                <label class="col-form-label" style="font-size:14px;margin-left: 5px;" *ngIf="hideInput">
+                  <input type="radio" (change)="invoiceTypeChange($event)" value="Ticket" formControlName="InvoiceType" /> Ticket
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group row" style="margin-bottom: 0px">
+              <label class="col-form-label col-lg-4 form-label">For {{invoiceType}}</label>
+              <div class="col-lg-4">
+
+                <!-- <label class="col-form-label form-text" *ngIf="hideText"></label> -->
+                <div class="autoComplete3">
+                  <input *ngIf="hideInput && invoiceType==='Sales Order'" appAutofocus type="text" class="form-control show" [inputFormatter]="soInputFormatter"
+                    [ngbTypeahead]="soSearch" (selectItem)="soSelection($event.item)" formControlName="SalesOrder" [resultTemplate]="soTemplate"
+                  />
+                  <input *ngIf="hideInput && invoiceType==='Ticket'" appAutofocus type="text" class="form-control show" [inputFormatter]="tucketInputFormatter"
+                    [ngbTypeahead]="ticketSearch" (selectItem)="onTicketChange($event)" formControlName="Ticket" [resultTemplate]="ticketTemplate"
+                  />
+                  <div style="text-align: center;">
+                    <!-- <span class="errorMessage" *ngIf="showGridErrorMessage &&(selectedSODetails.SalesOrderItems==undefined|| selectedSODetails.SalesOrderItems.length==0)">
+                      Please select so
+                    </span> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group row" *ngIf="hideInput && type!='invoice'">
+                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Tickets</label>
+                <div class="autoComplete3 quotationReqAutoComplete col-xl-8 col-sm-6 col-6">
+                  <input type="text" formControlName="Ticket" class="form-control show" [inputFormatter]="tucketInputFormatter" (selectItem)="onTicketChange($event)"
+                    [ngbTypeahead]="ticketSearch" [resultTemplate]="ticketTemplate" />
+                </div>
+              </div>
+              <div class="form-group row" *ngIf="hideText">
+                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                  <b>SO Number</b>
+                </label>
+                <div class="col-xl-8 col-sm-6 col-6">
+                  <label class="col-form-label form-text">
+                    <b>{{ (selectedSODetails.WorkFlowStatusId!=workFlowStatus.Draft) ? selectedSODetails.SalesOrderCode:selectedSODetails.DraftCode }}</b>
+                  </label>
+                </div>
+              </div>
+              <div class="form-group row" *ngIf="hideText">
+                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Requestor</label>
+                <div class="col-xl-8 col-sm-6 col-6">
+                  <label class="col-form-label form-text">{{ selectedSODetails.RequestedByUserName }}</label>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Customer Type</label>
+                <div class="col-xl-8 col-sm-6 col-6">
+                  <label class="col-form-label form-text" *ngIf="hideText&&selectedSODetails.Customer!=null">
+                    {{ selectedSODetails.Customer.CustomerCategoryName }}
+                  </label>
+                  <label class="col-form-label" style="font-size:14px" *ngIf="hideInput">
+                    <input type="radio" (change)="customerTypeChange($event)" value="1" formControlName="CustomerCategoryId" /> Owners
+                  </label>
+                  <label class="col-form-label" style="font-size:14px;margin-left: 5px;" *ngIf="hideInput">
+                    <input type="radio" (change)="customerTypeChange($event)" value="2" formControlName="CustomerCategoryId" /> Tenant
+                  </label>
+                  <label class="col-form-label" style="font-size:14px;margin-left: 5px;" *ngIf="hideInput">
+                    <input type="radio" (change)="customerTypeChange($event)" value="3" formControlName="CustomerCategoryId" /> Others
+                  </label>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Customer<i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i></label>
+                <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                  <label class="col-form-label form-text" *ngIf="hideText&&selectedSODetails.Customer!=null">{{ selectedSODetails.Customer.CustomerName }}</label>
+                  <input formControlName="Customer" type="text" *ngIf="hideInput" class="form-control show" [inputFormatter]="customerInputFormater"
+                    (selectItem)="onCustomerChange($event)" [ngbTypeahead]="customerSearch" [resultTemplate]="customerTemplate"
+                  />
+                  <div *ngIf="salesOrderForm.get('Customer') && salesOrderForm.get('Customer').errors!=null && salesOrderForm.get('Customer').touched==true">
+                    <span class="errorMessage" *ngIf="salesOrderForm.get('Customer').errors.required">Customer is required</span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Customer Address</label>
+                <div class="col-xl-8 col-sm-6 col-6">
+                  <label class="col-form-label form-text" *ngIf="hideText&&selectedSODetails.Customer!=null">{{ selectedSODetails.Customer.BillingAddress + '\n' + selectedSODetails.Customer.BillingCity + '\n' + selectedSODetails.Customer.BillingTelephone
+                    + '\n' + selectedSODetails.Customer.BillingCountry }}</label>
+                  <textarea formControlName="CustomerAddress" *ngIf="hideInput" class="form-control"></textarea>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Delivery Address</label>
+                <div class="col-xl-8 col-sm-6 col-6">
+                  <label class="col-form-label form-text" *ngIf="hideText">{{ selectedSODetails.DeliveryAddress }}</label>
+                  <textarea formControlName="DeliveryAddress" *ngIf="hideInput" class="form-control"></textarea>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Fax</label>
+                <div class="col-xl-8 col-sm-6 col-6">
+                  <label class="col-form-label form-text" *ngIf="hideText&&selectedSODetails.Customer!=null">{{ selectedSODetails.Customer.ShippingFax }}</label>
+                  <input formControlName="ShippingFax" *ngIf="hideInput" class="form-control" />
+                </div>
+              </div>
+              <!-- <div class="form-group row">
+                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">No. of Entries</label>
+                <div class="col-xl-8 col-sm-6 col-6">
+                  <label class="col-form-label form-text">{{ (selectedSODetails==undefined||selectedSODetails.SalesOrderItems==undefined)?0:selectedSODetails.SalesOrderItems.length
+                    }}
+                  </label>
+                </div>
+              </div> -->
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group row">
+                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Department<i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i></label>
+                <div class="col-xl-8 col-sm-6 col-6">
+                  <label class="col-form-label form-text" *ngIf="hideText">{{ selectedSODetails.Location }}</label>
+                  <select formControlName="LocationId" *ngIf="hideInput" class="form-control">
+                    <option [ngValue]="undefined">--Select--</option>
+                    <option *ngFor="let record of departments" value={{record.LocationID}}>
+                      {{record.Name}}
+                  </select>
+                  <div *ngIf="salesOrderForm.get('LocationId') && salesOrderForm.get('LocationId').errors!=null && salesOrderForm.get('LocationId').touched==true">
+                    <span class="errorMessage" *ngIf="salesOrderForm.get('LocationId').errors.required">Department is required</span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row" *ngIf="type==='invoice'">
+                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Invoice Number</label>
+                <div class="col-xl-8 col-sm-6 col-6">
+                  <label class="col-form-label form-text" *ngIf="type==='invoice' && selectedSODetails.SalesInvoiceId!=null">{{ selectedSODetails.SalesInvoiceCode }}</label>
+                  <input appAutofocus *ngIf="hideInput&&type==='invoice' && (selectedSODetails.SalesInvoiceId===null || selectedSODetails.SalesInvoiceId===undefined)"
+                    #SalesInvoiceCode formControlName="SalesInvoiceCode" type="text" class="form-control" />
+
+                  <div *ngIf="salesOrderForm.get('SalesInvoiceCode').errors!=null">
+                    <span class="errorMessage" *ngIf="salesOrderForm.get('SalesInvoiceCode').errors.Duplicate">Duplicate Sales Invoice Number</span>
+                  </div>
+
+                </div>
+              </div>
+              <div class="form-group row" *ngIf="hideText">
+                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">TicketNo</label>
+                <div class="col-xl-8 col-sm-6 col-6">
+                  <label class="col-form-label form-text">{{ selectedSODetails.Ticket==null ? null : selectedSODetails.Ticket.TicketNo }}</label>
+                </div>
+              </div>
+              <div class="form-group row" *ngIf="hideText">
+                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Created Date</label>
+                <div class="col-xl-8 col-sm-6 col-6">
+                  <label class="col-form-label form-text">{{ selectedSODetails.CreatedDate|DisplayDateFormat }}</label>
+                </div>
+              </div>
+              <div class="form-group row" *ngIf="type!='invoice'">
+                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">GST Required</label>
+                <div class="col-xl-1 col-sm-6 col-6">
+                  <label *ngIf="hideInput" class="col-form-label form-text">
+                    <mat-slide-toggle formControlName="IsGstRequired" (change)="matselect($event)"></mat-slide-toggle>
+                    <!-- &nbsp;
+                                              <label *ngIf="slideactive">Yes</label> -->
+                  </label>
+                  <label class="col-form-label form-text" *ngIf="hideText">{{ selectedSODetails.IsGstRequired==true?'Yes':'No' }}</label>
+                </div>
+                <label class="col-form-label col-xl-5 col-sm-6 col-6 form-label">Is Gst Before Discount</label>
+                <div class="col-xl-1 col-sm-6 col-6">
+                  <label *ngIf="hideInput" class="col-form-label form-text">
+                    <mat-slide-toggle formControlName="IsGstBeforeDiscount" (change)="calculateTotalPrice()"></mat-slide-toggle>
+                    <!-- &nbsp;
+                                              <label *ngIf="slideactive">Yes</label> -->
+                  </label>
+                  <label class="col-form-label form-text" *ngIf="hideText">{{ selectedSODetails.IsGstBeforeDiscount==true?'Yes':'No' }}</label>
+                </div>
+              </div>
+              <div class="form-group row" *ngIf="type!='invoice'">
+                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Cost of Service<i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i></label>
+                <div class="col-xl-8 col-sm-6 col-6">
+                  <label class="col-form-label form-text" *ngIf="hideText">{{ selectedSODetails.CostOfService }}</label>
+                  <select formControlName="CostOfServiceId" *ngIf="hideInput" class="form-control">
+                    <option [ngValue]="undefined">--Select--</option>
+                    <option *ngFor="let record of costOfServiceType" value={{record.CostOfServiceId}}>
+                      {{record.CostOfService}}
+                  </select>
+                  <div *ngIf="salesOrderForm.get('CostOfServiceId')&& salesOrderForm.get('CostOfServiceId').errors!=null && salesOrderForm.get('CostOfServiceId').touched==true">
+                    <span class="errorMessage" *ngIf="salesOrderForm.get('CostOfServiceId').errors.required">Cost Of Service is required</span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row" *ngIf="type!='invoice'">
+                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Expected Delivery</label>
+                <div class="col-xl-8 col-sm-6 col-6">
+                  <label class="col-form-label form-text" *ngIf="hideText">{{ selectedSODetails.ExpectedDeliveryDate|DisplayDateFormat }}</label>
+                  <div class="input-group" *ngIf="hideInput">
+                    <input class="form-control" formControlName="ExpectedDeliveryDate" (click)="onDatePickerFocus(deliveryDatePicker)" ngbDatepicker
+                      #deliveryDatePicker="ngbDatepicker">
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-secondary" (click)="deliveryDatePicker.toggle()" type="button">
+                        <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Currency Type<i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i></label>
+                <div class="col-xl-8 col-sm-6 col-6">
+                  <label class="col-form-label form-text" *ngIf="hideText">{{ selectedSODetails.CurrencyCode }}</label>
+                  <select (change)="onCurrencyChange($event)" formControlName="CurrencyId" *ngIf="hideInput" class="form-control">
+                    <option [ngValue]="undefined">--Select--</option>
+                    <option *ngFor="let record of currencies" value={{record.Id}}>
+                      {{ record.Code }}
+                  </select>
+                  <div *ngIf="salesOrderForm.get('CurrencyId') && salesOrderForm.get('CurrencyId').errors!=null && salesOrderForm.get('CurrencyId').touched==true ">
+                    <span class="errorMessage" *ngIf="salesOrderForm.get('CurrencyId').errors.required">Currency Code is required</span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Unit No</label>
+                <div class="col-xl-8 col-sm-6 col-6">
+                  <label class="col-form-label form-text" *ngIf="hideText&&selectedSODetails.Customer!=null">{{ selectedSODetails.Ticket==null ? null : selectedSODetails.Ticket.UnitNumber }}</label>
+                  <input formControlName="UnitNumber" *ngIf="hideInput" class="form-control" />
+                </div>
+              </div>
+              <div class="form-group row" *ngIf="type!='invoice'">
+                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Status</label>
+                <div class="col-xl-8 col-sm-6 col-6">
+                  <label *ngIf="selectedSODetails.WorkFlowStatusText!=''&&selectedSODetails.WorkFlowStatusText!=null" class="col-form-label form-text">{{ selectedSODetails.WorkFlowStatusText }}&nbsp;
+                    <span *ngIf="selectedSODetails.CurrentApproverUserName!=''&&selectedSODetails.CurrentApproverUserName!=null">[{{ selectedSODetails.CurrentApproverUserName }}]</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 engineers-assigned" style="padding:0px;">
+            <fieldset *ngIf="hideInput" formArrayName="SalesOrderItems">
+              <div style="text-align: center;">
+                <span class="errorMessage" *ngIf="showGridErrorMessage &&(selectedSODetails.SalesOrderItems==undefined|| selectedSODetails.SalesOrderItems.length==0)">
+                  Please enter sales order items
+                </span>
+              </div>
+              <p-table [columns]="gridColumns" (sortFunction)="customSort($event)" 
+              [customSort]="true" sortMode="single" [value]="salesOrderForm.controls.SalesOrderItems.controls">
+                <ng-template pTemplate="emptymessage">
+                  <tr *ngIf="type!='invoice'">
+                    <td colspan="11" style='text-align: center;'>
+                      <b>{{gridNoMessageToDisplay}}</b>
+                    </td>
+                  </tr>
+                  <tr *ngIf="type==='invoice'">
+                    <td colspan="8" style='text-align: center;'>
+                      <b>{{gridNoMessageToDisplay}}</b>
+                    </td>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="colgroup" let-columns>
+                  <colgroup>
+                    <col style="width:3%;">
+                    <col *ngIf="type!='invoice'" style="width:5%;">
+                    <col *ngIf="type!='invoice'" style="width:10%;">
+                    <col *ngIf="type!='invoice'" style="width:15%;">
+                    <col style="width:10%;">
+                    <col style="width:10%;">
+                    <col style="width:10%;">
+                    <col style="width:10%;">
+                    <col style="width:10%;">
+                    <col style="width:10%;">
+                    <col style="width:10%;">
+                  </colgroup>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                  <tr>
+                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                      {{col.header}}
+
+                      <span *ngIf="(col.field=='Unitprice'||col.field=='ItemTotal')&&selectedSODetails.CurrencySymbol!=null">
+                        &nbsp; ( {{ selectedSODetails.CurrencySymbol }} )
+                      </span>
+                      <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                    </th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                  <tr *ngIf="hideInput" [formGroupName]="i">
+                    <td>
+                      {{ i + 1 }}
+                    </td>
+                    <td *ngIf="type!='invoice'">
+                      {{ salesOrderForm.get('SalesOrderItems').controls[i].get('Item').value==null||salesOrderForm.get('SalesOrderItems').controls[i].get('Item').value==undefined?"":
+                      salesOrderForm.get('SalesOrderItems').controls[i].get('Item').value.ItemMasterCode }}
+                    </td>
+                    <td *ngIf="type!='invoice'">
+                      <input formControlName="Item" type="text" (click)="itemClick(i)" class="form-control" [inputFormatter]="itemMasterInputFormater"
+                        (selectItem)="itemMasterSelection($event,i)" [ngbTypeahead]="itemMasterSearch" [resultTemplate]="itemMasterTemplate"
+                      />
+                    </td>
+                    <td>
+                      <textarea formControlName="ItemDescription" autoresize type="text" class="form-control">
+                                                </textarea>
+                    </td>
+                    <td *ngIf="type!='invoice'">
+                      <select formControlName="MeasurementUnitID" *ngIf="hideInput" class="form-control">
+                        <option [ngValue]="undefined">--Select--</option>
+                        <option *ngFor="let record of measurementUnits" value={{record.MeasurementUnitID}}>
+                          {{ record.Name }}
+                      </select>
+                    </td>
+                    <td>
+                      <input type="number" style="text-align: right;" class="form-control" min="0" (keydown)=restrictMinus($event) (keyup)="avoidNegativeValues($event)"
+                        (change)="calculateTotalPrice($event)" formControlName="ItemQty" />
+                    </td>
+                    <td>
+                      <input type="number" style="text-align: right;" class="form-control" min="0" (keydown)=restrictMinus($event) (change)="calculateTotalPrice($event)"
+                        formControlName="Unitprice" />
+                    </td>
+                    <td>
+                      <input type="number" style="text-align: right;" class="form-control" min="0" (keydown)=restrictMinus($event) (change)="calculateTotalPrice($event)"
+                        formControlName="Discount" />
+                    </td>
+                    <td>
+                      <select formControlName="TaxID" *ngIf="hideInput" (change)="setTaxAmount($event.target.value,i)" class="form-control">
+                        <option [ngValue]="undefined">--Select--</option>
+                        <option *ngFor="let record of taxTypes" value={{record.TaxId}}>
+                          {{ record.TaxName }}
+                      </select>
+                    </td>
+                    <td>
+                      <!-- <input type="number" style="text-align: right;" class="form-control"  formControlName="TaxAmount"/> -->
+                      <span>{{ salesOrderForm.get('SalesOrderItems').controls[i].get('TotalTax').value }}</span>
+                    </td>
+                    <td>
+                      <div style="float:left;width:60%;">
+                        {{ (( salesOrderForm.get('SalesOrderItems').controls[i].get('ItemQty').value * salesOrderForm.get('SalesOrderItems').controls[i].get('Unitprice').value
+                        )+salesOrderForm.get('SalesOrderItems').controls[i].get('TotalTax').value-salesOrderForm.get('SalesOrderItems').controls[i].get('Discount').value
+                        )|number:'1.2-4' }}
+                      </div>
+                      <div class="gridIconsStyle" *ngIf="type!='invoice'">
+                        <i class="fa fa-trash gridRemoveIcon" (click)="removeGridItem(i)" aria-hidden="true"></i>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+              <div *ngIf="hideInput && type!='invoice'">
+                <input type="number" (keydown)=restrictMinus($event) [(ngModel)]="linesToAdd" [ngModelOptions]="{standalone: true}" class="form-control linesToAdd">
+                <button type="submit" (click)="addGridItem(linesToAdd)" class="addLine">
+                  <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Line
+                </button>
+              </div>
+            </fieldset>
+            <!-- ///////////////////////////// -->
+            <p-table *ngIf="hideText" [columns]="gridColumns" (sortFunction)="customSort($event)" [customSort]="true" sortMode="single"
+              [value]="selectedSODetails.SalesOrderItems">
+              <ng-template pTemplate="emptymessage">
+                <tr *ngIf="type!='invoice'">
+                  <td colspan="11" style='text-align: center;'>
+                    <b>{{gridNoMessageToDisplay}}</b>
+                  </td>
+                </tr>
+                <tr *ngIf="type==='invoice'">
+                  <td colspan="8" style='text-align: center;'>
+                    <b>{{gridNoMessageToDisplay}}</b>
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="colgroup" let-columns>
+                <colgroup>
+                  <col style="width:3%;">
+                  <col *ngIf="type!='invoice'" style="width:5%;">
+                  <col *ngIf="type!='invoice'" style="width:10%;">
+                  <col *ngIf="type!='invoice'" style="width:15%;">
+                  <col style="width:10%;">
+                  <col style="width:10%;">
+                  <col style="width:10%;">
+                  <col style="width:10%;">
+                  <col style="width:10%;">
+                  <col style="width:10%;">
+                  <col style="width:10%;">
+                </colgroup>
+              </ng-template>
+              <ng-template pTemplate="header" let-columns>
+                <tr>
+                  <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                    {{col.header}}
+
+                    <span *ngIf="(col.field=='Unitprice'||col.field=='ItemTotal')&&selectedSODetails.CurrencySymbol!=null">
+                      &nbsp; ( {{ selectedSODetails.CurrencySymbol }} )
+                    </span>
+                    <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                  </th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                <tr>
+                  <td>
+                    {{ i + 1 }}
+                  </td>
+                  <td *ngIf="type!='invoice'">
+                    {{ rowData.Item===null? "" : rowData.Item.ItemMasterCode }}
+                  </td>
+                  <td *ngIf="type!='invoice'">
+                    {{ rowData.Item===null? "" : rowData.Item.ItemName }}
+                  </td>
+                  <td>
+                    <span class="descriptionStyle" [innerHtml]="rowData.ItemDescription|TextAreaContentDisplay"></span>
+                  </td>
+                  <td *ngIf="type!='invoice'">
+                    {{ rowData.MeasurementUnitCode }}
+                  </td>
+                  <td align="right">
+                    {{ rowData.ItemQty }}
+                  </td>
+                  <td align="right">
+                    {{ rowData.Unitprice|number:'1.2-4' }}
+                  </td>
+                  <td align="right">
+                    {{ rowData.Discount|number:'1.2-4' }}
+                  </td>
+                  <td align="right">
+                    {{ rowData.TaxName }}
+                  </td>
+                  <td align="right">
+                    {{ rowData.TaxTotal|number:'1.2-4' }}
+                  </td>
+                  <td>
+                    <div style="float:left;width:60%;text-align: right;">
+                      {{ rowData.ItemTotalPrice|number:'1.2-4' }}
+                    </div>
+                    <div class="gridIconsStyle" *ngIf="hideInput==true">
+                      <i class="fa fa-edit gridEditIcon" (click)="editGridItem(i)" aria-hidden="true"></i>
+                      &nbsp;&nbsp;&nbsp;
+                      <i class="fa fa-trash gridRemoveIcon" (click)="removeGridItem(i)" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+            <div class="row colorder">
+              <div class="col-sm-5">
+                <div class="row" style="margin-top:3em;">
+                  <div class="col-12 row">
+                    <div class="col-5">
+                      <h4 class="form-heading">Payment Terms<i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i></h4>
+                    </div>
+                    <div class="col-6">
+                      <select (change)="onPaymentTermChange($event)" formControlName="PaymentTermId" *ngIf="hideInput" class="form-control">
+                        <option [ngValue]="undefined">--Select--</option>
+                        <option *ngFor="let record of paymentTerms" value={{record.PaymentTermsId}}>
+                          {{ record.Code }}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-12" style="margin-top:1em;">
+                    <textarea *ngIf="hideInput" class="form-control" autoresize formControlName="PaymentTerms"></textarea>
+                    <span class="descriptionStyle" showmore [value]="selectedSODetails.PaymentTerms" *ngIf="hideText"></span>
+                  </div>
+                </div>
+                <div class="row" style="margin-top:3em;" *ngIf="type!='invoice'">
+                  <div class="col-12">
+                    <h4 class="form-heading">Reasons For Sales Order<i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i></h4>
+                  </div>
+                  <div class="col-12">
+                    <textarea *ngIf="hideInput" class="form-control" autoresize formControlName="Reasons"></textarea>
+                    <span class="descriptionStyle" showmore [value]="selectedSODetails.Reasons" *ngIf="hideText"></span>
+                  </div>
+                </div>
+                <div class="row" style="margin-top:3em;" *ngIf="type!='invoice'">
+                  <div class="col-12">
+                    <h4 class="form-heading">Instructions to vendor</h4>
+                  </div>
+                  <div class="col-12">
+                    <textarea *ngIf="hideInput" class="form-control" autoresize formControlName="Instructions"></textarea>
+                    <span class="descriptionStyle" showmore [value]="selectedSODetails.Instructions" *ngIf="hideText"></span>
+                  </div>
+                </div>
+                <div class="row" style="margin-top:3em;" *ngIf="type!='invoice'">
+                  <div class="col-12">
+                    <h4 class="form-heading">Justifications</h4>
+                  </div>
+                  <div class="col-12">
+                    <textarea *ngIf="hideInput" class="form-control" autoresize formControlName="Justifications">
+                                </textarea>
+                    <span class="descriptionStyle" showmore [value]="selectedSODetails.Justifications" *ngIf="hideText"></span>
+                  </div>
+                </div>
+                <div class="row" style="margin-top:3em;" *ngIf="type!='invoice'">
+                  <div class="col-12 row">
+                    <div class="col-5">
+                      <h4 class="form-heading">Delivery Terms<i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i></h4>
+                    </div>
+                    <div class="col-6">
+                      <select (change)="onDeliveryTermChange($event)" formControlName="DeliveryTermId" *ngIf="hideInput" class="form-control">
+                        <option [ngValue]="undefined">--Select--</option>
+                        <option *ngFor="let record of deliveryTerms" value={{record.DeliveryTermsId}}>
+                          {{ record.Code }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-12" style="margin-top:1em;">
+                    <textarea *ngIf="hideInput" class="form-control" autoresize formControlName="DeliveryTerm">
+                                            </textarea>
+                    <span class="descriptionStyle" showmore [value]="selectedSODetails.DeliveryTerm" *ngIf="hideText"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="row" style="margin-top:3em;">
+                  <div class="col-12">
+                    <h4 class="form-heading">Attachments</h4>
+                  </div>
+                  <div class="col-12 attachments" *ngIf="selectedSODetails!=undefined">
+                    <ul>
+                      <ng-template ngFor let-data [ngForOf]="selectedSODetails.Attachments" let-i="index">
+                        <li *ngIf="data.IsDelete!=true||data.IsDelete==undefined">
+                          <span>
+                            <span class="displayFileName">
+                              {{ data.FileName }}
+                            </span>
+                            <a style="color:black;" target="_blank" *ngIf="hideText" href="{{apiEndPoint}}/salesOrderFileDownload?AttachmentId={{ data.AttachmentId }}&AttachmentTypeId={{ data.AttachmentTypeId }}&FileName={{data.FileName}}&RecordId={{data.RecordId}}">
+                              <i class="fa fa-download"></i>
+                            </a>
+                            &nbsp;&nbsp;
+                            <i *ngIf="hideInput" (click)="attachmentDelete(i)" class="fa fa-trash">
+                            </i>
+                          </span>
+                        </li>
+                      </ng-template>
+                    </ul>
+                  </div>
+                  <div class="col-12" *ngIf="hideInput">
+                    <div class="col-12">
+                      <input type="file" multiple (change)="onFileUploadChange($event)" name="file">
+                    </div>
+                    <div class="col-12">
+                      <ul class="fileList">
+                        <li *ngFor="let data of uploadedFiles;let i = index">
+                          <span>
+                            <span class="fileName">
+                              {{ data.name }}
+                            </span>
+                            <i class="fa fa-close" (click)="onFileClose(i)"></i>
+                          </span>
+                          <br>
+                          <span class="fileSize">{{ data.size/1024 }} KB</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-3 mobilecol1">
+
+                <table class="table table-subtotal" style="float:right;">
+                  <tr>
+                    <td class="nowrap" width="50%" align="right">Sub Total</td>
+                    <td align="right" *ngIf="hideInput">{{ selectedSODetails.CurrencySymbol }} {{ ( salesOrderForm.get('SubTotal').value )|number:'1.2-4' }}
+                    </td>
+                    <td align="right" *ngIf="hideText">{{ selectedSODetails.CurrencySymbol }} {{ ( selectedSODetails.SubTotal)|number:'1.2-4' }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="nowrap" align="right">Discount</td>
+                    <td *ngIf="hideInput">
+                      <input type="number" min="0" (keydown)=restrictMinus($event) style="text-align: right;" (change)="calculateTotalPrice($event)"
+                        formControlName="Discount" class="form-control">
+                    </td>
+                    <td *ngIf="hideText" align="right">{{ selectedSODetails.CurrencySymbol }} {{ (selectedSODetails.Discount)|number:'1.2-4' }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="nowrap" align="right">Shipping Charges</td>
+                    <td *ngIf="hideInput">
+                      <input type="number" min="0" (keydown)=restrictMinus($event) style="text-align: right;" (change)="calculateTotalPrice($event)"
+                        formControlName="ShippingCharges" class="form-control">
+                    </td>
+                    <td *ngIf="hideText" align="right">{{ selectedSODetails.CurrencySymbol }} {{ (selectedSODetails.ShippingCharges)|number:'1.2-4' }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="nowrap" align="right">Others</td>
+                    <td *ngIf="hideInput">
+                      <input type="number" min="0" (keydown)=restrictMinus($event) style="text-align: right;" (change)="calculateTotalPrice($event)"
+                        formControlName="OtherCharges" class="form-control">
+                    </td>
+                    <td *ngIf="hideText" align="right">{{ selectedSODetails.CurrencySymbol }} {{ (selectedSODetails.OtherCharges)|number:'1.2-4' }}
+                    </td>
+                  </tr>
+                </table>
+                <div style="clear: both;">
+                  <table class="table table-totalamount" style="float:right;border: inherit">
+                    <tr>
+                      <td class="nowrap" width="50%" align="right">Total</td>
+                      <td *ngIf="hideInput" align="right">{{ selectedSODetails.CurrencySymbol }} {{ (salesOrderForm.get('TotalAmount').value)|number:'1.2-4'
+                        }}
+                      </td>
+                      <td *ngIf="hideText" align="right">{{ selectedSODetails.CurrencySymbol }} {{ (selectedSODetails.TotalAmount)|number:'1.2-4' }}
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row" *ngIf="type!='invoice'">
+            <div class="col-xl-12 col-sm-12 col-12" *ngIf="(isApprovalPage==true||(isApprovalPage==false && (selectedSODetails.WorkFlowStatusId==2||selectedSODetails.WorkFlowStatusId==3)))">
+              <h4 class="form-heading">Approval Remarks</h4>
+              <div>
+                <textarea formControlName="Remarks" class="form-control" style="width:70%;display:inline-block ">
+                </textarea>
+                <button type="submit" (click)="update(isApprovalPage==true?2:3)" style="float:inherit;vertical-align: top;" class="btn btn-edit">
+                  <i class="fa fa-envelope" aria-hidden="true"></i>
+                  <span *ngIf="isApprovalPage==true">
+                    {{selectedSODetails.WorkFlowComments|ApprovalButton }}
+                  </span>
+                  <span *ngIf="isApprovalPage==false">
+                    Reply
+                  </span>
+                </button>
+              </div>
+              <div *ngIf="salesOrderForm.get('Remarks') && salesOrderForm.get('Remarks').errors!=null && salesOrderForm.get('Remarks').touched==true">
+                <span class="errorMessage" *ngIf="salesOrderForm.get('Remarks').errors.required">Approval Remarks is Required</span>
+              </div>
+            </div>
+            <div *ngIf="selectedSODetails.WorkFlowComments!=undefined && selectedSODetails.WorkFlowComments.length >0" class="col-xl-12 col-sm-12 col-12">
+              <label class="col-form-label form-label">Previous Comments</label>
+              <ul>
+                <li *ngFor="let record of selectedSODetails.WorkFlowComments">
+                  <span class='remarksUserName'>{{ record.UserName }}</span> - <span class='remarksDate'>{{ record.CreatedDate|date:'dd-MM-yyyy h:mm:ss a' }}</span>:
+                  <br>
+                  <span>{{ record.Remarks }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div *ngIf="isApprovalPage!=true && type === ''" class="col-12">
+            <div class="form-group text-right btn-list">
+              <button type="submit" (click)="saveRecord('save')" class="btn btn-save" *ngIf="hideInput">
+                <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+              <button type="submit" *ngIf="((selectedSODetails|DisableButton)==false)" [disabled]="selectedSODetails|DisableButton" (click)="saveRecord('send')" class="btn btn-approve">
+                <i class="fa fa-check" aria-hidden="true"></i> Send for Approval</button>
+              <button type="submit" (click)="cancelRecord()" class="btn btn-cancel" *ngIf="hideInput">
+                <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+              <button type="submit" *ngIf="hideText&&((selectedSODetails|DisableButton)==false)" [disabled]="selectedSODetails|DisableButton" (click)="editRecord()" class="btn btn-edit">
+                <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+              <button type="submit" *ngIf="hideText&&((selectedSODetails|DisableButton)==false)" [disabled]="selectedSODetails|DisableButton" (click)="deleteRecord()" class="btn btn-delete">
+                <i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+            </div>
+          </div>
+          <div *ngIf="isApprovalPage===true && type === 'approval'" class="col-12">
+            <div class="row">
+              <div class="col-12">
+                <div class="form-group text-right btn-list">
+                  <button type="submit" (click)="update(4)" class="btn btn-approve">
+                    <i class="fa fa-check" aria-hidden="true"></i>Approve</button>
+                  <button type="submit" (click)="update(5)" class="btn btn-delete">
+                    <i class="fa fa-ban" aria-hidden="true"></i> Reject</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="isApprovalPage!=true && type === 'invoice'" class="col-12">
+            <div class="row">
+              <div class="col-12">
+                <div class="form-group text-right btn-list">
+                  <button type="submit" (click)="saveRecord()" class="btn btn-save" *ngIf="hideInput">
+                    <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+                  <button type="button" (click)="cancelRecord()" class="btn btn-cancel" *ngIf="hideInput">
+                    <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                  <button type="button" *ngIf="hideText&&((selectedSODetails|DisableButton)==false)" (click)="editRecord()" class="btn btn-edit">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                  <!-- <button type="button" *ngIf="hideText&&((selectedSODetails|DisableButton)==false)" (click)="deleteRecord()" class="btn btn-delete">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button> -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </form>
+      <p-confirmDialog></p-confirmDialog>
+    </div>
+  </div>
+  <!-- left col end here-->
+</div>
+
+<ng-template #itemMasterTemplate let-r="result" let-t="term">
+  {{ r.ItemName }}
+</ng-template>
+
+<ng-template #customerTemplate let-r="result" let-t="term">
+  {{ r.CustomerName }}
+</ng-template>
+
+<ng-template #ticketTemplate let-r="result" let-i="index" let-t="term">
+  <table class="autoCompleteTable" style="width: 99%;">
+    <thead *ngIf='r.index==0'>
+      <tr>
+        <th style="width: 30%">
+          Ticket No
+        </th>
+        <th style="width: 30%">
+          Requestor
+        </th>
+        <th style="width: 20%">
+          Total
+        </th>
+        <th style="width: 20%">
+          Date
+        </th>
+      </tr>
+    </thead>
+    <tr>
+      <td style="width: 30%">{{ r.TicketNo }}</td>
+      <td style="width: 30%; white-space: pre-wrap; word-wrap: break-word; ">{{ r.UserName }}</td>
+      <td style="width: 20%">{{ r.BillAmount }}</td>
+      <td style="width: 20%">{{ r.CreatedDate |DisplayDateFormat }}</td>
+    </tr>
+  </table>
+</ng-template>
+
+<ng-template #soTemplate let-r="result" let-i="index" let-t="term">
+  <table class="autoCompleteTable" style="width: 99%;">
+    <thead *ngIf='r.index==0'>
+      <tr>
+        <th style="width: 20%">
+          SO Code
+        </th>
+        <th style="width: 25%">
+          Requestor
+        </th>
+        <th style="width: 20%">
+          Total
+        </th>
+        <th style="width: 20%">
+          Date
+        </th>
+      </tr>
+    </thead>
+    <tr>
+      <td style="width: 20%">{{ r.SalesOrderCode }}</td>
+      <td style="width: 25%; white-space: pre-wrap; word-wrap: break-word; ">{{ r.FirstName }}</td>
+      <td style="width: 20%">{{ r.TotalAmount }}</td>
+      <td style="width: 20%">{{ r.CreatedDate |DisplayDateFormat }}</td>
+    </tr>
+  </table>
+</ng-template>

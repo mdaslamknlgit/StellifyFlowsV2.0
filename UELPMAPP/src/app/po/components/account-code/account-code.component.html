@@ -1,0 +1,214 @@
+<div class="container-fluid" ngbDropdown #myDrop="ngbDropdown">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+            <div class="flexrow space-between align-center">
+            <h3 class="item-heading">  Account Code Management </h3>
+       
+
+          <div>   <input #file style="visibility: hidden;width:0px" type="file" accept="xlsx/*" (click)="file.value = null"
+                (change)="uploadFile($event)">
+           
+            <button class="btn  btn-transparent" (click)="addRecord()"  *ngIf="newPermission"> New Record</button>
+            
+   <button class="btn  btn-transparent" *ngIf="importPermission" #upload  (click)="file.click()">Import Account Codes</button>
+            <img style="display: none;" src="../assets/images/grid1.png" (click)="fullScreen()">
+            <img style="display: none;" src="../assets/images/grid2.png">
+        </div>
+        </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 rightPanel  enlargeRightPanel" [class.expand-rightcol]="rightSection">
+
+            <div class="enlargeRightPanelMargin">
+                <form [formGroup]="accountCodesInfoForm" class="form-horizontal" (ngSubmit)="onSubmit()" novalidate>
+                    <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll"
+                        (click)="$event.stopPropagation(); myDrop.close();">
+                        <div class="row fullScreenLabel">
+                            <div class="col-12">
+                                <h3 class="item-heading" style="float:none;">Manage Account Codes</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-2 col-sm-6 col-6 form-label">Select Entity<i
+                                            class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                                    <div class="col-xl-4 col-sm-6 col-6">
+                                        <select class="form-control" formControlName="CompanyId"
+                                            (change)="onCompanySelection($event.target.value)"
+                                            [ngClass]="(validateControl(accountCodesInfoForm.get('CompanyId')))?'form-control ng-touched':'form-control'">
+                                            <option [ngValue]="null">--Select--</option>
+                                            <option *ngFor="let company of companies" [value]="company.CompanyId">
+                                                {{company.CompanyName}}
+                                            </option>
+                                        </select>
+
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-2 col-sm-6 col-6 form-label">Account Type<i
+                                            class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                                    <div class="col-xl-4 col-sm-6 col-6">
+                                        <select class="form-control" (change)="onTypeSelection($event.target.value)"
+                                            formControlName="AccountType"
+                                            [ngClass]="(validateControl(accountCodesInfoForm.get('AccountType')))?'form-control ng-touched':'form-control'">
+                                            <option [ngValue]="null">--Select--</option>
+                                            <option [value]="record.AccountTypeName"
+                                                *ngFor="let record of accountTypes">
+                                                {{ record.AccountTypeName }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row" *ngIf="isNewRecord">
+                                    <label class="col-form-label col-xl-2 col-sm-6 col-6 form-label">Sub Category<i
+                                            class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                                    <div class="col-xl-4 col-sm-6 col-6">
+                                        <select class="form-control" formControlName="AccountCodeCategoryId"
+                                            [ngClass]="(validateControl(accountCodesInfoForm.get('AccountCodeCategoryId')))?'form-control ng-touched':'form-control'">
+                                            <option [ngValue]="null">--Select--</option>
+                                            <option *ngFor="let category of accountCodeCategories"
+                                                [value]="category.AccountCodeCategoryId">
+                                                {{category.AccountCodeName}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row" *ngIf="isNewRecord">
+                                    <label class="col-form-label col-xl-2 col-sm-6 col-6 form-label">Account Code<i
+                                            class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                                    <div class="col-xl-4 col-sm-6 col-6">
+                                        <input formControlName="AccountCodeName" class="form-control"
+                                            [ngClass]="(validateControl(accountCodesInfoForm.get('AccountCodeName')))?'form-control ng-touched':'form-control'">
+                                    </div>
+                                </div>
+                                <div class="form-group row" *ngIf="isNewRecord">
+                                    <label class="col-form-label col-xl-2 col-sm-6 col-6 form-label">Description<i
+                                            class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                                    <div class="col-xl-4 col-sm-6 col-6">
+                                        <input formControlName="Description" class="form-control"
+                                            [ngClass]="(validateControl(accountCodesInfoForm.get('Description')))?'form-control ng-touched':'form-control'">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row" *ngIf="!isNewRecord">
+                            <div class="col-12">
+                                <div [innerHtml]="uploadedRecords" style="color:green; text-align:center"></div>
+                                <div [innerHtml]="failedRecords" style="color:red; text-align:center"></div>
+                                <div [innerHtml]="message" style="color:red; text-align:center"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row" *ngIf="isNewRecord">
+                            <div class="col-12">
+                                <div [innerHtml]="message" style="color:red; text-align:center"></div>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="!isNewRecord">
+                            <div class="col-xl-12">
+                                <h4 class="form-heading" style="margin-bottom: 10px;">Account Code Management </h4>
+                            </div>
+                            <div class="col-12">
+                                <div class="gridSearch left-search">
+                                    <input type="text" formControlName="SearchKey"
+                                        (keyup)="onAccountCodesSearch($event)" (keydown.enter)="prevent($event)"
+                                        placeholder="Search Account codes..." class="search-filter">
+                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                            <div class="col-xl-12">
+                                <div class="table-responsive" [ngStyle]="{'max-width.px': screenWidth}">
+                                    <fieldset formArrayName="AccountCodes">
+                                        <p-table [columns]="gridColumns" sortMode="single"
+                                            [value]="accountCodesInfoForm.get('AccountCodes')['controls']">
+                                            <ng-template pTemplate="emptymessage">
+                                                <tr>
+                                                    <td colspan="5" style='text-align: center;'>
+                                                        <b>{{gridNoMessageToDisplay}}</b>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="colgroup" let-columns>
+                                                <colgroup>
+                                                    <col style="width:10%;">
+                                                    <col style="width:28%;">
+                                                    <col style="width:20%;">
+                                                    <col style="width:30%;">
+                                                    <col style="width:12%;">
+                                                </colgroup>
+                                            </ng-template>
+                                            <ng-template pTemplate="header" let-columns>
+                                                <tr>
+                                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                                        {{col.header}}
+                                                        <p-sortIcon *ngIf='col.field!="SNo"' [field]="col.field"
+                                                            ariaLabel="Activate to sort"
+                                                            ariaLabelDesc="Activate to sort in descending order"
+                                                            ariaLabelAsc="Activate to sort in ascending order">
+                                                        </p-sortIcon>
+                                                    </th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-rowData let-i="rowIndex"
+                                                let-columns="columns">
+                                                <tr [formGroupName]="i">
+                                                    <td>
+                                                        {{ i + 1 }}
+                                                    </td>
+                                                    <td>
+                                                        <!-- <input type="number" formControlName="AccountCodeCategoryId" min="0"
+                                                    class="form-control"> -->
+
+                                                        <select class="form-control"
+                                                            formControlName="AccountCodeCategoryId"
+                                                            (change)="onCategoryChange($event.target.value,i, accountCodesInfoForm.get('AccountCodes').controls[i].get('AccountCodeId').value)">
+                                                            <option *ngFor="let category of accountCodeCategories"
+                                                                [value]="category.AccountCodeCategoryId">
+                                                                {{category.AccountCodeName}}
+                                                            </option>
+                                                        </select>
+                                                        <!--  {{accountCodesInfoForm.get('AccountCodes').controls[i].get('AccountCodeCategoryName').value }} -->
+                                                    </td>
+                                                    <td>
+
+                                                        {{accountCodesInfoForm.get('AccountCodes').controls[i].get('AccountCodeName').value
+                                                        }}
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control"
+                                                            formControlName="Description"
+                                                            (change)="onDescriptionChange($event.target.value,i, accountCodesInfoForm.get('AccountCodes').controls[i].get('AccountCodeId').value)">
+                                                    </td>
+                                                    <td>
+                                                        <i class="fa fa-trash gridRemoveIcon" *ngIf="deletePermission"
+                                                            (click)="removeGridItem(i)" aria-hidden="true"></i>
+                                                        <!-- <button type="button" (click)="removeGridItem(i)"  class="btn btn-delete" ><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button> -->
+
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group text-right btn-list">
+                        <button *ngIf="isSelected && !isNewRecord" type="submit" class="btn btn-save">
+                            <i class="fa fa-check" aria-hidden="true" (click)="onSubmit()"></i> Save</button>
+                        <button *ngIf="isNewRecord && editPermission" type="submit" class="btn btn-save">
+                            <i class="fa fa-check" aria-hidden="true" (click)="onSubmit()"></i> Save </button>
+                        <button *ngIf="isSelected || isNewRecord" type="reset" (click)="cancelData()"
+                            class="btn btn-cancel">
+                            <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                        <button *ngIf="isSelected" type="reset" (click)="ResetData()" class="btn btn-cancel">
+                            <i class="fa fa-ban" aria-hidden="true"></i> Reset</button>
+                    </div>
+                    <p-confirmDialog></p-confirmDialog>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

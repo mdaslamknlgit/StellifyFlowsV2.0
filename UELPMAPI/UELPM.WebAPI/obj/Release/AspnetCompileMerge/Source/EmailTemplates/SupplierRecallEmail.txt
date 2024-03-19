@@ -1,0 +1,36 @@
+﻿<html >
+<head>
+    <title>Supplier Approval Recall</title>
+</head>
+<body >
+<div  style="font-family:tahoma;font-size:14px">
+Dear $$Name,
+<br/> <br/> 
+<div style="font-size:13px;">Request for Approval of Supplier $$SupplierCode has been Recalled</div>  
+<br/>
+<div><b>Supplier details are given below,</b> </div>  
+<br/> 
+<table border="1" cellpadding="5" cellspacing="0">
+<tr>
+<th style="color:#2672ec;">Supplier Code</th>
+<th style="color:#2672ec;">Supplier</th>
+<th style="color:#2672ec;">Category</th>
+<th style="color:#2672ec;">Created Date</th>
+<th style="color:#2672ec;">Status</th>
+</tr>
+<tr>
+<td>$$SupplierCode</td>
+<td>$$SupplierName</td>
+<td>$$CategoryName</td>
+<td>$$CreatedDate</td>
+<td>$$Status</td>
+</tr>
+</table>
+ <br/> 
+<br/>
+Best regards,
+<br/> 
+$$Sender
+</div>
+</body>
+</html>

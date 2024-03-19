@@ -1,0 +1,146 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12 col-sm-12 padding-null tittlediv">
+      <div class="flexrow space-between align-center">
+      <h3 class="item-heading"> Engineer Ticket Monitoring </h3>
+ 
+      <div> 
+      <img style="display: none;" src="../assets/images/grid1.png" (click)="showFullScreen()">
+      
+      <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+        <button class="btn customdropdown btn-transparent" style="background:none;border:none;padding:0px;" id="dropdownBasic1" ngbDropdownToggle>
+          <i  class="fa-solid fa-bars"></i>
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+          <button class="dropdown-item">Export</button>
+          <button class="dropdown-item">Print</button>
+        </div>
+      </div>
+
+    </div>
+
+    </div>
+    </div>
+  </div>
+  <div class="row">
+
+
+<div #rightPanel class="rightPanel col-lg-12 col-md-12" [class.expand-rightcol]="rightsection">
+
+
+      <form [formGroup]="signupForm" class="form-horizontal" novalidate="true">
+        <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+          <div class="row">
+            <div class="col-12"> 
+              <div class="form-group row">
+                <label class="col-form-label col-sm-2 form-label">Engineer</label>
+                <div class="col-sm-4">
+                  <input type="text" id="tickettno" name="tickettno" formControlName="tickettno" placeholder="Ticket No" class="form-control">
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label class="col-form-label col-sm-2 form-label">Name</label>
+                <div class="col-sm-8">
+                  <label class="col-form-label form-text">Vikram</label>
+                </div>
+
+              </div>
+
+
+              <div class="form-group row">
+                <label class="col-form-label col-sm-2 form-label">Contact Number</label>
+                <div class="col-sm-8">
+
+                  <label class="col-form-label  form-text">+60 5656598654</label>
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label class="col-form-label col-sm-2 form-label">Email </label>
+                <div class="col-sm-8">
+                  <label class="col-form-label  form-text">vikram@gmail.com</label>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+          <div class="col-12" style="padding:0px;">
+
+            <table class="table table-border" *ngIf="hidetext" style="width:97%">
+              <tr>
+                <th>S. no.</th>
+                <th>Ticket No.</th>
+                <th>Description</th>
+                <th>Facilities</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Status</th>
+              </tr>
+
+              <tr>
+                <td> 1 </td>
+                <td>#2254884 </td>
+                <td>Computer Replacement </td>
+                <td>UNIT 101, UNIT 108</td>
+                <td>20/05/2018</td>
+                <td>01/06/2018</td>
+                <td>
+                  <button class="filter-btn btn-pending">Pending</button>
+                </td>
+              </tr>
+
+              <tr>
+                <td> 2 </td>
+                <td>#2254884 </td>
+                <td>Computer Replacement </td>
+                <td>UNIT 101, UNIT 108</td>
+                <td>20/05/2018</td>
+                <td>01/06/2018</td>
+                <td>
+                  <button class="filter-btn btn-pending">Pending</button>
+                </td>
+              </tr>
+
+              <tr>
+                <td> 3 </td>
+                <td>#2254884 </td>
+                <td>Computer Replacement </td>
+                <td>UNIT 101, UNIT 108</td>
+                <td>20/05/2018</td>
+                <td>01/06/2018</td>
+                <td>
+                  <button class="filter-btn btn-draft">In Progress</button>
+                </td>
+              </tr>
+
+              <tr>
+                <td> 4 </td>
+                <td>#2254884 </td>
+                <td>Computer Replacement </td>
+                <td>UNIT 101, UNIT 108</td>
+                <td>20/05/2018</td>
+                <td>01/06/2018</td>
+                <td>
+                  <button class="filter-btn btn-approved">Completed</button>
+                </td>
+              </tr>
+
+            </table>
+
+          </div>
+
+
+
+        </div>
+      </form>
+
+    </div>
+    <!-- right col end here-->
+  </div>
+
+
+
+</div>

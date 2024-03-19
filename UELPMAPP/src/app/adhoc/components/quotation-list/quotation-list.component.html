@@ -1,0 +1,90 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-4 col-sm-12 padding-null tittlediv">
+      <h3 class="item-heading">
+        <img src="assets/images/icon1.png"> {{moduleHeading}}
+      </h3>
+      
+    </div>
+    
+    <div class="col-md-8 col-sm-4 align-text-top" style="text-align:right">
+
+      <button type="submit" *ngIf="!isApprovalPage && addPermission" (click)="RedirectCustomer(0)" class="btn btn-save">
+        <i class="fa fa-plus" ria-hidden="true"></i>  New</button>
+    </div>
+  </div>
+  <hr style="margin-top: 0px;" />
+  <div class="row">
+    <div class="col-sm-12">
+      <form [formGroup]="FiltersForm">
+        <div class="form-group row" style="display: flex;justify-content:space-between">
+          <label class="col-form-label form-label" style="margin: 4px 0px;">
+            Document Code</label>
+          <div class=" col-lg-2 col-sm-3 col-3 input-group" style="margin: 4px 0px;">
+            <input formControlName="DocumentCode" type="text" class="form-control" />
+          </div>
+          <label class="col-form-label form-label" style="margin: 4px 0px; padding-left: 15px;">
+            Customer Name</label>
+          <div class=" col-lg-2 col-sm-3 col-3 input-group" style="margin: 4px 0px;">
+            <input formControlName="CustomerName" type="text" class="form-control" />
+          </div>
+          <label class="col-form-label form-label" style="margin: 4px 0px;">
+            Customer Id</label>
+          <div class=" col-lg-2 col-sm-3 col-3 input-group" style="margin: 4px 0px;">
+            <input formControlName="CustomerId" type="text" class="form-control" />
+          </div>
+
+          <div class="input-group" style="margin: 4px 10px 0px;width: auto;">
+            <button type="submit" class="btn btn-save" (click)="FilterData()">
+              <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+
+            <button type="submit" (click)="resetFilters()" class="btn btn-save">
+              <i class="fa fa-refresh" ria-hidden="true"></i> Reset</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="row" style="margin-top: 20px">
+    <div class="col-xl-12">
+      <div class="respnsive-table tablescroll p-datatable-wrapper">
+        <!-- <p>Table</p> -->
+        <p-table #dt [columns]="quotationListColumns" [value]="data" [rows]="1" 
+        [scrollHeight]="'calc(100vh - 400px)'" scrollWidth="100%"
+        responsiveLayout="scroll" [paginator]="false"
+          [virtualRowHeight]="30" [virtualScroll]="true" sortMode="multiple">
+          <ng-template pTemplate="header" let-columns>
+            <tr style="height: 40px;">
+              <th *ngFor="let col of quotationListColumns;let i=index" [pSortableColumn]="col.field">
+                {{col.header}}
+                <p-sortIcon [hidden]="i==0" *ngIf="i!=quotationListColumns.length-1" [field]="col.field"></p-sortIcon>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+              <col *ngFor="let col of columns" [style.width]="col.width">
+            </colgroup>
+          </ng-template>
+          <ng-template pTemplate="body" let-value let-columns let-i="rowIndex">
+            <tr style="height:30px">
+              <td>{{i+1}}</td>
+              <td>{{value.DocumentCode}}</td>
+              <td>{{value.CustomerName}}</td>
+              <td>{{value.CustomerId}}</td>
+              <td>{{value.Department}}</td>
+              <td>{{value.Location}}</td>
+              <td class="alignright">{{value.Total | number:'1.2-2' }}</td>
+              <td>{{value.WorkFlowStatus}} </td>
+              <td class="aligncenter">
+                <button type="button" class="btn" (click)="RedirectCustomer(value.DocumentId)">
+                  <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                </button>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+</div>

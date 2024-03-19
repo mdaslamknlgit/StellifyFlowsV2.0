@@ -1,0 +1,299 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{68E7399E-965D-4361-ACA9-E0B89CC2A699}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UELPM.Service</RootNamespace>
+    <AssemblyName>UELPM.Service</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Dapper, Version=1.50.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.1.50.5\lib\net451\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.9.0.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.9.0\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus, Version=4.5.3.1, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.5.3.1\lib\net40\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.3.6.0\lib\net45\ExcelDataReader.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader.DataSet, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.DataSet.3.6.0\lib\net35\ExcelDataReader.DataSet.dll</HintPath>
+    </Reference>
+    <Reference Include="KellermanSoftware.Compare-NET-Objects, Version=4.62.0.0, Culture=neutral, PublicKeyToken=d970ace04cc85217, processorArchitecture=MSIL">
+      <HintPath>..\packages\CompareNETObjects.4.62.0\lib\net46\KellermanSoftware.Compare-NET-Objects.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Packaging, Version=4.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Packaging.4.5.0\lib\net46\System.IO.Packaging.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DBConnectionInstance.cs" />
+    <Compile Include="ExcelUpload\ExcelReader.cs" />
+    <Compile Include="ExcelUpload\ExcelUpload..cs" />
+    <Compile Include="Exceptions\ApiException.cs" />
+    <Compile Include="Exceptions\AuditLog.cs" />
+    <Compile Include="Exceptions\BadRequestException.cs" />
+    <Compile Include="Exceptions\InternalServerException.cs" />
+    <Compile Include="Exceptions\NotFoundException.cs" />
+    <Compile Include="Exceptions\UnauthorizedException.cs" />
+    <Compile Include="Helpers\ErrorLog.cs" />
+    <Compile Include="IItemRepository.cs" />
+    <Compile Include="Interface\IAccountCodeRepository.cs" />
+    <Compile Include="Interface\IAccountsRepository.cs" />
+    <Compile Include="Interface\IAccountSubCategoryRepository.cs" />
+    <Compile Include="Interface\IAccountTypesRepository.cs" />
+    <Compile Include="Interface\IActivityRepository.cs" />
+    <Compile Include="Interface\IAppModulesRepository.cs" />
+    <Compile Include="Interface\IAppViewsRepository.cs" />
+    <Compile Include="Interface\IAssetCategoryRepository.cs" />
+    <Compile Include="Interface\IAssetDepreciationRepository.cs" />
+    <Compile Include="Interface\IAssetDetailsRepository.cs" />
+    <Compile Include="Interface\IAssetDisposalRepository.cs" />
+    <Compile Include="Interface\IAssetMasterRepository.cs" />
+    <Compile Include="Interface\IAssetRegisterRepository.cs" />
+    <Compile Include="Interface\IAssetTransferRepository.cs" />
+    <Compile Include="Interface\IAssetTypeRepository.cs" />
+    <Compile Include="Interface\IAuditLogRepository.cs" />
+    <Compile Include="Interface\ICompanyRepository.cs" />
+    <Compile Include="Interface\IContactsRepository.cs" />
+    <Compile Include="Interface\IContractPurchaseOrderRepository.cs" />
+    <Compile Include="Interface\ICostCentreRepository.cs" />
+    <Compile Include="Interface\ICreditNoteRepository.cs" />
+    <Compile Include="Interface\ICurrencyRepository.cs" />
+    <Compile Include="Interface\ICustomerPaymentRepository.cs" />
+    <Compile Include="Interface\ICustomerRepository.cs" />
+    <Compile Include="Interface\IAdhocMasterRepository.cs" />
+    <Compile Include="Interface\IDealsRepository.cs" />
+    <Compile Include="Interface\IDeliveryTermsRepository.cs" />
+    <Compile Include="Interface\IDepartmentRepository.cs" />
+    <Compile Include="Interface\IDepreciationRepository.cs" />
+    <Compile Include="Interface\IEntityImportRepository.cs" />
+    <Compile Include="Interface\IErrrorLogRepository.cs" />
+    <Compile Include="Interface\IExpenseTypeRepository.cs" />
+    <Compile Include="Interface\IGenericRepository.cs" />
+    <Compile Include="Interface\ILDAPUserProfile.cs" />
+    <Compile Include="Interface\IEngineerManagementRepository.cs" />
+    <Compile Include="Interface\IExpenseMasterRepository.cs" />
+    <Compile Include="Interface\IExpensesPurchaseOrderCreationRespository.cs" />
+    <Compile Include="Interface\IFacilityManagementRepository.cs" />
+    <Compile Include="Interface\IFixedAssetPurchaseOrderCreationRepository.cs" />
+    <Compile Include="Interface\IGoodsReceivedNotesRepository.cs" />
+    <Compile Include="Interface\IGoodsReturnedNotesRepository.cs" />
+    <Compile Include="Interface\IInventoryCycleCountRepository.cs" />
+    <Compile Include="Interface\IInventoryDisposalRequestRepository.cs" />
+    <Compile Include="Interface\IInventoryRequestRepository.cs" />
+    <Compile Include="Interface\IInvoiceRepository.cs" />
+    <Compile Include="Interface\IItemAdjustmentRepository.cs" />
+    <Compile Include="Interface\IItemCategoryRepository.cs" />
+    <Compile Include="Interface\IItemMasterRepository.cs" />
+    <Compile Include="Interface\IItemsListingRepository.cs" />
+    <Compile Include="Interface\IItemTypeRepository.cs" />
+    <Compile Include="Interface\IConnectionRepository.cs" />
+    <Compile Include="Interface\ILeadsRepository.cs" />
+    <Compile Include="Interface\IMarketingListRepository.cs" />
+    <Compile Include="Interface\ILocationTransferRepository.cs" />
+    <Compile Include="Interface\IMeasurementUnitRepository.cs" />
+    <Compile Include="Interface\INotificationsRepository.cs" />
+    <Compile Include="Interface\IOpportunityRepository.cs" />
+    <Compile Include="Interface\IPaymentRepository.cs" />
+    <Compile Include="Interface\IPaymentTermsRepository.cs" />
+    <Compile Include="Interface\IProbabilityRepository.cs" />
+    <Compile Include="Interface\IProductsRepository.cs" />
+    <Compile Include="Interface\IProjectContractVariationOrderRepository.cs" />
+    <Compile Include="Interface\IProjectMasterContractRepository.cs" />
+    <Compile Include="Interface\IProjectPaymentContractRepository.cs" />
+    <Compile Include="Interface\IProjectPurchaseOrderRepository.cs" />
+    <Compile Include="Interface\IPurchaseOrderApprovalRepository.cs" />
+    <Compile Include="Interface\IPurchaseOrderRequestApprovalRepository.cs" />
+    <Compile Include="Interface\IPurchaseOrderCreationRepository.cs" />
+    <Compile Include="Interface\IPurchaseOrderRequestRepository.cs" />
+    <Compile Include="Interface\IReportsRepository.cs" />
+    <Compile Include="Interface\IRoleManagementRepository.cs" />
+    <Compile Include="Interface\ISalesInvoiceRepository.cs" />
+    <Compile Include="Interface\ISalesOrderRepository.cs" />
+    <Compile Include="Interface\ISalesQuotationRepository.cs" />
+    <Compile Include="Interface\ISchedulerNoRepository.cs" />
+    <Compile Include="Interface\IServiceCategoryRepository.cs" />
+    <Compile Include="Interface\IQuotationRequestRepository.cs" />
+    <Compile Include="Interface\IServiceMasterRepository.cs" />
+    <Compile Include="Interface\IServiceTypeRepository.cs" />
+    <Compile Include="Interface\ISupplierCategoryRepository.cs" />
+    <Compile Include="Interface\ISupplierPaymentRepository.cs" />
+    <Compile Include="Interface\ISupplierRepository.cs" />
+    <Compile Include="Interface\ISharedRepository.cs" />
+    <Compile Include="Interface\ITaxGroupRepository.cs" />
+    <Compile Include="Interface\ITaxRepository.cs" />
+    <Compile Include="Interface\ISupplierServiceRepository.cs" />
+    <Compile Include="Interface\ITicketRepository.cs" />
+    <Compile Include="Interface\IUserManagementRepository.cs" />
+    <Compile Include="Interface\IUserProfileRepository.cs" />
+    <Compile Include="Interface\IWorkflowAuditTrailRepository.cs" />
+    <Compile Include="Interface\IWorkFlowConfigurationRepository.cs" />
+    <Compile Include="Interface\IWorkFlowReAssignmentRepository.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\AccountCodeRepository.cs" />
+    <Compile Include="Repositories\AccountsRepository.cs" />
+    <Compile Include="Repositories\AccountSubCategoryRepository.cs" />
+    <Compile Include="Repositories\AccountTypesRepository.cs" />
+    <Compile Include="Repositories\ActivityRepository.cs" />
+    <Compile Include="Repositories\AppViewsRepository.cs" />
+    <Compile Include="Repositories\AssetCategoryRepository.cs" />
+    <Compile Include="Repositories\AssetDepreciationRepository.cs" />
+    <Compile Include="Repositories\AssetDetailsRepository.cs" />
+    <Compile Include="Repositories\AssetDisposalRepository.cs" />
+    <Compile Include="Repositories\AssetMasterRepository.cs" />
+    <Compile Include="Repositories\AssetRegisterRepository.cs" />
+    <Compile Include="Repositories\AssetTransferRepository.cs" />
+    <Compile Include="Repositories\AssetTypeRepository.cs" />
+    <Compile Include="Repositories\AuditLogRepository.cs" />
+    <Compile Include="Repositories\CompanyRepository.cs" />
+    <Compile Include="Repositories\ContactsRepository.cs" />
+    <Compile Include="Repositories\ContractPurchaseOrderRepository.cs" />
+    <Compile Include="Repositories\CostCentreRepository.cs" />
+    <Compile Include="Repositories\CreditNoteRepository.cs" />
+    <Compile Include="Repositories\CurrencyRepository.cs" />
+    <Compile Include="Repositories\CustomerPaymentRepository.cs" />
+    <Compile Include="Repositories\CustomerRepository.cs" />
+    <Compile Include="Repositories\AdhocMasterRepository.cs" />
+    <Compile Include="Repositories\DealsRepository.cs" />
+    <Compile Include="Repositories\DeliveryTermsRepository.cs" />
+    <Compile Include="Repositories\DepartmentRepository.cs" />
+    <Compile Include="Repositories\DepreciationRepository.cs" />
+    <Compile Include="Repositories\EntityImportRepository.cs" />
+    <Compile Include="Repositories\ErrorLogRepository.cs" />
+    <Compile Include="Repositories\ExpenseTypeRepository.cs" />
+    <Compile Include="Repositories\GenericRepository.cs" />
+    <Compile Include="Repositories\LDAPUserProfileRepository.cs" />
+    <Compile Include="Repositories\EngineerManagementRepository.cs" />
+    <Compile Include="Repositories\ExpenseMasterRepository.cs" />
+    <Compile Include="Repositories\ExpensesPurchaseOrderCreationRepository.cs" />
+    <Compile Include="Repositories\FacilityManagementRepository.cs" />
+    <Compile Include="Repositories\FixedAssetPurchaseOrderCreationRepository.cs" />
+    <Compile Include="Repositories\GoodsReceivedNotesRepository.cs" />
+    <Compile Include="Repositories\GoodsReturnedNotesRepository.cs" />
+    <Compile Include="Repositories\InventoryCycleCountRepository.cs" />
+    <Compile Include="Repositories\InventoryDisposalRequestRepository.cs" />
+    <Compile Include="Repositories\InvoiceRepository.cs" />
+    <Compile Include="Interface\IRequestTypeRepository.cs" />
+    <Compile Include="Repositories\ItemAdjustmentRepository.cs" />
+    <Compile Include="Repositories\ItemCategoryRepository.cs" />
+    <Compile Include="Repositories\ItemMasterRepository.cs" />
+    <Compile Include="Repositories\ItemRepository.cs" />
+    <Compile Include="Repositories\ItemsListingRepository.cs" />
+    <Compile Include="Repositories\InventoryRequestRepository.cs" />
+    <Compile Include="Repositories\ItemTypeRepository.cs" />
+    <Compile Include="Repositories\ConnectionRepository.cs" />
+    <Compile Include="Repositories\LeadsRepository.cs" />
+    <Compile Include="Repositories\MarketingListRepository.cs" />
+    <Compile Include="Repositories\LocationTransferRepository.cs" />
+    <Compile Include="Repositories\MeasurementUnitRepository.cs" />
+    <Compile Include="Repositories\NotificationsRepository.cs" />
+    <Compile Include="Repositories\OpportunityRepository.cs" />
+    <Compile Include="Repositories\PaymentRepository.cs" />
+    <Compile Include="Repositories\PaymentTermsRepostiory.cs" />
+    <Compile Include="Repositories\ProductsRepository.cs" />
+    <Compile Include="Repositories\ProjectContractVariationOrderRepository.cs" />
+    <Compile Include="Repositories\ProjectMasterContractRepository.cs" />
+    <Compile Include="Repositories\ProjectPaymentContractRepository.cs" />
+    <Compile Include="Repositories\ProjectPurchaseOrderRepository.cs" />
+    <Compile Include="Repositories\PurchaseOrderApprovalRepository.cs" />
+    <Compile Include="Repositories\PurchaseOrderCreationRepository.cs" />
+    <Compile Include="Repositories\PurchaseOrderRequestApprovalRepository.cs" />
+    <Compile Include="Repositories\PurchaseOrderRequestRepository.cs" />
+    <Compile Include="Repositories\ReportsRepository.cs" />
+    <Compile Include="Repositories\RequestTypeRepository.cs" />
+    <Compile Include="Repositories\RoleManagementRepository.cs" />
+    <Compile Include="Repositories\SalesInvoiceRepository.cs" />
+    <Compile Include="Repositories\SalesOrderRepository.cs" />
+    <Compile Include="Repositories\SalesQuotationRepository.cs" />
+    <Compile Include="Repositories\SchedulerNoRepository.cs" />
+    <Compile Include="Repositories\ServiceCategoryRepository.cs" />
+    <Compile Include="Repositories\QuotationRequestRepository.cs" />
+    <Compile Include="Repositories\ServiceMasterRepository.cs" />
+    <Compile Include="Repositories\ServiceTypeRepository.cs" />
+    <Compile Include="Repositories\SharedRepository.cs" />
+    <Compile Include="Repositories\SupplierCategoryRepository.cs" />
+    <Compile Include="Repositories\SupplierPaymentRepository.cs" />
+    <Compile Include="Repositories\SupplierRepository.cs" />
+    <Compile Include="Repositories\SupplierServiceRepository.cs" />
+    <Compile Include="Repositories\TaxGroupRepository.cs" />
+    <Compile Include="Repositories\TaxRepository.cs" />
+    <Compile Include="Repositories\TicketRepository.cs" />
+    <Compile Include="Repositories\UserManagementRepository.cs" />
+    <Compile Include="Repositories\UserProfileRepository.cs" />
+    <Compile Include="Repositories\WorkflowAuditTrailRepository.cs" />
+    <Compile Include="Repositories\WorkFlowConfigurationRepository.cs" />
+    <Compile Include="Repositories\WorkFlowReAssignmentRepository.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\UELPM.Model\UELPM.Model.csproj">
+      <Project>{b91f0a93-2096-4fe6-b40c-171d77620f72}</Project>
+      <Name>UELPM.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UELPM.Util\UELPM.Util.csproj">
+      <Project>{0fbf1660-a161-438c-842f-7d9330889b5f}</Project>
+      <Name>UELPM.Util</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

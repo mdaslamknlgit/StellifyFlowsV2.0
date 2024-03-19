@@ -1,0 +1,6 @@
+.rightfloat{
+    float: right;
+}
+.table-subtotal td{
+    border: inherit !important;
+}

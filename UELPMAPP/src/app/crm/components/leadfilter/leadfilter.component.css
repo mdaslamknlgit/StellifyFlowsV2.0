@@ -1,0 +1,12 @@
+p {
+    font-family: Lato;
+  }
+  
+  .details {
+    padding: 8px
+  }
+  
+  .details > label {
+    overflow-wrap: break-word;
+  }
+  

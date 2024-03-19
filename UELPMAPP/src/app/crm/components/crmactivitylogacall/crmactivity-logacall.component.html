@@ -1,0 +1,348 @@
+<block-ui message="Deafult Message"></block-ui>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12 col-sm-12 padding-null tittlediv">
+      <div class="flexrow space-between align-center">
+        <h3 class="item-heading"> CRM - Activity 
+         [ {{FormMode}} == {{ActivityId}} ==  {{ActivityTypeId}} == {{ActivityTypeName}} == {{TypeName}} ]
+        </h3>
+        <!-- <div>
+          <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickBack($event)">
+            <i class="fa fa-arrow-left" ria-hidden="true" aria-hidden="true"></i> Back</button>
+        </div> -->
+      </div>
+      <hr style="margin-top: 0px;" />
+      <!-- <p>Lead Id : {{LeadInfo.Id}}</p>
+        <p>First Name : {{LeadInfo.FirstName}}</p>
+        <p>Last Name : {{LeadInfo.LastName}}</p>
+        <p>Company Name : {{LeadInfo.CompName}}</p> -->
+    </div>
+  </div>
+
+  <div class="row">
+      <div #rightPanel [CustomSpinner]="showLoadingIcon" style='background: white' class="rightPanel1 col-lg-12 col-md-12"
+          [class.expand-rightcol]="rightsection">
+          <!-- <div class="fullScreenLabel">
+              <app-header></app-header>
+          </div> -->
+          <div>
+              <form (ngSubmit)="onSubmit(ActivityForm.value,myPanel,$event)" [formGroup]="ActivityForm"
+                  class="form-horizontal">
+                  <div class="container-fluid">
+                      <div class="row">
+                          <div class="col-12">
+                              <div class="form-group text-right btn-list">
+                                  <button type="submit" class="btn btn-save">
+                                      <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+
+                                  <button type="button" (click)="CancelRecord($event)" class="btn btn-cancel"
+                                      *ngIf="hideInput">
+                                      <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                              </div>
+                          </div>
+                      </div>
+                  
+                      <mat-accordion [multi]="true">
+                          <mat-expansion-panel [expanded]="true" #myPanel>
+                              <mat-expansion-panel-header>
+                                  <mat-panel-title>
+                                      Call Information
+                                  </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Call To</label>
+                                      <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                                        <select id="RegardingId" #RegardingId (change)="OnRegardingChange($event)" 
+                                          formControlName="RegardingId" 
+                                            class="form-control" tabindex="1" required>
+                                              <!-- <option [ngValue]="5">Contact</option>  
+                                              <option [ngValue]="8">Lead</option> -->
+                                              
+                                              <option *ngFor="let list of ActivityCallToItems" value={{list.Id}}>
+                                                {{ list.Name }}
+                                            </select>
+                        
+                                            <div
+                                              *ngIf="ActivityForm.get('RegardingId') && ActivityForm.get('RegardingId').errors!=null &&ActivityForm.get('RegardingId').touched==true">
+                                              <span class="errorMessage" *ngIf="ActivityForm.get('RegardingId').errors.required">
+                                                Call To is required</span>
+                                            </div>
+                                      </div>
+                                  </div>
+                                </div>
+                              </div>   
+
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Related To</label>
+                                      <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                                        
+                                        <select id="RegardingId" #RegardingId (change)="OnRegarChange($event)"
+                                          formControlName="RegarId" 
+                                            class="form-control" tabindex="1" required>
+                                              <!-- <option [ngValue]="5">Contact</option>  
+                                              <option [ngValue]="8">Lead</option> -->                                              
+                                              <option *ngFor="let list of RegarDomainItemsList" value={{list.ContactId}}>
+                                                {{ list.FullName }}
+                                            </select>
+                        
+                                            <div
+                                              *ngIf="ActivityForm.get('RegardingId') && ActivityForm.get('RegardingId').errors!=null &&ActivityForm.get('RegardingId').touched==true">
+                                              <span class="errorMessage" *ngIf="ActivityForm.get('RegardingId').errors.required">
+                                                Call To is required</span>
+                                            </div>
+                                      </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Activity Subject
+                                    <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                                    <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                                      <input id="ActivitySubject" #ActivitySubject formControlName="ActivitySubject" 
+                                      placeholder="ActivitySubject" [readonly]="IsClose"  
+                                      tabindex="2" class="form-control" required />
+                  
+                                      <div *ngIf="ActivityForm.get('ActivitySubject') && ActivityForm.get('ActivitySubject').errors!=null &&ActivityForm.get('ActivitySubject').touched==true">
+                                        <span class="errorMessage" *ngIf="ActivityForm.get('ActivitySubject').errors.required">
+                                          Activity Subject is required</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="row">
+                                  <div class="col-md-12">
+                                    <div class="form-group row">
+                                      <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Activity Description
+                                      <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                                      <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                                        <!-- <input id="ActivityDesc" #ActivityDesc formControlName="ActivityDesc" placeholder="Activity Desc" [readonly]="IsClose" 
+                                        tabindex="3" class="form-control" required /> -->
+                                        <textarea rows="4" cols="50"  formControlName="ActivityDesc" placeholder="Activity Desc" [readonly]="IsClose" 
+                                        tabindex="3" class="form-control" required >
+                                        </textarea>
+                    
+                                        <div *ngIf="ActivityForm.get('ActivityDesc') && ActivityForm.get('ActivityDesc').errors!=null &&ActivityForm.get('ActivityDesc').touched==true">
+                                          <span class="errorMessage" *ngIf="ActivityForm.get('ActivityDesc').errors.required">
+                                            Activity Subject is required</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Call Date
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <div class="input-group">
+                                            <input id="StartDate"
+                                                class="form-control" formControlName="StartDate" [readonly]="IsClose"
+                                                valueDefault={null}
+                                                (click)="onDatePickerFocus(StartDate,$event)"
+                                                tabindex="4"
+                                                ngbDatepicker #StartDate="ngbDatepicker">
+
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary"
+                                                    (click)="StartDate.toggle()" type="button">
+                                                    <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  </div>                            
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Call Time
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <div class="input-group">
+                                            <input id="StartTime"
+                                                class="form-control" #StartTime formControlName="StartTime" [readonly]="IsClose"
+                                                valueDefault={null}
+                                                
+                                                tabindex="5">
+                                        </div>
+                                    </div>
+                                  </div>   
+                                </div>
+                                
+                              </div>
+
+                              <div class="row"  *ngIf="IsHideEndDate">
+                                <div class="col-md-6">
+                                  <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">End Date
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <div class="input-group">
+                                            <input id="EndDate"
+                                                class="form-control" formControlName="EndDate" [readonly]="IsClose"
+                                                valueDefault={null}
+                                                (click)="onDatePickerFocus(EndDate,$event)"
+                                                tabindex="6"
+                                                ngbDatepicker #EndDate="ngbDatepicker">
+
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary"
+                                                    (click)="EndDate.toggle()" type="button">
+                                                    <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-6" *ngIf="IsHideEndTime">
+                                  <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">End Time
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <div class="input-group">
+                                            <input id="EndTime"
+                                                class="form-control" #EndTime formControlName="EndTime" [readonly]="IsClose"
+                                                valueDefault={null} tabindex="7">
+
+
+                                        </div>
+                                    </div>
+                                  </div>   
+                                </div>
+                              </div>
+
+                              <div class="row">
+                                  <div class="col-md-6" *ngIf="IsHideDueDate">
+                                    <div class="form-group row">
+                                      <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Due Date
+                                      </label>
+                                      <div class="col-xl-8 col-sm-6 col-6">
+                                          <div class="input-group">
+                                              <input id="DueDate"
+                                                  class="form-control" formControlName="DueDate" [readonly]="IsClose"
+                                                  valueDefault={null}
+                                                  (click)="onDatePickerFocus(DueDate,$event)"
+                                                  tabindex="8"
+                                                  ngbDatepicker #DueDate="ngbDatepicker">
+    
+                                              <div class="input-group-append">
+                                                  <button class="btn btn-outline-secondary"
+                                                      (click)="DueDate.toggle()" type="button">
+                                                      <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                                  </button>
+                                              </div>
+                                          </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-md-6" *ngIf="IsHideDueTime">
+                                    <div class="form-group row">
+                                      <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Duration (in minutes)
+                                      </label>
+                                      <div class="col-xl-8 col-sm-6 col-6">
+                                          <div class="input-group">
+                                              <input id="Duration"
+                                                  class="form-control" #Duration formControlName="Duration"
+                                                  [readonly]="IsClose"
+                                                  valueDefault={null} tabindex="9">
+                                                  
+                                          </div>
+                                          <div
+                                          *ngIf="ActivityForm.get('Duration') && ActivityForm.get('Duration').errors!=null &&ActivityForm.get('Duration').touched==true">
+                                          <span class="errorMessage" *ngIf="ActivityForm.get('Duration').errors.required">
+                                            Duration is required</span>
+                                        </div>
+                                      </div>
+                                    </div>   
+                                  </div>
+                              </div>
+
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Call Status
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                      <select id="LeadRatingId" #ActivityStatusId (change)="OnActivityStatusChange($event)" formControlName="ActivityStatusId" 
+                                      class="form-control" required>                                        
+                                        <option *ngFor="let list of ActivityStatusDomainItemsList" value={{list.ActivityStatusId}}>
+                                          {{ list.ActivityStatusName }}
+                                      </select>
+                  
+                                      <div
+                                        *ngIf="ActivityForm.get('ActivityStatusId') && ActivityForm.get('ActivityStatusId').errors!=null &&ActivityForm.get('ActivityStatusId').touched==true">
+                                        <span class="errorMessage" *ngIf="ActivityForm.get('ActivityStatusId').errors.required">
+                                          Activity Status is required</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                          </mat-expansion-panel>    
+                          <!-- <mat-expansion-panel [expanded]="true" #MyNotes *ngIf="FormMode=='EDIT'">
+                              <mat-expansion-panel-header>
+                                  <mat-panel-title>
+                                      Notes
+                                  </mat-panel-title>
+                              </mat-expansion-panel-header>
+
+                              <div class="row">
+                                <div class="col-md-12">
+                                    <div style="text-align:right !important;">
+                                      <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickNewNote($event)">
+                                        <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> Add Note</button>  
+                                    </div>
+                                    <br>    
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <div id="divNotesScroll" class="NotesList">
+                                        <div id="divNotesList">
+                                          <div *ngFor='let entry of timeLine;let i = index'>
+                                            <a href="#" class="list-group-item">
+                                              <h4 class="list-group-item-heading" *ngIf="UserId==entry.UserId">
+                                                <label class="username">{{UserName}}</label>
+                                                <label class="noteentry">{{entry.year}}</label>
+                                              </h4>
+                                              <h4 class="list-group-item-heading" *ngIf="UserId!=entry.UserId">
+                                                <label class="username">{{entry.year}}</label>
+                                                <label class="noteentry">{{UserName}}</label>
+                                              </h4>
+
+                                              <div [innerHtml]="entry.detail"></div>
+
+                                            </a>
+                                          </div>                                          
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                  </div>                          
+                                </div>
+                              </div>
+                          
+                            </mat-expansion-panel>   -->
+                                          
+                          <br>
+                          
+                          <br>
+                        </mat-accordion>
+                  </div>
+                
+              </form>
+          </div>
+      </div>
+  </div>
+
+</div>
+

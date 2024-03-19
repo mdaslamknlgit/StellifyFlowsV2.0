@@ -1,0 +1,740 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6 col-sm-12 padding-null tittlediv">
+      <h3 class="item-heading">
+        <img src="../assets/images/icon1.png"> {{moduleHeading}}
+      </h3>
+    </div>
+    <div class="col-md-6 col-sm-12 align-text-top" *ngIf="CustomerIPSId>0" style="text-align:right">
+      <div ngbDropdown placement="bottom-right" *ngIf="viewLogPermission" style="padding:0px;" class="d-inline-block">
+        <button class="btn btn-outline-primary" style="background:none;border:none;padding:0px;" id="dropdownBasic1"
+          ngbDropdownToggle>
+          <img src="../assets/images/grid2.png">
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+          <button class="dropdown-item" (click)="showLogPopUp = true">View Log</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12 col-md-12 enlargeRightPanel">
+      <div class="enlargeRightPanelMargin">
+        <form class="form-horizontal" novalidate [formGroup]="CustomerForm">
+          <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Customer Type
+                    <i class="fa fa-star mandatory-icon" aria-hidden="true"></i>
+                  </label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <select formControlName="CustomerType" *ngIf="!IsViewMode" id="CustomerType" class="form-control">
+                      <option [ngValue]="null">--Select--</option>
+                      <option *ngFor="let record of customerTypes" [style.color]="record.IsActive?'': 'lightgray'"
+                        [disabled]="!record.IsActive" [ngValue]="record">
+                        {{record.CustomerTypeName}}
+                    </select>
+                    <label *ngIf="IsViewMode" class="inputlabel" for="CustomerType">
+                      {{get('CustomerType','CustomerTypeName')}}
+                    </label>
+                    <div *ngIf="f.CustomerType.invalid && (f.CustomerType.dirty || f.CustomerType.touched)">
+                      <span class="errorMessage" *ngIf="f.CustomerType.errors.required">
+                        Customer Type is required</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Customer Name<i
+                      class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <input type="text" *ngIf="!IsViewMode" class="form-control" id="CustomerName"
+                      formControlName="CustomerName">
+                    <label *ngIf="IsViewMode" class="inputlabel" for="CustomerName">
+                      {{get('CustomerName')}}
+                    </label>
+                    <div *ngIf="f.CustomerName.invalid && (f.CustomerName.dirty || f.CustomerName.touched)">
+                      <span class="errorMessage" *ngIf="f.CustomerName.errors.required">
+                        Customer Name is required</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Customer ID<i
+                      class="fa fa-star mandatory-icon" *ngIf="verifyPermission" aria-hidden="true"></i></label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <input type="text" *ngIf="!IsViewMode && !IsReverify" maxlength="20" class="form-control"
+                      id="CustomerId" formControlName="CustomerId">
+                    <label class="errorMessage inputlabel"
+                      *ngIf="f.CustomerId.invalid && (f.CustomerId.dirty || f.CustomerId.touched) && f.CustomerId.errors.required">
+                      Customer Id is required
+                    </label>
+                    <label *ngIf="IsViewMode || IsReverify" class="inputlabel" for="CustomerId">
+                      {{get('CustomerId')}}
+                    </label>
+                    <span class="errorMessage" *ngIf="f.CustomerId.hasError('duplicate')"> Duplicate Customer ID </span>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Short Name</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <input class="form-control" *ngIf="!IsViewMode" type="text" id="ShortName"
+                      formControlName="ShortName">
+                    <label *ngIf="IsViewMode" class="inputlabel" for="ShortName">
+                      {{get('ShortName')}}
+                    </label>
+                    <span class="errorMessage" *ngIf="f.ShortName.errors?.maxlength">
+                      Maximum only 10 characters allowed
+                    </span>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Types of Tenants</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <select *ngIf="!IsViewMode" formControlName="TenantType" id="TenantType" class="form-control">
+                      <option [ngValue]="null">--Select--</option>
+                      <option *ngFor="let record of tenantTypes" [ngValue]="record">
+                        {{record.TenantTypeName}}
+                    </select>
+                    <label *ngIf="IsViewMode" class="inputlabel" for="TenantType">
+                      {{get('TenantType','TenantTypeName')}}
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Remarks</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <input *ngIf="!IsViewMode" class="form-control" type="text" id="Remarks" formControlName="Remarks">
+                    <label *ngIf="IsViewMode" class="inputlabel" for="TenantType">
+                      {{get('Remarks')}}
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group row" *ngIf="CustomerIPSId>0">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Requestor</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">
+                      {{get('CreatedBy','UserName')}}</label>
+                  </div>
+                </div>
+                <div class="form-group row" *ngIf="CustomerIPSId>0">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Status</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">
+                      {{get('WorkflowStatus','Statustext')}} {{get('CurrentApprover','UserName')}}</label>
+                  </div>
+                </div>
+                <div class="form-group row" *ngIf="CustomerIPSId>0">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">System No</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">
+                      {{get('SystemNo')}}</label>
+                  </div>
+                </div>
+                <div class="form-group row" *ngIf="CustomerIPSId>0">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Created Date</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">
+                      {{get('CreatedDate') | DisplayDateFormat}}
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group row" *ngIf="get('UpdatedDate')!=''">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Modified Date</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">
+                      {{get('UpdatedDate') | DisplayDateFormat}}
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Department<i
+                      class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <select *ngIf="!IsViewMode && !IsReverify" formControlName="Department" id="Department"
+                      class="form-control" (change)="onDeptChange()">
+                      <option [ngValue]="null">--Select--</option>
+                      <option *ngFor="let record of departments" [style.color]="record.HasWorkflow?'': 'lightgray'"
+                        [disabled]="!record.HasWorkflow" [ngValue]="record">
+                        {{record.Name}}
+                    </select>
+                    <label *ngIf="IsViewMode || IsReverify" class="inputlabel" for="Department">
+                      {{f.Department.value == null ? "" : f.Department.value.Name}}
+                    </label>
+                    <div *ngIf="f.Department.invalid && (f.Department.dirty || f.Department.touched)">
+                      <span class="errorMessage" *ngIf="f.Department.errors.required">
+                        Department is required</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Credit Term<i
+                      class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <select *ngIf="!IsViewMode" formControlName="CreditTerm" id="CreditTerm" class="form-control">
+                      <option [ngValue]="null">--Select--</option>
+                      <option *ngFor="let record of creditTerms" [style.color]="record.IsActive?'': 'lightgray'"
+                        [disabled]="!record.IsActive" [ngValue]="record">
+                        {{record.NoOfDays}}
+                    </select>
+                    <label *ngIf="IsViewMode" class="inputlabel" for="CreditTerm">
+                      {{f.CreditTerm.value == null ? '' : f.CreditTerm.value.CreditTermCode}}
+                    </label>
+                    <div *ngIf="f.CreditTerm.invalid && (f.CreditTerm.dirty || f.CreditTerm.touched)">
+                      <span class="errorMessage" *ngIf="f.CreditTerm.errors.required">
+                        Credit Term is required</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Currency Code<i
+                      class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <select *ngIf="!IsViewMode" formControlName="Currency" id="Currency" class="form-control">
+                      <option [ngValue]="undefined">--Select--</option>
+                      <option *ngFor="let record of currencyTypes" [ngValue]="record">
+                        {{record.Name}}
+                    </select>
+                    <label *ngIf="IsViewMode" class="inputlabel" for="Currency">
+                      {{get('Currency','Code')}}
+                    </label>
+                    <div *ngIf="f.Currency.invalid && (f.Currency.dirty || f.Currency.touched)">
+                      <span class="errorMessage" *ngIf="f.Currency.errors.required">
+                        Currency Code is required</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-12" style="margin-top: 20px">
+              <h4 class="form-heading"
+                style="text-align: center; border: none;width:100%; background: #d9e7f1; padding: 5px 0px;">
+                Customer Info </h4>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Type of Business</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <input *ngIf="!IsViewMode" class="form-control" formControlName="TypeOfBusiness" id="TypeOfBusiness"
+                      type="text">
+                    <label *ngIf="IsViewMode" class="inputlabel" for="TypeOfBusiness">
+                      {{f.TypeOfBusiness.value}}</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">URL</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <input *ngIf="!IsViewMode" class="form-control" id="URL" formControlName="URL" type="text">
+                    <label *ngIf="IsViewMode" class="inputlabel" for="URL">
+                      {{f.URL.value}}</label>
+                  </div>
+                </div>
+              </div>`
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">ROC</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <input *ngIf="!IsViewMode" class="form-control" id="ROC" formControlName="ROC" type="text">
+                    <label *ngIf="IsViewMode" class="inputlabel" for="ROC">
+                      {{f.ROC.value}}</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12" style="margin-top:2%;">
+                <h4 class="form-heading" style="margin-bottom: 10px;">Addresses </h4>
+                <div class="respnsive-table tablescrol">
+                  <fieldset formArrayName="CustomerAddresses">
+                    <p-table sortMode="single" [value]="fAAddresses.controls" [columns]="CustomerAddressColumns">
+                      <ng-template pTemplate="emptymessage">
+                        <tr>
+                          <td [attr.colspan]="CustomerAddressColumns.length" style='text-align: center;'>
+                            <b class="errorMessage" *ngIf="this.fAAddresses.invalid">
+                              Please Enter Address Details
+                            </b>
+                            <b class="errorMessage" *ngIf="this.fAAddresses.errors?.duplicate">
+                              Duplicate address types not allowed
+                            </b>
+                          </td>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="colgroup" let-columns>
+                        <colgroup>
+                          <col *ngFor="let col of columns" [style.width]="col.width">
+                        </colgroup>
+                      </ng-template>
+                      <ng-template pTemplate="header" let-columns>
+                        <tr>
+                          <th *ngFor="let col of columns" [pSortableColumn]="col.field"> {{col.header}} </th>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns>
+                        <tr [formGroupName]="i">
+                          <td> {{i + 1}}</td>
+                          <td> {{rowData.get('AddressType').value.AddressTypeName}} </td>
+                          <td>
+                            <div>
+                              {{rowData.get('AddressLine1').value}}
+                            </div>
+                            <div>
+                              {{rowData.get('AddressLine2').value}}
+                            </div>
+                            <div>
+                              {{rowData.get('AddressLine3').value}}
+                            </div>
+                          </td>
+                          <td> {{rowData.get('Country').value.Name}} </td>
+                          <td> {{rowData.get('City').value}} </td>
+                          <td> {{rowData.get('PostalCode').value}} </td>
+                          <td> {{rowData.get('Telephone').value}} </td>
+                          <td> {{rowData.get('Fax').value}} </td>
+                          <td> {{rowData.get('Email').value}} </td>
+                          <td> {{rowData.get('Attention').value}} </td>
+                          <td class="aligncenter" *ngIf="!IsViewMode">
+                            <button type="button" class="btn" (click)="EditCustomerInfoDetails(i)">
+                              <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                            </button>&nbsp;
+                            <button type="button" class="btn" *ngIf="!IsReverify" (click)="deleteRow('Address',i)">
+                              <i class="fa fa-trash" aria-hidden="true"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      </ng-template>
+                    </p-table>
+                    <div *ngIf="!IsViewMode">
+                      <button type="button" class="addLine" (click)="showAddress()">
+                        <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Line
+                      </button>
+                    </div>
+                  </fieldset>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12" style="margin-top:2%;">
+                <h4 class="form-heading" style="margin-bottom: 10px;">Contacts</h4>
+                <div class="respnsive-table tablescrol">
+                  <fieldset formArrayName="CustomerContacts">
+                    <p-table sortMode="single" [value]="CustomerForm.get('CustomerContacts')['controls']"
+                      [columns]="CustomerContactsColumns">
+                      <ng-template pTemplate="emptymessage">
+                        <tr>
+                          <td [attr.colspan]="CustomerContactsColumns.length" style='text-align: center;'>
+                            <b></b>
+                          </td>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="colgroup" let-columns>
+                        <colgroup>
+                          <col *ngFor="let col of columns" [style.width]="col.width">
+                        </colgroup>
+                      </ng-template>
+                      <ng-template pTemplate="header" let-columns>
+                        <tr>
+                          <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                            {{col.header}}
+                          </th>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="body" let-row let-i="rowIndex" let-columns>
+                        <tr [formGroupName]="i">
+                          <td> {{i + 1}}</td>
+                          <td>
+                            <input *ngIf="!IsViewMode" type="text" class="form-control" formControlName="Name">
+                            <span *ngIf="IsViewMode">{{row.get('Name').value}}</span>
+                          </td>
+                          <td>
+                            <select *ngIf="!IsViewMode" formControlName="Nationality" class="form-control">
+                              <option [ngValue]="undefined">--Select--</option>
+                              <option *ngFor="let record of nationalities" [ngValue]="record">
+                                {{record.NationalityName}}
+                            </select>
+                            <span *ngIf="IsViewMode">
+                              {{row.get('Nationality').value == null ? '' :
+                              row.get('Nationality').value.NationalityName}}
+                            </span>
+                          </td>
+                          <td>
+                            <input type="text" *ngIf="!IsViewMode" class="form-control" formControlName="ContactNo">
+                            <span *ngIf="IsViewMode">{{row.get('ContactNo').value}}</span>
+                          </td>
+                          <td>
+                            <input *ngIf="!IsViewMode" type="text" class="form-control" formControlName="Purpose">
+                            <span *ngIf="IsViewMode">{{row.get('Purpose').value}}</span>
+                          </td>
+                          <td>
+                            <input *ngIf="!IsViewMode" type="text" class="form-control" formControlName="Designation">
+                            <span *ngIf="IsViewMode">{{row.get('Designation').value}}</span>
+                          </td>
+                          <td>
+                            <input *ngIf="!IsViewMode" type="text" class="form-control"
+                              formControlName="NRICPassportNo">
+                            <span *ngIf="IsViewMode">{{row.get('NRICPassportNo').value}}</span>
+                          </td>
+                          <td>
+                            <input *ngIf="!IsViewMode" type="text" class="form-control" formControlName="Email">
+                            <span *ngIf="IsViewMode">{{row.get('Email').value}}</span>
+                          </td>
+                          <td class="aligncenter">
+                            <input *ngIf="!IsViewMode" type="checkbox" formControlName="IsDefault"
+                              (click)="IsClicked(i)">
+                            <span *ngIf="IsViewMode">{{row.get('IsDefault').value ? 'Yes' :'No'}}</span>
+                          </td>
+                          <td class="aligncenter" *ngIf="!IsViewMode">
+                            <button type="button" class="btn" (click)="deleteRow('Contact',i)">
+                              <i class="fa fa-trash" aria-hidden="true"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      </ng-template>
+                    </p-table>
+                    <div *ngIf="!IsViewMode">
+                      <button type="submit" (click)="addGridRow()" class="addLine">
+                        <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Line
+                      </button>
+                    </div>
+                  </fieldset>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-12" style="margin-top: 20px">
+              <h4 class="form-heading"
+                style="text-align: center; border: none;width:100%; background: #d9e7f1; padding: 5px 0px;">
+                For Financial use only </h4>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label"> Tax Group
+                    <i class="fa fa-star mandatory-icon" *ngIf="verifyPermission" aria-hidden="true"></i></label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <select *ngIf="!IsViewMode" formControlName="TaxGroup" id="TaxGroup" (change)="GetTaxTypes()"
+                      class="form-control">
+                      <option [ngValue]="undefined">--Select--</option>
+                      <option *ngFor="let record of taxGroups" [style.color]="record.IsActive?'': 'lightgray'"
+                        [disabled]="!record.IsActive" [ngValue]="record">
+                        {{record.TaxGroupName}}
+                    </select>
+                    <label class="errorMessage inputlabel"
+                      *ngIf="f.TaxGroup.invalid && (f.TaxGroup.dirty || f.TaxGroup.touched) && f.TaxGroup.errors.required">
+                      Tax Group is required
+                    </label>
+                    <label *ngIf="IsViewMode" class="inputlabel" for="TaxGroup">
+                      {{get('TaxGroup','TaxGroupName')}}
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label"> Tax Class<i
+                      class="fa fa-star mandatory-icon" *ngIf="verifyPermission" aria-hidden="true"></i></label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <select *ngIf="!IsViewMode" formControlName="TaxType" id="TaxType" class="form-control">
+                      <option [ngValue]="undefined">--Select--</option>
+                      <option *ngFor="let record of taxTypes" [ngValue]="record">
+                        {{record.TaxClass}}
+                    </select>
+                    <label class="errorMessage inputlabel"
+                      *ngIf="f.TaxType.invalid && (f.TaxType.dirty || f.TaxType.touched) && f.TaxType.errors.required">
+                      Tax Class is required
+                    </label>
+                    <label *ngIf="IsViewMode" class="inputlabel" for="TaxType">
+                      {{get('TaxType','TaxClass')}}
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label"> Rate Type<i
+                      class="fa fa-star mandatory-icon" *ngIf="verifyPermission" aria-hidden="true"></i></label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <input *ngIf="!IsViewMode" class="form-control" type="text" id="RateType"
+                      formControlName="RateType">
+                    <label class="errorMessage inputlabel"
+                      *ngIf="f.RateType.invalid && (f.RateType.dirty || f.RateType.touched) && f.RateType.errors.required">
+                      Rate Type is required
+                    </label>
+                    <label *ngIf="IsViewMode" class="inputlabel" for="RateType">
+                      {{f.RateType.value}}</label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label"> Account Set ID<i
+                      class="fa fa-star mandatory-icon" *ngIf="verifyPermission" aria-hidden="true"></i></label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <input *ngIf="!IsViewMode" class="form-control" type="text" id="AccountSetId"
+                      formControlName="AccountSetId">
+                    <label class="errorMessage inputlabel"
+                      *ngIf="f.AccountSetId.invalid && (f.AccountSetId.dirty || f.AccountSetId.touched) && f.AccountSetId.errors.required">
+                      Account Set Id is required
+                    </label>
+                    <label *ngIf="IsViewMode" class="inputlabel" for="AccountSetId">
+                      {{f.AccountSetId.value}}</label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label"> Credit Limit</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <input *ngIf="!IsViewMode" class="form-control" type="text" id="CreditLimit"
+                      formControlName="CreditLimit">
+                    <label *ngIf="IsViewMode" class="inputlabel" for="CreditLimit">
+                      {{f.CreditLimit.value}}</label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label"> Bank Code
+                    <i class="fa fa-star mandatory-icon" *ngIf="verifyPermission" aria-hidden="true"></i></label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <input *ngIf="!IsViewMode" class="form-control" type="text" id="BankCode"
+                      formControlName="BankCode">
+                    <label class="errorMessage inputlabel"
+                      *ngIf="f.BankCode.invalid && (f.BankCode.dirty || f.BankCode.touched) && f.BankCode.errors.required">
+                      Bank Code is required
+                    </label>
+                    <label *ngIf="IsViewMode" class="inputlabel" for="BankCode">
+                      {{f.BankCode.value}}</label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label"> GL Account
+                    <i class="fa fa-star mandatory-icon" *ngIf="verifyPermission" aria-hidden="true"></i></label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <input *ngIf="!IsViewMode" class="form-control" type="text" id="GLAccount"
+                      formControlName="GLAccount">
+                    <label class="errorMessage inputlabel"
+                      *ngIf="f.GLAccount.invalid && (f.GLAccount.dirty || f.GLAccount.touched) && f.GLAccount.errors.required">
+                      GL Account is required
+                    </label>
+                    <label *ngIf="IsViewMode" class="inputlabel" for="GLAccount">
+                      {{f.GLAccount.value}}</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <app-attachments [Attachments]="f.Attachments.value" [IsViewMode]="IsViewMode"></app-attachments>
+            <app-document-remarks [Reason]="get('Reason')" [WorkFlowStatus]="get('WorkflowStatus')">
+            </app-document-remarks>
+            <app-approval-remarks [IsApprovalPage]="isApprovalPage" [WorkFlowComments]="get('WorkFlowComments')"
+              [DocumentId]="CustomerIPSId" [DocumentCode]="get('DocumentCode')"
+              [CurrentApproverUserId]="get('CurrentApprover','UserID')" [RequestUserId]="get('CreatedBy','UserID')"
+              [UserId]="userDetails.UserID" [ProcessId]="25" [WorkFlowStatus]="get('WorkflowStatus')"
+              (backtoList)="OnCancel()" [CompanyId]="get('CompanyId')"
+              [IsSendForClarification]="get('ButtonPreferences','SendForClarification')"
+              [IsReplyForClarification]="get('ButtonPreferences','ReplyForClarification')">
+            </app-approval-remarks>
+          </div>
+          <div class="form-group text-right btn-list">
+            <div *ngIf="!isApprovalPage">
+              <button type="submit" class="btn btn-save" *ngIf="!IsViewMode" (click)="SaveRecord('Save')">
+                <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+              <button type="button" class="btn btn-save"
+                *ngIf="CustomerIPSId>0 && IsViewMode && get('ButtonPreferences','Edit')" (click)="edit()">
+                <i class="fa fa-edit" aria-hidden="true"></i> Edit</button>
+              <button type="submit" class="btn btn-approve" (click)="SaveRecord('Send')"
+                *ngIf="followWorkflow && get('ButtonPreferences','SendForApproval') && sendForApprovalPermission">
+                <i class="fa fa-check" aria-hidden="true"></i> Send for Approval
+              </button>
+              <button type="submit" class="btn btn-cancel" (click)="ShowRemarksPopUp(workFlowStatus.CancelledApproval)"
+                *ngIf="get('ButtonPreferences','CancelApproval') && (get('CreatedBy','UserID') == userDetails.UserID)">
+                <i class="fa fa-times-circle" aria-hidden="true"></i> Cancel Approval</button>
+              <button type="submit" class="btn btn-approve"
+                *ngIf="get('ButtonPreferences','CancelDraft') && CustomerIPSId > 0 && (get('CreatedBy','UserID') == userDetails.UserID)"
+                (click)=ShowRemarksPopUp(workFlowStatus.CancelDraft)>
+                <i class="fa fa-check" aria-hidden="true"></i> Cancel Draft
+              </button>
+              <button type="submit" class="btn btn-approve" (click)="Reverify()"
+                *ngIf="get('ButtonPreferences','ReVerify') && IsViewMode && reVerifyPermission">
+                <i class="fa fa-check" aria-hidden="true"></i> Reverify
+              </button>
+              <button type="reset" (click)="OnCancel()" class="btn btn-cancel">
+                <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+            </div>
+            <div *ngIf="isApprovalPage">
+              <button type="submit" class="btn btn-approve" (click)="edit()"
+                *ngIf="get('ButtonPreferences','Verify') && IsViewMode && verifyPermission">
+                <i class="fa fa-check" aria-hidden="true"></i> Verify
+              </button>
+              <button type="submit" class="btn btn-save" *ngIf="!IsViewMode" (click)="SaveRecord('Verify')">
+                <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+              <button type="submit" (click)="onApproveClick()" class="btn btn-approve"
+                *ngIf="get('ButtonPreferences','Approve') && approvePermission && (get('CurrentApprover','UserID') == userDetails.UserID) ">
+                <i class="fa fa-check" aria-hidden="true"></i>Approve
+              </button>
+              <button type="submit" (click)="ShowRemarksPopUp(workFlowStatus.Rejected)"
+                *ngIf="get('ButtonPreferences','Reject') && approvePermission && (get('CurrentApprover','UserID') == userDetails.UserID)"
+                class="btn btn-delete">
+                <i class="fa fa-ban" aria-hidden="true"></i> Reject
+              </button>
+              <button type="reset" (click)="OnCancel()" class="btn btn-cancel">
+                <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+            </div>
+          </div>
+          <p-confirmDialog></p-confirmDialog>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #countryTemplate let-r="result" let-i="index" let-t="term">
+  <table style="width: 99%;">
+    <thead *ngIf='r.index==0'>
+      <tr>
+        <th style="width: 70%">
+          Country Name
+        </th>
+        <th style="width: 30%">
+          Code
+        </th>
+      </tr>
+    </thead>
+    <tr>
+      <td style="width: 50%; white-space: pre-wrap; word-wrap: break-word; ">{{ r.Name }}</td>
+      <td style="width: 20%; white-space: pre-wrap; word-wrap: break-word;">{{ r.Code }}</td>
+    </tr>
+  </table>
+</ng-template>
+
+<p-dialog header="Customer Address" class="modalheightauto" width="800" height="400"
+  [(visible)]="showConstomerInfoDialog">
+  <form [formGroup]="AddressForm" class="form-horizontal">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group row">
+          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label"> Address Type<i
+              class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+          <div class="col-xl-8 col-sm-6 col-6">
+            <select formControlName="AddressType" (change)="OnAddressTypeChange()" class="form-control">
+              <option [ngValue]="null">--Select--</option>
+              <option *ngFor="let record of addressTypes" [ngValue]="record">
+                {{record.AddressTypeName}}
+            </select>
+            <div class="errorMessage">
+              <span *ngIf="AddressForm.get('AddressType').hasError('incorrect')"> Duplicate Address Type </span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label"> Address-1<i
+              class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+          <div class="col-xl-8 col-sm-6 col-6">
+            <input class="form-control" type="text" formControlName="AddressLine1">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label"> Address-2<i
+              class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+          <div class="col-xl-8 col-sm-6 col-6">
+            <input class="form-control" type="text" formControlName="AddressLine2">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label"> Address-3 </label>
+          <div class="col-xl-8 col-sm-6 col-6">
+            <input class="form-control" type="text" formControlName="AddressLine3">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label"> Telephone<i
+              class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+          <div class="col-xl-8 col-sm-6 col-6">
+            <input class="form-control" type="text" formControlName="Telephone">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label"> Fax</label>
+          <div class="col-xl-8 col-sm-6 col-6">
+            <input class="form-control" type="text" formControlName="Fax">
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group row">
+          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label"> Country<i class="fa fa-star mandatory-icon"
+              aria-hidden="true"></i></label>
+          <div class="col-xl-8 col-sm-6 col-6">
+            <input type="text" placeholder="" class="form-control" formControlName="Country"
+              [inputFormatter]="countryInputFormater" [ngbTypeahead]="countryNameSearch"
+              [resultTemplate]="countryTemplate">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label"> City</label>
+          <div class="col-xl-8 col-sm-6 col-6">
+            <input class="form-control" type="text" formControlName="City">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label"> Postal Code<i
+              class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+          <div class="col-xl-8 col-sm-6 col-6">
+            <input class="form-control" type="text" formControlName="PostalCode">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label"> Email</label>
+          <div class="col-xl-8 col-sm-6 col-6">
+            <input class="form-control" type="text" formControlName="Email">
+            <div class="errorMessage">
+              <span *ngIf="AddressForm.get('Email').hasError('email')">
+                Required valid data
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label"> Attention</label>
+          <div class="col-xl-8 col-sm-6 col-6">
+            <input class="form-control" type="text" formControlName="Attention">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group" style="text-align: right">
+      <button class="btn btn-save" (click)="AddCustomerInfoGrid()"> OK </button>
+      <button class="btn btn-save" type="reset" (click)="cancelCustomerInfo()" class="btn btn-cancel">
+        <i class="fa fa-ban" aria-hidden="true"></i> Cancel </button>
+    </div>
+  </form>
+</p-dialog>
+<app-auditlog *ngIf="showLogPopUp" (hideLogPopUp)="hideLogPopUp($event)" [DocumentId]="get('CustomerIPSId')"
+  [CompanyId]="get('CompanyId')" [DocumentNumber]="get('DocumentCode')" [PageName]="'CustomerMaster'"
+  [showLogPopUp]="showLogPopUp">
+</app-auditlog>
+<p-dialog [modal]="true" [(visible)]="showRemarksPopUp">
+  <p-header>
+    {{pmoduleHeading}}
+  </p-header>
+  <div>
+    <form [formGroup]="RemarksForm">
+      <div>
+        <label class="form-label">Reasons</label>
+        <textarea rows="4" cols="50" class="form-control" formControlName="Reasons">
+              </textarea>
+      </div>
+      <div class="errorMessage"
+        *ngIf="RemarksForm.get('Reasons') && RemarksForm.get('Reasons').errors!=null && RemarksForm.get('Reasons').touched==true">
+        <span *ngIf="RemarksForm.get('Reasons').errors.required">
+          Reason is Required
+        </span>
+        <span *ngIf="RemarksForm.get('Reasons').hasError('invaliddata')">
+          Required valid data
+        </span>
+      </div>
+    </form>
+  </div>
+  <p-footer>
+    <button type="button" class="btn" (click)="ProceedRemarks()">Yes</button>
+    &nbsp;
+    <button type="button" class="btn" (click)="showRemarksPopUp=false">No</button>
+  </p-footer>
+</p-dialog>

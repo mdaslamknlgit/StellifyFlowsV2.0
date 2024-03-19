@@ -1,0 +1,245 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+            <div class="flexrow space-between align-center">
+                <h3 class="item-heading"> Purchase Order List </h3>
+                <div> 
+                    <button class="btn  btn-transparent"   (click)="addRecord()" *ngIf="hideText && newPermission"> New Record</button>
+                    <button  class="btn btn-transparent" (clickOutside)="onClickedOutside($event)"  (click)="split()">  {{showfilterstext}}  </button> 
+                    
+                    <img style="display: none;" src="../assets/images/grid1.png" (click)="showFullScreen()">
+                    <div *ngIf="!showfilters" ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+                        <button class="btn customdropdown btn-transparent" style="background:none;border:none;padding:0px;" id="dropdownBasic1" ngbDropdownToggle>
+                            <i  class="fa-solid fa-bars"></i>
+                        </button>                   
+                        
+                        <div  ngbDropdownMenu aria-labelledby="dropdownBasic1" *ngIf="hideText && (printPermission || emailPermission) && (showPrintButton || showEmailButton) || viewLogPermission" >                    
+                            <button class="dropdown-item" *ngIf="showPrintButton && printPermission && hideText"  (click)="onPDFPrint()">Print</button>
+                            <button class="dropdown-item"  *ngIf="showEmailButton && emailPermission && hideText"   (click)="displayEmailPopUp()">Email</button>
+                            <button class="dropdown-item" *ngIf="viewLogPermission"  (click)="displayLogPopUp()">View Log</button>
+                            <!-- <button class="dropdown-item"  *ngIf="showEmailButton"   (click)="sendMailtoSupplier()">Email</button> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <div class="left-section" [CustomSpinner]="showLeftPanelLoadingIcon"    [class.display-filters]="!showfilters" >
+            <div class="filter-section" ngbDropdown #myDrop="ngbDropdown">
+                <div class="flexrow space-between showlist">
+                <div class="left-search">
+                    <input type="text" [(ngModel)]="purchaseOrderSearchKey" placeholder="Search requests..." (change)="onSearchInputChange($event)"
+                        class="search-filter">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                    <div class="filter-popup" *ngIf="showFilterPopUp" ngbDropdownMenu aria-labelledby="dropdownManual" (click)="$event.stopPropagation(); myDrop.open();" style="width: 380px">
+                        <form [formGroup]="poFilterInfoForm" class="form-horizontal">
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">PO Number</label>
+                                <div class="col-xl-8 col-lg-8 col-sm-6 col-6">
+                                    <input type="text" #poCode formControlName="POCode" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier</label>
+                                <div class="col-xl-8 col-lg-8 col-sm-6 col-6 autoComplete">             
+                                    <input formControlName="SupplierName" type="text" class="form-control show" [inputFormatter]="supplierInputFormater"
+                                        [ngbTypeahead]="supplierSearch"  (selectItem)="onSupplierFilterChange($event)" [resultTemplate]="supplierTemplate" (keyup)="suppliernamechange($event)"/> 
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label  col-xl-4 col-lg-4 col-sm-6 col-6 form-label">From Date</label>
+                                <div class="col-xl-8 col-lg-8 col-sm-6 col-6 input-group">
+                                    <input class="form-control fromcontrol" formControlName="FromDate"  ngbDatepicker #fromDate="ngbDatepicker">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" (click)="fromDate.toggle();toDate.close()" type="button">
+                                        <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                        </button>
+                                    </div>
+                                </div>                            
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-lg-4 col-sm-6 col-6 form-label">To Date</label>
+                                <div class="col-xl-8 col-lg-8 col-sm-6 col-6 input-group">
+                                    <input class="form-control" formControlName="ToDate"   ngbDatepicker #toDate="ngbDatepicker">
+                                   
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" (click)="toDate.toggle()" type="button">
+                                        <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">PO Type</label>
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <select #purchaseOrderDropDown formControlName="PoTypeId"  class="form-control">
+                                        <option value=0>
+                                            Select
+                                        </option>
+                                        <option *ngFor="let record of purchaseOrderTypes" value={{record.PurchaseOrderTypeId}}>
+                                            {{record.PurchaseOrderType}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>                                   
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-lg-4 col-sm-6 col-6 form-label">Status</label>
+                                <div class="col-xl-8 col-lg-8 col-sm-6 col-6">
+                                    <select #workFlowStatusDropDown formControlName="WorkFlowStatusId"  class="form-control">
+                                        <option value=0>
+                                            Select
+                                        </option>
+                                        <option *ngFor="let record of workFlowStatuses" value={{record.WorkFlowStatusid}}>
+                                            {{record.Statustext}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-12 error errorMessage">
+                                    {{filterMessage}}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-12" style="text-align: right">
+                                    <button type="submit" (click)="filterData()" class="btn btn-save">
+                                        <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                    <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                        <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- start filter code -->
+                <div class="filter-icon">
+                    <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                    <i class="fa fa-filter" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div style="float:right;margin:0px;" class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+                    <i class="fa fa-undo" aria-hidden="true"></i>
+                </div>
+</div>
+                <div malihu-scrollbar class="filter-scroll" style="width:100%; float:left;">
+                    <table class="table">
+                        <tr >
+                            <td  (click)="hidefilter()" style="padding: 0;">
+                                <table class="listtable">
+                                    <tr>
+                                        <th>Record Name </th>
+                                      <th>Supplier</th>  
+                                      <th>PO Status </th> 
+                                          
+                                    </tr>
+                                    <tr  [class.activerow]="record.PurchaseOrderId==selectedPurchaseOrderId&&record.POTypeId==selectedPurchaseOrderTypeId" (click)="onRecordSelection(record.PurchaseOrderId,record.POTypeId)"
+                                    *ngFor="let record of purchaseOrdersList">
+                                        <td>{{ (record.WorkFlowStatusId!=workFlowStatus.Draft)?record.PurchaseOrderCode:record.DraftCode }}</td>
+                                        <td>{{ record.SupplierName }}</td>
+                                          <td>{{ record.WorkFlowStatusText }}</td>  
+                                         
+                                    </tr>
+                                </table>
+                                <!-- <h5 class="sub-heading">{{ record.IsDocumentApproved?record.PurchaseOrderCode:record.DraftCode }}</h5> -->
+                                
+                                <!-- <br>
+                                <label class="label-text">Purchase Order Status</label> :
+                                <label class="label-value">{{ record.PurchaseOrderStatusText }}</label>                                            -->
+                            </td>
+                        </tr>
+                    </table>
+                    <div *ngIf="purchaseOrdersList.length==0" class="col-12 listErrorMessage">
+                        {{errorMessage}}
+                    </div>    
+                   
+                </div>
+                <ngb-pagination *ngIf="purchaseOrdersList.length>0" (pageChange)="pageChange($event)" [collectionSize]="purchaseOrderPagerConfig.TotalRecords" class="d-flex justify-content-center" [pageSize]="purchaseOrderPagerConfig.RecordsToFetch" [maxSize]="5"  [(page)]="currentPage" [boundaryLinks]="true"></ngb-pagination>
+              
+            </div>
+         
+        </div>
+
+
+
+
+
+
+        </div>
+    </div>
+
+
+    <div class="row">
+     
+        <!-- left col end here-->
+
+    <div   #rightPanel class="rightPanel col-lg-12 col-md-12" style="padding: 0px; margin:0px; border:none;"  [class.expand-rightcol]="rightsection">
+            <div class="row" style="display:none">
+                    <div class='col-lg-12'>
+                            <div class="md-stepper-horizontal">
+                                    <div class="md-step active">
+                                      <div class="md-step-circle"><span>1</span></div>
+                                      <div class="md-step-title">PO</div>
+                                      <div class="md-step-bar-left"></div>
+                                      <div class="md-step-bar-right"></div>
+                                    </div>
+                                    <div class="md-step green">
+                                      <div class="md-step-circle"><span>2</span></div>
+                                      <div class="md-step-title">GRN</div>
+                                      <!-- <div class="md-step-optional">Optional</div> -->
+                                      <div class="md-step-bar-left"></div>
+                                      <div class="md-step-bar-right"></div>
+                                    </div>
+                                    <div class="md-step orange ">
+                                      <div class="md-step-circle"><span>3</span></div>
+                                      <div class="md-step-title">Invoice</div>
+                                      <div class="md-step-bar-left"></div>
+                                      <div class="md-step-bar-right"></div>
+                                    </div>
+                                </div>
+                    </div>
+            </div> 
+       <div [ngClass]="{'hideRightPanel':(purchaseOrdersList.length==0 && hideText==true)}">
+        <app-standard-purchase-order [remarks]='remarks'  [isApprovalPage]="isApprovalPage"  [selectedPoId]='selectedPurchaseOrderId' (cancelChanges)="cancelChanges($event)" (updateStatus)="updateStatus($event)" (readListView)="readListView($event)"  *ngIf="selectedPurchaseOrderTypeId == purchaseOrderType.InventoryPo"></app-standard-purchase-order>
+        <app-asset-purchase-order    [remarks]='remarks'  [isApprovalPage]="isApprovalPage"  [selectedPoId]='selectedPurchaseOrderId' (cancelChanges)="cancelChanges($event)"  (updateStatus)="updateStatus($event)"  (readListView)="readListView($event)"   *ngIf="selectedPurchaseOrderTypeId == purchaseOrderType.FixedAssetPo"></app-asset-purchase-order>
+        <app-contract-purchase-order [remarks]='remarks'  [isApprovalPage]="isApprovalPage"  [selectedPurchaseOrderTypeId]='selectedPurchaseOrderTypeId' [selectedPoId]='selectedPurchaseOrderId' (cancelChanges)="cancelChanges($event)"  (updateStatus)="updateStatus($event)"  (readListView)="readListView($event)"  *ngIf="selectedPurchaseOrderTypeId == purchaseOrderType.ContractPoFixed||selectedPurchaseOrderTypeId == purchaseOrderType.ContractPoVariable"></app-contract-purchase-order>
+        <app-expense-purchase-order  [remarks]='remarks'  [isApprovalPage]="isApprovalPage"  [selectedPoId]='selectedPurchaseOrderId' (cancelChanges)="cancelChanges($event)"  (updateStatus)="updateStatus($event)"  (readListView)="readListView($event)"   *ngIf="selectedPurchaseOrderTypeId == purchaseOrderType.ExpensePo"></app-expense-purchase-order>
+
+       </div>
+       <email-purchase-order-popup *ngIf="showEmailPopUp" [SupId]="SupplierId" [PurchaseOrderId]="PurchaseOrderId" [PurchaseOrderTypeId]="PurchaseOrderTypeId"
+        [CompanyId]="companyId"  (onStatusUpdate)="onStatusUpdate($event)" (hideEmailPopUp)="hideEmailPopUp($event)" [showEmailPopUp]="showEmailPopUp"></email-purchase-order-popup>
+        <app-auditlog *ngIf="showLogPopUp" (hideLogPopUp)="hideLogPopUp($event)" [DocumentId]="selectedPurchaseOrderId" [DocumentNumber]="selectedPurchaseOrderCode" [PageName]="selectedPurchaseOrderTypeId" [DocType]="'PO'" [showLogPopUp]="showLogPopUp"></app-auditlog>
+    </div>
+    <!-- left col end here-->
+    </div>
+</div>
+
+<ng-template #itemMasterTemplate let-r="result" let-t="term">
+    {{ r.ItemName }}
+</ng-template>
+
+<ng-template #supplierTemplate let-r="result" let-t="term">
+    <!-- {{ r.SupplierName }} -->
+    <!-- <div [ngClass]="ngb-disabled">
+        <span [ngClass]="{disabled : r.WorkFlowStatus!='Approved'}"> {{  r.WorkFlowStatus!='Approved'? r.SupplierName + " ( " + r.WorkFlowStatus + " ) " : r.SupplierName}}</span> 
+     </div> -->
+     <div [ngClass]="ngb-disabled">
+        <span [ngClass]="{disabled : r.WorkFlowStatus!='Approved' || r.IsFreezed===true}"> {{  r.WorkFlowStatus!='Approved' ? r.SupplierName + " ( " + r.WorkFlowStatus + " ) " : r.SupplierName}}</span> 
+     </div>
+</ng-template>
+
+<p-dialog header="Select Purchase Order Type" width="400" modal='true' [(visible)]="showPurchaseOrderTypeDialog">
+    <div class="form-group row">
+        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">PO Type</label>
+        <div class="col-xl-8 col-sm-6 col-6">
+            <select #purchaseOrderDropDown class="form-control">
+                <option *ngFor="let record of purchaseOrderTypes" value={{record.PurchaseOrderTypeId}}>
+                    {{record.PurchaseOrderType}}
+                </option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <button style='left:84%;position: relative;' (click)="purchaseOrderSelectionOk(purchaseOrderDropDown.value)" class="btn btn-save" >
+            Ok
+        </button>
+    </div>
+</p-dialog>

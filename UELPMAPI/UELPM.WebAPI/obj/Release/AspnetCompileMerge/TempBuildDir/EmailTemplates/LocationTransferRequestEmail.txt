@@ -1,0 +1,52 @@
+﻿<html >
+<head>
+    <title>Request for Location Transfer Approval</title>
+</head>
+<body >
+<div  style="font-family:tahoma;font-size:14px">
+Dear $$Name,
+<br/> <br/> 
+<div style="font-size:13px;">New $$subject </div>  
+<br/>
+<div><b>$$MailSubTitle details are given below,</b> </div>  
+<br/> 
+<table style='width:50%;'>
+	<tr>
+		<td style="width:20%;color:#2672ec;font-weight:bold;">From Company</td>
+		<td style="width:30%;">$$FromCompany</td>
+		<td style="width:20%;color:#2672ec;font-weight:bold;">To Company</td>
+		<td style="width:30%;">$$ToCompany</td>
+	</tr>
+	<tr>
+		<td style="width:20%;color:#2672ec;font-weight:bold;">From Location</td>
+		<td style="width:30%;">$$FromLocation</td>
+		<td style="width:20%;color:#2672ec;font-weight:bold;">To Location</td>
+		<td style="width:30%;">$$ToLocation</td>
+	</tr>
+	<tr>
+		<td colspan='4' style="color:#2672ec;font-weight:bold;">Reason For Transfer</td>
+	</tr>
+	<tr>
+		<td colspan='4' >$$Reason</td>
+	</tr>
+</table>
+<table border="1" cellpadding="5" cellspacing="0" style="margin-top:1%;">
+	<tr>
+	   <th style="color:#2672ec;">Serial No</th>
+	   <th style="color:#2672ec;">Item Code</th>
+	   <th style="color:#2672ec;">Item Name</th>
+	   <th style="color:#2672ec;">Manufacturer</th>
+	</tr>
+	 $$ItemsDetails
+</table>
+<br/> 
+<div style="font-size:13px;">For more details, Click below to login. <br/>
+<a href="$$SiteLogin" style="color:#0645AD; text-decoration: underline;">$$SiteLogin</a></div> 
+<br/>
+Best regards,
+<br/> 
+$$Sender
+</div>
+</div>
+</body>
+</html>

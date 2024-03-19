@@ -1,0 +1,1311 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 col-sm-12 padding-null tittlediv">
+            <h3 class="item-heading">
+                <img src="../assets/images/icon1.png"> {{moduleHeading}}
+            </h3>
+        </div>
+        <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+            <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+                <button class="btn btn-outline-primary" style="background:none;border:none;padding:0px;"
+                    id="dropdownBasic1" ngbDropdownToggle>
+                    <img src="../assets/images/grid2.png">
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button class="dropdown-item" (click)="exportRecord(paymentContractId)"
+                        *ngIf="exportPermission && selectedPPCDetails.WorkFlowStatusId==4">Export</button>
+                    <button class="dropdown-item" (click)="printRecord(paymentContractId)" *ngIf="reportPermission && (selectedPPCDetails.WorkFlowStatusId==4
+                        ||selectedPPCDetails.WorkFlowStatusId==14||selectedPPCDetails.WorkFlowStatusId==25
+                        ||selectedPPCDetails.WorkFlowStatusId==26)">Report</button>
+                    <button class="dropdown-item" *ngIf="viewLogPermission && paymentContractId>0"
+                        (click)="displayLogPopUp()"> View Log</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div #rightPanel class="rightPanel col-lg-12 col-md-12">
+            <div class="fullScreenLabel">
+                <app-header></app-header>
+            </div>
+            <div>
+                <form [formGroup]="PaymentHistoryOrderForm" class="form-horizontal">
+                    <div class="row fullScreenLabel">
+                        <div class="col-12">
+                            <h3 class="item-heading" style="float:none;">Project Payment History</h3>
+                        </div>
+                    </div>
+                    <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+                        <div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Project Contract Master
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" style="word-wrap:break-word">{{
+                                                selectedPOPDetails.ProjectName }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Requestor
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                {{ selectedPOPDetails.RequestedByUserName }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Contract Name
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" style="word-wrap:break-word">{{
+                                                selectedPOPDetails.ProjectName }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Contract Start Date
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                {{ selectedPOPDetails.ContractStartDate|DisplayDateFormat }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Contract End Date
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                {{ selectedPOPDetails.ContractEndDate|DisplayDateFormat }}
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Contract Terms
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                {{ selectedPOPDetails.ContractTerms }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Currency
+                                            Type</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                {{selectedPOPDetails.CurrencyCode }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Payment Terms
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                {{selectedPOPDetails.NoOfDays }} </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Original Contract Sum
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                {{selectedPOPDetails.OriginalContractSum | number:'1.2-2'}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Total VO Sum
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                <!-- {{selectedPOPDetails.TotalVOSum | number:'1.2-2'}} -->
+                                                {{PaymentHistoryOrderForm.get('CMTotalVOSum').value | number:'1.2-2'}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Adjusted Contract Sum
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                <!-- {{selectedPOPDetails.AdjustedContractSum | number:'1.2-2'}} -->
+                                                {{PaymentHistoryOrderForm.get('CMAdjustedContractSum').value |
+                                                number:'1.2-2'}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Is Retention Applicable
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                {{ selectedPOPDetails.IsRetentionApplicable==true?'Yes':'No' }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="selectedPOPDetails.IsRetentionApplicable" class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Retention %
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                {{ selectedPOPDetails.RetentionPercentage}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="selectedPOPDetails.IsRetentionApplicable" class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Retention Type
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                {{ selectedPOPDetails.RetentionTypeId == 1 ? "Fixed Retention" :
+                                                "Variable Retention"}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Tax Authority
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                {{ selectedPOPDetails.TaxGroupName }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Remarks</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                {{selectedPOPDetails.Remarks}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Payment Description
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="IsViewMode">
+                                                {{selectedPPCDetails.PaymentDescription}}
+                                            </label>
+                                            <textarea formControlName="PaymentDescription" *ngIf="!IsViewMode"
+                                                class="form-control">
+                                            </textarea>
+                                            <div
+                                                *ngIf="PaymentHistoryOrderForm.get('PaymentDescription') && PaymentHistoryOrderForm.get('PaymentDescription').errors!=null && PaymentHistoryOrderForm.get('PaymentDescription').touched==true">
+                                                <span class="errorMessage"
+                                                    *ngIf="PaymentHistoryOrderForm.get('PaymentDescription').errors.required">
+                                                    Payment Description is required
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Contract ID
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                {{ selectedPOPDetails.POPMasterCode }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="paymentContractId>0" class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Document Code
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                {{ selectedPPCDetails.DocumentCode }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="paymentContractId>0" class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Status
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                {{ selectedPPCDetails.StatusText }} &nbsp;
+                                                <span
+                                                    *ngIf="selectedPPCDetails.CurrentApproverUserName!=''&&selectedPPCDetails.CurrentApproverUserName!=null">[{{
+                                                    selectedPPCDetails.CurrentApproverUserName }}]</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Created Date
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                {{ selectedPOPDetails.CreatedDate|DisplayDateFormat }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Department
+                                            <i class="fa fa-star mandatory-icon" *ngIf="IsViewMode"
+                                                aria-hidden="true"></i>
+                                        </label>
+                                        <div class="col-xl-8 col-sm-4 col-4">
+                                            <label class="col-form-label form-text" *ngIf="IsViewMode">
+                                                {{selectedPPCDetails.LocationName}}</label>
+
+                                            <select #dept (change)="onDepChage($event,dept)"
+                                                formControlName="LocationId" *ngIf="!IsViewMode" class="form-control">
+                                                <option [ngValue]="null">--Select--</option>
+                                                <option *ngFor="let record of departmentsWorkflow"
+                                                    [style.color]="record.HasWorkflow?'': 'lightgray'"
+                                                    [disabled]="!record.HasWorkflow" value={{record.LocationID}}>
+                                                    {{record.Name}}
+                                            </select>
+                                            <div
+                                                *ngIf="PaymentHistoryOrderForm.get('LocationId') && PaymentHistoryOrderForm.get('LocationId').errors!=null && PaymentHistoryOrderForm.get('LocationId').touched==true">
+                                                <span class="errorMessage"
+                                                    *ngIf="PaymentHistoryOrderForm.get('LocationId').errors.required">
+                                                    Department is required</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Supplier ID
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                {{
+                                                selectedPOPDetails.Supplier==null?"":selectedPOPDetails.Supplier.SupplierCode}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Supplier Name
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                {{
+                                                selectedPOPDetails.Supplier==null?"":selectedPOPDetails.Supplier.SupplierName
+                                                }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Supplier Sub Codes
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                {{ selectedPOPDetails.SupplierSubCode!=null ?
+                                                selectedPOPDetails.SupplierSubCode.SubCode
+                                                + " ( " + selectedPOPDetails.SupplierSubCode.SubCodeDescription + " ) "
+                                                :
+                                                ""}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Supplier Address
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text"
+                                                [innerText]="PaymentHistoryOrderForm.get('SupplierAddress').value">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Type Of Service
+                                        </label>
+                                        <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                {{ selectedPOPDetails.ServiceName }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="selectedPOPDetails.IsRetentionApplicable" class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Retention Supplier Id
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                {{ selectedPOPDetails.RetentionSupplierCodeName}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Expense Type
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                {{selectedPOPDetails.ExpensesType}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="selectedPOPDetails.IsRetentionApplicable" class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Retention (Max Limit)
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                <!-- {{selectedPOPDetails.RetentionMaxLimit | number:'1.2-2'}} -->
+                                                {{PaymentHistoryOrderForm.get('CMRetentionMaxLimit').value |
+                                                number:'1.2-2'}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Tax Rate
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                {{ selectedPOPDetails.TaxName}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Contract Description
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">
+                                                {{ selectedPOPDetails.ContractDescription}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12" style="margin-top:2%;">
+                                <h3 class="form-heading" style="float:none;">
+                                    Interim Certificate Details
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom: 10px;">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-6 form-label">
+                                Certificate No.
+                            </label>
+                            <div class="col-xl-2 col-sm-6 col-6">
+                                <div *ngIf="!IsViewMode" class="input-group">
+                                    <input class="form-control" type="text" formControlName="CertificateNo">
+                                </div>
+                                <span *ngIf="IsViewMode"> {{selectedPPCDetails.CertificateNo}} </span>
+                            </div>
+                            <label class="col-form-label col-xl-2 col-sm-6 col-6 form-label">Date of Valuation
+                                <i class="fa fa-star mandatory-icon" *ngIf="!IsViewMode" aria-hidden="true"></i>
+                            </label>
+                            <div class="col-xl-2 col-sm-6 col-6">
+                                <div *ngIf="!IsViewMode" class="input-group">
+                                    <input class="form-control" formControlName="DateOfValuation"
+                                        (dateSelect)="validateDates('valuation')"
+                                        (click)="onDatePickerFocus(DateOfValuation)" ngbDatepicker
+                                        #DateOfValuation="ngbDatepicker">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" (click)="DateOfValuation.toggle()"
+                                            type="button">
+                                            <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div
+                                    *ngIf="PaymentHistoryOrderForm.get('DateOfValuation') && PaymentHistoryOrderForm.get('DateOfValuation').errors!=null && PaymentHistoryOrderForm.get('DateOfValuation').touched==true">
+                                    <span class="errorMessage"
+                                        *ngIf="PaymentHistoryOrderForm.get('DateOfValuation').errors.required">
+                                        Date of valuation is required
+                                    </span>
+                                </div>
+                                <span *ngIf="IsViewMode">
+                                    {{PaymentHistoryOrderForm.get('DateOfValuation').value |DisplayDateFormat}}
+                                </span>
+                            </div>
+                            <label class="col-form-label col-xl-2 col-sm-6 col-6 form-label">
+                                Supplier Invoice No.
+                                <i class="fa fa-star mandatory-icon" *ngIf="!IsViewMode" aria-hidden="true"></i>
+                            </label>
+                            <div class="col-xl-2 col-sm-6 col-6">
+                                <div *ngIf="!IsViewMode" class="input-group">
+                                    <input class="form-control" type="text" formControlName="SupplierInvoiceNumber">
+                                </div>
+                                <div
+                                    *ngIf="PaymentHistoryOrderForm.get('SupplierInvoiceNumber') && PaymentHistoryOrderForm.get('SupplierInvoiceNumber').errors!=null && PaymentHistoryOrderForm.get('SupplierInvoiceNumber').touched==true">
+                                    <span class="errorMessage"
+                                        *ngIf="PaymentHistoryOrderForm.get('SupplierInvoiceNumber').errors.required">
+                                        Supplier Invoice Number is required
+                                    </span>
+                                </div>
+                                <span *ngIf="IsViewMode">
+                                    {{selectedPPCDetails.SupplierInvoiceNumber}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom: 10px;">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-6 form-label">
+                                Date of certification
+                            </label>
+                            <div class="col-xl-2 col-sm-6 col-6">
+                                <div *ngIf="!IsViewMode" class="input-group">
+                                    <input class="form-control" formControlName="DateOfCertification"
+                                        (dateSelect)="validateDates('certificate')"
+                                        (click)="onDatePickerFocus(DateOfCertification)" ngbDatepicker
+                                        #DateOfCertification="ngbDatepicker">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" (click)="DateOfCertification.toggle()"
+                                            type="button">
+                                            <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <span *ngIf="IsViewMode">
+                                    {{PaymentHistoryOrderForm.get('DateOfCertification').value | DisplayDateFormat}}
+                                </span>
+                            </div>
+                            <label class="col-form-label col-xl-2 col-sm-6 col-6 form-label"> Payment Number
+                            </label>
+                            <label class="col-form-label col-xl-2 col-sm-6 col-6">
+                                <b> {{PaymentHistoryOrderForm.get('PaymentNo').value}}</b>
+                            </label>
+                            <label class="col-form-label col-xl-2 col-sm-6 col-6 form-label">Supplier Invoice Date
+                                <i class="fa fa-star mandatory-icon" *ngIf="!IsViewMode" aria-hidden="true"></i>
+                            </label>
+                            <div class="col-xl-2 col-sm-6 col-6">
+                                <div *ngIf="!IsViewMode" class="input-group">
+                                    <input class="form-control" formControlName="DateOfDocument"
+                                        (dateSelect)="validateDates('valuation')"
+                                        (click)="onDatePickerFocus(DateOfDocument)" ngbDatepicker
+                                        #DateOfDocument="ngbDatepicker">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" (click)="DateOfDocument.toggle()"
+                                            type="button">
+                                            <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div
+                                    *ngIf="PaymentHistoryOrderForm.get('DateOfDocument') && PaymentHistoryOrderForm.get('DateOfDocument').errors!=null && PaymentHistoryOrderForm.get('DateOfDocument').touched==true">
+                                    <span class="errorMessage"
+                                        *ngIf="PaymentHistoryOrderForm.get('DateOfDocument').errors.required">
+                                        Supplier Invoice Date is required
+                                    </span>
+                                </div>
+                                <span *ngIf="IsViewMode">
+                                    {{PaymentHistoryOrderForm.get('DateOfDocument').value |DisplayDateFormat}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 engineers-assigned" style="padding:0px;">
+                                <div class="col-12">
+                                    <fieldset>
+                                        <div style="text-align: center;">
+                                            <span class="errorMessage" *ngIf="showGridErrorMessage1">
+                                                Please enter atleast one Accumulated Payment
+                                            </span>
+                                        </div>
+                                        <div class="tablescroll">
+                                            <div formArrayName="ProjectMasterContractItems">
+                                                <p-table [columns]="projectPOInterimColumns" [scrollable]="false"
+                                                    sortMode="single"
+                                                    [value]="selectedPOPDetails.ProjectMasterContractItems">
+                                                    <ng-template pTemplate="colgroup" let-columns>
+                                                        <colgroup>
+                                                            <col style="width:70px;">
+                                                            <col style="width:180px;">
+                                                            <!-- <col style="width:150px;">
+                                                            <col style="width:150px;">
+                                                            <col style="width:120px;"> -->
+                                                            <col style="width:150px;">
+                                                            <col style="width:180px;">
+                                                            <col style="width:180px;">
+                                                            <col style="width:120px">
+                                                            <col style="width:180px;">
+                                                            <col style="width:100px;">
+                                                        </colgroup>
+                                                    </ng-template>
+                                                    <ng-template pTemplate="header" let-columns>
+                                                        <tr>
+                                                            <th *ngFor="let col of projectPOInterimColumns"
+                                                                [pSortableColumn]="col.field">
+                                                                {{col.header}}
+                                                                <p-sortIcon [field]="col.field">
+                                                                </p-sortIcon>
+                                                            </th>
+                                                        </tr>
+                                                    </ng-template>
+                                                    <ng-template pTemplate="body" let-rowData let-i="rowIndex"
+                                                        let-columns="columns">
+                                                        <tr [formGroupName]="i">
+                                                            <td> {{ i + 1 }} </td>
+                                                            <td> {{ rowData.ItemDescription }} </td>
+                                                            <!-- <td> {{ rowData.Expense.AccountCodeName}} </td>
+                                                            <td> {{ rowData.AccountCode }} </td>
+                                                            <td> {{ rowData.TypeOfCostName }} </td> -->
+                                                            <td> {{ rowData.ApportionmentMethod }} </td>
+                                                            <td style="text-align: right">
+                                                                {{ (rowData.ContractValue) |number:'1.2-2'}}
+                                                            </td>
+                                                            <td style="text-align: right">
+                                                                {{ (rowData.PrevAccumulatedAmount) |number:'1.2-2'}}
+                                                            </td>
+                                                            <td style="text-align: right">
+                                                                <span
+                                                                    *ngIf="IsViewMode || (rowData.ContractValue==rowData.PrevAccumulatedAmount)">
+                                                                    {{ (rowData.CurrentPayment) |number:'1.2-2'}}
+                                                                </span>
+                                                                <span>
+                                                                    <input currencyMask [options]="options2precision"
+                                                                        *ngIf="!(IsViewMode || (rowData.ContractValue==rowData.PrevAccumulatedAmount))"
+                                                                        style="text-align: right;" class="form-control"
+                                                                        formControlName="CurrentPayment"
+                                                                        (blur)="calculateCurrentPayment(i,PaymentHistoryOrderForm.get('ProjectMasterContractItems').controls[i])"
+                                                                        min="0"
+                                                                        (keydown)="restrictMinusValue($event)" />
+                                                                </span>
+                                                            </td>
+                                                            <td style="text-align: right">
+                                                                <span
+                                                                    *ngIf="IsViewMode || (rowData.ContractValue==rowData.PrevAccumulatedAmount)">
+                                                                    {{ (rowData.AccumulatedPayment) |number:'1.2-2'}}
+                                                                </span>
+                                                                <span>
+                                                                    <input currencyMask [options]="options2precision"
+                                                                        *ngIf="!(IsViewMode || (rowData.ContractValue==rowData.PrevAccumulatedAmount))"
+                                                                        style="text-align: right;" class="form-control"
+                                                                        min="0"
+                                                                        (blur)="calculateTotalPrice(i,PaymentHistoryOrderForm.get('ProjectMasterContractItems').controls[i])"
+                                                                        formControlName="AccumulatedPayment"
+                                                                        (keydown)="restrictMinusValue($event)" />
+                                                                </span>
+                                                            </td>
+                                                            <td style="text-align: right">
+                                                                {{ (
+                                                                PaymentHistoryOrderForm.get('ProjectMasterContractItems').controls[i].get('OverallStatus').value)
+                                                                |number:'1.0-1'}}%
+                                                                <div class="errorMessage"
+                                                                    style="float:left; width:100%;"
+                                                                    *ngIf="PaymentHistoryOrderForm.get('ProjectMasterContractItems').controls[i].get('OverallStatus')!=null &&
+                                                                PaymentHistoryOrderForm.get('ProjectMasterContractItems').controls[i].get('OverallStatus').errors!=null ">
+                                                                    <span
+                                                                        *ngIf="PaymentHistoryOrderForm.get('ProjectMasterContractItems').controls[i].get('OverallStatus').errors.statusError">
+                                                                        {{statusErrorMessage}}
+                                                                    </span>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </ng-template>
+                                                    <ng-template pTemplate="footer" let-columns>
+                                                        <tr style="font-weight: bold;">
+                                                            <td> </td>
+                                                            <td>Sub Total</td>
+                                                            <!-- <td> </td>
+                                                            <td> </td>
+                                                            <td> </td> -->
+                                                            <td> </td>
+                                                            <td style="text-align: right">
+                                                                {{ ( selectedPOPDetails.SubTotal )|number:'1.2-2' }}
+                                                            </td>
+                                                            <td style="text-align: right">
+                                                                {{ (
+                                                                PaymentHistoryOrderForm.get('SubTotalPrevAccumulatedAmount').value
+                                                                )|number:'1.2-2'}}
+                                                            </td>
+                                                            <td style="text-align: right">
+                                                                {{ (
+                                                                PaymentHistoryOrderForm.get('SubTotalCurrentPayment').value
+                                                                )|number:'1.2-2'}}
+                                                            </td>
+                                                            <td style="text-align: right">
+                                                                {{ (
+                                                                PaymentHistoryOrderForm.get('SubTotalAccPayment').value
+                                                                )|number:'1.2-2'}}
+                                                            </td>
+                                                            <td style="text-align: right">
+                                                                {{ ( PaymentHistoryOrderForm.get('SubTotalStatus').value
+                                                                )}}%
+                                                            </td>
+                                                        </tr>
+                                                    </ng-template>
+                                                </p-table>
+                                            </div>
+                                            <div formArrayName="DiscountLineItems">
+                                                <p-table [columns]="projectPOInterimColumns" [scrollable]="false"
+                                                    sortMode="single" [value]="selectedPOPDetails.DiscountLineItems">
+                                                    <ng-template pTemplate="colgroup" let-columns>
+                                                        <colgroup>
+                                                            <col style="width:70px;">
+                                                            <col style="width:180px;">
+                                                            <!-- <col style="width:150px;">
+                                                            <col style="width:150px;">
+                                                            <col style="width:120px;"> -->
+                                                            <col style="width:150px;">
+                                                            <col style="width:180px;">
+                                                            <col style="width:180px;">
+                                                            <col style="width:120px">
+                                                            <col style="width:180px;">
+                                                            <col style="width:100px;">
+                                                        </colgroup>
+                                                    </ng-template>
+                                                    <ng-template pTemplate="body" let-rowData let-i="rowIndex"
+                                                        let-columns="columns">
+                                                        <tr [formGroupName]="i">
+                                                            <td>{{ i + 1 }}</td>
+                                                            <td>{{ rowData.DisItemDescription }}</td>
+                                                            <!-- <td>{{ rowData.Expense.AccountCodeName}}</td>
+                                                            <td>{{ rowData.AccountCode }}</td>
+                                                            <td>{{ rowData.DisTypeOfCostName }}</td> -->
+                                                            <td>{{ rowData.DisApportionmentMethod }}</td>
+                                                            <td style="text-align: right">
+                                                                {{ rowData.DiscountValue |number:'1.2-2' |
+                                                                negativeInParenthesis}}
+                                                            </td>
+                                                            <td style="text-align: right">
+                                                                {{ (rowData.PrevAccumulatedAmount) |number:'1.2-2' |
+                                                                negativeInParenthesis}}
+                                                            </td>
+                                                            <td style="text-align: right">
+                                                                <span
+                                                                    *ngIf="IsViewMode || (rowData.DiscountValue==rowData.PrevAccumulatedAmount)">
+                                                                    {{ (rowData.CurrentPayment) |number:'1.2-2' |
+                                                                    negativeInParenthesis}}
+                                                                </span>
+                                                                <span
+                                                                    *ngIf="!(IsViewMode || (rowData.DiscountValue==rowData.PrevAccumulatedAmount))">
+                                                                    <input currencyMask [options]="options2precision"
+                                                                        style="text-align: right;" class="form-control"
+                                                                        formControlName="CurrentPayment"
+                                                                        (blur)="setDiscountValue(i,'CurrentPayment');calculateCurrentPayment(i,PaymentHistoryOrderForm.get('DiscountLineItems').controls[i])"
+                                                                        (keydown)="restrictMinusValue($event)" />
+                                                                </span>
+                                                            </td>
+                                                            <td style="text-align: right">
+                                                                <span
+                                                                    *ngIf="IsViewMode || (rowData.DiscountValue==rowData.PrevAccumulatedAmount)">
+                                                                    {{ (rowData.AccumulatedPayment) |number:'1.2-2' |
+                                                                    negativeInParenthesis}}
+                                                                </span>
+                                                                <span
+                                                                    *ngIf="!(IsViewMode || (rowData.DiscountValue==rowData.PrevAccumulatedAmount))">
+                                                                    <input currencyMask [options]="options2precision"
+                                                                        style="text-align: right;" class="form-control"
+                                                                        formControlName="AccumulatedPayment"
+                                                                        (blur)="setDiscountValue(i,'AccumulatedPayment');calculateTotalPrice(i,PaymentHistoryOrderForm.get('DiscountLineItems').controls[i])"
+                                                                        (keydown)="restrictMinusValue($event)" />
+                                                                </span>
+                                                            </td>
+                                                            <td style="text-align: right">
+                                                                {{ (
+                                                                PaymentHistoryOrderForm.get('DiscountLineItems').controls[i].get('OverallStatus').value)
+                                                                |number:'1.0-1'}}%
+                                                                <div class="errorMessage"
+                                                                    style="float:left; width:100%;"
+                                                                    *ngIf="PaymentHistoryOrderForm.get('DiscountLineItems').controls[i].get('OverallStatus')!=null &&
+                                                                PaymentHistoryOrderForm.get('DiscountLineItems').controls[i].get('OverallStatus').errors!=null ">
+                                                                    <span
+                                                                        *ngIf="!PaymentHistoryOrderForm.get('DiscountLineItems').controls[i].get('OverallStatus').valid">
+                                                                        {{statusErrorMessage}}
+                                                                    </span>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </ng-template>
+                                                    <ng-template pTemplate="footer" let-rowData let-i="rowIndex"
+                                                        let-columns>
+                                                        <tr style="font-weight: bold;">
+                                                            <td> </td>
+                                                            <td>Total Before Tax</td>
+                                                            <!-- <td> </td>
+                                                            <td> </td>
+                                                            <td> </td> -->
+                                                            <td> </td>
+                                                            <td style="text-align: right">
+                                                                {{ ( selectedPOPDetails.TotalBefTax )|number:'1.2-2' }}
+                                                            </td>
+                                                            <td style="text-align: right">
+                                                                {{
+                                                                (PaymentHistoryOrderForm.get('PrevAccPayTotalBefTax')==null||PaymentHistoryOrderForm.get('PrevAccPayTotalBefTax').value==undefined)?"":
+                                                                (
+                                                                PaymentHistoryOrderForm.get('PrevAccPayTotalBefTax').value
+                                                                )|number:'1.2-2'
+                                                                }}
+                                                            </td>
+                                                            <td style="text-align: right">
+                                                                {{
+                                                                (PaymentHistoryOrderForm.get('TotalBefTaxCurrentPayment')==null||PaymentHistoryOrderForm.get('TotalBefTaxCurrentPayment').value==undefined)?"":
+                                                                (
+                                                                PaymentHistoryOrderForm.get('TotalBefTaxCurrentPayment').value
+                                                                )|number:'1.2-2'
+                                                                }}
+                                                            </td>
+                                                            <td style="text-align: right">
+                                                                {{
+                                                                (PaymentHistoryOrderForm.get('TotalBefTaxAccPayment')==null||PaymentHistoryOrderForm.get('TotalBefTaxAccPayment').value==undefined)?"":
+                                                                (
+                                                                PaymentHistoryOrderForm.get('TotalBefTaxAccPayment').value
+                                                                )|number:'1.2-2'
+                                                                }}
+                                                            </td>
+                                                            <td style="text-align: right">
+                                                                {{
+                                                                (PaymentHistoryOrderForm.get('TotalBefTaxStatus')==null||PaymentHistoryOrderForm.get('TotalBefTaxStatus').value==undefined)?"":
+                                                                ( PaymentHistoryOrderForm.get('TotalBefTaxStatus').value
+                                                                )
+                                                                }}%
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="footercolor">
+                                                            <td> </td>
+                                                            <td>Tax</td>
+                                                            <!-- <td> </td>
+                                                            <td> </td>
+                                                            <td> </td> -->
+                                                            <td> </td>
+                                                            <td style="text-align: right">
+                                                                {{( selectedPOPDetails.TotalTax )|number:'1.2-2' }}
+                                                            </td>
+                                                            <td> </td>
+                                                            <td> </td>
+                                                            <td> </td>
+                                                            <td> </td>
+                                                        </tr>
+                                                        <tr style="font-weight: bold;">
+                                                            <td> </td>
+                                                            <td>Total</td>
+                                                            <!-- <td> </td>
+                                                            <td> </td>
+                                                            <td> </td> -->
+                                                            <td> </td>
+                                                            <td style="text-align: right">
+                                                                {{( selectedPOPDetails.TotalAmount )|number:'1.2-2' }}
+                                                            </td>
+                                                            <td style="text-align: right">
+                                                                {{ (
+                                                                PaymentHistoryOrderForm.get('PrevAccPayTotalAmount').value
+                                                                )|number:'1.2-2' }}
+                                                            </td>
+                                                            <td style="text-align: right">
+                                                                {{ (
+                                                                PaymentHistoryOrderForm.get('CurrentPaymentTotalAmount').value
+                                                                )|number:'1.2-2' }}
+                                                            </td>
+                                                            <td style="text-align: right">
+                                                                {{ (
+                                                                PaymentHistoryOrderForm.get('AccPaymentTotalAmount').value
+                                                                )|number:'1.2-2' }}
+                                                            </td>
+                                                            <td style="text-align: right">
+                                                                {{ (
+                                                                PaymentHistoryOrderForm.get('StatusTotalAmount').value )
+                                                                }}%
+                                                            </td>
+                                                        </tr>
+                                                    </ng-template>
+                                                </p-table>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <h4 class="form-heading">Project Payment Items </h4>
+                            </div>
+                            <div *ngIf="selectedPOPDetails.IsRetentionApplicable" class="col-xl-2">
+                                Retentions :
+                                <select *ngIf="!IsViewMode" class="form-control" formControlName="NoOfRetentions"
+                                    (change)="PrepareRetentions();SetRetentions(); CalculatePaymentSummary();">
+                                    <option value="1">1 </option>
+                                    <option value="2">2 </option>
+                                    <option value="3">3 </option>
+                                    <option value="4">4 </option>
+                                    <option value="5">5 </option>
+                                </select>
+                                <span *ngIf="IsViewMode">
+                                    {{PaymentHistoryOrderForm.get('NoOfRetentions').value}}
+                                </span>
+                            </div>
+                            <div align="center" *ngIf="!IsPaymentSummaryValid" class="col-xl-10">
+                                <p style="color: red;">Total Value of work done must be equal to accumulated payment
+                                </p>
+                            </div>
+                            <fieldset formArrayName="PaymentSummary">
+                                <div class="col-xl-12" style="margin-top: 20px;">
+                                    <p-table class="ptable" [columns]="projectPOInterimColumns" [scrollable]="false"
+                                        sortMode="single"
+                                        [value]="PaymentHistoryOrderForm.get('PaymentSummary')['controls']">
+                                        <ng-template pTemplate="colgroup" let-columns>
+                                            <colgroup>
+                                                <col style="width:5%;">
+                                                <col style="width:30%;">
+                                            </colgroup>
+                                        </ng-template>
+                                        <ng-template pTemplate="header" let-rowData let-i="rowIndex">
+                                            <tr>
+                                                <td rowspan="4" style="border-bottom: inherit;"
+                                                    class="textcenter fontbold">Sno </td>
+                                                <td rowspan="4" style="border-bottom: inherit;"
+                                                    class="textcenter fontbold">Description</td>
+                                                <td rowspan="4" style="border-bottom: inherit;"
+                                                    class="textcenter fontbold">Previous Cumulative
+                                                    <br> Payment Summary
+                                                    <!-- <br> [Cert No
+                                                    {{PaymentHistoryOrderForm.get('PaymentNo').value - 1 }}] -->
+                                                </td>
+                                                <td [attr.colspan]="PaymentHistoryOrderForm.get('PaymentSummary')['controls'][0].get('Retentions')['controls'].length+2"
+                                                    class="textcenter">
+                                                    <h5 class="textcenter">Summary of Payment to date</h5>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td [attr.colspan]="PaymentHistoryOrderForm.get('PaymentSummary')['controls'][0].get('Retentions')['controls'].length"
+                                                    class="textcenter fontbold">
+                                                    <!-- Applicable Retention sum for [Cert No
+                                                    {{PaymentHistoryOrderForm.get('PaymentNo').value}}] -->
+                                                    Retentions
+                                                </td>
+                                                <td rowspan="3" style="border-bottom: inherit;word-break: break-all;"
+                                                    class="textcenter">
+                                                    Current Accumulated <br> Payment
+                                                    <br>{{totalFormat}}
+                                                </td>
+                                                <td rowspan="3" class="textcenter"
+                                                    style="border-bottom: inherit;word-break: break-all;">
+                                                    Current Payment</td>
+                                            </tr>
+                                            <tr>
+                                                <ng-template ngFor let-data let-count
+                                                    [ngForOf]="PaymentHistoryOrderForm.get('PaymentSummary')['controls'][0].get('Retentions')['controls']">
+                                                    <td class="textcenter" style="border-bottom: inherit;">
+                                                        {{ data.get('RetentionName').value }}
+                                                    </td>
+                                                </ng-template>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-rowData let-i="rowIndex">
+                                            <tr *ngIf="i==0" [formGroupName]="i">
+                                                <td style="border:none;border-left:1px solid #dee2e6"> </td>
+                                                <td style="border-top: inherit;"> </td>
+                                                <td style="border:none"> </td>
+                                                <ng-container style="width:70%;" formArrayName="Retentions">
+                                                    <ng-container
+                                                        *ngFor="let data of rowData.get('Retentions')['controls'];let j=index;let controlsLength = count">
+                                                        <td [formGroupName]="j"
+                                                            [ngStyle]="{ 'width':(70/(controlsLength))+'%' }">
+                                                            <input currencyMask [options]="options2precision"
+                                                                *ngIf="i==0 && data.get('IsRetention').value && !IsViewMode"
+                                                                formControlName="RetentionPercentage"
+                                                                (keydown)="restrictMinusValue($event)"
+                                                                (blur)="onRetentionAmountChange()"
+                                                                style="text-align: right;float:left;width:99%;"
+                                                                class="form-control" />
+                                                            <div class="textright"
+                                                                *ngIf="(i==0 && !data.get('IsRetention').value && !IsViewMode)">
+                                                                {{data.get('RetentionPercentage').value |
+                                                                number:'1.2-2'}}%
+                                                            </div>
+                                                            <div class="textright" *ngIf="(i==0 && IsViewMode)">
+                                                                {{data.get('RetentionPercentage').value |
+                                                                number:'1.2-2'}}%
+                                                            </div>
+                                                        </td>
+                                                    </ng-container>
+                                                </ng-container>
+                                                <td style="border:none;border-right:1px solid #dee2e6"> </td>
+                                            </tr>
+                                            <tr [formGroupName]="i">
+                                                <td>{{ i + 1 }}</td>
+                                                <td>{{rowData.get('Description').value}}</td>
+                                                <td class="textright">
+                                                    {{rowData.get('PrevPaid').value | number:'1.2-2' |
+                                                    negativeInParenthesis}}
+                                                </td>
+                                                <ng-container style="width:70%;" formArrayName="Retentions">
+                                                    <ng-container
+                                                        *ngFor="let data of rowData.get('Retentions')['controls'];let j=index;let controlsLength = count">
+                                                        <td [formGroupName]="j"
+                                                            [ngStyle]="{ 'width':(70/(controlsLength))+'%' }">
+                                                            <input currencyMask [options]="options2precision"
+                                                                *ngIf="i==0 && !IsViewMode"
+                                                                formControlName="RetentionAmount"
+                                                                (keydown)="restrictMinusValue($event)"
+                                                                (blur)="onRetentionAmountChange()"
+                                                                style="text-align: right;float:left;width:99%;"
+                                                                class="form-control" />
+                                                            <div class="textright" *ngIf="i==0 && IsViewMode">
+                                                                {{data.get('RetentionAmount').value | number:'1.2-2'}}
+                                                            </div>
+                                                            <div class="textright"
+                                                                *ngIf="i==1 && data.get('IsRetention').value">
+                                                                {{data.get('RetentionAmount').value | number:'1.2-2'}}
+                                                            </div>
+                                                        </td>
+                                                    </ng-container>
+                                                </ng-container>
+                                                <td class="textright">
+                                                    <span *ngIf="i==5">
+                                                        ({{selectedPOPDetails.TaxName}}%)
+                                                    </span>
+                                                    <span *ngIf="(i!=2&&i!=6) || IsViewMode">
+                                                        {{rowData.get('Total').value | number:'1.2-2' |
+                                                        negativeInParenthesis }}
+                                                    </span>
+                                                    <input currencyMask [options]="options2precision"
+                                                        *ngIf="i==2 && !IsViewMode && selectedPOPDetails.IsRetentionApplicable"
+                                                        formControlName="Total" (keydown)="restrictMinusValue($event)"
+                                                        (blur)="CalculatePaymentSummary();this.validateRetentionRelease()"
+                                                        style="text-align: right;float:left;width:99%;"
+                                                        class="form-control" />
+                                                    <input *ngIf="i==6 && !IsViewMode" currencyMask
+                                                        [options]="options2precision"
+                                                        (blur)="CalculatePaymentSummary();" formControlName="Total"
+                                                        class="form-control">
+                                                    <div
+                                                        *ngIf="i==6 && rowData.get('Total') && rowData.get('Total').errors!=null && rowData.get('Total').touched==true">
+                                                        <span class="errorMessage"
+                                                            *ngIf="rowData.get('Total').errors.required">
+                                                            Tax Adjustment cannot be greater than 0.99
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td class="textright">
+                                                    <span>
+                                                        {{rowData.get('CurrentPayment').value | number:'1.2-2' |
+                                                        negativeInParenthesis }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-6 form-label">
+                                Previous Payment (w/o Tax)
+                            </label>
+                            <label class="col-form-label col-xl-2 col-sm-6 col-6">
+                                <b> {{PreviousPaymentWOTax | number:'1.2-2'}}</b>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <br />
+                            <div class="col-12" style="margin-top:2%;">
+                                <h3 class="form-heading" style="float:none;">Distribution Summary</h3>
+                            </div>
+                            <div class="col-12">
+                                <fieldset formArrayName="POPDistributionSummaryItems">
+                                    <p-table [columns]="POPDistributionSummaryColumns" sortMode="single"
+                                        [value]="selectedPOPDetails.POPDistributionSummaryItems">
+                                        <ng-template pTemplate="emptymessage">
+                                            <tr>
+                                                <td colspan="5" style='text-align: center;'>
+                                                    <b>{{ gridNoMessageToDisplay }}</b>
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="colgroup" let-columns>
+                                            <colgroup>
+                                                <ng-template ngFor let-data [ngForOf]="POPDistributionSummaryColumns">
+                                                    <col colspan="1" [style.width]="data.width">
+                                                </ng-template>
+                                            </colgroup>
+                                        </ng-template>
+                                        <ng-template pTemplate="header" let-columns>
+                                            <tr>
+                                                <ng-template ngFor let-data [ngForOf]="POPDistributionSummaryColumns">
+                                                    <th style="text-align: center;" [pSortableColumn]="data.field">
+                                                        {{data.header}}
+                                                        <p-sortIcon [field]="data.field">
+                                                        </p-sortIcon>
+                                                    </th>
+                                                </ng-template>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-rowData let-i="rowIndex"
+                                            let-columns="columns">
+                                            <tr [formGroupName]="i">
+                                                <td> {{ i + 1 }} </td>
+                                                <td> {{ rowData.LocationName }} </td>
+                                                <td align="right">{{ rowData.DistributionPercentage }} %</td>
+                                                <td align="right">{{ rowData.PayContractAmount| number:'1.2-2' }}</td>
+                                                <td align="right">{{ rowData.ThisCertification | number:'1.2-2' }}</td>
+                                                <td align="right">{{ rowData.RetentionAmount| number:'1.2-2' }}</td>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="footer" let-columns>
+                                            <tr>
+                                                <td>Total</td>
+                                                <td></td>
+                                                <td align="right">{{distributionPercentageSum| number:'1.2-2'}} %</td>
+                                                <td align="right">{{payContractSum | number:'1.2-2'}}</td>
+                                                <td align="right">{{certificationSum| number:'1.2-2'}}</td>
+                                                <td align="right">{{retentionSum | number:'1.2-2'}}</td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                </fieldset>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="row" style="margin-top:3em;">
+                                <div class="col-12">
+                                    <h4 class="form-heading">Attachments</h4>
+                                </div>
+                                <div class="col-12 attachments" *ngIf="selectedPPCDetails!=undefined">
+                                    <ul>
+                                        <ng-template ngFor let-data [ngForOf]="selectedPPCDetails.Attachments"
+                                            let-i="index">
+                                            <li *ngIf="data.IsDelete!=true||data.IsDelete==undefined">
+                                                <span class="attcmnts">
+                                                    <span class="displayFileName" style="word-wrap:break-word">
+                                                        {{ data.FileName }}
+                                                    </span>
+                                                    <a style="color:black;" target="_blank"
+                                                        href="{{apiEndPoint}}/DownloadAttachedFiles?AttachmentId={{ data.AttachmentId }}&AttachmentTypeId={{ data.AttachmentTypeId }}&FileName={{data.FileName|encodeURIComponent}}&RecordId={{data.RecordId}}">
+                                                        <i class="fa fa-download"></i>
+                                                    </a>
+                                                    &nbsp;&nbsp;
+                                                    <i *ngIf="!IsViewMode" (click)="attachmentDelete(i)"
+                                                        class="fa fa-trash">
+                                                    </i>
+                                                </span>
+                                            </li>
+                                        </ng-template>
+                                    </ul>
+                                </div>
+                                <div class="col-12" *ngIf="!IsViewMode">
+                                    <div class="col-12">
+                                        <input style="height: 30px" type="file" multiple
+                                            (change)="onFileUploadChange($event)" name="file">
+                                    </div>
+                                    <div class="col-12">
+                                        <ul class="fileList">
+                                            <li *ngFor="let data of uploadedFiles;let i = index">
+                                                <span>
+                                                    <span class="fileName" style="word-wrap:break-word">
+                                                        {{ data.name }}
+                                                    </span>
+                                                    <i class="fa fa-close" (click)="onFileClose(i)"></i>
+                                                </span>
+                                                <br>
+                                                <span class="fileSize">{{ data.size/1024 }} KB</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-xl-12 col-sm-12 col-12"
+                                *ngIf="selectedPPCDetails.WorkFlowStatusId==workFlowStatus.Void">
+                                <h4 class="form-heading">Reasons To Void</h4>
+                                <div class="col-12">
+                                    <span class="descriptionStyle" showmore
+                                        [value]="selectedPPCDetails.ReasonsToVoid"></span>
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-sm-12 col-12"
+                                *ngIf="(selectedPPCDetails.WorkFlowStatusId == workFlowStatus.Rejected)">
+                                <h4 class="form-heading">Reasons To Reject</h4>
+                                <div class="col-12">
+                                    <span class="descriptionStyle" showmore
+                                        [value]="selectedPPCDetails.ReasonsToReject"></span>
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-sm-12 col-12"
+                                *ngIf="selectedPPCDetails.WorkFlowStatusId==workFlowStatus.AskedForClarification||selectedPPCDetails.WorkFlowStatusId==workFlowStatus.WaitingForApproval">
+                                <h4 class="form-heading">Approval Remarks</h4>
+                                <div>
+                                    <textarea formControlName="ApprovalRemarks" class="form-control"
+                                        style="width:70%;display:inline-block ">
+                                        </textarea>
+                                    <button type="submit"
+                                        (click)="updateStatus(isApprovalPage?workFlowStatus.AskedForClarification:workFlowStatus.WaitingForApproval)"
+                                        style="float:inherit;vertical-align: top;" class="btn btn-edit">
+                                        <i class="fa fa-envelope" aria-hidden="true"></i>
+                                        <span *ngIf="isApprovalPage">
+                                            {{ selectedPPCDetails.WorkFlowComments|ApprovalButton }}
+                                        </span>
+                                        <span *ngIf="!isApprovalPage">
+                                            Reply
+                                        </span>
+                                    </button>
+                                </div>
+                                <div
+                                    *ngIf="PaymentHistoryOrderForm.get('ApprovalRemarks') && PaymentHistoryOrderForm.get('ApprovalRemarks').errors!=null && PaymentHistoryOrderForm.get('ApprovalRemarks').touched==true">
+                                    <span class="errorMessage"
+                                        *ngIf="PaymentHistoryOrderForm.get('ApprovalRemarks').errors.required">Approval
+                                        Remarks is Required</span>
+                                </div>
+                            </div>
+                            <div *ngIf="selectedPPCDetails.ReasonsToCancel!=undefined && selectedPPCDetails.ReasonsToCancel.length >0"
+                                class="col-xl-12 col-sm-12 col-12">
+                                <h4 class="form-heading">Reason for Cancel approval</h4>
+                                <ul>
+                                    <li *ngFor="let record of selectedPPCDetails.ReasonsToCancel">
+                                        <span>{{ record }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div *ngIf="selectedPPCDetails.WorkFlowComments!=undefined && selectedPPCDetails.WorkFlowComments.length >0"
+                                class="col-xl-12 col-sm-12 col-12">
+                                <!-- <label class="col-form-label form-label">Previous Comments</label> -->
+                                <h4 class="form-heading">Previous Comments</h4>
+                                <ul>
+                                    <li *ngFor="let record of selectedPPCDetails.WorkFlowComments">
+                                        <span class='remarksUserName'>{{ record.UserName }}</span> -
+                                        <span class='remarksDate'>{{ record.CreatedDate|date:'dd-MM-yyyy h:mm:ss a'
+                                            }}</span>:
+                                        <br>
+                                        <span>{{ record.Remarks }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-xl-12 col-sm-12 col-12">
+                                <app-payment-details [DocumentId]="paymentContractId" [ProcessId]="24"
+                                    [CompanyId]="companyId" [changing]="changingValue" [CurrencySymbol]="">
+                                </app-payment-details>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div *ngIf="projectMasterContractId>0 ||paymentContractId>0" class="col-12">
+                            <div *ngIf="!isApprovalPage" class="form-group text-right btn-list">
+                                <button type="submit" *ngIf="!IsViewMode && hasWorkFlow" (click)="saveRecord('save')"
+                                    class="btn btn-save">
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                    {{paymentContractId==0? 'Save':'Update'}}
+                                </button>
+                                <button type="submit"
+                                    *ngIf="isSameUSer && sendForApprovalPermission && hasWorkFlow && (selectedPPCDetails.WorkFlowStatusId==0||selectedPPCDetails.WorkFlowStatusId==21||selectedPPCDetails.WorkFlowStatusId==workFlowStatus.Draft)"
+                                    (click)="saveRecord('send')" class="btn btn-approve">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Send for Approval</button>
+                                <button type="submit"
+                                    *ngIf="isSameUSer && IsViewMode && editPermission && (selectedPPCDetails.WorkFlowStatusId==workFlowStatus.Draft || selectedPPCDetails.WorkFlowStatusId==21)"
+                                    (click)="editRecord()" class="btn btn-edit">
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                                <button type="submit"
+                                    *ngIf="(selectedPPCDetails.WorkFlowStatusId==workFlowStatus.WaitingForApproval||selectedPPCDetails.WorkFlowStatusId==workFlowStatus.AskedForClarification) && isSameUSer"
+                                    (click)="onRejectClick(workFlowStatus.CancelledApproval)" class="btn btn-cancel">
+                                    <i class="fa fa-times-circle" aria-hidden="true"></i> Cancel Approval</button>
+                                <button type="submit" (click)="onRejectClick(workFlowStatus.Void)"
+                                    *ngIf="selectedPPCDetails.CanVoidable && voidPermission" class="btn btn-cancel">
+                                    <i class="fa fa-ban" aria-hidden="true"></i> Void</button>
+                                <button type="submit" (click)="onCancelClick()" class="btn btn-cancel">
+                                    <i class="fa fa-window-close" aria-hidden="true"></i> Close</button>
+                            </div>
+                            <div *ngIf="isApprovalPage" class="form-group text-right btn-list">
+                                <button type="submit" (click)="onVerify()" class="btn btn-save"
+                                    *ngIf="verifyPermission && isApproverUser &&!doUpdate && (selectedPPCDetails.WorkFlowStatusId!=18 && selectedPPCDetails.WorkFlowStatusId!=20)">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Verify</button>
+                                <button type="submit" *ngIf="doUpdate  && isApproverUser" (click)="saveRecord('verify')"
+                                    class="btn btn-save">
+                                    <i class="fa fa-check" aria-hidden="true"></i>Update</button>
+                                <button type="submit" (click)="onApproveClick('approve')"
+                                    *ngIf="approvePermission  && isApproverUser" class="btn btn-approve">
+                                    <i class="fa fa-check" aria-hidden="true"></i>Approve</button>
+                                <button type="submit" (click)="onRejectClick(workFlowStatus.Rejected)"
+                                    *ngIf="approvePermission  && isApproverUser" class="btn btn-delete">
+                                    <i class="fa fa-ban" aria-hidden="true"></i> Reject</button>
+                                <button type="submit" (click)="onCancelClick()" class="btn btn-cancel">
+                                    <i class="fa fa-ban" aria-hidden="true"></i> Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <p-dialog header="Validations" width="500" modal='true' [(visible)]="showValidationPopup">
+        <div class="form-group row">
+            <div class="col-xl-8 col-sm-6 col-6">
+                <div>Max allowed retention value is {{selectedPOPDetails.RetentionMaxLimit | number:'1.2-2'}}.</div>
+                <div>Previous retention value is {{previousRetentionSum | number:'1.2-2'}}.</div>
+                <div>Current retention value is {{currentRetentionSum | number:'1.2-2'}}.</div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <button style='left:84%;position: relative;' (click)="closeValidationPopUp()" class="btn btn-save">
+                Ok
+            </button>
+        </div>
+    </p-dialog>
+    <p-dialog header="Validations" width="500" modal='true' [(visible)]="showMandatoryPopup">
+        <div class="form-group row">
+            <div class="col-xl-8 col-sm-6 col-6">
+                Enter either Current Payment amount or Retention Release amount.
+            </div>
+        </div>
+        <div class="form-group row">
+            <button style='left:84%;position: relative;' (click)="closeValidationPopUp()" class="btn btn-save">
+                Ok
+            </button>
+        </div>
+    </p-dialog>
+    <p-dialog header="Validations" width="500" modal='true' [(visible)]="showRetentionReleasePopup">
+        <div class="form-group row">
+            <div class="col-xl-8 col-sm-6 col-6">
+                {{RetentionValidationMessage}}
+            </div>
+        </div>
+        <div class="form-group row">
+            <button style='left:84%;position: relative;' (click)="closeValidationPopUp()" class="btn btn-save">
+                Ok
+            </button>
+        </div>
+    </p-dialog>
+    <p-confirmDialog></p-confirmDialog>
+    <app-auditlog *ngIf="showLogPopUp" (hideLogPopUp)="hideLogPopUp($event)" [DocumentId]="paymentContractId"
+        [DocumentNumber]="selectedPPCDetails.DocumentCode" [PageName]="'ProjectPaymentContract'" [DocType]="'PPC'"
+        [showLogPopUp]="showLogPopUp">
+    </app-auditlog>
+    <p-dialog [header]="VoidOrRejectHeader" width="500" modal='true' [(visible)]="showVoidOrRejectPopup">
+        <div class="form-group row">
+            <div class="col-xl-12 col-sm-12 col-12">
+                <textarea class="form-control" #reason></textarea>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-xl-12 col-sm-12 col-12">
+                <button style="float: left;" (click)="onVoidOrRejectClick(reason,StatusId)" class="btn btn-save">
+                    Ok
+                </button>
+                <button style="float: left;" (click)="closeValidationPopUp()" class="btn btn-cancel">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </p-dialog>

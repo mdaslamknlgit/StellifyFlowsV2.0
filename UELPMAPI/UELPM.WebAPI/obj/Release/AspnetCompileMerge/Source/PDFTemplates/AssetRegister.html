@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500" rel="stylesheet" />
+    <title>Asset Register</title>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            padding: 0px;
+            margin: 0px
+        }
+
+        .form-label {
+            color: #01548e;
+        }
+
+        .form-table td {
+            height: 30px;
+            vertical-align: top;
+        }
+
+        .form-heading {
+            color: #01548e;
+            font-size: 18px;
+            display: inline-block;
+            border-bottom: 1px solid #01548e;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .footer td {
+            background: #111;
+            color: #fff;
+            position: relative;
+            z-index: 99;
+            text-align: right;
+            height: 61px;
+            line-height: 61px;
+            width: 100%;
+            font-size: 12px;
+            font-weight: 300;
+        }
+
+        .nowrap {
+            white-space: nowrap
+        }
+    </style>
+</head>
+
+<body>
+    <table border="0" align="center" style="border-bottom:2px solid #000;line-height:22px; font-size:13px;width:100%">
+        <tr>
+            <td valign="top" width="16%"><img style="width: 200px; height: 70px;" src="[[LogoURL]]" alt="logo" /></td>
+            <td valign="top" align="center" width="61%">
+                <div style="padding-bottom:8px; text-align:center;"> [[CompanyName]].</div>
+                <div style="padding-bottom:8px;text-align:center;">[[CompanyDescription]]</div>
+                <div style="padding-bottom:8px;text-align:center;">Original</div>
+                <div style="padding-bottom:8px;text-align:center;"><b>[[Title]]</b></div>
+            </td>
+            <td valign="top" width="23%">
+                <div style="padding-bottom:8px; text-align:left;"> [[Address1]]</div>
+                <div style="padding-bottom:8px;text-align:left;"> [[Address2]]</div>
+                <div style="padding-bottom:8px;text-align:left;">[[Country]] [[ZipCode]]</div>
+                <div style="padding-bottom:8px;text-align:left;">Tel: [[Telephone]]</div>
+                <div style="padding-bottom:8px;text-align:left;">Fax: [[Fax]]</div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3"><span style="color: #01548e;">Company Reg. Number: </span> [[CompanyRegNumber]]</td>
+        </tr>
+    </table>
+    <hr />
+    <table border="1" cellpadding="3" cellspacing="0" style="margin-bottom:20px;width:100%">
+        <thead>
+            <tr>
+                <th width="10%" class="reportField textHeader">S.no.</th>
+                <th width="10%" class="reportField textHeader">Asset Name</th>
+                <th width="10%" class="reportField textHeader">Bar Code</th>
+                <th width="10%" class="reportField textHeader">Purchased Date</th>
+                <th width="10%" class="reportField textHeader">Supplier</th>
+                <th width="10%" class="reportField textHeader">Invoice Number</th>
+                <th width="10%" class="reportField textHeader">Salvage Value</th>
+                <th width="10%" class="reportField textHeader">Location</th>
+                <th width="10%" class="reportField textHeader">Purchase Value</th>
+                <th width="10%" class="reportField textHeader">Current Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each Assets}}
+            <tr>
+                <td class="reportField">{{SerialNumber}}</td>
+                <td class="reportField">{{Asset.AssetName}}</td>
+                <td class="reportField">{{BarCode}}</td>
+                <td align="center" class="reportField">{{PurchasedDateString}}</td>
+                <td class="reportField">{{Supplier.SupplierName}}</td>
+                <td class="reportField">{{Invoice.InvoiceCode}}</td>
+                <td align="right" class="reportField">{{SalvageValue}}</td>
+                <td class="reportField">{{Location.Name}}</td>
+                <td align="right" class="reportField">{{CurrencySymbol}}{{PurchasedValue}}</td>
+                <td align="right" class="reportField">{{CurrencySymbol}}{{CurrentValue}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</body>
+</html>

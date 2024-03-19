@@ -1,0 +1,11 @@
+.linesToAdd
+{
+    width: 5%;
+    height: 24px;
+    padding: 3px;
+    display:inline-block;
+    font-size: 12px;
+}
+.error{float:left; width:100%;  color:red;}
+:host ::ng-deep .ui-dialog .ui-dialog-content { overflow: inherit;}
+:host ::ng-deep .importassets th {word-break: break-all;}

@@ -1,0 +1,112 @@
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-md-12 col-sm-12 padding-null tittlediv">
+          <div class="flexrow space-between align-center">
+              <h3 class="item-heading"> CRM - Connections Details</h3>
+              <div> 
+                <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickBack($event)">
+                    <i class="fa fa-arrow-left" ria-hidden="true" aria-hidden="true"></i> Back</button>                    
+
+              </div>
+          </div>
+          <hr style="margin-top: 0px;" />
+      </div>
+  </div>
+
+  <!-- Connection Dashboard Starts Here -->
+  <div class="row">
+      <!-- <div class="col-md-6 ">
+        <div class="box">
+          <div class="row">
+            <div class="col-lg-6 col-sm-6 innerbox">
+              <div class="reservation flexbox">
+                <img src="assets/images/purchaseimg.png">
+                <div class="dashboad-info">
+                  <h4>{{Total0}}</h4>
+                  Purchase <br /> Orders
+                </div>
+              </div>
+            </div>
+    
+            <div class="col-lg-6 col-sm-6 innerbox ">
+              <div class="services flexbox">
+                <img src="assets/images/expensesimg.png">
+                <div class="dashboad-info">
+                  <h4>{{Total1}}</h4>
+                  Expenses <br /> Purchase Orders
+                </div>
+              </div>
+            </div>
+    
+
+          </div>
+        </div>
+      </div> -->
+  </div>
+  <br clear="all">
+  <div class="clear"></div>
+  <!-- Connection Dashboard Ends Here -->
+
+  <!-- Edit Form Starts Here -->
+  <div class="row">
+    <h3 class="item-heading"> Total Emails : {{totalEmails}}    List Name : {{ListName}} </h3>
+  </div>
+   
+  <div class="row">
+      <!-- Table Starts Here -->
+      <div class="respnsive-table tablescroll p-datatable-wrapper">
+        <p-table #PurchaseOrderListTable dataKey="DraftCode" [rowHover]="true" [filterDelay]="0"
+            [globalFilterFields]="['DraftCode', 'SupplierName']" [columns]="ConnectionsListsCols"
+            [value]="ConnectionsEmailLists" [rows]="this.ConnectionsPagerConfig.RecordsToFetch" [scrollable]="true"
+            [scrollHeight]="'calc(100vh - 300px)'" scrollWidth="100%" [virtualRowHeight]="30"
+            [virtualScroll]="true" sortMode="multiple" responsiveLayout="scroll"
+              [paginator]="false"
+            
+            [rowsPerPageOptions]="[5,10,15,25,50,75,100]">
+            <ng-template pTemplate="header" let-columns>
+                <tr style="height: 40px;">
+                    <th *ngFor="let col of ConnectionsListsCols;let i=index"
+                        [pSortableColumn]="col.field">
+                        {{col.header}}
+                        <p-sortIcon [hidden]="i==0" *ngIf="i!=ConnectionsListsCols.length-1"
+                            [field]="col.field"></p-sortIcon>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="colgroup" let-columns>
+                <colgroup>
+                    <col *ngFor="let col of columns" [style.width]="col.width">
+                </colgroup>
+            </ng-template>
+            <ng-template pTemplate="body" let-value let-columns let-i="rowIndex">
+                <tr style="height:30px" [pSelectableRow]="rowData">
+                    <td>{{value.Regarding}}</td>
+                    <td>{{value.FirstName}}</td>
+                    <!-- <td>{{value.CreatedDate | date: 'yyyy-MM-dd'}}</td> -->
+                    <td>{{value.LastName }}</td>
+                    <td>{{value.Company }}</td>
+                    <td>{{value.Title }}</td>
+                    <td>{{value.Email }}</td>
+                    <td class="aligncenter">
+                        <!-- <button type="button" class="btn"
+                            (click)="RedirectPurchaseOrder(value.PurchaseOrderId,value.POTypeId,value.SupplierId)">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                        </button> -->
+                    </td>
+                </tr>
+
+            </ng-template>
+            <ng-template pTemplate="emptymessage" let-columns>
+                <tr>
+                    <td [attr.colspan]="ConnectionsLists.length">
+                        No records found
+                    </td>
+                </tr>
+            </ng-template>
+            
+        </p-table>
+      </div>
+    <!-- Table Ends Here -->
+  </div>
+  <!-- Edit Form Ends Here -->
+</div>

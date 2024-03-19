@@ -1,0 +1,278 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500" rel="stylesheet" />
+    <title>Fixed Asset Purchase Order</title>
+    <style>
+        body {
+            font-family: Arial;
+            font-size: 10px;
+            padding: 0px;
+            margin: 0px
+        }
+
+        .form-label {
+            color: #01548e;
+        }
+
+        .form-size {
+            font-size: 10px;
+            font-family: Arial;
+        }
+
+        .form-table td {
+            vertical-align: top;
+            padding: 0px;
+        }
+
+        .form-heading {
+            color: #01548e;
+            font-size: 18px;
+            display: inline-block;
+            border-bottom: 1px solid #01548e;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .footer td {
+            background: #111;
+            color: #fff;
+            position: relative;
+            z-index: 99;
+            text-align: right;
+            height: 61px;
+            line-height: 61px;
+            width: 100%;
+            font-size: 12px;
+            font-weight: 300;
+        }
+
+        .nowrap {
+            white-space: nowrap
+        }
+    </style>
+</head>
+
+<body>
+    <table style="width:100%; margin-bottom:20px" align="center" border="0">
+        <tr>
+            <td width="40%" valign="top">
+
+                <table class="form-table" cellpadding="0" cellspacing="0" style="width:100%" border="0">
+
+                    <tr class="form-group row" style="font-family:Arial;font-size:11px;">
+                        <td width="30%"><b>Supplier </b></td>
+                        <td width="2%">:</td>
+                        <td width="68%" style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word"><b>[[SupplierName]]</b></td>
+
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td>Address </td>
+                        <td>:</td>
+                        <td>[[SupplierAddress]]</td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td>Attention to </td>
+                        <td>:</td>
+                        <td>[[ContactName]]</td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td>Telephone no</td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[ContactNumber]]</td>
+                    </tr>
+
+                </table>
+            </td>
+
+            <td width="20%"> </td>
+            <td width="40%" valign="top">
+
+                <table style="width:100%" cellpadding="0" cellspacing="0" border="0" class="form-table">
+                    <tr class="form-group row form-size">
+                        <td width="30%">Date </td>
+                        <td width="2%">:</td>
+                        <td width="68%" colspan="2" style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[CreatedDate]]</td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td colspan="1">Delivery Address </td>
+                        <td>:</td>
+                        <td colspan="2">[[DeliveryAddress]]</td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td>Prepared By </td>
+                        <td>:</td>
+                        <td colspan="2" style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[RequestedByUserName]] </td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td>Currency</td>
+                        <td>:</td>
+                        <td width="40%" style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[CurrencyCode]]</td>
+                        <td>Terms : &nbsp;  [[PaymentTerms]]</td>
+
+                    </tr>
+
+                </table>
+                <br />
+            </td>
+
+        </tr>
+        <tr>
+            <td colspan="3">
+                <br />
+                <!--<h4 class="form-heading" style="text-decoration:underline;">Asset Details</h4>-->
+            </td>
+        </tr>
+
+
+        <tr>
+            <td colspan="3">
+                <table class="form-size" border="1" cellpadding="3" cellspacing="0" style="margin-bottom:20px; width:100%">
+                    <thead>
+                        <tr>
+                            <th width="7%" align="center" class="reportField textHeader"><b>No.</b></th>
+                            <!--<th width="12%" class="reportField textHeader">Type</th>-->
+                            <!--th width="14%" align="center" class="reportField textHeader">Item</th>-->
+                            <th width="43%" align="center" class="reportField textHeader"><b>Description</b></th>
+                            <th width="14%" align="center" class="reportField textHeader"><b>Qty</b></th>
+                            <th width="15%" align="center" class="reportField textHeader"><b>Unit Price ([[Currency]]) </b></th>
+                            <!--<th width="11%" align="center" class="reportField textHeader">Discount</th>-->
+                            <!--<th width="18%" align="center" class="reportField textHeader"><b>GST%</b></th>-->
+                            <th width="21%" align="center" class="reportField textHeader"><b>Total ([[Currency]])</b></th>
+                        </tr>
+                    </thead>
+                    <tbody class="form-size">
+                        {{#each FixedAssetDetails}}
+                        <tr>
+                            <td align="center" class="reportField">{{ItemId}}</td>
+                            <!--<td class="reportField">{{Type}}</td>-->
+                            <!--<td align="center" class="reportField">{{AssetName}}</td>-->
+                            <td align="left" class="reportField">{{AssetDescription}}</td>
+                            <td align="center" class="reportField">{{AssetQty}}</td>
+                            <td align="right" class="reportField">{{Unitprice}}</td>
+                            <!--<td align="center" class="reportField">{{Discount}}</td>-->
+                            <!--<td align="right" class="reportField">{{TaxTotal}}</td>-->
+                            <td align="right" class="reportField">{{Total}}</td>
+                        </tr>
+                        {{/each}}
+
+
+
+                    </tbody>
+                </table>
+                <table class="form-size" border="0" cellpadding="3" cellspacing="0" style=" width:100%;table-layout:fixed">
+                    <tr>
+                        <td rowspan="4" colspan="4" width="100%">
+
+                            <table style="width:100%;" border="0">
+                                <tr>
+                                    <td style="white-space:nowrap" width="98%">
+
+                                        <div class="row">
+
+                                            <h4 style="margin:0px;padding:0px; text-decoration:underline; margin-bottom:10px;font-family:Arial;font-size:11px;"><b>Instructions To Vendor</b></h4>
+
+
+                                            <table border="1" cellpadding="1" cellspacing="0" style="width:100%">
+                                                <tr><td valign="top" style="height:50px;font-family:Arial;font-size:10px;">[[Instructions]] &nbsp; </td></tr>
+                                            </table>
+
+
+
+
+                                        </div>
+
+
+                                    </td>
+
+
+
+                                </tr>
+
+                            </table>
+
+
+                        </td><!--instructions end here -->
+
+                        <td width="18%" align="right">Total</td>
+                        <td width="8%"> </td>
+                        <td width="21%" align="right">[[Currency]] [[TotalItems]]</td>
+                    </tr>
+                    <tr>
+                        <td align="right">Discount</td>
+                        <td> </td>
+                        <td align="right">
+                            <table style="border-bottom: 1px solid #000000; width:100%;margin-left:50px;  padding-bottom:5px;text-align:right;font-size:10px;">
+                                <tr>
+                                    <td> [[Currency]] [[TotalDiscount]] </td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+                    <tr>
+
+                        <td align="right">Total Before GST</td>
+                        <td> </td>
+                        <td align="right">[[Currency]] [[TotalBeforeGST]]</td>
+                    </tr>
+                    <tr>
+                        <td align="right">GST([[GstAmount]])%</td>
+                        <td> </td>
+                        <td align="right">
+                            <table style="border-bottom: 1px solid #000000; width:100%;   padding-bottom:5px;text-align:right;font-size:10px;">
+                                <tr>
+                                    <td>  [[Currency]] [[GSTAmount]]  </td>
+                                </tr>
+                            </table>
+
+
+                        </td>
+                    </tr>
+
+
+
+
+                    <tr>
+                        <td align="left" colspan="4">[[AmountinWords]]</td>
+                        <td align="right">Grand Total</td>
+                        <td> </td>
+                        <td align="right">
+                            <table style="border-bottom: 1px solid #000000; width:100%; padding-bottom:5px;text-align:right;font-size:10px;">
+                                <tr>
+                                    <td> [[Currency]] [[TotalAmount]]  </td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="2"></td>
+        </tr>
+
+
+
+
+        <tr class="row">
+
+            <td colspan="2"></td>
+        </tr>
+
+
+    </table>
+
+
+    <br /> <br />
+    <div style="padding-bottom:8px;  text-align:left;font-family:Arial;font-size:9px">
+        Please contact <b>([[RequestedByUserName]])</b> at DID:65 [[RequestorContactNo]] or email to <b>[[RequestorEmailID]]</b> for further clarification.
+    </div>
+    <div style="padding-bottom:8px;text-align:left;font-family:Arial;font-size:9px">
+        <b>This is computer generated Purchase Order, no signature is required</b>
+    </div>
+</body>
+</html>

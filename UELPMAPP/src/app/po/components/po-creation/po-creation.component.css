@@ -1,0 +1,204 @@
+.nowrap{ white-space: nowrap;}
+.table-subtotal {border-collapse: collapse}
+.table-subtotal td{ border: inherit}
+.table-totalamount td{ border: inherit;}
+.gridSaveIcon,.gridEditIcon,.gridCancelIcon,.gridRemoveIcon
+{
+    font-size:18px;
+    cursor: pointer;
+    position: relative;
+}
+.gridIconsStyle
+{
+    float: left;
+    top: 5px;
+    position: relative;
+    left: 7%;
+}
+.table tr .gridIconsStyle
+{
+    display:none;
+}
+.table tr:hover .gridIconsStyle
+{
+    display:block;
+}
+.fileList
+{   
+    width:100%;
+}
+.fileList li
+{
+    padding: 1em;
+    background-color: #fff;
+    border:1px solid #e6e6e6; 
+}
+.fileList .fileName
+{
+    font-weight: bold;
+}
+.fileList .fileSize
+{
+    color:#afa5a5;
+}
+.fileList .fa.fa-close
+{
+    font-size: 16px;
+    float: right;
+    color:#afa5a5;
+    cursor: pointer;
+}
+.displayFileName
+{
+    display: inline-block;
+    padding:1em;
+}
+.attachments .fa
+{
+    font-size:16px;
+    cursor: pointer;
+}
+
+.addLine
+{
+    background: #01548e;
+    color: white;
+    border: 1px solid #01548e;
+    cursor: pointer;
+    border-radius: 3px;
+    margin-left: 3px;
+
+}
+.fullScreenLabel
+{
+    display:none;
+}
+.ui-table-summary 
+{
+    text-align: left;
+}
+.linesToAdd
+{
+    width: 5%;
+    height: 24px;
+    padding: 3px;
+    display:inline-block;
+    font-size: 12px;
+}
+.showMore,.showLess
+{
+  color:blue;
+  cursor: pointer;
+}
+.showLessContent
+{
+   overflow:"hidden";
+   height:18px;
+}
+
+:host ::ng-deep  button .disabled{ color:#afa5a5; }
+.container-fluid
+{
+    width:98% !important;
+    padding-right: 4px !important;
+    padding-left: 4px !important;
+}
+
+/* process step bar start   */
+
+ /*
+.md-stepper-horizontal {
+	display:table;
+	width:100%;
+	margin:0 auto;
+ 
+}
+.md-stepper-horizontal .md-step {
+	display:table-cell;
+	position:relative;
+	padding:5px; width: 33.333%;
+}
+ 
+   
+.md-stepper-horizontal .md-step:hover .md-step-circle {
+	background-color:#757575;
+}
+.md-stepper-horizontal .md-step:first-child .md-step-bar-left,
+.md-stepper-horizontal .md-step:last-child .md-step-bar-right {
+	display:none;
+}
+.md-stepper-horizontal .md-step .md-step-circle {
+	width:30px;
+	height:30px;
+	margin:0 auto;
+	background-color:#2c5aa7;
+	border-radius: 50%;
+	text-align: center;
+	line-height:30px;
+	font-size: 16px;
+	font-weight: 600;
+	color:#FFFFFF;
+}
+.md-stepper-horizontal .md-step.green .md-step-circle {
+    background-color:green;
+    
+}
+.md-stepper-horizontal .md-step.green .md-step-title { 
+    color: green;
+}
+.md-stepper-horizontal .md-step.orange .md-step-circle {
+    background-color:orange;
+    
+}
+.md-stepper-horizontal .md-step.orange .md-step-title { 
+    color: orange;
+}
+
+.md-stepper-horizontal .md-step.active .md-step-circle {
+	background-color: #2c5aa7;
+}
+ 
+ 
+.md-stepper-horizontal .md-step .md-step-title {
+	margin-top:5px;
+	font-size:16px;
+	font-weight:600;
+}
+.md-stepper-horizontal .md-step .md-step-title,
+.md-stepper-horizontal .md-step .md-step-optional {
+	text-align: center;
+	color:rgba(0,0,0,.26);
+}
+.md-stepper-horizontal .md-step.active .md-step-title {
+	font-weight: 600;
+	color:rgba(0,0,0,.87);
+}
+.md-stepper-horizontal .md-step.active.done .md-step-title,
+.md-stepper-horizontal .md-step.active.editable .md-step-title {
+	font-weight:600;
+}
+.md-stepper-horizontal .md-step .md-step-optional {
+	font-size:12px;
+}
+.md-stepper-horizontal .md-step.active .md-step-optional {
+	color:rgba(0,0,0,.54);
+}
+.md-stepper-horizontal .md-step .md-step-bar-left,
+.md-stepper-horizontal .md-step .md-step-bar-right {
+	position:absolute;
+	top:20px;
+	height:1px;
+	border-top:1px solid #DDDDDD;
+}
+.md-stepper-horizontal .md-step .md-step-bar-right {
+	right:0;
+	left:50%;
+	margin-left:20px;
+}
+.md-stepper-horizontal .md-step .md-step-bar-left {
+	left:0;
+	right:50%;
+	margin-right:20px;
+}
+
+/*   process step bar end  */

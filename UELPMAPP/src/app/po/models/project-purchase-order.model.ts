@@ -1,0 +1,91 @@
+import { Suppliers } from "../../shared/models/shared.model";
+import { WorkflowAuditTrail } from "./workflow-audittrail.model";
+import { POPDistributionSummary } from "../../po/models/project-contract-master.model";
+export class ProjectPurchaseOrder {
+    public ProjectPurchaseOrderId: number;
+    public POPMasterCode: string;
+    public PoCode: string;
+    public POPCode: String;
+    public DraftCode: string;
+    // public SupplierInvoiceDate: Date;
+    // public SupplierInvoiceNo: string;
+    public JobCompletionDate: Date;
+    public DateOfValuation: Date;
+    public DateOfCertification: Date;
+    public CertificateNumber: number;
+    public ProjectMasterContractId: number;
+    public ContractValueTotal: number;
+    public PrevAccumulatedPaymentTotal: number;
+    public CurrentPaymentTotal: number;
+    public AccumulatedTotal: number;
+    public TaxId: number;
+    public SubjectToRetentionPercentageA1: number;
+    public SubjectToRetentionPercentageA2: number;
+    public SubjectToRetentionAmountA1: number;
+    public SubjectToRetentionAmountA2: number;
+    public NoRetentiontionAmount: number;
+    public RetentionSum: number;
+    public RetentionSumForThismonth: number;
+    public GrandTotal: number;
+    public WorkFlowStatusId: number;
+    public WorkFlowStatus: string;
+    public CreatedBy: number;
+    public CreatedDate: Date;
+    public ProjectPurchaseOrderItems: Array<ProjectPurchaseOrderItems>;
+    public DeletedProjectPurchaseOrderItems: Array<number>;
+    public CompanyId: number;
+    public Supplier: Suppliers;
+    public CommercialDiscount: number;
+    public IsItemised: boolean;
+    public IsRetentionApplicable: boolean;
+    public ProjectName: string;
+    public CurrentApproverUserId:number;
+    public ContractStartDate: Date;
+    public ContractEndDate: Date;
+    public OriginalContractSum:number;
+    public GST: number;
+    public GSTAdjustment: number;
+    public WorkFlowComments:Array<WorkflowAuditTrail>;    
+    public POPDistributionSummaryItems: Array<POPDistributionSummary>;
+    public NoRetentiontionPercentage : number;    
+    public RetionSumCaluculated : number;
+    public GrandTotalRetentionSum : number;
+    public PreviousRetentionAccumulatedSum : number;
+    public TotalReleasedRetentionSum : number;
+    public BalanceRetentionSum : number;
+    public TotalRetentionSumBeforeRelease : number;
+    public PreviousMonthReleaseRetentionSum : number;
+    public NetRetention : number;
+    public CurrentNettRetention : number;
+    public PreviousCertifiedContractSum : number;
+    public CurrentCertificationAmount : number;
+    public PreviousCertifiedGST : number;
+    public PreviousCertifiedGSTAdjustment : number;
+    public PreviousCertificationTotal : number;
+    public PaymentTotal : number;
+}
+
+export class ProjectPurchaseOrderItems {
+    public ProjectPurchaseOrderItemId: number;
+    public ProjectPurchaseOrderId: number;
+    public ItemId: number;
+    public ItemDescription: string;
+    public AccountCodeId: number;
+    public AccountCode: string;
+    public POPCostCategoryId: number; 
+    public TypeOfCost: string;
+    public POPApportionmentId: number;      
+    public ApportionmentMethod: string;
+    public PrevAccumulatedAmount: number;
+    public ContractValue: number;
+    public CurrentPayment: number;
+    public AccumulatedPayment: number;        
+    public OverallStatus: number;
+    // public CreatedBy: number;
+    // public CreatedDate: Date;
+}
+
+export class ProjectPurchaseOrderDisplayResult {
+    public ProjectPurchaseOrders: Array<ProjectPurchaseOrder>;
+    public TotalRecords: number;
+}

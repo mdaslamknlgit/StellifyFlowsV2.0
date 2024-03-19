@@ -1,0 +1,39 @@
+﻿SELECT * FROM
+(SELECT entity.CompanyId,cn.LocationID,entity.companyname AS Entity,  
+                   L.NAME AS Department,  
+                   Format (CN.CreatedDate, 'dd-MM-yyyy') AS Date,  
+       (case when CN.InvoiceId = 0 then 'Without Invoice' else 'With Invoice' end) as CNType,  
+                   ISNULL(CN.DocumentCode,'') as DocumentCode,  
+       ISNULL(I.InvoiceCode,'') as InvoiceCode,    
+                   Concat(entity.companycode, '-', (SELECT  
+                   dbo.Getsuppliercode(s.suppliercode,  
+                   '-')),  
+                   '-00')                                      AS SupplierID,  
+                   s.SupplierName,  
+                   wfstatus.statustext AS Status,  
+  CN.SubTotal as CRNAmountBefTax,  
+                   CN.CreditNoteTotal as CRNAmountWithTax,  
+                   cc.NAME as Currency,  
+       CN.Reasons,  
+       CN.SupplierCreditNoteNo,  
+       ISNULL( Format ( CN.SupplierCreditNoteDate, 'dd-MM-yyyy'),'') AS SupplierCreditNoteDate,  
+                   Concat(requester.firstname, requester.lastname)                    AS                   Requster  ,
+                   wfstatus.workflowstatusid,
+                   requester.userid 
+            FROM   CreditNote AS CN  
+          LEFT JOIN Invoice as I  
+               ON Cn.InvoiceId = I.InvoiceId  
+                   INNER JOIN supplier AS s  
+                           ON CN.SupplierId = s.supplierid  
+                   INNER JOIN company AS entity  
+                           ON CN.companyid = entity.companyid  
+       INNER JOIN DocumentWFStatus as DWFS  
+               on DWFS.DocumentId=CN.CreditNoteId and DWFS.ProcessId = 18  
+                   INNER JOIN workflowstatus AS wfstatus  
+                           ON DWFS.WFStatusId = wfstatus.workflowstatusid  
+                   INNER JOIN userprofile AS requester  
+                           ON CN.createdby = requester.userid  
+                   INNER JOIN location AS L  
+                           ON CN.locationid = L.locationid  
+                   INNER JOIN currencies AS cc  
+                           ON CN.CurrencyType = cc.id) AS T1

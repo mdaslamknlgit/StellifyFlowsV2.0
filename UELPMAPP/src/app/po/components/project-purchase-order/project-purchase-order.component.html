@@ -1,0 +1,1171 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 col-sm-12 padding-null tittlediv">
+            <h3 class="item-heading">
+                <img src="../assets/images/icon1.png">Project Purchase Order</h3>
+        </div>
+        <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+            <img src="../assets/images/add-new.png" (click)="addRecord()" *ngIf="hideText">
+            <img src="../assets/images/grid1.png" (click)="showFullScreen()">
+            <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+                <button class="btn btn-outline-primary" style="background:none;border:none;padding:0px;" id="dropdownBasic1" ngbDropdownToggle>
+                    <img src="../assets/images/grid2.png">
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button class="dropdown-item">Print</button>
+                    <button class="dropdown-item">Email</button>
+                    <button class="dropdown-item">Export</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class='col-lg-3 col-md-4 leftdiv' [CustomSpinner]="showLeftPanelLoadingIcon" cls [class.collapse-leftcol]="leftSection">
+            <div class="left-section">
+                <div class="filter-section" ngbDropdown #myDrop="ngbDropdown">
+                    <div class="left-search">
+                        <input type="text" [(ngModel)]="requestSearchKey" placeholder="Search requests..." (change)="onSearchInputChange($event)"
+                            class="search-filter">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                        <div class="filter-popup" *ngIf="showFilterPopUp" ngbDropdownMenu aria-labelledby="dropdownManual" (click)="$event.stopPropagation(); myDrop.open();">
+                            <form [formGroup]="poFilterInfoForm" class="form-horizontal">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-6 form-label">POPMasterCode</label>
+                                    <div class="col-6">
+                                        <input type="text" #documentCode formControlName="DocumentCode" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-lg-4 col-sm-6 col-6 form-label">Status</label>
+                                    <div class="col-xl-8 col-lg-8 col-sm-6 col-6">
+                                        <select #workFlowStatusDropDown formControlName="WorkFlowStatusId" class="form-control">
+                                            <option value=0>
+                                                Select
+                                            </option>
+                                            <option *ngFor="let record of workFlowStatuses" value={{record.WorkFlowStatusid}}>
+                                                {{record.Statustext}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-6 form-label">Project Name</label>
+                                    <div class="col-6">
+                                        <input type="text" formControlName="ProjectName" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-12 error errorMessage">
+                                        {{filterMessage}}
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12" style="text-align: right">
+                                        <button type="submit" (click)="filterData()" class="btn btn-save">
+                                            <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                        <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                            <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="filter-icon">
+                        <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                            <i class="fa fa-filter" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div style="float:right;margin:0px;" class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+                        <i class="fa fa-undo" aria-hidden="true"></i>
+                    </div>
+                    <div malihu-scrollbar class="filter-scroll" style="width:100%; float:left;">
+                        <table class="table">
+                            <tr [class.activerow]="record.ProjectPurchaseOrderId==selectedPOId" (click)="onRecordSelection(record.ProjectPurchaseOrderId)"
+                                *ngFor="let record of projectPoList">
+                                <td>
+                                    <h5 class="sub-heading">{{ (record.WorkFlowStatusId!=workFlowStatus.Draft) ? record.PoCode:record.DraftCode }}</h5>
+                                    <label class="label-text">Project Name</label> :
+                                    <label class="label-value">{{ record.ProjectName }}</label>
+                                    <br>
+                                    <label class="label-text">Certificate Number</label> :
+                                    <label class="label-value">{{ record.CertificateNumber }}</label>
+                                    <br>
+                                    <label class="label-text">Status</label> :
+                                    <label class="label-value">{{ record.WorkFlowStatus }}</label>
+                                </td>
+                            </tr>
+                        </table>
+                        <div *ngIf="projectPoList.length==0" class="col-12 error listErrorMessage">
+                            {{errorMessage}}
+                        </div>
+                        <ngb-pagination [maxSize]="5" *ngIf="projectPoList.length>0" (pageChange)="pageChange($event)" [collectionSize]="purchaseOrderPagerConfig.TotalRecords"
+                            class="d-flex justify-content-center" [pageSize]="purchaseOrderPagerConfig.RecordsToFetch" [(page)]="currentPage"
+                            [boundaryLinks]="true"></ngb-pagination>
+                    </div>
+                </div>
+            </div>
+            <div class="split-line" (click)="split()"></div>
+        </div>
+        <div #rightPanel class="rightPanel col-lg-9 col-md-8" [class.expand-rightcol]="rightSection">
+            <div [ngClass]="{'hideRightPanel':(projectPoList.length==0 && hideText==true)}">
+                <form [formGroup]="projectPurchaseOrderForm" class="form-horizontal">
+                    <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+                        <div class="row fullScreenLabel">
+                            <div class="col-12">
+                                <h3 class="item-heading" style="float:none;">Project Purchase Order</h3>
+                            </div>
+                        </div>
+                        <div *ngIf="hideInput&&(selectedPODetails.ProjectPurchaseOrderId==0||selectedPODetails.ProjectPurchaseOrderId==null||selectedPODetails.ProjectPurchaseOrderId==undefined)"
+                            class="row">
+                            <div class="col-lg-10">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Project Contract Master</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <!-- <label *ngIf="hideText" class="col-form-label form-text">{{ selectedPODetails.ProjectName }}</label> -->
+                                        <input type="text" class="form-control show" [inputFormatter]="projectContractMasterInputFormater" [ngbTypeahead]="projectContractMasterSearch"
+                                            (selectItem)="projectMasterContractChange($event.item)" [resultTemplate]="projectPOTemplate"
+                                        />
+                                        <span class="errorMessage" *ngIf="projectPurchaseOrderForm.get('ProjectMasterContractId')!=null &&
+                                        projectPurchaseOrderForm.get('ProjectMasterContractId').errors!=null ">
+                                            <span *ngIf="projectPurchaseOrderForm.get('ProjectMasterContractId').errors.required">
+                                                Project contract is required
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group row" *ngIf="projectPurchaseOrderForm.get('ProjectPurchaseOrderId').value > 0">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Purchase Order NO</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text">{{ (selectedPODetails.WorkFlowStatusId!=workFlowStatus.Draft) ? selectedPODetails.POPCode:selectedPODetails.DraftCode
+                                            }}
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Project Name</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text">{{ hideText?selectedPODetails.ProjectName: projectPurchaseOrderForm.get('ProjectName').value
+                                            }}
+                                        </label>
+                                    </div>
+                                </div>
+                                <!-- <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier Id</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text">{{ hideText?(selectedPODetails.Supplier==undefined?"":selectedPODetails.Supplier.SupplierCode)
+                                            :( projectPurchaseOrderForm.get('Supplier').value==undefined?"":projectPurchaseOrderForm.get('Supplier').value.SupplierCode
+                                            ) }}</label>
+                                    </div>
+                                </div> -->
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier Name</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text">{{ hideText?(selectedPODetails.Supplier==undefined?"":selectedPODetails.Supplier.SupplierName)
+                                            : ( projectPurchaseOrderForm.get('Supplier').value==undefined?"": projectPurchaseOrderForm.get('Supplier').value.SupplierName
+                                            ) }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Contract Amount</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text">{{ hideText?selectedPODetails.OriginalContractSum : projectPurchaseOrderForm.get('OriginalContractSum').value
+                                            }}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Contract Start Date</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text">{{ (hideText? selectedPODetails.ContractStartDate!=null ? ( selectedPODetails.ContractStartDate
+                                            |DisplayDateFormat) : "" : projectPurchaseOrderForm.get('ContractStartDate').value
+                                            !=null ? (projectPurchaseOrderForm.get('ContractStartDate').value | DisplayDateFormat)
+                                            : "") }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group row" *ngIf="projectPurchaseOrderForm.get('ProjectPurchaseOrderId').value > 0">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Status</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label *ngIf="selectedPODetails.WorkFlowStatus!=''&&selectedPODetails.WorkFlowStatus!=null" class="col-form-label form-text">{{ selectedPODetails.WorkFlowStatus }}&nbsp;
+                                            <span *ngIf="selectedPODetails.CurrentApproverUserName!=''&&selectedPODetails.CurrentApproverUserName!=null">[{{ selectedPODetails.CurrentApproverUserName }}]</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">PO Type</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text">Project Purchase Order</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Project Number</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text">{{ hideText? selectedPODetails.POPMasterCode : projectPurchaseOrderForm.get('POPMasterCode').value
+                                            }}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Create Date</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text" *ngIf="hideText||(hideInput)">{{ selectedPODetails.CreatedDate|DisplayDateFormat }}</label>
+                                    </div>
+                                </div>
+                                <!-- <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Completion Of Job</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{ selectedPODetails.JobCompletionDate|DisplayDateFormat }}</label>
+                                        <div class="input-group" *ngIf="hideInput">
+                                            <input class="form-control" formControlName="JobCompletionDate" ngbDatepicker #jobCompletionDateDatePicker="ngbDatepicker">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary" (click)="jobCompletionDateDatePicker.toggle()" type="button">
+                                                    <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                                </button>
+                                            </div>
+                                        </div> -->
+                                <!-- <div *ngIf="projectPurchaseOrderForm.get('JobCompletionDate') && projectPurchaseOrderForm.get('JobCompletionDate').errors!=null && projectPurchaseOrderForm.get('JobCompletionDate').touched==true ">
+                                            <span class="errorMessage" *ngIf="projectPurchaseOrderForm.get('JobCompletionDate').errors.required">Job Completion Date is required</span>
+                                        </div> -->
+                                <!-- </div>
+                                </div> -->
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Contract End Date</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text">{{ (hideText? selectedPODetails.ContractEndDate!=null ? ( selectedPODetails.ContractEndDate
+                                            |DisplayDateFormat) : "" : projectPurchaseOrderForm.get('ContractEndDate').value
+                                            !=null ? (projectPurchaseOrderForm.get('ContractEndDate').value | DisplayDateFormat)
+                                            : "") }}
+                                        </label>
+                                    </div>
+                                </div>
+                                <!-- <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier Invoice Date</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">                        
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{ selectedPODetails.SupplierInvoiceDate|DisplayDateFormat }}</label>
+                                        <div class="input-group" *ngIf="hideInput">
+                                            <input class="form-control" formControlName="SupplierInvoiceDate" ngbDatepicker
+                                                #supplierInvoiceDatePicker="ngbDatepicker">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary" (click)="supplierInvoiceDatePicker.toggle()" type="button">
+                                                    <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                                </button>
+                                            </div>
+                                        </div> 
+                                        <div *ngIf="projectPurchaseOrderForm.get('SupplierInvoiceDate') && projectPurchaseOrderForm.get('SupplierInvoiceDate').errors!=null && projectPurchaseOrderForm.get('SupplierInvoiceDate').touched==true ">
+                                            <span class="errorMessage" *ngIf="projectPurchaseOrderForm.get('SupplierInvoiceDate').errors.required">Supplier Invoice Date is required</span>
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <!-- <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier Invoice No</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">                        
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{ selectedPODetails.SupplierInvoiceNo }}</label>
+                                        <input type="text" class="form-control" *ngIf="hideInput" formControlName="SupplierInvoiceNo" />
+                                        <div *ngIf="projectPurchaseOrderForm.get('SupplierInvoiceNo') && projectPurchaseOrderForm.get('SupplierInvoiceNo').errors!=null && projectPurchaseOrderForm.get('SupplierInvoiceNo').touched==true ">
+                                            <span class="errorMessage" *ngIf="projectPurchaseOrderForm.get('SupplierInvoiceNo').errors.required">Supplier Invoice No is required</span>
+                                        </div>
+                                    </div>
+                                </div> -->
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <h3 class="form-heading" style="float:none;">Interim Certificate Details</h3>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Date Of Valuation</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{selectedPODetails.DateOfValuation|DisplayDateFormat }}</label>
+                                        <div class="input-group" *ngIf="hideInput">
+                                            <input class="form-control" formControlName="DateOfValuation" ngbDatepicker #valuationDatePicker="ngbDatepicker">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary" (click)="valuationDatePicker.toggle()" type="button">
+                                                    <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="projectPurchaseOrderForm.get('DateOfValuation') && projectPurchaseOrderForm.get('DateOfValuation').errors!=null && projectPurchaseOrderForm.get('DateOfValuation').touched==true ">
+                                            <span class="errorMessage" *ngIf="projectPurchaseOrderForm.get('DateOfValuation').errors.required">Date Of Valuation is required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Date Of Certification</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{selectedPODetails.DateOfCertifcation|DisplayDateFormat }}</label>
+                                        <div class="input-group" *ngIf="hideInput">
+                                            <input class="form-control" formControlName="DateOfCertification" ngbDatepicker #certificationDatePicker="ngbDatepicker">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary" (click)="certificationDatePicker.toggle()" type="button">
+                                                    <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="projectPurchaseOrderForm.get('DateOfCertification') && projectPurchaseOrderForm.get('DateOfCertification').errors!=null && projectPurchaseOrderForm.get('DateOfCertification').touched==true ">
+                                            <span class="errorMessage" *ngIf="projectPurchaseOrderForm.get('DateOfCertification').errors.required">Date Of Certification is required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Certificate Number</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{ selectedPODetails.CertificateNumber }}</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" *ngIf="hideInput" formControlName="CertificateNumber" />
+                                        </div>
+                                        <div *ngIf="projectPurchaseOrderForm.get('CertificateNumber') && projectPurchaseOrderForm.get('CertificateNumber').errors!=null && projectPurchaseOrderForm.get('CertificateNumber').touched==true ">
+                                            <span class="errorMessage" *ngIf="projectPurchaseOrderForm.get('CertificateNumber').errors.required"> Certification Number is required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 20px">
+                            <div class="col-12">
+                                <h3 class="form-heading" style="float:none;">Line Items</h3>
+                            </div>
+                            <div class="col-12 engineers-assigned" style="padding:0px;">
+                                <div class="col-12">
+                                    <fieldset formArrayName="ProjectPurchaseOrderItems">
+                                        <div style="text-align: center;">
+                                            <span class="errorMessage" *ngIf="showGridErrorMessage1">
+                                                Please Enter Line Items
+                                            </span>
+                                        </div>
+                                        <p-table [columns]="projectPOItemColumns" (sortFunction)="customSort($event)" [customSort]="true" sortMode="single" [value]="hideInput==true?projectPurchaseOrderForm.get('ProjectPurchaseOrderItems')['controls']:selectedPODetails.ProjectPurchaseOrderItems">
+                                            <ng-template pTemplate="emptymessage">
+                                                <tr>
+                                                    <td [colSpan]="projectPOItemColumns.length" style='text-align: center;'>
+                                                        <b>{{ gridNoMessageToDisplay }}</b>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="colgroup" let-columns>
+                                                <colgroup>
+                                                    <ng-template ngFor let-data [ngForOf]="projectPOItemColumns">
+                                                        <col [style.width]="data.width">
+                                                    </ng-template>
+                                                </colgroup>
+                                            </ng-template>
+                                            <ng-template pTemplate="header" let-columns>
+                                                <tr>
+                                                    <th *ngFor="let col of projectPOItemColumns" [pSortableColumn]="col.field">
+                                                        {{col.header}}
+                                                        <span *ngIf="(col.field=='ContractValue')&&selectedPODetails.CurrencySymbol!=null">
+                                                            &nbsp; ( {{ selectedPODetails.CurrencySymbol }} )
+                                                        </span>
+                                                        <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                                    </th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+
+                                                <!-- <ng-container [formGroupName]="i" *ngTemplateOutlet="rowTemplate;context:{ rowData:rowData,i:i }">
+
+                                                </ng-container> -->
+                                                <tr *ngIf="hideInput" [formGroupName]="i">
+                                                    <td>
+                                                        {{ i + 1 }}
+                                                    </td>
+                                                    <td>
+                                                        {{ rowData.get('ItemDescription').value }}
+                                                    </td>
+                                                    <td>
+                                                        {{ rowData.get('AccountCodeName').value }}
+                                                    </td>
+                                                    <td>
+                                                        {{ rowData.get('AccountCode').value }}
+                                                    </td>
+                                                    <td>
+                                                        <select formControlName="TypeOfCost" class="form-control">
+                                                            <ng-template ngFor let-data [ngForOf]="popCostCategories" let-i="index">
+                                                                <option value={{data.POPCostCategoryId}}>
+                                                                    {{data.TypeOfCost}}
+                                                                </option>
+                                                            </ng-template>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select formControlName="ApportionmentId" class="form-control">
+                                                            <ng-template ngFor let-data [ngForOf]="popApportionments" let-i="index">
+                                                                <option value={{data.POPApportionmentId}}>
+                                                                    {{data.Method}}
+                                                                </option>
+                                                            </ng-template>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        {{ rowData.get('ContractValue').value }}
+                                                    </td>
+                                                    <td>
+                                                        {{ rowData.get('PrevAccumulatedAmount').value }}
+                                                    </td>
+                                                    <td>
+                                                        {{ rowData.get('AccumulatedPayment').value - rowData.get('PrevAccumulatedAmount').value }}
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" formControlName="AccumulatedPayment" (keyup)="onPaymentKeyUp($event)" (keydown)="restrictMinusValue($event)"
+                                                            min="0" style="text-align:right;float:left;" class="form-control"
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        {{ (rowData.get('AccumulatedPayment').value/rowData.get('ContractValue').value)|percent:'1.0-2' }}
+                                                    </td>
+                                                </tr>
+                                                <tr *ngIf="hideText">
+                                                    <td>
+                                                        {{ i + 1 }}
+                                                    </td>
+                                                    <td>
+                                                        {{ rowData.ItemDescription }}
+                                                    </td>
+                                                    <td>
+                                                        {{ rowData.AccountCodeName }}
+                                                    </td>
+                                                    <td>
+                                                        {{ rowData.AccountCode }}
+                                                    </td>
+                                                    <td>
+                                                        {{ rowData.CostDescription }}
+                                                    </td>
+                                                    <td>
+                                                        {{ rowData.Method }}
+                                                    </td>
+                                                    <td>
+                                                        {{ rowData.ContractValue }}
+                                                    </td>
+                                                    <td>
+                                                        {{ rowData.PrevAccumulatedValue }}
+                                                    </td>
+                                                    <td>
+                                                        {{ rowData.CurrentPayment }}
+                                                    </td>
+                                                    <td>
+                                                        {{ rowData.AccumulatedPayment }}
+                                                    </td>
+                                                    <td>
+                                                        {{ rowData.OverallStatus }}
+                                                    </td>
+                                                </tr>
+                                                <ng-container *ngIf="(i==(formContentLength-1))">
+                                                    <tr>
+                                                        <td>
+                                                        </td>
+                                                        <td>
+                                                            <b>Sub-Total</b>
+                                                        </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td>
+                                                            {{ hideText? selectedPODetails.ContractValueSubTotal:projectPurchaseOrderForm.get('ContractValueSubTotal').value }}
+                                                        </td>
+                                                        <td>
+                                                            {{ hideText? selectedPODetails.PrevAccumulatedPaymentSubTotal:projectPurchaseOrderForm.get('PrevAccumulatedPaymentSubTotal').value
+                                                            }}
+                                                        </td>
+                                                        <td>
+                                                            {{ hideText? selectedPODetails.CurrentPaymentSubTotal:projectPurchaseOrderForm.get('CurrentPaymentSubTotal').value }}
+                                                        </td>
+                                                        <td>
+                                                            {{ hideText? selectedPODetails.AccumulatedSubTotal:projectPurchaseOrderForm.get('AccumulatedSubTotal').value }}
+                                                        </td>
+                                                        <td>
+                                                            <span *ngIf="hideInput">{{ (projectPurchaseOrderForm.get('AccumulatedSubTotal').value/projectPurchaseOrderForm.get('ContractValueSubTotal').value)|percent:'1.0-2'
+                                                                }}
+                                                            </span>
+                                                            <span *ngIf="hideText">{{ (selectedPODetails.AccumulatedSubTotal/selectedPODetails.ContractValueSubTotal)|percent:'1.0-2'
+                                                                }}
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                        </td>
+                                                        <td>
+                                                            Commerical-discount
+                                                        </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td>
+                                                            {{ hideText? selectedPODetails.CommercialDiscount:projectPurchaseOrderForm.get('CommercialDiscount').value }}
+                                                        </td>
+                                                        <td>
+                                                            {{ hideText? selectedPODetails.PreviousCommercialDiscount:projectPurchaseOrderForm.get('PreviousCommercialDiscount').value }}
+                                                        </td>
+                                                        <td>
+
+                                                        </td>
+                                                        <td>
+                                                            <input *ngIf="hideInput" type="number" class="form-control" [(ngModel)]="commercialDiscount" [ngModelOptions]="{standalone: true}"
+                                                                (keyup)="onDiscountKeyUp($event)" />
+                                                            <span *ngIf="hideText">{{ selectedPODetails.CommercialDiscount }}</span>
+                                                        </td>
+                                                        <td>
+                                                            <span *ngIf="hideInput">{{ (projectPurchaseOrderForm.get('CommercialDiscount').value/projectPurchaseOrderForm.get('CommercialDiscount').value)|percent:'1.0-2'
+                                                                }}
+                                                            </span>
+                                                            <span *ngIf="hideText">{{ (selectedPODetails.CommercialDiscount/selectedPODetails.CommercialDiscount)|percent:'1.0-2'
+                                                                }}
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                        </td>
+                                                        <td>
+                                                            <b>Total before GST</b>
+                                                        </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td>
+                                                            {{ hideText? (selectedPODetails.ContractValueSubTotal-selectedPODetails.CommercialDiscount):(projectPurchaseOrderForm.get('ContractValueSubTotal').value
+                                                            - projectPurchaseOrderForm.get('CommercialDiscount').value) }}
+                                                        </td>
+                                                        <td>
+                                                            <!-- {{ hideText? (selectedPODetails.PrevAccumulatedPaymentSubTotal-selectedPODetails.CommercialDiscount):(projectPurchaseOrderForm.get('PrevAccumulatedPaymentSubTotal').value
+                                                            - projectPurchaseOrderForm.get('CommercialDiscount').value) }} -->
+                                                            {{ hideText? (selectedPODetails.PrevAccumulatedPaymentSubTotal-selectedPODetails.CommercialDiscount):(projectPurchaseOrderForm.get('PrevAccumulatedPaymentSubTotal').value)
+                                                            }}
+                                                        </td>
+                                                        <td>
+                                                            {{ hideText? (selectedPODetails.CurrentPaymentSubTotal):(projectPurchaseOrderForm.get('CurrentPaymentSubTotal').value) }}
+                                                        </td>
+                                                        <td>
+                                                            {{ hideText? (selectedPODetails.AccumulatedSubTotal-selectedPODetails.CommercialDiscount):(projectPurchaseOrderForm.get('AccumulatedSubTotal').value
+                                                            - projectPurchaseOrderForm.get('CommercialDiscount').value) }}
+                                                        </td>
+                                                        <td>
+                                                            <span *ngIf="hideInput">{{ ((projectPurchaseOrderForm.get('AccumulatedSubTotal').value
+                                                                - projectPurchaseOrderForm.get('CommercialDiscount').value)/(projectPurchaseOrderForm.get('ContractValueSubTotal').value
+                                                                - projectPurchaseOrderForm.get('CommercialDiscount').value))|percent:'1.0-2'
+                                                                }}
+                                                            </span>
+                                                            <span *ngIf="hideText">{{ ((selectedPODetails.AccumulatedSubTotal-selectedPODetails.CommercialDiscount)/(selectedPODetails.ContractValueSubTotal-selectedPODetails.CommercialDiscount))|percent:'1.0-2'
+                                                                }}
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                        </td>
+                                                        <td>
+                                                            <b>GST(%)</b>
+                                                        </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td>
+                                                            <input *ngIf="hideInput" type="number" class="form-control" [(ngModel)]="GST" [ngModelOptions]="{standalone: true}" (keyup)="onGSTKeyUp($event)"
+                                                            />
+                                                        </td>
+                                                        <td>
+
+                                                        </td>
+                                                        <td>
+
+                                                        </td>
+                                                        <td>
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                </ng-container>
+                                            </ng-template>
+                                            <ng-template pTemplate="footer" let-rowData let-i="rowIndex" let-columns="columns">
+                                                <tr>
+                                                    <td>
+                                                    </td>
+                                                    <td>
+                                                        <b>Total</b>
+                                                    </td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>
+                                                        {{ hideText? selectedPODetails.ContractValueTotal:projectPurchaseOrderForm.get('ContractValueTotal').value }}
+                                                    </td>
+                                                    <td>
+                                                        {{ hideText? selectedPODetails.PrevAccumulatedPaymentTotal:projectPurchaseOrderForm.get('PrevAccumulatedPaymentTotal').value
+                                                        }}
+                                                    </td>
+                                                    <td>
+                                                        {{ hideText? selectedPODetails.CurrentPaymentTotal:projectPurchaseOrderForm.get('CurrentPaymentTotal').value }}
+                                                    </td>
+                                                    <td>
+                                                        {{ hideText? selectedPODetails.AccumulatedTotal:projectPurchaseOrderForm.get('AccumulatedTotal').value }}
+                                                    </td>
+                                                    <td>
+                                                        <span *ngIf="hideInput">{{ ((projectPurchaseOrderForm.get('AccumulatedTotal').value)/(projectPurchaseOrderForm.get('ContractValueTotal').value))|percent:'1.0-2'
+                                                            }}
+                                                        </span>
+                                                        <span *ngIf="hideText">{{ ((selectedPODetails.AccumulatedTotal)/(selectedPODetails.ContractValueTotal))|percent:'1.0-2'
+                                                            }}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                        <!-- <div *ngIf="hideInput">
+                                            <input type="number"  (keydown)="restrictMinusValue($event)" min="0"  [(ngModel)]="linesToAdd" [ngModelOptions]="{standalone: true}" class="form-control linesToAdd">
+                                            <button type="submit" (click)="addGridItem(linesToAdd,'LineItems')" class="addLine">
+                                                <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Line
+                                            </button>
+                                        </div> -->
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 20px">
+                            <div class="col-12">
+                                <h3 class="form-heading" style="float:none;">Payment Summary</h3>
+                            </div>
+                            <div class="col-12 engineers-assigned">
+                                <p-table (sortFunction)="customSort($event)" [customSort]="true" sortMode="single">
+                                    <ng-template pTemplate="emptymessage">
+                                        <!-- <tr>
+                                            <td colspan="projectPOItemColumns.length" style='text-align: center;'>
+                                                <b>{{ gridNoMessageToDisplay }}</b>
+                                            </td>
+                                        </tr> -->
+                                    </ng-template>
+                                    <ng-template pTemplate="header" let-columns>
+                                    </ng-template>
+                                </p-table>
+                                <table class="ui-table">
+                                    <thead class="ui-table-thead">
+                                        <tr>
+                                            <th rowspan="4">Description</th>
+                                            <th rowspan="4">Previous Cummulative Payment Summary</th>
+                                            <th colspan="4" style="text-align: center;">Summary of Payment to date</th>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="3" style="text-align: center;">Applicable Retention Sum For</th>
+                                            <th rowspan="3">Total (A1+A2+B)</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Subject To Retention (A1)</th>
+                                            <th>Subject To Retention (A2)</th>
+                                            <th>No Retention (B)</th>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                <input type="number" formControlName="SubjectToRetentionPercentageA1" (keyup)="onRetentionPercentage1KeyUp($event)" class="form-control"
+                                                />
+                                            </th>
+                                            <th>
+                                                <input type="number" formControlName="SubjectToRetentionPercentageA2" (keyup)="onRetentionPercentage2KeyUp($event)" class="form-control"
+                                                />
+                                            </th>
+                                            <th style="text-align:center;">
+                                                <!-- <input type="number" class="form-control" /> -->
+                                                {{ hideText? (selectedPODetails.NoRetentiontionPercentage):projectPurchaseOrderForm.get('NoRetentiontionPercentage').value
+                                                |percent:'1.0-2' }}
+
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="ui-table-tbody">
+                                        <tr>
+                                            <td>Total Value of work done</td>
+                                            <td style='text-align: right;'>
+                                                {{ hideText? selectedPODetails.PrevAccumulatedPaymentTotal:projectPurchaseOrderForm.get('PrevAccumulatedPaymentTotal').value
+                                                }}
+                                            </td>
+                                            <td style='text-align: right;'>
+                                                <input type="number" formControlName="SubjectToRetentionAmountA1" (keyup)="onRetentionAmount1KeyUp($event)" class="form-control"
+                                                />
+                                                <div class="errorMessage" style="float:left;text-align:left;width:100%;" *ngIf="selectedProjectMasterContract.IsRetentionApplicable && projectPurchaseOrderForm.get('SubjectToRetentionAmountA1')!=null &&
+                                                projectPurchaseOrderForm.get('SubjectToRetentionAmountA1').errors!=null ">
+                                                    <span *ngIf="projectPurchaseOrderForm.get('SubjectToRetentionAmountA1').errors.maxRetentionLimitError1">
+                                                        Retention Amount should not exceed RetentionLimit
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td style='text-align: right;'>
+                                                <input type="number" formControlName="SubjectToRetentionAmountA2" (keyup)="onRetentionAmount2KeyUp($event)" class="form-control"
+                                                />
+                                                <div class="errorMessage" style="float:left; text-align:left; width:100%;" *ngIf="selectedProjectMasterContract.IsRetentionApplicable && projectPurchaseOrderForm.get('SubjectToRetentionAmountA2')!=null &&
+                                                projectPurchaseOrderForm.get('SubjectToRetentionAmountA2').errors!=null ">
+                                                    <span *ngIf="projectPurchaseOrderForm.get('SubjectToRetentionAmountA2').errors.maxRetentionLimitError2">
+                                                        Retention Amount should not exceed RetentionLimit
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td style='text-align: right;'>
+                                                <input type="number" formControlName="NoRetentiontionAmount" (keyup)="onNoRetentionAmountKeyUp($event)" class="form-control" />
+                                            </td>
+                                            <td style='text-align: right;'>
+                                                <!-- {{ hideText? (selectedPODetails.AccumulatedTotal):(projectPurchaseOrderForm.get('AccumulatedTotal').value ) }} -->
+                                                <label class="col-form-label form-text" *ngIf="hideText">{{ selectedPODetails.AccumulatedTotal }}</label>
+                                                <input type="number" readonly *ngIf="hideInput" formControlName="CurrentPaymmentSummaryTotal" class="form-control" />
+                                                <div class="errorMessage" style="float:left; text-align:left; width:100%;" *ngIf="projectPurchaseOrderForm.get('CurrentPaymmentSummaryTotal')!=null &&
+                                                projectPurchaseOrderForm.get('CurrentPaymmentSummaryTotal').errors!=null ">
+                                                    <span *ngIf="projectPurchaseOrderForm.get('CurrentPaymmentSummaryTotal').errors.paymentSummaryTotalError">
+                                                        Payment Amount should be equal to Accumulaed Payment
+                                                    </span>
+                                                </div>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Retention sum (Calculated)</td>
+                                            <td style='text-align: right;'>
+                                                {{ hideText? (selectedPODetails.RetionSumCaluculated):projectPurchaseOrderForm.get('RetionSumCaluculated').value }}
+
+                                            </td>
+                                            <td style='text-align: right;'>
+                                                <input type="number" formControlName="CalculatedRetentionSum1" class="form-control" />
+                                            </td>
+                                            <td style='text-align: right;'>
+                                                <input type="number" formControlName="CalculatedRetentionSum2" class="form-control" />
+                                            </td>
+                                            <td style='text-align: right;'>
+                                                <input type="number" formControlName="CalculatedRetentionSum3" class="form-control" />
+                                            </td>
+                                            <td style='text-align: right;'>
+                                                {{ hideText? (selectedPODetails.GrandTotalRetentionSum): (projectPurchaseOrderForm.get('CalculatedRetentionSum1').value +
+                                                projectPurchaseOrderForm.get('CalculatedRetentionSum2').value) }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Retention sum (previously released)</td>
+                                            <td style='text-align: right;'>
+                                                {{ hideText? (selectedPODetails.PreviousRetentionAccumulatedSum):projectPurchaseOrderForm.get('PreviousRetentionAccumulatedSum').value
+                                                }}
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td style='text-align: right;'>
+                                                {{ hideText? (selectedPODetails.TotalReleasedRetentionSum):(projectPurchaseOrderForm.get('PreviousRetentionAccumulatedSum').value
+                                                + projectPurchaseOrderForm.get('PreviousMonthReleaseRetentionSum').value)
+                                                }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Retention sum (Bal ref current release)</td>
+                                            <td style='text-align: right;'>
+                                                {{ hideText? (selectedPODetails.BalanceRetentionSum):(projectPurchaseOrderForm.get('RetionSumCaluculated').value - projectPurchaseOrderForm.get('PreviousRetentionAccumulatedSum').value)
+                                                }}
+
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td style='text-align: right;'>
+                                                {{ hideText? (selectedPODetails.TotalRetentionSumBeforeRelease): ( (projectPurchaseOrderForm.get('CalculatedRetentionSum1').value
+                                                + projectPurchaseOrderForm.get('CalculatedRetentionSum2').value) - (projectPurchaseOrderForm.get('PreviousRetentionAccumulatedSum').value
+                                                + projectPurchaseOrderForm.get('PreviousMonthReleaseRetentionSum').value))
+                                                }}
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style='text-align: right;'>Retention sum (release in the month)</td>
+                                            <td style='text-align: right;'>
+                                                {{ hideText? (selectedPODetails.PreviousMonthReleaseRetentionSum):projectPurchaseOrderForm.get('PreviousMonthReleaseRetentionSum').value
+                                                }}
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>
+                                                <input type="number" style='text-align: right; float: right;' formControlName="RetentionSumForThismonth" (keyup)="onCurrentReleaseReturnSumKeyUp($event)"
+                                                    class="form-control" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <b>Nett Retention</b>
+                                            </td>
+                                            <td style='text-align: right;'>
+                                                {{ hideText? (selectedPODetails.NetRetention): (projectPurchaseOrderForm.get('RetionSumCaluculated').value - projectPurchaseOrderForm.get('PreviousMonthReleaseRetentionSum').value)
+                                                }}
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td style='text-align: right;'>
+                                                {{ hideText? (selectedPODetails.CurrentNettRetention): (projectPurchaseOrderForm.get('CurrentNettRetention').value) }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Contract Sum Previously Certified to date</td>
+                                            <td style='text-align: right;'>
+                                                {{ hideText? (selectedPODetails.PreviousCertifiedContractSum):projectPurchaseOrderForm.get('PreviousCertifiedContractSum').value
+                                                }}
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td style='text-align: right;'>
+                                                {{ hideText? (selectedPODetails.PreviousCertifiedContractSum):projectPurchaseOrderForm.get('PreviousCertifiedContractSum').value
+                                                }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <b>Amount due under this certificate</b>
+                                            </td>
+                                            <td style='text-align: right;'>
+                                                {{ hideText? (selectedPODetails.PreviousCertifiedContractSum):projectPurchaseOrderForm.get('PreviousCertifiedContractSum').value
+                                                }}
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td style='text-align: right;'>
+                                                {{ hideText? (selectedPODetails.CurrentCertificationAmount):projectPurchaseOrderForm.get('CurrentCertificationAmount').value }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>GST (% and type - based on Computation Method)</td>
+                                            <td style='text-align: right;'>
+                                                {{ hideText? (selectedPODetails.PreviousCertifiedGST):projectPurchaseOrderForm.get('PreviousCertifiedGST').value }}
+                                            </td>
+                                            <td rowspan="2"></td>
+                                            <td rowspan="2"></td>
+                                            <td rowspan="2"></td>
+                                            <td>
+                                                <input *ngIf="hideInput" style='text-align: right; float:right;' type="number" class="form-control" formControlName="CertifiedGST"
+                                                    (keyup)="onCertifiedTotalGSTKeyUp($event)" />
+                                                <span *ngIf="hideText">{{ selectedPODetails.CertifiedGST }}</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>GST Adjustment</td>
+                                            <td style='text-align: right;'>
+                                                {{ hideText? (selectedPODetails.PreviousCertifiedGSTAdjustment):projectPurchaseOrderForm.get('PreviousCertifiedGSTAdjustment').value
+                                                }}
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <b>Grand Total</b>
+                                            </td>
+                                            <td style='text-align: right;'>
+                                                {{ hideText? (selectedPODetails.PreviousCertificationTotal):( projectPurchaseOrderForm.get('PreviousCertifiedContractSum').value
+                                                + projectPurchaseOrderForm.get('PreviousCertifiedGSTAdjustment').value) }}
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td style='text-align: right;'>
+                                                {{ hideText? selectedPODetails.PaymentTotal:projectPurchaseOrderForm.get('PaymentTotal').value }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top: 20px">
+
+                            <div class="col-12" style="margin-top:2%;">
+                                <h3 class="form-heading" style="float:none;">Distribution Summary</h3>
+                            </div>
+                            <div class="col-12 engineers-assigned" style="padding:0px;">
+                                <div class="col-12">
+                                    <fieldset formArrayName="POPDistributionSummaryItems">
+                                        <p-table [columns]="POPDistributionSummaryColumns" (sortFunction)="customSort($event)" [customSort]="true" sortMode="single"
+                                            [value]="hideInput==true?projectPurchaseOrderForm.get('POPDistributionSummaryItems')['controls']:selectedPODetails.POPDistributionSummaryItems">
+                                            <ng-template pTemplate="emptymessage">
+                                                <tr>
+                                                    <td [colSpan]="POPDistributionSummaryColumns.length" style='text-align: center;'>
+                                                        <b>{{ gridNoMessageToDisplay }}</b>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="colgroup" let-columns>
+                                                <colgroup>
+                                                    <ng-template ngFor let-data [ngForOf]="POPDistributionSummaryColumns">
+                                                        <col colspan="1" [style.width]="data.width">
+                                                    </ng-template>
+                                                </colgroup>
+                                            </ng-template>
+                                            <ng-template pTemplate="header" let-columns>
+                                                <tr>
+                                                    <ng-template ngFor let-data [ngForOf]="POPDistributionSummaryColumns">
+                                                        <th style="text-align: center;" [pSortableColumn]="data.field">
+                                                            {{data.header}}
+                                                            <p-sortIcon [field]="data.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                                        </th>
+                                                    </ng-template>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                                <tr *ngIf="hideInput" [formGroupName]="i">
+                                                    <td>
+                                                        {{ i + 1 }}
+                                                    </td>
+                                                    <td>
+                                                        <!-- <input type="text" class="form-control" formControlName="Company" /> -->
+                                                        {{ projectPurchaseOrderForm.get('POPDistributionSummaryItems')['controls'][i].get('Company').value.CompanyName }}
+                                                    </td>
+                                                    <td style="text-align: right;">
+                                                        <!-- <input type="number" (keydown)="restrictMinusValue($event)" min="0" max="100" style="text-align: right;float:left;width:80%;"
+                                                            class="form-control" formControlName="DistributionPercentage" /> -->
+                                                        {{ projectPurchaseOrderForm.get('POPDistributionSummaryItems')['controls'][i].get('DistributionPercentage').value }}
+                                                    </td>
+                                                    <td style="text-align: right;">
+                                                        <!-- <input type="number" (keydown)="restrictMinusValue($event)" min="0" style="text-align: right;float:left;width:80%;" class="form-control"
+                                                            formControlName="ContractAmount" /> -->
+                                                        {{ projectPurchaseOrderForm.get('POPDistributionSummaryItems')['controls'][i].get('ContractAmount').value }}
+                                                    </td>
+                                                    <td style="text-align: right;">
+                                                        <!-- <input type="number" (keydown)="restrictMinusValue($event)" min="0" style="text-align: right;float:left;width:80%;" class="form-control"
+                                                            formControlName="ThisCertification" /> -->
+                                                        {{ projectPurchaseOrderForm.get('POPDistributionSummaryItems')['controls'][i].get('ThisCertification').value }}
+                                                    </td>
+                                                    <td style="text-align: right;">
+                                                        <!-- <input type="number" (keydown)="restrictMinusValue($event)" min="0" style="text-align: right;float:left;width:80%;" class="form-control"
+                                                            formControlName="RetentionAmount" /> -->
+
+                                                        {{ projectPurchaseOrderForm.get('POPDistributionSummaryItems')['controls'][i].get('RetentionAmount').value }}
+                                                    </td>
+                                                </tr>
+                                                <tr *ngIf="hideText">
+                                                    <td>
+                                                        {{ i + 1 }}
+                                                    </td>
+                                                    <td>
+                                                        {{ rowData.Company.CompanyName }}
+                                                    </td>
+                                                    <td>
+                                                        {{ rowData.DistributionPercentage }}
+                                                    </td>
+                                                    <td>
+                                                        {{ rowData.ContractAmount }}
+                                                    </td>
+                                                    <td>
+                                                        {{ rowData.ThisCerification }}
+                                                    </td>
+                                                    <td>
+                                                        {{ rowData.RetentionAmount }}
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="footer" let-rowData let-i="rowIndex" let-columns="columns">
+                                                <tr>
+                                                    <td>
+                                                    </td>
+                                                    <td>
+                                                        <b>Total</b>
+                                                    </td>
+                                                    <td style="text-align: right;">
+                                                        {{ hideText? selectedPODetails.DistributionPercentageTotal:projectPurchaseOrderForm.get('DistributionPercentageTotal').value
+                                                        }}
+                                                    </td>
+                                                    <td style="text-align: right;">
+                                                        {{ hideText? selectedPODetails.ContractAmountTotal:projectPurchaseOrderForm.get('ContractAmountTotal').value }}
+                                                    </td>
+                                                    <td style="text-align: right;">
+                                                        {{ hideText? selectedPODetails.CertificationTotal:projectPurchaseOrderForm.get('CertificationTotal').value }}
+                                                    </td>
+                                                    <td style="text-align: right;">
+                                                        {{ hideText? selectedPODetails.RetentionTotal:projectPurchaseOrderForm.get('RetentionTotal').value }}
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-xl-12 col-sm-12 col-12" *ngIf="(isApprovalPage==true||(isApprovalPage==false && hideText==true && (selectedPODetails.WorkFlowStatusId==workFlowStatus.AskedForClarification||selectedPODetails.WorkFlowStatusId==workFlowStatus.WaitingForApproval)))">
+                                <h4 class="form-heading">Approval Remarks</h4>
+                                <div>
+                                    <textarea appAutofocus formControlName="ApprovalRemarks" class="form-control" style="width:70%;display:inline-block ">
+                                    </textarea>
+                                    <button type="submit" (click)="updateStatus(isApprovalPage==true?workFlowStatus.AskedForClarification:workFlowStatus.WaitingForApproval)"
+                                        style="float:inherit;vertical-align: top;" class="btn btn-edit">
+                                        <i class="fa fa-envelope" aria-hidden="true"></i>
+                                        <span *ngIf="isApprovalPage==true">
+                                            {{ selectedPODetails.WorkFlowComments|ApprovalButton }}
+                                        </span>
+                                        <span *ngIf="isApprovalPage==false">
+                                            Reply
+                                        </span>
+                                    </button>
+                                </div>
+                                <div *ngIf="projectPurchaseOrderForm.get('ApprovalRemarks') && projectPurchaseOrderForm.get('ApprovalRemarks').errors!=null && projectPurchaseOrderForm.get('ApprovalRemarks').touched==true">
+                                    <span class="errorMessage" *ngIf="projectPurchaseOrderForm.get('ApprovalRemarks').errors.required">Approval Remarks is Required</span>
+                                </div>
+                            </div>
+                            <div *ngIf="selectedPODetails.WorkFlowComments!=undefined && selectedPODetails.WorkFlowComments.length >0" class="col-xl-12 col-sm-12 col-12">
+                                <!-- <label class="col-form-label form-label">Previous Comments</label> -->
+                                <h4 class="form-heading">Previous Comments</h4>
+                                <ul>
+                                    <li *ngFor="let record of selectedPODetails.WorkFlowComments">
+                                        <span class='remarksUserName'>{{ record.UserName }}</span> -
+                                        <span class='remarksDate'>{{ record.CreatedDate|date:'dd-MM-yyyy h:mm:ss a' }}</span>:
+                                        <br>
+                                        <span>{{ record.Remarks }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div *ngIf="!isApprovalPage" class="form-group text-right btn-list">
+                                <button type="submit" (click)="saveRecord('save')" class="btn btn-save" *ngIf="hideInput">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+                                <button type="submit" *ngIf="((selectedPODetails|DisableButton)==false)" [disabled]="selectedPODetails|DisableButton" (click)="saveRecord('send')"
+                                    class="btn btn-approve">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Send for Approval</button>
+                                <button type="submit" (click)="cancelRecord()" class="btn btn-cancel" *ngIf="hideInput">
+                                    <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                                <button type="submit" *ngIf="hideText&&((selectedPODetails|DisableButton)==false)" (click)="editRecord()" class="btn btn-edit">
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                            </div>
+                            <div *ngIf="isApprovalPage==true" class="form-group text-right btn-list">
+                                <button type="submit" (click)="updateStatus(workFlowStatus.Approved)" class="btn btn-approve">
+                                    <i class="fa fa-check" aria-hidden="true"></i>Approve</button>
+                                <button type="submit" (click)="displayVoidPopUp(false)" class="btn btn-delete">
+                                    <i class="fa fa-ban" aria-hidden="true"></i> Reject</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <void-purchase-order-popup *ngIf="showVoidPopUp" [selectedPODetails]="selectedPODetails" [isVoid]="isVoid" (voidApproval)="saveRecord($event)"
+                    (reject)="reject($event)" [purchaseOrderTypeId]="poTypeId" [purchaseOrderId]="selectedPODetails.ProjectPurchaseOrderId"
+                    (onStatusUpdate)="onStatusUpdate($event)" (hideVoidPopUp)="hideVoidPopUp($event)" [showVoidPopUp]="showVoidPopUp"></void-purchase-order-popup>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #rowTemplate let-i="i" let-rowData>
+
+    <tr *ngIf="hideInput">
+        <td>
+            {{ i + 1 }}
+        </td>
+        <td>
+            {{ rowData.get('ItemDescription').value }}
+        </td>
+        <td>
+            {{ rowData.get('AccountCodeName').value }}
+        </td>
+        <td>
+            {{ rowData.get('AccountCode').value }}
+        </td>
+        <td>
+            <select formControlName="TypeOfCost" class="form-control">
+                <ng-template ngFor let-data [ngForOf]="popCostCategories" let-i="index">
+                    <option value={{data.POPCostCategoryId}}>
+                        {{data.TypeOfCost}}
+                    </option>
+                </ng-template>
+            </select>
+        </td>
+        <td>
+            <select formControlName="ApportionmentId" class="form-control">
+                <ng-template ngFor let-data [ngForOf]="popApportionments" let-i="index">
+                    <option value={{data.POPApportionmentId}}>
+                        {{data.Method}}
+                    </option>
+                </ng-template>
+            </select>
+        </td>
+        <td>
+            {{ rowData.get('ContractValue').value }}
+        </td>
+        <td>
+            {{ rowData.get('PrevAccumulatedAmount').value }}
+        </td>
+        <td>
+            {{ rowData.get('AccumulatedPayment').value - rowData.get('PrevAccumulatedAmount').value }}
+        </td>
+        <td>
+            <input type="number" formControlName="AccumulatedPayment" (keydown)="restrictMinusValue($event)" min="0" style="text-align: right;float:left;width:80%;"
+                class="form-control" />
+        </td>
+        <td>
+            {{ (rowData.get('AccumulatedPayment').value/rowData.get('ContractValue').value)|percent:'1.0-2' }}
+        </td>
+    </tr>
+    <tr *ngIf="hideText">
+        <td>
+            {{ i + 1 }}
+        </td>
+        <td>
+            {{ rowData.ItemDescription }}
+        </td>
+        <td>
+            {{ rowData.AccountCodeName }}
+        </td>
+        <td>
+            {{ rowData.AccountCode }}
+        </td>
+        <td>
+            {{ rowData.CostDescription }}
+        </td>
+        <td>
+            {{ rowData.Method }}
+        </td>
+        <td>
+            {{ rowData.ContractValue }}
+        </td>
+        <td>
+            {{ rowData.PrevAccumulatedValue }}
+        </td>
+        <td>
+            {{ rowData.CurrentPayment }}
+        </td>
+        <td>
+            {{ rowData.AccumulatedPayment }}
+        </td>
+        <td>
+            {{ rowData.OverallStatus }}
+        </td>
+    </tr>
+</ng-template>
+
+<ng-template #projectPOTemplate let-r="result" let-i="index" let-t="term">
+    <table class="autoCompleteTable" style="width: 99%;table-layout: fixed">
+        <thead *ngIf='r.index==0'>
+            <tr>
+                <th style="width: 27%">
+                    Contract Number
+                </th>
+                <th style="width: 33%">
+                    Project Name
+                </th>
+                <th style="width: 22%">
+                    Contract Sum
+                </th>
+                <th style="width: 18%">
+                    Created Date
+                </th>
+            </tr>
+        </thead>
+
+        <tr>
+            <td style="width: 27%">{{ r.POPMasterCode }}</td>
+            <td style="width: 33%">{{ r.ProjectName }}</td>
+            <td style="width: 22%">{{ r.OriginalContractSum }}</td>
+            <td style="width: 18%">{{ r.CreatedDate |DisplayDateFormat }}</td>
+
+        </tr>
+    </table>
+</ng-template>

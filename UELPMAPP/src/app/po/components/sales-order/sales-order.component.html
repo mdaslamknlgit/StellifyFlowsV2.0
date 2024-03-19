@@ -1,0 +1,197 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 col-sm-12 padding-null tittlediv">
+            <h3 class="item-heading">
+                <img src="../assets/images/icon1.png"> Sales order > {{pageTitle}} </h3>
+        </div>
+        <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+            <img src="../assets/images/add-new.png" (click)="addRecord()" *ngIf="hidetext && !isApproval">
+            <img src="../assets/images/grid1.png" (click)="showFullScreen()">
+            <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+                <button class="btn btn-outline-primary" style="background:none;border:none;padding:0px;" id="dropdownBasic1" ngbDropdownToggle>
+                    <img src="../assets/images/grid2.png">
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button class="dropdown-item" (click)="onPDFPrint()">Print</button>
+
+                    <!-- <button class="dropdown-item" (click)="sendMailtoSupplier()">Email</button> -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class='col-lg-3 col-md-4 leftdiv' [CustomSpinner]="showLeftPanelLoadingIcon" [class.collapse-leftcol]="leftsection">
+            <div class="left-section">
+                <div class="filter-section" ngbDropdown #myDrop="ngbDropdown">
+                    <div class="left-search">
+                        <input type="text" *ngIf="type!='invoice'" [(ngModel)]="salesOrderSearchKey" placeholder="Search requests..." (keyup)="onSearchInputChange($event, type)"
+                            class="search-filter">
+                        <input type="text" *ngIf="type==='invoice'" [(ngModel)]="salesInvoiceSearchKey" placeholder="Search requests..." (keyup)="onSearchInputChange($event, type)"
+                            class="search-filter">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                        <div class="filter-popup" *ngIf="showFilterPopUp" ngbDropdownMenu aria-labelledby="dropdownManual" (click)="$event.stopPropagation(); myDrop.open();">
+                            <form *ngIf="type!='invoice'" [formGroup]="soFilterInfoForm" class="form-horizontal">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-6 form-label">SO Code</label>
+                                    <div class="col-6">
+                                        <input type="text" #soCode formControlName="SOCode" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-6 form-label">Customer</label>
+                                    <div class="col-6 autoComplete">
+                                        <input formControlName="Customer" type="text" class="form-control show" [inputFormatter]="customerInputFormater" [ngbTypeahead]="customerSearch"
+                                            [resultTemplate]="customerTemplate" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-6 form-label">Ticket No</label>
+                                    <div class="col-6 autoComplete">
+                                        <input formControlName="Ticket" type="text" class="form-control show" [inputFormatter]="tucketInputFormater" [ngbTypeahead]="ticketSearch"
+                                            [resultTemplate]="ticketTemplate" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-6 form-label">Unit No</label>
+                                    <div class="col-6 autoComplete">                                       
+                                        <input formControlName="Facilities" type="text" class="form-control show" [inputFormatter]="facilityInputFormater" [ngbTypeahead]="facilitySearch"
+                                            [resultTemplate]="facilityTemplate" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12 error errorMessage">
+                                        {{filterMessage}}
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12" style="text-align: right">
+                                        <button type="submit" (click)="filterData()" class="btn btn-save">
+                                            <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                        <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                            <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <form *ngIf="type==='invoice'" [formGroup]="salesInvoiceFilterInfoForm" class="form-horizontal">
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-6 form-label">Sales Invoice </label>
+                                    <div class="col-6">
+
+                                        <input type="text" #SalesInvoiceCode formControlName="SalesInvoiceCode" class="form-control">
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-6 form-label">Customer</label>
+                                    <div class="col-6 autoComplete">
+
+                                        <input formControlName="Customer" type="text" class="form-control show" [inputFormatter]="customerInputFormater" [ngbTypeahead]="customerSearch"
+                                            [resultTemplate]="customerTemplate" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-12 error">
+                                        {{filterMessage}}
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+
+                                    <div class="col-12" style="text-align: right">
+                                        <button type="submit" (click)="filterData()" class="btn btn-save">
+                                            <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                        <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                            <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- start filter code -->
+
+                    <div style="float:left;margin:0px 0px 0px 16px; " class="filter-icon" *ngIf="!isFilterApplied">
+                        <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                            <i class="fa fa-filter" aria-hidden="true"></i>
+                        </button>
+                    </div>
+
+
+                    <div style="float:left;margin:0px 0px 0px 16px;" class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+                        <i class="fa fa-undo" aria-hidden="true"></i>
+                    </div>
+
+                    <!-- <div style="float:right;margin:0px;" class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+                        <i class="fa fa-undo" aria-hidden="true"></i>
+                    </div> -->
+                    <div malihu-scrollbar class="filter-scroll" style="width:100%; float:left;">
+                        <table class="table" *ngIf="type!='invoice'">
+                            <tr [class.activerow]="record.SalesOrderId===selectedSalesOrderId" (click)="onRecordSelection(record.SalesOrderId)" *ngFor="let record of salesOrdersList">
+                                <td>
+                                    <h5 class="sub-heading">{{ (record.WorkFlowStatusId!=workFlowStatus.Draft) ? record.SalesOrderCode:record.DraftCode }}</h5>
+                                    <label class="label-text">Customer</label> :
+                                    <label class="label-value">{{ record.CustomerName }}</label>
+                                    <div *ngIf="!isApproval">
+                                        <br>
+                                        <label class="label-text">Status</label> :
+                                        <label class="label-value">{{ record.WorkFlowStatusText }}</label>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <table class="table" *ngIf="type==='invoice'">
+                            <tr [class.activerow]="record.SalesInvoiceId==selectedInvoiceId" (click)="onRecordSelection(record.SalesInvoiceId)" *ngFor="let record of salesInvoiceList">
+                                <td>
+                                    <h5 class="sub-heading">{{(record.WorkFlowStatusId!=workFlowStatus.Draft)? record.SalesOrderCode:record.DraftCode }}</h5>
+                                    <label class="label-text">Customer</label> :
+                                    <label class="label-value">{{ record.CustomerName }}</label>
+                                </td>
+                            </tr>
+                        </table>
+                        <div *ngIf="salesOrdersList.length===0 && salesInvoiceList.length === 0" class="col-12 listErrorMessage">
+                            {{errorMessage}}
+                        </div>
+                        <ngb-pagination *ngIf="type!='invoice' && salesOrdersList.length>0" (pageChange)="pageChange($event, type)" [collectionSize]="salesOrderPagerConfig.TotalRecords"
+                            class="d-flex justify-content-center" [pageSize]="salesOrderPagerConfig.RecordsToFetch" [maxSize]="5"
+                            [page]="1" [boundaryLinks]="true"></ngb-pagination>
+
+                        <ngb-pagination *ngIf="type==='invoice' && salesInvoiceList.length>0" [maxSize]="5" (pageChange)="pageChange($event, type)"
+                            [collectionSize]="salesInvoicePagerConfig.TotalRecords" class="d-flex justify-content-center" [pageSize]="salesInvoicePagerConfig.RecordsToFetch"
+                            [page]="1" [boundaryLinks]="true"></ngb-pagination>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="split-line" (click)="split()"></div>
+        </div>
+        <!-- left col end here-->
+
+        <div #rightPanel class="rightPanel col-lg-9 col-md-8" [class.expand-rightcol]="rightsection">
+            <app-standard-sales-order [remarks]='remarks' [type]="type" [isApprovalPage]="isApprovalPage" [selectedSoId]='selectedSalesOrderId'
+                [selectedSoInvoiceId]='selectedInvoiceId' [salesOrderList]="salesOrdersList" [salesInvoiceList]="salesInvoiceList"
+                [pageTitle]="pageTitle" (cancelChanges)="cancelChanges($event)" (updateStatus)="updateStatus($event)" (readListView)="readListView($event)"></app-standard-sales-order>
+        </div>
+        <!-- left col end here-->
+    </div>
+</div>
+
+<ng-template #itemMasterTemplate let-r="result" let-t="term">
+    {{ r.ItemName }}
+</ng-template>
+
+<ng-template #customerTemplate let-r="result" let-t="term">
+    {{ r.CustomerName }}
+</ng-template>
+<ng-template #ticketTemplate let-r="result" let-t="term">
+    {{ r.TicketNo }}
+</ng-template>
+
+<ng-template #facilityTemplate let-r="result" let-t="term">
+    {{ r.UnitNumber }}
+</ng-template>

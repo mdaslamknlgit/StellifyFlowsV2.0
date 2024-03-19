@@ -1,0 +1,194 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12 col-sm-12 padding-null tittlediv">
+      <h3 class="item-heading">  Property Management </h3>
+    </div>
+    <div class="col-md-12 col-sm-12 align-text-top" style="text-align:right; display: none;">
+      <img src="assets/images/grid1.png">
+      <img src="assets/images/grid2.png">
+    </div>
+  </div>
+    
+  <div class="row dashboard" style="margin-top: 20px;">
+    
+<ul class="flexrow" style="width: 100%; padding: 20px; border-bottom: 2px solid #f1f2f6;">
+  <div> 
+  <div  class="lititem">
+    <img   src="assets/images/purchaseimg.png">
+    <label style="cursor: pointer;" (click)="purchaseorderclick($event)"> Purchase Order 
+      <i *ngIf="!purchasesubmenu" style="font-size: 10px" class="fa-solid fa-chevron-down"></i> 
+      <i *ngIf="purchasesubmenu" style="font-size: 10px" class="fa-solid fa-chevron-up"></i> 
+      <!-- po/pocreation/0/1/0 -->
+      <ul class="submenuitems" *ngIf="purchasesubmenu">
+        <li [routerLink]="['/po/pocreation/0/1/0']" >Inventory PO</li>
+        <li [routerLink]="['/po/pocreation/0/2/0']">Fixed Asset PO</li>
+        <li [routerLink]="['/po/pocreation/0/3/0']">Expense PO</li>
+        <li [routerLink]="['/po/pocreation/0/4/0']">Project PO</li>
+      </ul>
+    </label>
+   
+  </div>
+
+  <div  class="lititem">
+    <img  src="assets/images/contractimg.png">
+    <label [routerLink]="['/po/contractpo']"> Purchase Contract </label>
+  </div>
+ 
+
+</div>
+<div  class="arrowline">
+  <li class="vline"> <span><i class="fa-solid fa-chevron-right"></i> </span>  </li>
+
+</div>
+<div style="display:flex; flex:1;justify-content: space-between;">
+  <div  class="lititem flexauto">
+    <img  src="assets/images/purchaseimg.png">
+    <label  [routerLink]="['/po/poapproval']"> PO Approval   </label>
+    
+  </div>
+  <div class="hlinebox">
+    <div class="hline"> </div>
+    <i style="position: absolute; right: 50%; font-size: 18px;"  class="fa-solid fa-chevron-right"></i>
+  </div>
+  <div  class="lititem flexauto">
+    <img  src="assets/images/contractimg2.png">
+    <!-- <label [routerLink]="['/po/goodsreceivednotes/request']"> GRN (Goods Recieved Notes) </label> -->
+    <label [routerLink]="['/po/goodsreceivednoteslist/request']"> GRN (Goods Recieved Notes) </label>
+  </div>
+  <div class="hlinebox">
+    <div class="hline"> </div>
+    <i style="position: absolute; right: 50%; font-size: 18px;"  class="fa-solid fa-chevron-right"></i>
+  </div>
+  <div  class="lititem">
+    <img  src="assets/images/fixedassetsimg.png">
+    <!-- <label [routerLink]="['/po/supplierinvoice/request']"> Supplier Invoice </label> -->
+    <label [routerLink]="['/po/supplierinvoicelist/request']"> Supplier Invoice </label>
+  </div>
+</div>
+<div class="arrowline">
+  <li class="vline" style="transform: rotateZ(270deg);"> <span><i class="fa-solid fa-chevron-right"></i> </span>  </li>
+
+</div>
+<div> 
+  <div  class="lititem">
+    <img  src="assets/images/goodsimg.png">
+    <label>Payments </label>    
+  </div> 
+  <div class="lititem">
+    <img  src="assets/images/fixedassetsimg.png">
+    <label  [routerLink]="['/po/creditnotelist/request']"> Credit Note</label>
+      
+  </div>
+</div>
+</ul>
+     
+<div class="row">
+  <div class="col-md-6 ">
+    <div class="box">
+      <div class="row">
+        <div class="col-lg-6 col-sm-6 innerbox">
+          <div class="reservation flexbox">
+            <img src="assets/images/purchaseimg.png">
+            <div class="dashboad-info">
+              <h4>{{dashboardCount?.PurchaseOrder}}</h4>
+              Purchase <br /> Orders
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-sm-6 innerbox ">
+          <div class="services flexbox">
+            <img src="assets/images/expensesimg.png">
+            <div class="dashboad-info">
+              <h4>{{dashboardCount?.ExpensesPurchaseOrder}}</h4>
+              Expenses <br /> Purchase Orders
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-sm-6 innerbox borderbottomnone">
+          <div class="billing flexbox">
+            <img src="assets/images/fixedassetsimg.png">
+            <div class="dashboad-info">
+              <h4>{{dashboardCount?.FixedAssetPurchaseOrder}}</h4>
+              Fixed Asset <br /> Purchase Orders
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col-lg-6 col-sm-6 innerbox borderbottomnone">
+          <div class="cleaning flexbox">
+            <img src="assets/images/contractimg.png">
+            <div class="dashboad-info">
+              <h4>{{dashboardCount?.ContractPurchaseOrder}}</h4>
+              Contract <br /> Purchase Orders
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <div class="col-md-6 " style="padding-left: 0px;"> 
+    <div class="box"> 
+    <div class="row ">
+    <div class="col-lg-6 col-sm-6 innerbox">
+      <div class="maintanance flexbox">
+        <img src="assets/images/goodsimg.png">
+        <div class="dashboad-info">
+          <h4>{{dashboardCount?.GoodsReceivedNote}}</h4>
+          Goods Received  <br/> Notes
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6 col-sm-6 innerbox borderrightnone">
+      <div class="cleaning flexbox">
+        <img src="assets/images/invoiceimg.png">
+        <div class="dashboad-info">
+          <h4>{{dashboardCount?.Invoice}}</h4>
+          Invoice
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="col-lg-6 col-sm-6 innerbox borderbottomnone">
+      <div class="maintanance flexbox">
+        <img src="assets/images/fixedimg.png">
+        <div class="dashboad-info">
+          <h4>{{dashboardCount?.GoodsReceivedNote}}</h4>
+          Fixed Asset <br/>
+          Purchase Orders
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6 col-sm-6 innerbox borderrightnone borderbottomnone">
+      <div class="cleaning flexbox">
+        <img src="assets/images/contractimg2.png">
+        <div class="dashboad-info">
+          <h4>{{dashboardCount?.Invoice}}</h4>
+          Contract <br/>
+          Purchase Orders
+        </div>
+      </div>
+    </div>
+
+    
+
+
+  </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- <ngx-barcode [bc-value]="55555" [bc-display-value]="true"></ngx-barcode> -->
+ 

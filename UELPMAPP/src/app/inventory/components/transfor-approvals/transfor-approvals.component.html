@@ -1,0 +1,136 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6 col-sm-12 padding-null tittlediv">
+      <h3 class="item-heading">
+        <img src="../assets/images/icon1.png"> Inventory > Transfer Approvals </h3>
+    </div>
+    <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+      <img src="../assets/images/grid1.png" (click)="showFullScreen()">
+      <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+        <button class="btn btn-outline-primary" style="background:none;border:none;padding:0px;" id="dropdownBasic1" ngbDropdownToggle>
+          <img src="../assets/images/grid2.png">
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+          <button class="dropdown-item">Email</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-3 col-md-4 leftdiv" [class.collapse-leftcol]="leftsection">
+      <div class="left-section">
+        <div class="filter-section">
+          
+            <div class="left-search">
+              <input type="text" placeholder="Search requests..." class="search-filter">
+              <i class="fa fa-search" aria-hidden="true"></i>
+            </div>
+
+<div class="filter-icon"> <i class="fa fa-filter" aria-hidden="true"></i></div>
+<div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="filter-scroll">
+
+ <table class="table">
+<tr><td>
+ <h5 class="sub-heading"> Laptops</h5>
+  <label class="label-text">Category</label> :<label class="label-value">Electronics</label>
+  <label class="label-text">Transfer Qty.</label> :<label class="label-value">10</label>
+  <label class="label-text">Qty in Hand </label> :<label class="label-value">10</label>   
+</td></tr>
+<tr><td>
+ <h5 class="sub-heading"> Keyboards</h5>
+ <label class="label-text">Category</label> :<label class="label-value">Electronics</label>
+ <label class="label-text">Transfer Qty.</label> :<label class="label-value">10</label>
+ <label class="label-text">Qty in Hand </label> :<label class="label-value">10</label>     
+</td></tr>
+ 
+<tr><td>
+<h5 class="sub-heading"> Chairs</h5>
+<label class="label-text">Category</label> :<label class="label-value">Electronics</label>
+  <label class="label-text">Transfer Qty.</label> :<label class="label-value">10</label>
+  <label class="label-text">Qty in Hand </label> :<label class="label-value">10</label>    
+</td></tr>
+<tr><td>
+ <h5 class="sub-heading">Tables</h5>
+ <label class="label-text">Category</label> :<label class="label-value">Electronics</label>
+ <label class="label-text">Transfer Qty.</label> :<label class="label-value">10</label>
+ <label class="label-text">Qty in Hand </label> :<label class="label-value">10</label>    
+</td></tr>
+</table>
+ </div>   
+ </div>   
+    </div>
+     <div class="split-line" (click)="split()"></div> 
+ </div><!-- left col end here-->
+
+<div  #rightPanel class="rightPanel col-lg-9 col-md-8" [class.expand-rightcol]="rightsection">
+  <form    class="form-horizontal" >
+      <div class="row fullScreenLabel">
+          <div class="col-12">
+              <h3 class="item-heading" style="float:none;">Transfer Approvals</h3>
+          </div>
+      </div>
+  <div class="form-group row">
+      <label class="col-form-label col-xl-2 col-sm-6 col-6 form-label">Name </label>  
+      <div class="col-xl-4 col-sm-6 col-6">
+        <label class="col-form-label form-text"  ><b style="color:#01548e">Laptops</b> </label>     
+      </div>
+  </div>
+  
+   <div class="form-group row">
+      <label class="col-form-label col-xl-2 col-sm-6 col-6 form-label">To Location </label>  
+      <div class="col-xl-4 col-sm-6 col-6">   
+      <label class="col-form-label form-text">Engineering Department</label> 
+      </div> 
+
+        </div>
+
+        <div class="form-group row">
+          <label class="col-form-label col-xl-2 col-sm-6 col-6 form-label">Qty in hand </label>
+          <div class="col-xl-4 col-sm-6 col-6">
+            <label class="col-form-label form-text">10 </label>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="col-form-label col-xl-2 col-sm-6 col-6 form-label">Transfer Qty </label>
+          <div class="col-xl-4 col-sm-6 col-6">
+            <label class="col-form-label form-text">10 </label>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="col-form-label col-xl-2 col-sm-6 col-6 form-label">Reason </label>
+          <div class="col-xl-4 col-sm-6 col-6">
+            <label class="col-form-label form-text">Excessive Stock in hand</label>
+          </div>
+        </div>
+
+
+        <div class="form-group row">
+          <label class="col-form-label col-xl-12 col-sm-12 col-12 form-label">Clarification Remarks</label>
+          <div class="col-xl-12 col-sm-12 col-12">
+            <textarea id="priority" name="priority" formControlName="priority" placeholder="Priority" class="form-control" style="width:70%;display:inline-block ">
+</textarea>
+            <button type="submit" style="float:inherit;vertical-align: top;" (click)="editdata()" class="btn btn-edit">
+              <i class="fa fa-envelope" aria-hidden="true"></i> Send for Clarification</button>
+
+          </div>
+        </div>
+
+
+        <div class="form-group text-right btn-list">
+          <button type="submit" (click)="savedata()" class="btn btn-save" *ngIf="hideinput">
+            <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+          <button type="submit" (click)="canledata()" class="btn btn-cancel" *ngIf="hideinput">
+            <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+          <button type="submit" (click)="editdata()" class="btn btn-approve" *ngIf="hidetext">
+            <i class="fa fa-check" aria-hidden="true"></i> Approve</button>
+          <button type="submit" class="btn btn-delete" *ngIf="hidetext">
+            <i class="fa fa-ban" aria-hidden="true"></i> Reject</button>
+        </div>
+
+      </form>
+    </div>
+    <!-- left col end here-->
+  </div>
+</div>

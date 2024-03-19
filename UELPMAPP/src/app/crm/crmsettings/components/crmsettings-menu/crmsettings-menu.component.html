@@ -1,0 +1,28 @@
+<app-header></app-header>
+<div class="body-content" [class.showMenu]="showMenu">
+    <app-sidebar (change)="onMenuClick($event)"></app-sidebar>
+    <div class="right-nav">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 padding-null tittlediv">
+                <div class="flexrow space-between align-center">
+                    <h3 class="item-heading"> Settings </h3>
+                </div>
+                <hr style="margin-top: 0px;" />
+            </div>
+          </div>      <div class="row">
+        <div class="col-md-12">
+            <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickCRMSettings($event)">
+                <i class="fa fa-cog" ria-hidden="true" aria-hidden="true"></i> CRM Settings</button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickLeadSettings($event)">
+                <i class="fa fa-cog" ria-hidden="true" aria-hidden="true"></i> Lead Settings</button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                
+            <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickContactSettings($event)">
+              <i class="fa fa-cog" ria-hidden="true" aria-hidden="true"></i> Contacts Settings</button>
+        </div>
+      </div>
+      <br/>
+        <router-outlet></router-outlet>
+    </div>
+</div>
+<app-footer></app-footer>

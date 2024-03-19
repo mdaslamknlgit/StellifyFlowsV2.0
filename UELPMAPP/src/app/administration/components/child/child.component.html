@@ -1,0 +1,267 @@
+<!-- <button (click)="removeMe(index)">I am a Child component, click to Remove
+  </button> -->
+
+
+<table id="table1" #tabledata cellpadding="0" cellspacing="0" border="0" [style.display]="updateStyle()">
+    <tbody>
+        <tr class="lines">
+            <td>
+                <table cellpadding="0" cellspacing="0" border="0">
+                    <tbody>
+                        <tr class="lines" id="lines-table1">
+                            <td class="line lleft" style="height: 80px;"></td>
+                            <td class="line lright" style="height: 80px;"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+
+
+
+        <tr class="nodes sortable">
+            <!-- ngIf: step.getValue('Type') == 'Parallel' -->
+            <td class="button-container">
+                <div class="menu bnode">
+                    <div>
+                        <a (click)="createchildNode()">
+                            <i class="fa fa-arrows-h" style="margin-left: 0.04em;"></i>
+                        </a>
+                    </div>
+                </div>
+            </td>
+            <!-- end ngIf: step.getValue('Type') == 'Parallel' -->
+            <td class="node button-container">
+
+
+            </td>
+
+        </tr>
+        <tr class="nodes branchtr">
+            <td class="node">
+                <table cellpadding="0" cellspacing="0" border="0">
+                    <tbody>
+                        <tr class="lines">
+                            <td class="bline lleft"></td>
+                            <td class="bline lright ltop cloneline"></td>
+                            <td class="bline lleft ltop "></td>
+                            <td class="bline lright"></td>
+                        </tr>
+                        <tr class="branch">
+
+                            <td colspan="2" class="branchtd">
+                                <table cellpadding="0" cellspacing="0" border="0">
+                                    <tbody>
+                                        <tr class="nodes">
+                                            <td class="node" colspan="2">
+                                                <table cellpadding="0" cellspacing="0" border="0">
+                                                    <tbody>
+                                                        <tr class="nodes">
+                                                            <td class="node">
+                                                                <div class="node parallel">
+                                                                    <div class="header padding-bottom-null">
+                                                                        <div class="row margin-bottom-null sub-heading">
+                                                                            <div class="col l1 padding-null">
+                                                                                <i class="fa fa-random"></i>
+                                                                            </div>
+                                                                            <div class="col l10 padding-null step-name">
+                                                                                <input class="ng-pristine" onclick="this.focus();this.select()" type="text">
+                                                                            </div>
+                                                                            <div class="col l1 padding-null delete-icon">
+                                                                                <i class="fa fa-trash-o" aria-hidden="true" (click)="removeMe(index)"></i>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row margin-bottom-null execute-when">
+                                                                            <!-- <Label style="display:inline-block; width: 125px;"> Item Type :</Label> -->
+                                                                            <!-- <input style="width:100%;"   class="ng-pristine "   type="text"    placeholder="Always" > -->
+
+                                                                            <!-- <select class="form-control drp_dwn">
+                                                                                <option *ngFor="let item of itemTypes" [value]="item.Id">
+                                                                                    {{item.Name}}
+                                                                                </option>
+                                                                            </select> -->
+                                                                            <input type="hidden" value="firstDirection">
+                                                                            <Label style="display:inline-block; width: 85px;"> Process :</Label>
+                                                                            <input type="text" [id]="leftWorkFlowLevelId" (change)="onChange($event.target.value, leftWorkFlowLevelId)" [(ngModel)]="firstCondtion"
+                                                                                [ngModelOptions]="{standalone: true}" placeholder="">
+                                                                            <!-- <input type="hidden" [(ngModel)]="leftleveldirection" [ngModelOptions]="{standalone: true}">
+                                                                            <input type="hidden" [(ngModel)]="leftlevelId" [ngModelOptions]="{standalone: true}">
+                                                                            <input type="hidden" [(ngModel)]="leftParentWorkLevelId" [ngModelOptions]="{standalone: true}"> -->
+                                                                        </div>
+
+                                                                    </div>
+                                                                    <div class="footer relative">
+                                                                        <a style="cursor: pointer;" (click)="createComponent()" class="bounce">
+                                                                            <i class="fa fa-angle-down" aria-hidden="true"></i>
+
+                                                                        </a>
+                                                                    </div>
+                                                                    <!-- ngIf: !context.selectedBranchIds[branch.getValue('Id')] && branch.getList('Steps').length >= 1 -->
+                                                                    <!-- ngIf: !context.selectedBranchIds[branch.getValue('Id')] && branch.getList('Steps').length >= 2 -->
+                                                                    <!-- ngIf: !context.selectedBranchIds[branch.getValue('Id')] && branch.getList('Steps').length >= 3 -->
+                                                                </div>
+                                                                <table *ngIf="showchildtable">
+                                                                    <tr>
+                                                                        <td class="button-container">
+                                                                            <!-- <app-menu-controls></app-menu-controls> -->
+                                                                            <app-menu-controls (createApproverClick)="onCreateApprover($event)" (createComponentClick)="onCreateComponent($event)" (removeComponentClick)="onremoveComponent($event)"></app-menu-controls>
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr class="extend">
+                                            <td class="line lleft"></td>
+                                            <td class="line lright"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td colspan="2" class="childnodetd" style="display:none;">
+                                <ng-template #viewContainerRef></ng-template>
+                            </td>
+                            <td colspan="2">
+                                <table cellpadding="0" cellspacing="0" border="0">
+                                    <tbody>
+                                        <tr class="nodes">
+                                            <td class="node" colspan="2">
+                                                <table cellpadding="0" cellspacing="0" border="0">
+                                                    <tbody>
+                                                        <tr class="nodes">
+                                                            <td class="node">
+                                                                <div class="node parallel">
+                                                                    <div class="header padding-bottom-null">
+                                                                        <div class="row margin-bottom-null sub-heading">
+                                                                            <div class="col l1 padding-null">
+                                                                                <i class="fa fa-random"></i>
+                                                                            </div>
+                                                                            <div class="col l10 padding-null step-name">
+                                                                                <input class="ng-pristine " onclick="this.focus();this.select()">
+                                                                            </div>
+                                                                            <div class="col l1 padding-null delete-icon">
+                                                                                <i class="fa fa-trash-o" aria-hidden="true" (click)="removeMe(index)"></i>
+
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row margin-bottom-null execute-when">
+
+                                                                            <!-- <Label style="display:inline-block; width: 125px;"> Item Type :</Label> -->
+                                                                            <!-- <input style="width:100%;" class="ng-pristine" type="text" placeholder="Always"> -->
+                                                                            <!-- <select class="form-control drp_dwn">
+                                                                                <option *ngFor="let item of itemTypes" [value]="item.Id">
+                                                                                    {{item.Name}}
+                                                                                </option>
+                                                                            </select> -->
+                                                                            <input type="hidden" value="secondDirection">
+                                                                            <Label style="display:inline-block; width: 85px;"> Process :</Label>
+                                                                            <input type="text" [id]="rightWorkFlowLevelId" (change)="onChange($event.target.value, rightWorkFlowLevelId)" [(ngModel)]="secondCondition"
+                                                                                [ngModelOptions]="{standalone: true}" placeholder="">
+                                                                            <!-- <input type="hidden" [(ngModel)]="rightleveldirection" [ngModelOptions]="{standalone: true}">
+                                                                            <input type="hidden" [(ngModel)]="rightlevelId" [ngModelOptions]="{standalone: true}">
+                                                                            <input type="hidden" [(ngModel)]="rightParentWorkLevelId" [ngModelOptions]="{standalone: true}"> -->
+                                                                        </div>
+
+
+                                                                    </div>
+                                                                    <div class="footer relative">
+                                                                        <a style="cursor: pointer;" (click)="createComponent()" class="bounce">
+                                                                            <i class="fa fa-angle-down" aria-hidden="true"></i>
+
+                                                                        </a>
+                                                                    </div>
+                                                                    <!-- ngIf: !context.selectedBranchIds[branch.getValue('Id')] && branch.getList('Steps').length >= 1 -->
+                                                                    <!-- ngIf: !context.selectedBranchIds[branch.getValue('Id')] && branch.getList('Steps').length >= 2 -->
+                                                                    <!-- ngIf: !context.selectedBranchIds[branch.getValue('Id')] && branch.getList('Steps').length >= 3 -->
+                                                                </div>
+                                                                <table *ngIf="showchildtable">
+                                                                    <tr>
+                                                                        <td class="button-container">
+                                                                            <!-- <app-menu-controls></app-menu-controls> -->
+                                                                            <div class="menu 11">
+                                                                                    <input type="checkbox" class="menu-open" name="menu-open">
+                                                                                    <label class="menu-open-button ng-pristine" (click)="openOptions($event)">
+                                                                                        <span class="addline addline-1"></span>
+                                                                                        <span class="addline addline-2"></span>
+                                                                                    </label>
+                                                                                    <a class="menu-item hint--right hint--bounce check">
+                                                                                        <i class="fa fa-check" (click)="createApproval()"></i>
+                                                                                    </a>
+                                                                                    <a class="menu-item hint--left hint--bounce edit" style="visibility: hidden;">
+                                                                                        <i class="fa fa-pencil"></i>
+                                                                                    </a>
+                                            
+                                                                                    <a class="menu-item hint--right hint--bounce random" (click)="createComponent()">
+                                                                                        <i class="fa fa-random"></i>
+                                                                                    </a>
+                                            
+                                                                                </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                                <!-- ngIf: toBeDeleted==branch.getValue('Id') -->
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <!-- ngIf: context.selectedBranchIds[branch.getValue('Id')] -->
+                                                        </tr>
+                                                        <!-- ngIf: context.selectedBranchIds[branch.getValue('Id')] -->
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr class="extend">
+                                            <td class="line lleft"></td>
+                                            <td class="line lright"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <!-- end ngIf: branch.getValue('IsSuspended') != 1.0 -->
+                            <!-- end ngRepeat: branch in step.getList('Branches', 'Index') track by branch.getValue('Id') -->
+                        </tr>
+                        <tr class="lines">
+                            <td class="bline lleft"></td>
+                            <!-- ngRepeat: count in getBranchRange(step) -->
+                            <td class="bline lright lbottom"></td>
+                            <td class="bline lleft lbottom " ng-repeat-end=""></td>
+                            <!-- end ngRepeat: count in getBranchRange(step) -->
+                            <td class="bline lright"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+
+
+        <tr class="lines">
+            <td>
+                <table cellpadding="0" cellspacing="0" border="0">
+                    <tbody>
+                        <tr class="lines">
+                            <td class="line lleft"></td>
+                            <td class="line lright"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <!-- end ngIf: step.getValue('IsSuspended') != 1.0 -->
+        <!-- end ngRepeat: step in branch.getList('Steps', 'Index') track by step.getValue('Id') -->
+    </tbody>
+</table>
+<table>
+    <tr>
+        <td class="button-container">
+            <!-- <app-menu-controls></app-menu-controls> -->
+            <app-menu-controls (createApproverClick)="onCreateApprover($event)" (createComponentClick)="onCreateComponent($event)" (removeComponentClick)="onremoveComponent($event)"></app-menu-controls>
+        </td>
+    </tr>
+</table>
