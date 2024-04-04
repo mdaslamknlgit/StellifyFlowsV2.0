@@ -1,0 +1,86 @@
+/**
+ * Created by andrew.yang on 3/22/2017.
+ */
+import { EventEmitter, QueryList, Renderer2, SimpleChanges, OnInit } from '@angular/core';
+import { Header, Footer, Column } from './shared';
+import { TreeNode } from "./model";
+import { AfterViewInit, OnChanges, OnDestroy } from "@angular/core/src/metadata/lifecycle_hooks";
+export declare class TreeTable implements OnInit, OnDestroy, AfterViewInit, OnChanges {
+    renderer: Renderer2;
+    paginator: boolean;
+    rows: number;
+    totalRecords: number;
+    pageLinks: number;
+    rowsPerPageOptions: number[];
+    first: number;
+    lazy: boolean;
+    virtualScroll: boolean;
+    value: TreeNode[];
+    selectionMode: string;
+    selection: any;
+    style: any;
+    styleClass: string;
+    labelExpand: string;
+    labelCollapse: string;
+    metaKeySelection: boolean;
+    contextMenu: any;
+    globalFilter: any;
+    filterDelay: number;
+    immutable: boolean;
+    rowStyleClass: Function;
+    tableStyle: any;
+    tableStyleClass: string;
+    selectionChange: EventEmitter<any>;
+    onNodeSelect: EventEmitter<any>;
+    onNodeUnselect: EventEmitter<any>;
+    onNodeExpand: EventEmitter<any>;
+    onNodeCollapse: EventEmitter<any>;
+    onContextMenuSelect: EventEmitter<any>;
+    onLazyLoad: EventEmitter<any>;
+    header: Header;
+    footer: Footer;
+    columns: QueryList<Column>;
+    rowTouched: boolean;
+    loading: boolean;
+    stopFilterPropagation: boolean;
+    dataToRender: any[];
+    filterTimeout: any;
+    filteredValue: any[];
+    globalFilterFunction: any;
+    constructor(renderer: Renderer2);
+    onRowClick(event: MouseEvent, node: TreeNode): void;
+    onRowTouchEnd(): void;
+    onRowRightClick(event: MouseEvent, node: TreeNode): void;
+    findIndexInSelection(node: TreeNode): number;
+    propagateSelectionUp(node: TreeNode, select: boolean): void;
+    propagateSelectionDown(node: TreeNode, select: boolean): void;
+    isSelected(node: TreeNode): boolean;
+    isSingleSelectionMode(): boolean;
+    isMultipleSelectionMode(): boolean;
+    isCheckboxSelectionMode(): boolean;
+    getRowStyleClass(rowData: any): string;
+    hasFooter(): boolean;
+    ngOnInit(): void;
+    ngAfterViewInit(): void;
+    ngOnChanges(changes: SimpleChanges): void;
+    shownColumns(): Column[];
+    handleDataChange(): void;
+    updatePaginator(): void;
+    paginate(event: any): void;
+    updateDataToRender(datasource: any): void;
+    filterFields(object: any): boolean;
+    filterChildren(children: any, parent: any): boolean;
+    isFiltered(node: any): boolean;
+    filter(): void;
+    filterConstraints: {
+        startsWith(value: any, filter: any): boolean;
+        contains(value: any, filter: any): boolean;
+        endsWith(value: any, filter: any): boolean;
+        equals(value: any, filter: any): boolean;
+        in(value: any, filter: any[]): boolean;
+    };
+    resolveFieldData(data: any, field: string): any;
+    ngOnDestroy(): void;
+}
+export declare class TreeTableModule {
+}
