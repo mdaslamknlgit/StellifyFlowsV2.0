@@ -1,0 +1,141 @@
+﻿SELECT * FROM
+(SELECT c.CompanyId,po.LocationID,c.companyname                            AS Entity,  
+                   Format (po.createddate, 'dd-MM-yyyy')    AS Date,  
+                   Isnull(po.expensespurchaseordercode, '') AS PONo,  
+                   'Exprense PO'                            AS POType,  
+                   wfstatus.statustext                            AS Status,  
+                   s.suppliername,  
+                   (SELECT Cast(Sum(expensesqty * unitprice) AS DECIMAL(18, 2))  
+                    FROM   expensespoitems  
+                    WHERE  expensespurchaseorderid = po.expensespurchaseorderid  
+                           AND isdeleted = 0)               AS POAmountBefGST,  
+                   po.totalamount                           AS POAmountWithGST,  
+                   Concat(c.companycode, '-', (SELECT  
+                   dbo.Getsuppliercode(s.suppliercode,  
+                   '-')),  
+                   '-', ssc.subcode)                        AS SupplierCode,  
+                   po.vendorreferences                      AS  
+                   SupplierQuotationNo  
+                   ,  
+                   Concat(usp.firstname, usp.lastname)      AS  
+                   Requstor,  
+                   L.NAME                                   AS Dept,  
+                   po.reasons                               AS ReasonForPurchase  
+                   ,  
+                   cs.costofservice,  
+                   cc.NAME                                  AS Currency,  
+                   Isnull(PT.description, '')               AS PaymentTerms,  
+                   po.remarksquotation                      AS Remarks,  
+                   Isnull(po.justifications, '')            AS Justifications  
+            FROM   expensespurchaseorder AS po  
+                   INNER JOIN supplier AS s  
+                           ON po.supplierid = s.supplierid  
+                   INNER JOIN workflowstatus AS wfstatus  
+                           ON po.workflowstatusid = wfstatus.workflowstatusid  
+                   INNER JOIN userprofile AS usp  
+                           ON po.createdby = usp.userid  
+                   INNER JOIN company AS c  
+                           ON po.companyid = c.companyid  
+                   INNER JOIN location AS L  
+                           ON po.locationid = L.locationid  
+                   INNER JOIN currencies AS cc  
+                           ON po.currencyid = cc.id  
+                   LEFT JOIN dbo.paymentterms AS PT  
+                          ON po.paymenttermid = PT.paymenttermsid  
+                   LEFT JOIN costofservice AS cs  
+                          ON po.costofserviceid = cs.costofserviceid  
+                   LEFT JOIN suppliersubcode AS ssc  
+                          ON po.suppliersubcodeid = ssc.subcodeid     
+            UNION ALL  
+            SELECT c.CompanyId,po.LocationID,c.companyname                         AS Entity,  
+                   Format (po.createddate, 'dd-MM-yyyy') AS Date,  
+                   Isnull(po.purchaseordercode, '')      AS PONo,  
+                   'Inventory PO'                        AS POType,  
+                   wfstatus.statustext                         AS Status,  
+                   s.suppliername,  
+                   (SELECT Cast(Sum(itemqty * unitprice) AS DECIMAL(18, 2))  
+                    FROM   purchaseorderitems  
+                    WHERE  purchaseorderid = po.purchaseorderid  
+                           AND isdeleted = 0)            AS POAmountBefGST,  
+                   po.totalamount                        AS POAmountWithGST,  
+                   Concat(c.companycode, '-', (SELECT  
+                   dbo.Getsuppliercode(s.suppliercode,  
+                   '-')),  
+                   '-', ssc.subcode)                     AS SupplierCode,  
+                   po.vendorreferences                   AS SupplierQuotationNo,  
+                   Concat(usp.firstname, usp.lastname)   AS Requstor,  
+                   L.NAME                                AS Dept,  
+                   po.reasons                            AS ReasonForPurchase,  
+                   cs.costofservice,  
+                   cc.NAME                               AS Currency,  
+                   Isnull(PT.description, '')            AS PaymentTerms,  
+                   po.remarksquotation                   AS Remarks,  
+                   Isnull(po.justifications, '')         AS Justifications  
+            FROM   purchaseorder AS po  
+                   INNER JOIN supplier AS s  
+                           ON po.supplierid = s.supplierid  
+                   INNER JOIN workflowstatus AS wfstatus  
+                           ON po.workflowstatusid = wfstatus.workflowstatusid  
+                   INNER JOIN userprofile AS usp  
+                           ON po.createdby = usp.userid  
+                   INNER JOIN company AS c  
+                           ON po.companyid = c.companyid  
+                   INNER JOIN location AS L  
+                           ON po.locationid = L.locationid  
+                   INNER JOIN currencies AS cc  
+                           ON po.currencyid = cc.id  
+                   LEFT JOIN dbo.paymentterms AS PT  
+                          ON po.paymenttermid = PT.paymenttermsid  
+                   LEFT JOIN costofservice AS cs  
+                          ON po.costofserviceid = cs.costofserviceid  
+                   LEFT JOIN suppliersubcode AS ssc  
+                          ON po.suppliersubcodeid = ssc.subcodeid     
+            UNION ALL  
+            SELECT c.CompanyId,po.LocationID,c.companyname                              AS Entity,  
+                   Format (po.createddate, 'dd-MM-yyyy')      AS Date,  
+                   Isnull(po.fixedassetpurchaseordercode, '') AS PONo,  
+                   'Fixed Asset PO'                           AS POType,  
+                   wfstatus.statustext                              AS Status,  
+                   s.suppliername,  
+                   (SELECT Cast(Sum(assetqty * unitprice) AS DECIMAL(18, 2))  
+                    FROM   fixedassetpoitems  
+                    WHERE  fixedassetpurchaseorderid =  
+                           po.fixedassetpurchaseorderid  
+                           AND isdeleted = 0)                 AS POAmountBefGST,  
+                   po.totalamount                             AS POAmountWithGST  
+                   ,  
+                   Concat(c.companycode, '-', (SELECT  
+                   dbo.Getsuppliercode(s.suppliercode,  
+                   '-')),  
+                   '-', ssc.subcode)                          AS SupplierCode,  
+                   po.vendorreferences                        AS  
+                   SupplierQuotationNo,  
+                   Concat(usp.firstname, usp.lastname)        AS Requstor,  
+                   L.NAME                                     AS Dept,  
+        po.reasons                                 AS  
+                   ReasonForPurchase  
+                   ,  
+                   cs.costofservice,  
+                   cc.NAME                                    AS Currency,  
+                   Isnull(PT.description, '')                 AS PaymentTerms,  
+                   po.remarksquotation                        AS Remarks,  
+                   Isnull(po.justifications, '')              AS Justifications  
+            FROM   fixedassetpurchaseorder AS po  
+                   INNER JOIN supplier AS s  
+                           ON po.supplierid = s.supplierid  
+                   INNER JOIN workflowstatus AS wfstatus  
+                           ON po.workflowstatusid = wfstatus.workflowstatusid  
+                   INNER JOIN userprofile AS usp  
+                           ON po.createdby = usp.userid  
+                   INNER JOIN company AS c  
+                           ON po.companyid = c.companyid  
+                   INNER JOIN location AS L  
+                           ON po.locationid = L.locationid  
+                   INNER JOIN currencies AS cc  
+                           ON po.currencyid = cc.id  
+                   LEFT JOIN dbo.paymentterms AS PT  
+                          ON po.paymenttermid = PT.paymenttermsid  
+                   LEFT JOIN costofservice AS cs  
+                          ON po.costofserviceid = cs.costofserviceid  
+                   LEFT JOIN suppliersubcode AS ssc  
+                          ON po.suppliersubcodeid = ssc.subcodeid) AS T1

@@ -1,0 +1,46 @@
+﻿<html >
+<head>
+    <title>Request for Purchase Order Approval</title>
+</head>
+<body >
+<div  style="font-family:tahoma;font-size:14px">
+Dear $$Name,
+<br/> <br/> 
+<div style="font-size:13px;">New $$MailTitle is waiting for approval.</div>  
+<br/>
+<div><b>$$MailSubTitle details are given below,</b> </div>  
+<br/> 
+<table border="1" cellspacing="0">
+<tr>
+<th style="color:#2672ec;">Request Number</th>
+<th style="color:#2672ec;">Type</th>
+<th style="color:#2672ec;">Supplier</th>
+<th style="color:#2672ec;">Total Amount($$DocumentCurrencySymbol)</th>
+<th style="color:#2672ec;">Contract Start Date</th>
+<th style="color:#2672ec;">Contract End Date</th>
+<th style="color:#2672ec;">Requester</th>
+</tr>
+<tr>
+<td>$$PurchaseOrderRequestNumber</td>
+<td>$$PurchaseOrderType</td>
+<td>$$Supplier</td>
+<td>$$TotalAmount</td>
+<td>$$ContractStartDate</td>
+<td>$$DeliveryDate</td>
+<td>$$Sender</td>
+</tr>
+</table>
+ <br/> 
+<div style="font-size:13px;">For more details, Click below to login. <br/>
+<a href="$$SiteLogin" style="color:#0645AD; text-decoration: underline;">$$PurchaseOrderRequestNumber</a></div> 
+<br/>
+Best regards,
+<br/> 
+$$Sender
+</div>
+</div>
+</body>
+</html>
+
+
+

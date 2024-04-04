@@ -1,0 +1,43 @@
+﻿SELECT * FROM
+(SELECT entity.CompanyId,PPC.Locationid,entity.companyname AS Entity,  
+                   L.NAME                                                 AS                   Department,  
+                   Format (ppc.createddate, 'dd-MM-yyyy')                  AS                   Date,  
+                   Isnull(ppc.DocumentCode, '')                           AS                   DocumentCode,  
+       Concat(entity.companycode, '-', (SELECT  
+                   dbo.Getsuppliercode(s.suppliercode,  
+                   '-')),  
+                   '-', ssc.subcode)                                      AS  
+                   SupplierID,  
+                   s.suppliername as SupplierName,  
+       wfstatus.statustext AS Status,  
+       PPC.CertificateNo as CertificateNo,  
+       PPC.SupplierInvoiceNumber as SupplierInvoiceNumber,  
+       ISNULL(PPI.CPAmountDueUnderThisCerificate,0) as InvoiceAmountBefTax,  
+       ISNULL(PPI.CPGrandTotal,0) as InvoiceAmountWithTax,  
+                   cC.NAME AS Currency,  
+                   Isnull(PT.description, '') AS PaymentTerms,  
+                   ISNULL(PPC.PaymentDescription,'') as PaymentDescription,  
+                   Concat(requester.firstname, requester.lastname) AS Requster  ,
+                   wfstatus.workflowstatusid,
+                   requester.userid 
+            FROM   ProjectPaymentContract AS ppc  
+          Left join ProjectMasterContract as PMC  
+               ON PMC.ProjectMasterContractId = PPC.POPId  
+          left join ProjectPaymentItems AS PPI  
+               ON PPC.PaymentContractId = PPI.PaymentContractId  
+                   INNER JOIN supplier AS s  
+                           ON PMC.supplierid = s.supplierid  
+                   INNER JOIN workflowstatus AS wfstatus  
+                           ON ppc.workflowstatusid = wfstatus.workflowstatusid  
+                   INNER JOIN userprofile AS requester  
+                           ON ppc.createdby = requester.userid  
+          LEFT JOIN Currencies as CC  
+               ON CC.Id = PMC.CurrencyId  
+                   INNER JOIN company AS entity 
+                           ON ppc.companyid = entity.companyid  
+                   INNER JOIN location AS L  
+                           ON ppc.locationid = L.locationid  
+                   LEFT JOIN dbo.paymentterms AS PT  
+                          ON PMC.paymenttermsid = PT.paymenttermsid  
+          LEFT JOIN suppliersubcode AS ssc  
+                          ON pmc.suppliersubcodeid = ssc.subcodeid ) AS T1

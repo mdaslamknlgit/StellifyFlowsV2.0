@@ -1,0 +1,271 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500" rel="stylesheet" />
+    <title>Sales Order Invoice</title>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            padding: 0px;
+            margin: 0px
+        }
+
+        .form-label {
+            color: #01548e;
+        }
+
+        .form-table td {
+            height: 30px;
+            vertical-align: top;
+        }
+
+        .form-heading {
+            color: #01548e;
+            font-size: 18px;
+            display: inline-block;
+            border-bottom: 1px solid #01548e;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .footer td {
+            background: #111;
+            color: #fff;
+            position: relative;
+            z-index: 99;
+            text-align: right;
+            height: 61px;
+            line-height: 61px;
+            width: 100%;
+            font-size: 12px;
+            font-weight: 300;
+        }
+
+        .nowrap {
+            white-space: nowrap
+        }
+    </style>
+</head>
+
+<body>
+    <table border="0" align="center" style="border-bottom:2px solid #000;line-height:22px; font-size:13px;width:100%">
+        <tr>
+            <td valign="top" width="16%"><img style="width: 200px; height: 70px;" src="[[LogoURL]]" alt="logo" /></td>
+            <td valign="top" align="center" width="61%">
+                <div style="padding-bottom:8px; text-align:center;"> [[CompanyName]].</div>
+                <div style="padding-bottom:8px;text-align:center;">[[CompanyDescription]]</div>
+                <div style="padding-bottom:8px;text-align:center;">Original</div>
+                <div style="padding-bottom:8px;text-align:center;"><b>[[Title]]</b></div>
+                <!--<div style="padding-bottom:8px;text-align:center;"> Purchase Order Number Must appear on all enquiries, and delivery order</div>-->
+            </td>
+            <td valign="top" width="23%">
+                <div style="padding-bottom:8px; text-align:left;"> [[Address1]]</div>
+                <div style="padding-bottom:8px;text-align:left;"> [[Address2]]</div>
+                <div style="padding-bottom:8px;text-align:left;">[[Country]] [[ZipCode]]</div>
+                <div style="padding-bottom:8px;text-align:left;">Tel: [[Telephone]]</div>
+                <div style="padding-bottom:8px;text-align:left;">Fax: [[Fax]]</div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3"><span style="color: #01548e;">Company Reg. Number: </span> [[CompanyRegNumber]]</td>
+        </tr>
+    </table>
+    <hr />
+    <table style="width:100%" align="center" border="0">
+        <tr>
+            <td width="50%" valign="top">
+
+                <table class="form-table" style="width:100%">
+
+                    <tr class="form-group row">
+                        <td style="color: #01548e;">Customer Type </td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[customerType]]</td>
+                    </tr>
+                    <tr class="form-group row">
+                        <td style="color: #01548e;">Customer </td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[CustomerName]]</td>
+                    </tr>
+                    <tr class="form-group row">
+                        <td style="color: #01548e;">Customer Address </td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[BillingAddress]]</td>
+                    </tr>
+                    <tr class="form-group row">
+                        <td style="color: #01548e;">Delivery Address </td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[DeliveryAddress]]</td>
+                    </tr>
+                    <tr class="form-group row">
+                        <td style="color: #01548e;">Fax </td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[BillingFax]]</td>
+                    </tr>
+                    <tr class="form-group row">
+                        <td style="color: #01548e;">Unit No</td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[UnitNumber]]</td>
+                    </tr>
+                </table>
+            </td>
+
+            <td width="50%" valign="top">
+
+                <table style="width:100%" class="form-table">
+                    <tr class="form-group row">
+                        <td style="color: #01548e;">SO Number</td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word"><b>[[SalesOrderCode]]</b></td>
+                    </tr>
+                    <tr class="form-group row">
+                        <td style="color: #01548e;">Invoice No </td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[SalesInvoiceCode]]</td>
+                    </tr>
+                    <tr class="form-group row">
+                        <td style="color: #01548e;">Date </td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[CreatedDate]]</td>
+                    </tr>
+                    <tr class="form-group row">
+                        <td width="45%" style="color: #01548e;">Department </td>
+                        <td width="2%">:</td>
+                        <td width="53%" style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[Location]] </td>
+                    </tr>
+
+
+                    <tr class="form-group row">
+                        <td style="color: #01548e;">Ticket No </td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[TicketNo]]</td>
+                    </tr>
+                    <tr class="form-group row">
+                        <td style="color: #01548e;">Currency Type </td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[CurrencyCode]]</td>
+                    </tr>
+                  
+                </table>
+                <br />
+            </td>
+
+        </tr>
+        <tr>
+            <td colspan="2">
+                <br />
+                <h4 class="form-heading" style="text-decoration:underline;">Items Details</h4>
+            </td>
+        </tr>
+
+
+        <tr>
+            <td colspan="2">
+                <table  border="1" cellpadding="3" cellspacing="0" style="margin-bottom:20px; width:100%">
+                    <thead>
+                        <tr>
+                            <th width="7%" class="reportField textHeader">S.no.</th>                                                 
+                            <th width="28%" class="reportField textHeader">Description</th>                          
+                            <th width="7%" class="reportField textHeader">Qty</th>
+                            <th width="11%" class="reportField textHeader">Price ([[Currency]]) </th>
+                            <th width="10%" class="reportField textHeader">Discount</th>                           
+                            <th width="10%" class="reportField textHeader">Gst</th>
+                            <th width="22%" class="reportField textHeader">Total ([[Currency]])</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each SalesOrderItemDetails}}
+                        <tr>
+                            <td class="reportField">{{ItemId}}</td>
+                            <td class="reportField">
+                                <div style="color: #01548e;padding-bottom:10px;">{{ItemName}} :</div>
+                                {{ItemDescription}}
+                            </td>                           
+                            <td align="right" class="reportField">{{ItemQty}}</td>
+                            <td align="right" class="reportField">{{Unitprice}}</td>
+                            <td align="right" class="reportField">{{Discount}}</td>
+                            <td align="right" class="reportField">{{GstAmount}}</td>
+                            <td align="right" class="reportField">{{Total}}</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="2"></td>
+        </tr>
+
+
+
+
+        <tr class="row">
+
+            <td colspan="2">
+
+
+                <table style="width:100%;" border="0">
+                    <tr>
+                        <td style="white-space:nowrap" width="50%">
+
+                            <div class="row">
+                                <h4 class="form-heading" style="margin:0px;padding:0px; text-decoration:underline; margin-bottom:10px">Payment Terms</h4>
+                                <div> [[PaymentTerms]] </div>
+                                <br />
+                            </div>                          
+                        </td>
+
+                        <td valign="top" width="50%">
+
+                            <table class="table table-subtotal" cellpadding="5" style="float:right; width: 100%;" border="0">
+                                <tr>
+                                    <td class="nowrap" width="60%" align="right" style="white-space:nowrap">Sub Total :</td>
+                                    <td align="right" width="40%" class="nowrap" style="white-space:nowrap"> [[Currency]] [[SubTotal]]</td>
+
+                                </tr>
+                                <tr>
+                                    <td class="nowrap" align="right" style="white-space:nowrap">Discount :</td>
+                                    <td align="right" class="nowrap" style="white-space:nowrap">[[Currency]] [[Discount]]</td>
+                                </tr>
+                                <tr>
+                                    <td class="nowrap" align="right" style="white-space:nowrap">Shipping Charges :</td>
+                                    <td align="right" class="nowrap" style="white-space:nowrap">[[Currency]] [[ShippingCharges]]</td>
+                                </tr>
+                                <tr>
+                                    <td class="nowrap" align="right" style="white-space:nowrap">Others :</td>
+                                    <td align="right" class="nowrap" style="white-space:nowrap">[[Currency]] [[OtherCharges]] </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="nowrap" align="right" style="white-space:nowrap">Total :</td>
+                                    <td align="right" class="nowrap" style="white-space:nowrap">[[Currency]] [[TotalAmount]] </td>
+                                </tr>
+                            </table>
+                        </td>
+
+                    </tr>
+                 
+                </table>
+
+            </td>
+        </tr>
+
+
+
+
+
+
+
+
+    </table>
+
+
+
+
+
+
+</body>
+</html>

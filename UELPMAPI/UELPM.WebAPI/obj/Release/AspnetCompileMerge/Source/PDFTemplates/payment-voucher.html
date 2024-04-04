@@ -1,0 +1,165 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500" rel="stylesheet" />
+    <title>Payment Voucher</title>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            padding: 0px;
+            margin: 0px
+        }
+
+        .form-label {
+            color: #01548e;
+        }
+
+        .form-table td {
+            height: 30px;
+        }
+
+        .form-heading {
+            color: #01548e;
+            font-size: 18px;
+            display: inline-block;
+            margin-bottom: 0px;
+        }
+    </style>
+</head>
+
+<body>
+    <table style="width: 100%; line-height:22px;" align="center">
+        <tr>
+            <td>
+
+                <table style="width: 100%;" align="center">
+                    <tr>
+                        <td width="60%"><img style="width: 200px; height: 70px" src="[[LogoURL]]" alt="logo" /></td>
+                        <td valign="top" width="40%">
+                            <div style="line-height:22px;">  
+                                <div style="padding-bottom:8px; text-align:left;"><b>Company Name: </b>[[CompanyName]]</div>
+                                <div style="padding-bottom:8px; text-align:left;"> [[Address1]]</div>
+                                <div style="padding-bottom:8px;text-align:left;"> [[Address2]]</div>
+                                <div style="padding-bottom:8px;text-align:left;">[[Country]] [[ZipCode]]</div>
+                                <div style="padding-bottom:8px;text-align:left;">Tel: [[Telephone]]</div>
+                                <div style="padding-bottom:8px;text-align:left;">Fax: [[Fax]]</div>
+                                <div style="padding-bottom:8px;text-align:left;">Company No: [[CompanyRegNumber]]</div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <br /> <br />
+                <div style="text-align:center;"> <h4 class="form-heading" style="margin:0px;">PAYMENT VOUCHER</h4></div>
+                <hr style="margin:0px;" />
+                <table style="width: 100%;" align="center">
+                    <tr>
+                        <td width="50%" valign="top">
+
+                            <table style="width: 100%;" class="form-table">
+                                <tr class="form-group row">
+                                    <td width="40%">[[PaymentType]] Name :</td>
+                                    <td width="60%">[[PayeeName]]</td>
+                                </tr>
+
+                                <tr class="form-group row">
+                                    <td >[[PaymentType]] Address :</td>
+                                    <td width="60%">
+                                        [[Address]]<br />
+                                    </td>
+                                </tr>
+
+
+                            </table>
+                        </td>
+
+                        <td width="50%" valign="top">
+
+                            <table style="width: 100%;" class="form-table">
+                                <!--<tr class="form-group row">
+                                        <td width="60%">Payment Voucher No </td>
+                                        <td width="40%">[[PaymentId]] </td>
+                                    </tr>-->
+                                <tr class="form-group row">
+                                    <td>Payment Reference No :</td>
+                                    <td>[[PaymentCode]] </td>
+                                </tr>
+                                <tr class="form-group row">
+                                    <td>Payment Date  :</td>
+                                    <td>[[PaymentDate]]</td>
+                                </tr>
+                                <tr class="form-group row">
+                                    <td>Payment Type :</td>
+                                    <td>[[Name]]</td>
+                                </tr>
+
+
+                            </table>
+
+
+                        </td>
+
+                    </tr>
+
+
+
+                    <tr>
+                        <td colspan="2">
+                            <h4 class="form-heading" style="margin-bottom:10px;text-decoration:underline">Invoice Details</h4>
+
+                            <table border="0" style="width: 100%;" cellpadding="5" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th width="20%" style="border:1px solid #000;border-bottom:0px;border-right:0px;width:20%">S.no.</th>
+                                        <th width="60%" style="border:1px solid #000;border-bottom:0px;border-right:0px;width:60%"> Invoice No </th>
+                                        <th width="20%" style="border:1px solid #000;border-bottom:0px;width:20%" align="right">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each InvoiceDetails}}
+                                    <tr>
+                                        <td style="border:1px solid #000;border-right:0px">{{InvoiceId}}</td>
+                                        <td style="border:1px solid #000; border-right:0px">{{InvoiceNumber}}</td>
+                                        <td style="border:1px solid #000;" align="right">{{PayableAmount}}</td>
+                                    </tr>
+                                    {{/each}}
+
+                                    <tr>
+                                        <td width="80%" colspan="2" style="font-weight:bold;width:80%">Amount in Words</td>
+                                        <td width="20%" style="font-weight:bold;border:1px solid #000;border-bottom:0px;width:20%" align="right">[[Total]]</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <div style="width:350px; float:left;">[[AmountInWords]]  Only </div><div style="width:150px; float:right; text-align:right ">Over Payment </div> </td>
+                                       
+                                        <td style="border:1px solid #000;border-bottom:0px;" align="right">[[OverPayment]]</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" align="right">Total</td>
+                                        <td style="border:1px solid #000" align="right">[[Total]]</td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+
+
+
+
+
+                        </td>
+                    </tr>
+
+
+                     
+                </table>
+
+
+                 
+
+
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

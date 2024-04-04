@@ -1,0 +1,27 @@
+﻿<html >
+<head>
+    <title>Clarification for $$MailTitle Approval</title>
+</head>
+<body >
+<div  style="font-family:tahoma;font-size:14px">
+Dear $$Name,
+<br/> <br/> 
+<div style="font-size:13px;">Clarifications for New $$MailTitle .</div>  
+<br/>
+<div><b>The below are the clarifications and please check.</b> </div>  
+<br/> 
+<b>$$MailTitle Number:</b>  $$DocumentCode
+<br/> 
+<b>Clarifications: </b> $$Clarification,
+ <br/> 
+ <div style="font-size:13px;">For more details, Click below to login. <br/>
+<a href="$$SiteLogin" style="color:#0645AD; text-decoration: underline;">$$DocumentCode</a></div> 
+<br/>
+Best regards,
+<br/> 
+$$sender
+</div>
+</div>
+</body>
+</html>
+

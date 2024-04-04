@@ -1,0 +1,490 @@
+﻿<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.2.4.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.4.0\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{969FD424-9276-4E54-A5D9-AB0F03654BE8}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UELPM.WebAPI</RootNamespace>
+    <AssemblyName>UELPM.WebAPI</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CommonServiceLocator, Version=2.0.4.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.8.11\lib\net46\CommonServiceLocator.dll</HintPath>
+    </Reference>
+    <Reference Include="CsvHelper, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
+      <HintPath>..\packages\CsvHelper.2.2.0\lib\net40-client\CsvHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.9.0.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.9.0\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus, Version=4.5.3.1, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.5.3.1\lib\net40\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.3.6.0\lib\net45\ExcelDataReader.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.8.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1000\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.Owin, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.4.0.0\lib\net451\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Cors, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Cors.4.0.0\lib\net451\Microsoft.Owin.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Diagnostics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Diagnostics.4.0.0\lib\net451\Microsoft.Owin.Diagnostics.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.HttpListener, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.4.0.0\lib\net451\Microsoft.Owin.Host.HttpListener.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.4.0.0\lib\net451\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Hosting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Hosting.4.0.0\lib\net451\Microsoft.Owin.Hosting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.4.0.0\lib\net451\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.4.0.0\lib\net451\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="System.Configuration.ConfigurationManager, Version=4.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Configuration.ConfigurationManager.4.4.1\lib\net461\System.Configuration.ConfigurationManager.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.Packaging, Version=4.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Packaging.4.5.0\lib\net46\System.IO.Packaging.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.6\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.Cors, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.6\lib\net45\System.Web.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Http, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.6\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.Cors, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Cors.5.2.6\lib\net45\System.Web.Http.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.Owin, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Owin.5.2.6\lib\net45\System.Web.Http.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.6\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Unity.Abstractions, Version=3.3.1.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.8.11\lib\net46\Unity.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Configuration, Version=5.2.5.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.8.11\lib\net46\Unity.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Container, Version=5.8.11.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.8.11\lib\net46\Unity.Container.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Interception, Version=5.5.5.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.8.11\lib\net46\Unity.Interception.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Interception.Configuration, Version=5.1.7.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.8.11\lib\net46\Unity.Interception.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RegistrationByConvention, Version=2.1.9.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.8.11\lib\net46\Unity.RegistrationByConvention.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ServiceLocation, Version=2.1.2.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.8.11\lib\net46\Unity.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Site.css" />
+    <Content Include="EmailTemplates\AssetDepreciationApprovalEmail.txt" />
+    <Content Include="EmailTemplates\AssetDepreciationRequestEmail.txt" />
+    <Content Include="EmailTemplates\AssetDisposalApprovalEmail.txt" />
+    <Content Include="EmailTemplates\AssetDisposalRequestEmail.txt" />
+    <Content Include="EmailTemplates\ContractMasterRecallApprovalEmail.txt" />
+    <Content Include="EmailTemplates\ContractMasterRequestApprovalMail.txt" />
+    <Content Include="EmailTemplates\ContractMasterRequestEmail.txt" />
+    <Content Include="EmailTemplates\CreditNote.html" />
+    <Content Include="EmailTemplates\CustomerMaster.html" />
+    <Content Include="EmailTemplates\InvoiceApprovalEmail.txt" />
+    <Content Include="EmailTemplates\CreditNoteApprovalEmail.txt" />
+    <Content Include="EmailTemplates\GoodsReturnNoteApprovalEmail.txt" />
+    <Content Include="EmailTemplates\NoReplyMailText.txt" />
+    <Content Include="EmailTemplates\POPPaymentRecallEmail.txt" />
+    <Content Include="EmailTemplates\POPVORecallEmail.txt" />
+    <Content Include="EmailTemplates\ProjectContractMasterRecallApprovalEmail.txt" />
+    <Content Include="EmailTemplates\ProjectPaymentContractApprovalEmail.txt" />
+    <Content Include="EmailTemplates\ProjectPaymentContractRequestEmail.txt" />
+    <Content Include="EmailTemplates\ReplyForClarificationMail.txt" />
+    <Content Include="EmailTemplates\ReturnForClarificationMail.txt" />
+    <Content Include="EmailTemplates\SalesInvoice.html" />
+    <Content Include="EmailTemplates\SalesInvoiceEmail.html" />
+    <Content Include="EmailTemplates\SalesQuotation.html" />
+    <Content Include="EmailTemplates\SalesQuotationEmail.html" />
+    <Content Include="EmailTemplates\SupplierRecallEmail.txt" />
+    <Content Include="EmailTemplates\UserManagementLoginEmail.txt" />
+    <Content Include="EmailTemplates\LocationTransferApprovalEmail.txt" />
+    <Content Include="EmailTemplates\AssetTransferApprovalEmail.txt" />
+    <Content Include="EmailTemplates\CreditNoteRequestEmail.txt" />
+    <Content Include="EmailTemplates\GoodsReturnNoteRequestEmail.txt" />
+    <Content Include="EmailTemplates\InvoiceRequestEmail.txt" />
+    <Content Include="EmailTemplates\LocationTransferRequestEmail.txt" />
+    <Content Include="EmailTemplates\AssetTransferRequestEmail.txt" />
+    <Content Include="EmailTemplates\ClarificationMail.txt" />
+    <Content Include="EmailTemplates\ProjectContractVariationOrderApprovalEmail.txt" />
+    <Content Include="EmailTemplates\ProjectContractVariationOrderRequestEmail.txt" />
+    <Content Include="EmailTemplates\PurchaseOrderClarificationReplyMail.txt" />
+    <Content Include="EmailTemplates\ProjectContractMasterApprovalEmail.txt" />
+    <Content Include="EmailTemplates\ProjectContractMasterRequestEmail.txt" />
+    <Content Include="EmailTemplates\PurchaseOrderEmailToSupplier.txt" />
+    <Content Include="EmailTemplates\InvoiceRecallApprovalEmail.txt" />
+    <Content Include="EmailTemplates\PurchaseOrderRecallApprovalEmail.txt" />
+    <Content Include="EmailTemplates\PurchaseOrderRequestApprovalMail.txt" />
+    <Content Include="EmailTemplates\QuotationRequestEmailToSupplier.txt" />
+    <Content Include="EmailTemplates\PurchaseOrderRequestClarificationMail.txt" />
+    <Content Include="EmailTemplates\PurchaseOrderRequestEmail.txt" />
+    <Content Include="EmailTemplates\ReplyMail.txt" />
+    <Content Include="EmailTemplates\SalesOrderApprovalMail.txt" />
+    <Content Include="EmailTemplates\SalesOrderMail.txt" />
+    <Content Include="EmailTemplates\SupplierApprovalEmail.txt" />
+    <Content Include="EmailTemplates\SupplierRequestEmail.txt" />
+    <Content Include="Global.asax" />
+    <Content Include="images\logo.jpg" />
+    <Content Include="index.html" />
+    <Content Include="PDFTemplates\AssetRegister.html" />
+    <Content Include="PDFTemplates\AuditLogChanges.html" />
+    <Content Include="PDFTemplates\CreditNote.html" />
+    <Content Include="PDFTemplates\Footer.html" />
+    <Content Include="PDFTemplates\GoodsReturnedNotestBody.html" />
+    <Content Include="PDFTemplates\Header.html" />
+    <Content Include="PDFTemplates\InvoiceHeader.html" />
+    <Content Include="PDFTemplates\InvoicePayments.html" />
+    <Content Include="PDFTemplates\LocationTransferBody.html" />
+    <Content Include="PDFTemplates\payment-voucher.html" />
+    <Content Include="PDFTemplates\PurchaseOrderExpensePOBodyNew.html" />
+    <Content Include="PDFTemplates\PurchaseOrderExpensePOBody.html" />
+    <Content Include="PDFTemplates\PurchaseOrderFixedAssetPOBodyNew.html" />
+    <Content Include="PDFTemplates\PurchaseOrderFixedAssetPOBody.html" />
+    <Content Include="PDFTemplates\PurchaseOrderFixedContractBody.html" />
+    <Content Include="PDFTemplates\PurchaseOrderInventoryPOBodyNew.html" />
+    <Content Include="PDFTemplates\PurchaseOrderInventoryPOBody.html" />
+    <Content Include="PDFTemplates\PurchaseOrderRequestApprovalBody.html" />
+    <Content Include="PDFTemplates\PurchaseOrderRequestBody.html" />
+    <Content Include="PDFTemplates\PurchaseOrderRequestFixedPOApprovalBody.html" />
+    <Content Include="PDFTemplates\PurchaseOrderRequestFixedPOBody.html" />
+    <Content Include="PDFTemplates\PurchaseOrderRequestFooter.html" />
+    <Content Include="PDFTemplates\PurchaseOrderRequestHeader.html" />
+    <Content Include="PDFTemplates\PurchaseOrdersListsPDF.html" />
+    <Content Include="PDFTemplates\QuotationRequestBody.html" />
+    <Content Include="PDFTemplates\GoodsReceivedNotestBody.html" />
+    <Content Include="PDFTemplates\SalesHeader.html" />
+    <Content Include="PDFTemplates\SalesInvoice.html" />
+    <Content Include="PDFTemplates\SalesInvoiceBody.html" />
+    <Content Include="PDFTemplates\SalesOrderBody.html" />
+    <Content Include="PDFTemplates\SalesQuotation.html" />
+    <Content Include="PDFTemplates\SupplierInvoiceBodyNew.html" />
+    <Content Include="PDFTemplates\WorkFlowReAssignmentBody.html" />
+    <Content Include="ReportQueries\ADMINWORKFLOW.txt" />
+    <Content Include="ReportQueries\APCREDITNOTE.txt" />
+    <Content Include="ReportQueries\APINVOICE.txt" />
+    <Content Include="ReportQueries\COA.txt" />
+    <Content Include="ReportQueries\PO.txt" />
+    <Content Include="ReportQueries\POC.txt" />
+    <Content Include="ReportQueries\POCMASTER.txt" />
+    <Content Include="ReportQueries\POPINVOICE.txt" />
+    <Content Include="ReportQueries\POPMASTER.txt" />
+    <Content Include="ReportQueries\SUPPLIER.txt" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\UnityConfig.cs" />
+    <Compile Include="App_Start\UnityResolver.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Authentication\BasicAuthentication.cs" />
+    <Compile Include="Base\AnanomyousBase.cs" />
+    <Compile Include="Base\ApiControllerBase.cs" />
+    <Compile Include="Controllers\AccountsController.cs" />
+    <Compile Include="Controllers\ActivitiesController.cs" />
+    <Compile Include="Controllers\AppModulesController.cs" />
+    <Compile Include="Controllers\AppViewsController.cs" />
+    <Compile Include="Controllers\AuthenticationController.cs" />
+    <Compile Include="Controllers\AutoMapController.cs" />
+    <Compile Include="Controllers\ConnectionController.cs" />
+    <Compile Include="Controllers\AccountCodeController.cs" />
+    <Compile Include="Controllers\AccountSubCategoryController.cs" />
+    <Compile Include="Controllers\AccountTypesController.cs" />
+    <Compile Include="Controllers\AdhocMasterController.cs" />
+    <Compile Include="Controllers\AssetCategoryController.cs" />
+    <Compile Include="Controllers\AssetDepreciationController.cs" />
+    <Compile Include="Controllers\AssetDetailsController.cs" />
+    <Compile Include="Controllers\AssetDisposalController.cs" />
+    <Compile Include="Controllers\AssetMasterController.cs" />
+    <Compile Include="Controllers\AssetsRegisterController.cs" />
+    <Compile Include="Controllers\AssetTransferController.cs" />
+    <Compile Include="Controllers\AssetTypeController.cs" />
+    <Compile Include="Controllers\AuditLogController.cs" />
+    <Compile Include="Controllers\CompanyController.cs" />
+    <Compile Include="Controllers\ContactsController.cs" />
+    <Compile Include="Controllers\ContractPurchaseOrderController.cs" />
+    <Compile Include="Controllers\CostCentreController.cs" />
+    <Compile Include="Controllers\CreditNoteController.cs" />
+    <Compile Include="Controllers\CurrencyController.cs" />
+    <Compile Include="Controllers\CustomerController.cs" />
+    <Compile Include="Controllers\CustomerPaymentController.cs" />
+    <Compile Include="Controllers\DealsController.cs" />
+    <Compile Include="Controllers\DeliveryTermsController.cs" />
+    <Compile Include="Controllers\DepartmentController.cs" />
+    <Compile Include="Controllers\DepreciationController.cs" />
+    <Compile Include="Controllers\EmptyController.cs" />
+    <Compile Include="Controllers\EngineerManagementController.cs" />
+    <Compile Include="Controllers\ExpenseMasterController.cs" />
+    <Compile Include="Controllers\ExpensesPurchaseOrderController.cs" />
+    <Compile Include="Controllers\ExpenseTypeController.cs" />
+    <Compile Include="Controllers\FacilityManagementController.cs" />
+    <Compile Include="Controllers\FixedAssetPurchaseOrderController.cs" />
+    <Compile Include="Controllers\GenericController.cs" />
+    <Compile Include="Controllers\GoodsReceivedNotesController.cs" />
+    <Compile Include="Controllers\GoodsReturnedNotesController.cs" />
+    <Compile Include="Controllers\InventoryCycleCountController.cs" />
+    <Compile Include="Controllers\InventoryDisposalRequestController.cs" />
+    <Compile Include="Controllers\InventoryRequestController.cs" />
+    <Compile Include="Controllers\InvoiceController.cs" />
+    <Compile Include="Controllers\ItemAdjustmentController.cs" />
+    <Compile Include="Controllers\ItemCategoryController.cs" />
+    <Compile Include="Controllers\ItemController.cs" />
+    <Compile Include="Controllers\ItemMasterController.cs" />
+    <Compile Include="Controllers\ItemsListingController.cs" />
+    <Compile Include="Controllers\ItemTypeController.cs" />
+    <Compile Include="Controllers\LeadsController.cs" />
+    <Compile Include="Controllers\ListController.cs" />
+    <Compile Include="Controllers\LocationTransferController.cs" />
+    <Compile Include="Controllers\LogInController.cs" />
+    <Compile Include="Controllers\MeasurementUnitController.cs" />
+    <Compile Include="Controllers\NotificationController.cs" />
+    <Compile Include="Controllers\OpportunityController.cs" />
+    <Compile Include="Controllers\PaymentController.cs" />
+    <Compile Include="Controllers\PaymentTermsController.cs" />
+    <Compile Include="Controllers\ProducsController.cs" />
+    <Compile Include="Controllers\ProjectContractVariationOrderController.cs" />
+    <Compile Include="Controllers\ProjectMasterContractController.cs" />
+    <Compile Include="Controllers\ProjectPaymentContractController.cs" />
+    <Compile Include="Controllers\ProjectPurchaseOrderController.cs" />
+    <Compile Include="Controllers\PurchaseOrderApprovalController.cs" />
+    <Compile Include="Controllers\PurchaseOrderCreationController.cs" />
+    <Compile Include="Controllers\PurchaseOrderRequestApprovalController.cs" />
+    <Compile Include="Controllers\PurchaseOrderRequestController.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
+    <Compile Include="Controllers\RequestTypeController.cs" />
+    <Compile Include="Controllers\RoleManagementController.cs" />
+    <Compile Include="Controllers\SalesInvoiceController.cs" />
+    <Compile Include="Controllers\SalesOrderController.cs" />
+    <Compile Include="Controllers\SalesQuotationController.cs" />
+    <Compile Include="Controllers\SchedulerNoController.cs" />
+    <Compile Include="Controllers\ServiceCategoryController.cs" />
+    <Compile Include="Controllers\QuotationRequestController.cs" />
+    <Compile Include="Controllers\ServiceTypeController.cs" />
+    <Compile Include="Controllers\SupplierCategoryController.cs" />
+    <Compile Include="Controllers\SupplierController.cs" />
+    <Compile Include="Controllers\SharedController.cs" />
+    <Compile Include="Controllers\SupplierPaymentController.cs" />
+    <Compile Include="Controllers\TaxController.cs" />
+    <Compile Include="Controllers\SupplierServiceController.cs" />
+    <Compile Include="Controllers\TaxGroupController.cs" />
+    <Compile Include="Controllers\TestController.cs" />
+    <Compile Include="Controllers\TicketController.cs" />
+    <Compile Include="Controllers\UserManagementController.cs" />
+    <Compile Include="Controllers\UserProfileController.cs" />
+    <Compile Include="Controllers\WorkflowAuditTrailController.cs" />
+    <Compile Include="Controllers\WorkFlowController.cs" />
+    <Compile Include="Controllers\WorkFlowReAssignmentController.cs" />
+    <Compile Include="CustomActionResults\DuplicateResult.cs" />
+    <Compile Include="ExceptionLogger\ExceptionManagerApi.cs" />
+    <Compile Include="Extensions\ModelErrorExtensions.cs" />
+    <Compile Include="Extensions\MyAuditLog.cs" />
+    <Compile Include="Filters\ApiExceptionFilterAttribute.cs" />
+    <Compile Include="Filters\CacheControlAttribute .cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\ExcelService.cs" />
+    <Compile Include="Helpers\Helpers.cs" />
+    <Compile Include="Helpers\ReadCSV.cs" />
+    <Compile Include="LDAPWrapper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\ADAuthorizationServerProvider.cs" />
+    <Compile Include="Startup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="log4net.config" />
+    <None Include="packages.config" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\web.config" />
+    <Content Include="UploadedFiles\ContactsLists%284%29.csv" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Data\" />
+    <Folder Include="ExportedInvoices\" />
+    <Folder Include="Models\" />
+    <Folder Include="Properties\PublishProfiles\" />
+    <Folder Include="UploadedAccountCodes\" />
+    <Folder Include="UploadedAssetDetails\" />
+    <Folder Include="UploadedItems\" />
+    <Folder Include="UploadedSuppliers\" />
+    <Folder Include="Views\WeatherForecast\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UELPM.Business\UELPM.Business.csproj">
+      <Project>{4fd29755-8a95-4aa2-bfb4-9a6deb39164c}</Project>
+      <Name>UELPM.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UELPM.Model\UELPM.Model.csproj">
+      <Project>{b91f0a93-2096-4fe6-b40c-171d77620f72}</Project>
+      <Name>UELPM.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UELPM.Scheduler\UELPM.Scheduler.csproj">
+      <Project>{690b08c7-4184-4d70-a0ff-828fcabdb0dc}</Project>
+      <Name>UELPM.Scheduler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UELPM.Service\UELPM.Service.csproj">
+      <Project>{68e7399e-965d-4361-aca9-e0b89cc2a699}</Project>
+      <Name>UELPM.Service</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>49266</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:49266/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.4.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.4.0\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

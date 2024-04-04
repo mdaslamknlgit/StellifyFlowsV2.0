@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33423.256
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UELPM.WebAPI", "UELPM.WebAPI\UELPM.WebAPI.csproj", "{969FD424-9276-4E54-A5D9-AB0F03654BE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UELPM.Model", "UELPM.Model\UELPM.Model.csproj", "{B91F0A93-2096-4FE6-B40C-171D77620F72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UELPM.Service", "UELPM.Service\UELPM.Service.csproj", "{68E7399E-965D-4361-ACA9-E0B89CC2A699}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UELPM.Business", "UELPM.Business\UELPM.Business.csproj", "{4FD29755-8A95-4AA2-BFB4-9A6DEB39164C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UELPM.Util", "UELPM.Util\UELPM.Util.csproj", "{0FBF1660-A161-438C-842F-7D9330889B5F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UELPM.Scheduler", "UELPM.Scheduler\UELPM.Scheduler.csproj", "{690B08C7-4184-4D70-A0FF-828FCABDB0DC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{969FD424-9276-4E54-A5D9-AB0F03654BE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{969FD424-9276-4E54-A5D9-AB0F03654BE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{969FD424-9276-4E54-A5D9-AB0F03654BE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{969FD424-9276-4E54-A5D9-AB0F03654BE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B91F0A93-2096-4FE6-B40C-171D77620F72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B91F0A93-2096-4FE6-B40C-171D77620F72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B91F0A93-2096-4FE6-B40C-171D77620F72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B91F0A93-2096-4FE6-B40C-171D77620F72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68E7399E-965D-4361-ACA9-E0B89CC2A699}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68E7399E-965D-4361-ACA9-E0B89CC2A699}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68E7399E-965D-4361-ACA9-E0B89CC2A699}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68E7399E-965D-4361-ACA9-E0B89CC2A699}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FD29755-8A95-4AA2-BFB4-9A6DEB39164C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FD29755-8A95-4AA2-BFB4-9A6DEB39164C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FD29755-8A95-4AA2-BFB4-9A6DEB39164C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FD29755-8A95-4AA2-BFB4-9A6DEB39164C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FBF1660-A161-438C-842F-7D9330889B5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FBF1660-A161-438C-842F-7D9330889B5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FBF1660-A161-438C-842F-7D9330889B5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FBF1660-A161-438C-842F-7D9330889B5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{690B08C7-4184-4D70-A0FF-828FCABDB0DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{690B08C7-4184-4D70-A0FF-828FCABDB0DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{690B08C7-4184-4D70-A0FF-828FCABDB0DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{690B08C7-4184-4D70-A0FF-828FCABDB0DC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6B53841E-85FE-4CFC-B9D5-01B3F0BD454F}
+	EndGlobalSection
+EndGlobal

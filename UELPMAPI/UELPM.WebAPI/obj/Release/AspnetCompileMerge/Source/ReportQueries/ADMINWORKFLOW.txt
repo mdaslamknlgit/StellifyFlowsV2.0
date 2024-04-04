@@ -1,0 +1,25 @@
+﻿SELECT * FROM
+(select  entity.CompanyId, 
+                 entity.CompanyName as Entity,  
+                 l.Name as Department,  
+                 wfp.ProcessName as DocumentName,  
+                 wfc.WorkFlowName,  
+                 Isnull(wfl.FieldName,'') as Condition,  
+                 ISNULL(wfl.Operator,'') as Operator,  
+                 ISNULL(wfl.Value,'') as Value,  
+                 ISNULL(Concat(uspa.firstname, uspa.lastname),'') as UserName,  
+                 Concat(uspc.firstname, uspc.lastname) AS CreatedBy,  
+                 Format (wfc.CreatedDate, 'dd-MM-yyyy') AS CreatedDate,  
+                 Concat(uspu.firstname, uspu.lastname) AS UpdatedBy,  
+                 Format (wfc.UpdatedDate, 'dd-MM-yyyy') AS UpdatedDate,  
+                 ISNULL(R.RoleName,'') as RoleName  
+                 from WorkFlowConfiguration wfc  
+                 inner join Company as entity on wfc.CompanyId = entity.CompanyId  
+                 inner join WorkFlowProcessLevel wfpl on wfc.WorkFlowConfigurationId = wfpl.WorkFlowConfigurationId   
+                 inner join WorkFlowLevel as wfl on wfpl.WorkFlowProcessId = wfl.WorkFlowProcessId  
+                 INNER JOIN location AS L on wfc.LocationID = l.LocationID  
+                 Inner join WorkFlowProcess as wfp on wfc.ProcessId = wfp.ProcessId  
+                 inner join UserProfile as uspc on wfc.CreatedBy = uspc.UserID  
+                 left join UserProfile as uspu on wfc.UpdatedBy = uspu.UserID  
+                 left join UserProfile as uspa on wfl.ApproverUserId= uspa.UserID  
+                 left  join Roles as r on wfl.RoleID = r.RoleID ) AS T1

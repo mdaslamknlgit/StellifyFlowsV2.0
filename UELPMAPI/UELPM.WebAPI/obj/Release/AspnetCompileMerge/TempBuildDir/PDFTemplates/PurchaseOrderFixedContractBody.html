@@ -1,0 +1,349 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500" rel="stylesheet" />
+    <title>Contract Purchase Order</title>
+    <style>
+        body {
+            font-family: Arial;
+            font-size: 14px;
+            padding: 0px;
+            margin: 0px
+        }
+
+        .form-label {
+            color: #01548e;
+        }
+
+        .form-size {
+            font-size: 10px;
+            font-family: Arial;
+        }
+        .form-table td {
+            height: 12px;
+            vertical-align: top;
+        }
+
+        .form-heading {
+            color: #01548e;
+            font-size: 18px;
+            display: inline-block;
+            border-bottom: 1px solid #01548e;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .footer td {
+            background: #111;
+            color: #fff;
+            position: relative;
+            z-index: 99;
+            text-align: right;
+            height: 61px;
+            line-height: 61px;
+            width: 100%;
+            font-size: 12px;
+            font-weight: 300;
+        }
+
+        .nowrap {
+            white-space: nowrap
+        }
+    </style>
+</head>
+
+<body>
+    <table style="width:100%" align="center" border="0">
+        <tr>
+            <td width="50%" valign="top">
+
+                <table class="form-table" style="width:100%">
+                    <!--<tr class="form-group row">
+        <td width="45%" style="color: #01548e;font-family:Arial;font-size:11px"><b>Company Reg. Number:</b> </td>
+        <td width="2%">:</td>
+        <td width="53%" style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word;font-family:Arial;font-size:11px"><b>[[CompanyRegNumber]]</b></td>
+    </tr>-->
+                    <tr class="form-group row form-size">
+                        <td width="45%">PO Type </td>
+                        <td width="2%">:</td>
+                        <td width="53%" style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[PurchaseOrderTitleType]]</td>
+                    </tr>
+                    <!--<tr class="form-group row form-size">
+        <td width="45%" style="color: #01548e;">Requestor</td>
+        <td width="2%">:</td>
+        <td width="53%" style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[FirstName]] [[LastName]]</td>
+    </tr>-->
+                    <tr class="form-group row form-size">
+                        <td width="45%">Type of Contract</td>
+                        <td width="2%">:</td>
+                        <td width="53%" style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[PurchaseOrderType]] </td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td>Type Of Service </td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[ServiceName]]</td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td >Supplier </td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[SupplierName]]</td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td>Supplier Id</td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[SupplierCode]]</td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td >Contract Period</td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[StartDate]] to [[EndDate]]</td>
+                    </tr>
+                    <!--<tr class="form-group row form-size">
+        <td style="color: #01548e;">End Date </td>
+        <td>:</td>
+        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[EndDate]]</td>
+    </tr>-->
+
+                    <tr class="form-group row form-size">
+                        <td >Contract Terms</td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[ContractTerms]]</td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td>Total Contract Sum </td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[Currency]] [[TotalContractSum]]</td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td >Billing Frequency </td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[BillingFrequency]] </td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td>Contract Sum </td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[Currency]] [[TenureAmount]]</td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td>Margin Amount</td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[Margin]]</td>
+                    </tr>
+
+                   
+                    <!--<tr class="form-group row form-size">
+                        <td style="color: #01548e;">Contract Name </td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[ContractName]] </td>
+                    </tr>-->
+
+
+
+
+
+                </table>
+            </td>
+
+            <td width="50%" valign="top">
+
+                <table style="width:100%" class="form-table">
+                    <!--<tr class="form-group row" style="font-family:Arial;font-size:13.5px;">
+        <td style="color: #01548e;"><b>POC ID</b></td>
+        <td>:</td>
+        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word"><b>[[POCode]]</b></td>
+    </tr>-->
+                    <tr class="form-group row form-size">
+                        <td width="45%" >Date</td>
+                        <td width="2%">:</td>
+                        <td width="53%" style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[CreatedDate]]</td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td width="45%">Status</td>
+                        <td width="2%">:</td>
+                        <td width="53%" style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[PurchaseOrderStatusText]]</td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td width="45%">Department</td>
+                        <td width="2%">:</td>
+                        <td width="53%" style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[Location]]</td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td >First PO Date </td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[PODate]]</td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td>Payment Term</td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word"> </td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td >Accrue the Expense</td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[AccruetheExpense]]</td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td >Accrual Code</td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[AccountCodeName]]</td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td>Split by Month (Accrual)</td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[SplitByMonthly]]</td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td >Currency</td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[CurrencyCode]]</td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td >Tax Authority</td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[TaxGroupName]] </td>
+                    </tr>
+                    <tr class="form-group row form-size">
+                        <td>Tax Description</td>
+                        <td>:</td>
+                        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[Description]] </td>
+                    </tr>
+
+
+                    <!--<tr class="form-group row form-size">
+        <td width="45%" style="color: #01548e;">Designation</td>
+        <td width="2%">:</td>
+        <td width="53%" style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[Designation]]</td>
+    </tr>-->
+                    <!--<tr class="form-group row form-size">
+        <td style="color: #01548e;">Supplier Sub Code</td>
+        <td>:</td>
+        <td style="word-break:break-word;white-space:pre-wrap;word-wrap:break-word">[[SupplierSubCode]]</td>
+    </tr>-->
+
+
+
+                </table>
+                <br />
+            </td>
+
+        </tr>
+        <tr>
+            <!--<td  colspan="2" style="font-family:Arial;font-size:11px;">
+                <br />
+                <h4  style="text-decoration:underline;">Contract Details</h4>
+            </td>-->
+        </tr>
+
+
+        <tr class="form-size">
+            <td colspan="2">
+                <table class="form-size" border="1" cellpadding="3" cellspacing="0" style="margin-bottom:20px; width:100%">
+                    <thead>
+                        <tr>
+                            <th width="5%" class="reportField textHeader"><b>No.</b></th>
+                            <th width="20%" class="reportField textHeader"><b>Category </b></th>
+                            <th width="20%" class="reportField textHeader"><b>Expense </b></th>
+                            <th width="40%" class="reportField textHeader"><b>Description </b></th>
+                            <th width="15%" class="reportField textHeader"><b>Amount ([[Currency]])</b></th>
+                            <!--<th width="20%" class="reportField textHeader">Payment Valuation</th>-->
+                        </tr>
+                    </thead>
+                    <tbody class="form-size">
+                        {{#each FixedContractDetails}}
+                        <tr class="form-size">
+                            <td class="reportField form-size" style="text-align:center">{{ItemId}}</td>
+                            <td class="reportField form-size" style="text-align:left">{{Category}}</td>
+                            <td class="reportField form-size" style="text-align:left">{{ExpenseCategory}}</td>
+                            <td class="reportField form-size" style="text-align:left">{{Description}}</td>
+                            <td align="right" class="reportField form-size">{{Amount}}</td>
+                            <!--<td align="right" class="reportField">{{PaymentValuation}}</td>-->
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="2"></td>
+        </tr>
+
+
+
+
+        <tr class="row">
+
+            <td colspan="2" width="30%">
+
+
+                <table class="form-size" style="width:100%; table-layout:fixed;" border="0" >
+                    <tr>
+                        <td style="white-space:nowrap" width="5%" colspan="4"></td>
+
+                        <td valign="top" width="50%">
+
+                            <table class="table table-subtotal form-size" cellpadding="3" style="float:right; width: 100%;" border="0">
+                                <tr>
+                                    <td class="nowrap" width="84%" align="right" style="white-space:nowrap">Total :</td>
+                                    <td width="1%"></td>
+                                    <td align="right" width="15%" class="nowrap" style="white-space:nowrap"> [[Currency]] [[SubTotal]]</td>
+
+                                </tr>
+                                <tr>
+
+
+                                    <td class="nowrap" align="right" style="white-space:nowrap">Discount :</td>
+                                    <td></td>
+                                    <td align="right"  class="nowrap" style="border-bottom: 1px solid #000000; width:70%;"> [[Currency]] [[Discount]]</td>
+
+                                </tr>
+                                <tr>
+                                    <td class="nowrap" align="right" style="white-space:nowrap">Total before GST :</td>
+                                    <td></td>
+                                    <td align="right" class="nowrap" style="white-space:nowrap"> [[Currency]] [[SubTotal]]</td>
+
+                                </tr>
+                                <!--<tr>
+                                    <td class="nowrap" align="right" style="white-space:nowrap">Tax Type :</td>
+                                    <td align="right" class="nowrap" style="white-space:nowrap">[[TaxName]]</td>
+                                </tr>-->
+                                <tr>
+                                    <td class="nowrap" align="right" style="white-space:nowrap">GST ([[GstAmount]])% :</td>
+                                    <td></td>
+                                    <td align="right" class="nowrap" style="border-bottom: 1px solid #000000; width:70%;">[[Currency]] [[TotalTax]] </td>
+                                </tr>
+                               
+
+                                <tr>
+                                    <td class="nowrap" align="right" style="white-space:nowrap">Grand Total :</td>
+                                    <td></td>
+                                    <td align="right" class="nowrap" style="border-bottom: 1px solid #000000; width:70%; ">[[Currency]] [[TotalAmount]] </td>
+                                </tr>
+                            </table>
+                        </td>
+
+                    </tr>
+                </table>
+
+            </td>
+        </tr>
+
+
+        <tr>
+            <td style="text-decoration:underline; font-size:11px;font-family:Arial;">Audit Trail</td>
+        </tr>
+
+
+
+
+
+    </table>
+
+
+
+
+
+
+</body>
+</html>

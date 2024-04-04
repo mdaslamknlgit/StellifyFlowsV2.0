@@ -1,0 +1,40 @@
+﻿SELECT * FROM
+(SELECT entity.CompanyId,entity.CompanyName as CompanyName,
+       Format (s.createddate, 'dd-MM-yyyy') AS CreationDate,
+       Concat(entity.companycode, '-', (SELECT dbo.Getsuppliercode(s.suppliercode,'-'))) AS SupplierId,
+       s.suppliername                       AS SupplierName,
+       wfstatus.statustext                  AS Status,
+       s.suppliershortname                  AS ShortName,
+       s.billingaddress1                    AS AddressLine1,
+       s.billingaddress2                    AS AddressLine2,
+       s.billingaddress3                    AS AddressLine3,
+       s.billingcity                        AS City,
+       c.NAME                               AS Country,
+       s.billingzipcode                     AS PostalCode,
+       l.NAME                               AS Dept,
+       gs.statustext                        AS GSTStatus,
+       sc.categorytext                      AS Category,
+       ( CASE
+           WHEN s.suppliertypeid = 1 THEN 'Internal'
+           ELSE 'External'
+         END )                              AS Type,
+       pt.code                              AS PaymentTerms,
+	   ISNULL(tg.TaxGroupName,'') AS TaxGroup,
+	   ISNULL(T.TaxClass,'') as TaxClass,
+	   ISNULL(SCD.RateType,'') AS RateType,
+	   ISNULL(scd.CreditLimit,0) AS CreditLimit,
+       SA.WorkFlowStatusid,
+       s.suppliertypeid
+FROM   supplier AS s
+       INNER JOIN suppliercompanydetails AS scd ON s.supplierid = scd.supplierid
+       INNER JOIN company AS entity ON scd.companyid = entity.companyid
+       INNER JOIN countries AS c ON s.billingcountryid = c.id
+       LEFT JOIN gststatus AS gs ON s.gststatusid = gs.gststatusid
+       LEFT JOIN suppliercategory AS sc ON s.suppliercategoryid = sc.suppliercategoryid
+       LEFT JOIN suppliersubcode AS ssc ON s.supplierid = ssc.supplierid AND scd.companyid = ssc.companyid
+       LEFT JOIN supplierapproval AS sa ON s.supplierid = sa.supplierid AND sa.companyid = scd.companyid
+       LEFT JOIN workflowstatus AS wfstatus ON sa.workflowstatusid = wfstatus.workflowstatusid
+       LEFT JOIN location AS l ON ssc.locationid = l.locationid
+       INNER JOIN paymentterms AS pt ON scd.paymenttermsid = pt.paymenttermsid
+       LEFT JOIn TaxGroup as tg on scd.TaxId = tg.TaxGroupId
+	   LEFT JOIN Taxes as T on scd.TaxClass = T.TaxId) AS T1

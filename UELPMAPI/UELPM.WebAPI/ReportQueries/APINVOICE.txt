@@ -1,0 +1,132 @@
+﻿SELECT * FROM
+(SELECT entity.CompanyId,i.LocationID,entity.companyname  
+                   AS  
+                   Entity,  
+                   L.NAME  
+                   AS Department,  
+                   Format (I.updateddate, 'dd-MM-yyyy')  
+                   AS CreationDate,  
+                   I.invoicecode  
+                   AS InvoiceNo,  
+                   ( CASE  
+                       WHEN I.potypeid = 1 THEN (SELECT purchaseordercode  
+                                                 FROM   purchaseorder  
+                                                 WHERE  
+                       purchaseorderid = I.purchaseorderid)  
+                       WHEN I.potypeid = 2 THEN (SELECT  
+                       fixedassetpurchaseordercode  
+                                                 FROM   fixedassetpurchaseorder  
+                                                 WHERE  
+                       fixedassetpurchaseorderid =  
+                                                I.purchaseorderid)  
+                       WHEN I.potypeid = 3 THEN (SELECT  
+                       expensespurchaseordercode  
+                    FROM   expensespurchaseorder  
+                                                 WHERE  
+                       expensespurchaseorderid =  
+                                                I.purchaseorderid)  
+                       WHEN I.potypeid IN ( 5, 6 ) THEN (SELECT cponumber  
+                                                         FROM  
+                       contractpurchaseorder  
+                                                         WHERE  
+                       cpoid = I.purchaseorderid)  
+                       ELSE ''  
+                     END )  
+                   AS [PONOs/CPONos],  
+                   ( CASE  
+                       WHEN I.potypeid IN( 1, 2, 3 ) THEN (SELECT DISTINCT  
+                                                          Stuff(  
+                                                          (SELECT DISTINCT  
+                                                          ', ' + grn.grncode  
+                                                           FROM  
+                                                          invoiceitems ii  
+                       INNER JOIN invoicegrn  
+                                  AS  
+                                  ig  
+                               ON ii.invoiceid  
+                                  =  
+                                  ig.invoiceid  
+                       INNER JOIN goodsreceivednote  
+                                  AS  
+                                  grn  
+                               ON ig.goodsreceivednoteid  
+                                  =  
+                                  grn.goodsreceivednoteid  
+                              WHERE  i.invoiceid =  
+                                     ig.invoiceid  
+                              FOR xml path ('')), 1, 1, ''  
+                       ) col2  
+                        FROM   invoiceitems AS ii)  
+                       WHEN I.potypeid IN ( 5, 6 ) THEN (SELECT DISTINCT Stuff(  
+                       (SELECT DISTINCT  
+                       ', ' + i2.cponumber  
+                        FROM   invoice i1  
+                       INNER JOIN invoiceitems i2  
+                               ON i1.invoiceid =  
+                                  i2.invoiceid  
+                              WHERE  
+                       i1.invoiceid =  
+                       I.invoiceid  
+                                               FOR xml path  
+                       ('')),  
+                                        1  
+                                        , 1, '') col2  
+                        FROM   invoiceitems AS ii)  
+                       ELSE ''  
+                     END )  
+                   AS [GRNNos/POCNos],  
+                   Concat(entity.companycode, '-', (SELECT  
+                   dbo.Getsuppliercode(s.suppliercode,  
+                   '-')),  
+                   '-', (SELECT dbo.Getsubcode(i.potypeid, i.purchaseorderid,  
+                                i.invoiceid)))  
+                   AS  
+                   SupplierCode,  
+                   s.suppliername as SupplierName,  
+                   wfstatus.statustext  
+                   AS Status,  
+                   (SELECT Cast(Sum(itemqty * unitprice) AS DECIMAL(18, 2))AS  
+                           total  
+                    FROM   invoiceitems  
+                    WHERE  invoiceid = i.invoiceid)  
+                   AS InvoiceAmountBefGST,  
+                   I.totalamount  
+                   AS InvoiceAmountWithGST,  
+                   I.supplierrefno  
+                   AS SupplierInoviceNo,  
+                   ( CASE  
+                       WHEN I.potypeid = 1 THEN 'Inventory PO'  
+                       WHEN I.potypeid = 2 THEN 'Fixed Asset PO'  
+                       WHEN I.potypeid = 3 THEN 'Expenses PO'  
+                       WHEN I.potypeid = 5 THEN 'Contract PO Fixed'  
+                       WHEN I.potypeid = 6 THEN 'Contract PO Variable'  
+                       ELSE 'Without PO'  
+                     END )  
+                   AS InvoiceType,  
+                   Concat(requester.firstname, requester.lastname)  
+                   AS Requestor,  
+                   cc.NAME  
+                   Currency,  
+                   PT.description  
+                   AS PaymentTerms,  
+                   I.invoicedescription AS InvoiceDescription,
+				   ISNULL(SCH.SchedulerNumber,'') AS SchedulerNumber,
+                   I.workflowstatusid,
+                   requester.userid,
+                   S.suppliertypeid
+            FROM   invoice AS I  
+                   INNER JOIN supplier AS s  
+                           ON I.supplierid = s.supplierid  
+                   INNER JOIN company AS entity  
+                           ON I.companyid = entity.companyid  
+                   INNER JOIN workflowstatus AS wfstatus
+                           ON I.workflowstatusid = wfstatus.workflowstatusid  
+                   INNER JOIN userprofile AS requester  
+                           ON I.createdby = requester.userid  
+                   INNER JOIN location AS L  
+                           ON I.locationid = L.locationid  
+                   INNER JOIN currencies AS cc  
+                           ON I.currencyid = cc.id  
+                   LEFT JOIN dbo.paymentterms AS PT  
+                          ON I.paymenttermid = PT.paymenttermsid
+				   LEFT JOIN dbo.SchedulerNo as SCH on sch.SchedulerNoId = I.SchedulerId) AS T1

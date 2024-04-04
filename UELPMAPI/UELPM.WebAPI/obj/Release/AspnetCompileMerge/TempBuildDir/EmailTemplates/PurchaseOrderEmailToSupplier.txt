@@ -1,0 +1,44 @@
+﻿<html >
+<head>
+    <title>New Purchase Order Mail</title>
+</head>
+<body>
+<div  style="font-family:tahoma;font-size:14px">
+Dear $$Name,
+<br/> <br/> 
+<div style="font-size:13px;">Find here with new purchase order details.</div>  
+<br/>
+<div><b>Purchase Order details are given below,</b> </div>  
+<br/> 
+<table border="1" cellpadding="5" cellspacing="0">
+<tr>
+<th style="color:#2672ec;">Request Number</th>
+<th style="color:#2672ec;">Type</th>
+<th style="color:#2672ec;">Request From</th>
+<th style="color:#2672ec;">Supplier</th>
+<th style="color:#2672ec;">Total Amount($$DocumentCurrencySymbol)</th>
+<th style="color:#2672ec;">Delivery Date</th>
+</tr>
+<tr>
+<td>$$PurchaseOrderRequestNumber</td>
+<td>$$PurchaseOrderType</td>
+<td>$$CompanyName</td>
+<td>$$Supplier</td>
+<td>$$TotalAmount</td>
+<td>$$DeliveryDate</td>
+</tr>
+</table>
+ <br/> 
+<div style="font-size:13px;">For more details, please find here with attached pdf document. <br/>
+</div> 
+<br/>
+Best regards,
+<br/> 
+$$Sender
+<br/>
+From $$CompanyName
+</div>
+</div>
+</body>
+</html>
+

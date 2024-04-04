@@ -1,0 +1,37 @@
+﻿<html >
+<head>
+    <title>Request for Project Contract Master Approval</title>
+</head>
+<body >
+<div  style="font-family:tahoma;font-size:14px">
+Dear $$Name,
+<br/> <br/> 
+<div style="font-size:13px;">$$MailTitle</div>  
+<br/>
+<div><b>POP Contract details :</b> </div>  
+<br/> 
+<table border="1" cellpadding="5" cellspacing="0">
+<tr>
+<th style="color:#2672ec;">Request Number</th>
+<th style="color:#2672ec;">Supplier</th>
+<th style="color:#2672ec;">Original Contract Sum($$DocumentCurrencySymbol)</th>
+<th style="color:#2672ec;">Status</th>
+</tr>
+<tr>
+<td><a href="$$SiteLogin" style="color:#0645AD; text-decoration: underline;">$$PurchaseOrderRequestNumber</a></td>
+<td>$$Supplier</td>
+<td style="text-align: right">$$OriginalContractSum</td>
+<td>$$Status</td>
+</tr>
+</table>
+ <br/> 
+<div style="font-size:13px;">For more details, Click above to login. <br/>
+</div> 
+<br/>
+Best regards,
+<br/> 
+$$Sender
+</div>
+</div>
+</body>
+</html>

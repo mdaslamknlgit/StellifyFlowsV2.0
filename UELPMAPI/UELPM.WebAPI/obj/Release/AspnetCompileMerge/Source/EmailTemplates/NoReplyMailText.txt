@@ -1,0 +1,15 @@
+﻿<br>
+<br>
+<div>
+    <span style="background-color: yellow">
+	<b>
+	Please do not reply directly to this email.
+	</b>
+	</span>
+</div>
+<br>
+<div>
+    <span style="background-color: yellow">
+	Responses go to an automated email box that we are unable to read or reply to. We are unable to respond to individual reply to this email.
+	</span>
+</div>
