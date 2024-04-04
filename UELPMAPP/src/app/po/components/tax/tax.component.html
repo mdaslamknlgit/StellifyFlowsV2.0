@@ -1,0 +1,164 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+            <div class="flexrow space-between align-center">
+                <h3 class="item-heading"> Taxes  </h3>
+                <!-- <p>--{{FormMode}}  -- {{TaxId}}  -- {{isDisplayMode}}</p> -->
+                <div>
+                    <input #file style="visibility: hidden;width:0px" type="file" accept="xlsx/*"
+                        (click)="file.value = null" (change)="uploadFile($event)">
+
+                        <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickBack($event)">
+                            <i class="fa fa-arrow-left" ria-hidden="true" aria-hidden="true"></i> Back</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <p>Edit Form Starts Here</p>
+    <div class="row">
+        <div #rightPanel class="rightPanel col-lg-12 col-md-12" [class.expand-rightcol]="rightSection">
+            <div class="fullScreenLabel"> <app-header></app-header> </div>
+            <div *ngIf="isDisplayMode!=null">
+
+                <form [formGroup]="taxForm" class="form-horizontal">
+                    <div class="rightcol-scrroll">
+                        <div class="row fullScreenLabel">
+                            <div class="col-12">
+                                <h3 class="item-heading" style="float:none;">Taxes</h3>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Tax Name<i
+                                    class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"
+                                    aria-hidden="true"></i> </label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <input type="text" appAutofocus formControlName="TaxName" maxlength="50"
+                                    [ngClass]="(validateControl(taxForm.get('TaxName')))?'form-control ng-touched':'form-control'"
+                                    placeholder="Tax Name" *ngIf="isDisplayMode==false" class="form-control">
+
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true">
+                                    <b style="color:#01548e">{{ selectedTaxRecord.TaxName }}</b>
+                                </label>
+                                <div
+                                    *ngIf="isDisplayMode==false &&taxForm.get('TaxName') && taxForm.get('TaxName').errors!=null && taxForm.get('TaxName').touched==true">
+                                    <span class="errorMessage" *ngIf="taxForm.get('TaxName').errors.required">Tax Name
+                                        is required</span>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Tax in Percentage<i
+                                    class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"
+                                    aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <input type="number" min="0" max="100" oninput="validity.valid||(value='')"
+                                    formControlName="TaxAmount"
+                                    [ngClass]="(validateControl(taxForm.get('TaxAmount')))?'form-control ng-touched':'form-control'"
+                                    placeholder="Tax Amount" *ngIf="isDisplayMode==false" class="form-control">
+
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true">
+                                    {{ selectedTaxRecord.TaxAmount }}
+                                </label>
+
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Tax Group <i
+                                    class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"
+                                    aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <select *ngIf="isDisplayMode==false" class="form-control" formControlName="TaxGroupId"
+                                    [ngClass]="(validateControl(taxForm.get('TaxGroupId')))?'form-control ng-touched':'form-control'">
+                                    <option [ngValue]="null">--Select--</option>
+                                    <option *ngFor="let taxGroup of taxGroups" [value]="taxGroup.TaxGroupId">
+                                        {{taxGroup.TaxGroupName}}
+                                    </option>
+                                </select>
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true">
+                                    {{ selectedTaxRecord.TaxAuthority }}
+                                </label>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Tax Class<i
+                                    class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"
+                                    aria-hidden="true"></i>
+                            </label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <input type="text" oninput="validity.valid||(value='')" formControlName="TaxClass"
+                                    [ngClass]="(validateControl(taxForm.get('TaxClass')))?'form-control ng-touched':'form-control'"
+                                    placeholder="Tax Class" *ngIf="isDisplayMode==false" class="form-control">
+
+                                <label class="col-form-label  form-text" *ngIf="isDisplayMode==true">
+                                    {{selectedTaxRecord.TaxClass}} </label>
+                                <div
+                                    *ngIf="isDisplayMode==false && taxForm.get('TaxClass').errors!=null && taxForm.get('TaxClass').touched==true">
+                                    <span class="errorMessage" *ngIf="taxForm.get('TaxClass').errors.Duplicate">Tax
+                                        Group and Class cannot be same.</span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group text-right btn-list">
+                        <button type="submit" (click)="saveRecord()" class="btn btn-save"
+                            *ngIf="isDisplayMode==false"><i class="fa fa-check" aria-hidden="true"></i> Save</button>
+
+                            <button type="button" (click)="ClickBack($event)" class="btn btn-cancel">
+                                <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+
+
+                            <!-- <button type="button" (click)="ClickBack($event)" class="btn btn-cancel"
+                            *ngIf="isDisplayMode==true"><i class="fa fa-ban" aria-hidden="true"></i> Cancel</button> -->
+                       
+                            <button type="submit" (click)="editRecord()" class="btn btn-edit"
+                            *ngIf="isDisplayMode==true && editPermission"><i
+                                class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                        
+                                <button type="submit" (click)="deleteRecord()" class="btn btn-delete"
+                            *ngIf="isDisplayMode==true && TaxesList.length > 0 && deletePermission"><i class="fa fa-trash-o"
+                                aria-hidden="true"></i> Delete</button>
+                    </div>
+
+                </form>
+                <p-confirmDialog></p-confirmDialog>
+            </div>
+        </div>
+    </div>
+    <p>Edit Form Ends Here</p>
+        <ng-template #filters>
+            <div class="flter-popover">
+                <form class="form-horizontal" (ngSubmit)="onSubmit()">
+                    <div class="form-group row">
+                        <label class="col-form-label col-4 form-label">Name </label>
+                        <div class="col-8">
+
+                            <input type="text" id="orderlevel" name="orderlevel" placeholder="Re-Order Level"
+                                class="form-control">
+
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-4 form-label">Category</label>
+                        <div class="col-8">
+
+                            <input type="text" id="alertqty" name="alertqty" placeholder="Low Alert Qty"
+                                class="form-control">
+
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </ng-template>

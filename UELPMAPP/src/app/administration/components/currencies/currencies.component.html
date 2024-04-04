@@ -1,0 +1,93 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+            <div class="flexrow space-between align-center">
+                <h3 class="item-heading"> Currency </h3>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div #rightPanel [CustomSpinner]="showRightPanelLoadingIcon" class="rightPanel col-lg-12 col-md-12"
+            [class.expand-rightcol]="rightsection">
+            <div class="fullScreenLabel"> <app-header></app-header> </div>
+            <div>
+                <form [formGroup]="currencyManagementForm" class="form-horizontal">
+                    <div class="rightcol-scrroll">
+                        <div class="row fullScreenLabel">
+                            <div class="col-12">
+                                <h3 class="item-heading" style="float:none;">Currency</h3>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Name <i
+                                    class="fa fa-star mandatory-icon" *ngIf="hideinput" aria-hidden="true"></i></label>
+                            <div class="autoComplete col-xl-4 col-sm-6 col-6">
+                                <label class="col-form-label form-text"
+                                    *ngIf="selectedCurrencyManagementRecord.Id!=null || hidetext">
+                                    <b style="color:#01548e">{{selectedCurrencyManagementRecord.Name}}</b> </label>
+
+                                <input formControlName="Name"
+                                    *ngIf="selectedCurrencyManagementRecord.Id==null&&hideinput" type="text"
+                                    class="form-control show" />
+
+                                <div *ngIf="currencyManagementForm.get('Name').errors!=null">
+                                    <span class="errorMessage"
+                                        *ngIf="currencyManagementForm.get('Name').errors.DuplicateCurrency">Duplicate
+                                        Currency</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Code <i
+                                    class="fa fa-star mandatory-icon" *ngIf="hideinput" aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-6">
+                                <label class="col-form-label form-text"
+                                    *ngIf="hidetext">{{selectedCurrencyManagementRecord.Code }}</label>
+                                <input formControlName="Code" *ngIf="hideinput" type="text" class="form-control show" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Symbol </label>
+                            <div class="col-xl-4 col-sm-6 col-6">
+                                <label class="col-form-label form-text"
+                                    *ngIf="hidetext">{{selectedCurrencyManagementRecord.Symbol }}</label>
+                                <input formControlName="Symbol" *ngIf="hideinput" type="text"
+                                    class="form-control show" />
+                            </div>
+                        </div>
+                        <div class="form-group row" *ngIf="hidetext">
+                            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Status </label>
+                            <div class="col-xl-4 col-sm-6 col-6">
+                                <label
+                                    class="col-form-label form-text">{{selectedCurrencyManagementRecord.Status==1?"Active":"InActive"}}
+                                </label>
+                                <!-- <label class="col-form-label form-text"  *ngIf="hideinput">
+                  <mat-slide-toggle formControlName="Status" (change)="matselect($event)"></mat-slide-toggle>
+              <label *ngIf="slideactive">Active</label>   -->
+                                <!-- </label> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group text-right btn-list">
+                        <button type="submit" (click)="saveRecord()" class="btn btn-save" *ngIf="hideinput"><i
+                                class="fa fa-check" aria-hidden="true"></i> Save</button>
+                        <button type="submit" (click)="cancelRecord()" class="btn btn-cancel" *ngIf="hideinput"><i
+                                class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                        <button type="submit" (click)="editRecord()" class="btn btn-edit"
+                            *ngIf="hidetext && editPermission"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                            Edit</button>
+                        <button type="submit" (click)="deleteRecord()" class="btn btn-delete"
+                            *ngIf="hidetext && deletePermission"><i class="fa fa-trash-o" aria-hidden="true"></i>
+                            Delete</button>
+                    </div>
+                </form>
+                <p-confirmDialog></p-confirmDialog>
+            </div>
+        </div><!-- left col end here-->
+    </div>
+</div>
+<ng-template #userTemplate let-r="result" let-t="term">
+    {{ r.UserName }}
+</ng-template>

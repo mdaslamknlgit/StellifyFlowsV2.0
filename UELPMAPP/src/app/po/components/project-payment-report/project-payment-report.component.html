@@ -1,0 +1,258 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6 col-sm-12 padding-null tittlediv">
+      <h3 class="item-heading">
+        <img src="../assets/images/icon1.png"> {{moduleHeading}}
+      </h3>
+    </div>
+    <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+      export as
+      <select (change)="export_xls('exportContent')">
+        <option value=""> </option>
+        <!-- <option value="pdf">pdf</option> -->
+        <option value="excel">excel</option>
+      </select>
+    </div>
+    <br>
+  </div>
+  <div id="exportContent">
+    <div class="row">
+      <div class="col-md-6 col-sm-12 padding-null tittlediv">
+        Master Document Code: &nbsp; <b>{{reportData.MasterDocumentCode}}</b>
+      </div>
+      <br>
+    </div>
+    <br>
+    <div class="row">
+      <div>
+        <h5>Type of Cost Category</h5>
+        <table>
+          <tr style="background-color: #dceaf6; color: black;">
+            <th>Type of Cost</th>
+            <th>Description</th>
+            <th>GL-Cost</th>
+            <th>GL-Cost Description </th>
+            <th>GST Group</th>
+            <th>GST Class</th>
+            <th>GL-Retention</th>
+            <th>GL-Retention Description</th>
+            <th>GST Group (retention)</th>
+            <th>GST Class (retention)</th>
+            <th>Suffix for Invoice No</th>
+          </tr>
+          <tr *ngFor="let category of reportData.CostCategories">
+            <td>{{category.TypeOfCost}}</td>
+            <td>{{category.CostDescription}}</td>
+            <td>{{category.GL_Cost}}</td>
+            <td>{{category.GL_Cost_Description}}</td>
+            <td>{{category.GST_GroupName}}</td>
+            <td>{{category.GST_ClassName}}</td>
+            <td>{{category.GL_Retention}}</td>
+            <td>{{category.GL_Retention_Description}}</td>
+            <td>{{category.GL_GroupRetentionName}}</td>
+            <td>{{category.GL_ClassRetentionName}}</td>
+            <td>{{category.Prefix}}</td>
+          </tr>
+        </table>
+        <br>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <h5>Basic of Apportionment</h5>
+        <table>
+          <tr style="background-color: #dceaf6; color: black;">
+            <th>Method</th>
+            <th colspan="2" style="text-align:center" *ngFor="let category of reportData.CostCategories">
+              {{category.TypeOfCost}} </th>
+            <th>Total</th>
+            <th>Remarks</th>
+          </tr>
+          <tr *ngFor="let apportionment of reportData.Apportionments">
+            <td>{{apportionment.Method}}</td>
+            <ng-template ngFor let-j="index" let-data [ngForOf]="apportionment.ApportionmentDetails">
+              <td style="text-align: right"> {{ data.Amount }} </td>
+              <td style="text-align: right"> {{ ((data.Amount)/( apportionment.Total))|percent :'2.8-8' }} </td>
+            </ng-template>
+            <td>{{ apportionment.Total }}</td>
+            <td>{{ apportionment.Remarks }}</td>
+          </tr>
+        </table>
+        <br>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <table *ngFor="let typeOfCostLineItems of reportData.TypeOfCostLineItems">
+          <tr>
+            <td style="background-color: yellowgreen;font-weight: bold;text-align: center" colspan="2">
+              {{typeOfCostLineItems.TypeOfCostTitle}}</td>
+            <td style="font-weight: bold;text-align: center" colspan="4">{{typeOfCostLineItems.PaymentDocumentCode}}
+            </td>
+            <td style="font-weight: bold;text-align: center" colspan="2"
+              [ngStyle]="{'background-color': typeOfCostLineItems.InvoiceDescription=='' ? 'none' : 'yellow' }">
+              <span *ngIf="typeOfCostLineItems.InvoiceDescription!=''">Invoice No :</span>
+              {{typeOfCostLineItems.InvoiceDescription}}
+            </td>
+          </tr>
+          <tr style="background-color: #dceaf6; color: black;">
+            <th>No</th>
+            <th>Description</th>
+            <th>Apportionment Method</th>
+            <th>Contract Value</th>
+            <th>Previous Accumulated Payment</th>
+            <th>Current Payment</th>
+            <th>Accumulated Payment</th>
+            <th>Status</th>
+          </tr>
+          <tr *ngFor="let lineItem of typeOfCostLineItems.LineItems; index as i">
+            <td>{{i+1}}</td>
+            <td>{{lineItem.LineItemDescription}}</td>
+            <td>{{lineItem.ApportionmentMethod}}</td>
+            <td style="text-align: right">{{lineItem.ContractValue|number:'1.2-2'| negativeInParenthesis}}</td>
+            <td style="text-align: right">{{lineItem.PrevAccPayment|number:'1.2-2'| negativeInParenthesis}}</td>
+            <td style="text-align: right">{{lineItem.CurrentPayment|number:'1.2-2'| negativeInParenthesis}}</td>
+            <td style="text-align: right">{{lineItem.AccPayment|number:'1.2-2'| negativeInParenthesis}}</td>
+            <td style="text-align: right">{{lineItem.Status | percent:'2.2-2'}}</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td style="font-weight: bold;">Sub Total</td>
+            <td></td>
+            <td style="font-weight: bold;text-align: right">{{typeOfCostLineItems.STContractValue|number:'1.2-2'|
+              negativeInParenthesis}}
+            </td>
+            <td style="font-weight: bold;text-align: right">{{typeOfCostLineItems.STPrevAccPayment|number:'1.2-2'|
+              negativeInParenthesis}}
+            </td>
+            <td style="font-weight: bold;text-align: right">{{typeOfCostLineItems.STCurrentPayment|number:'1.2-2'|
+              negativeInParenthesis}}
+            </td>
+            <td style="font-weight: bold;text-align: right">{{typeOfCostLineItems.STAccPayment|number:'1.2-2'|
+              negativeInParenthesis}}
+            </td>
+            <td style="font-weight: bold;text-align: right">{{typeOfCostLineItems.STStatus| percent:'2.2-2'}}</td>
+          </tr>
+          <tr *ngFor="let lineItem of typeOfCostLineItems.DiscountItems; index as i">
+            <td>{{i+1}}</td>
+            <td>{{lineItem.LineItemDescription}}</td>
+            <td>{{lineItem.ApportionmentMethod}}</td>
+            <td style="text-align: right">{{lineItem.ContractValue |number:'1.2-2'| negativeInParenthesis}}</td>
+            <td style="text-align: right">{{lineItem.PrevAccPayment |number:'1.2-2'| negativeInParenthesis}}</td>
+            <td style="text-align: right">{{lineItem.CurrentPayment |number:'1.2-2'| negativeInParenthesis}}</td>
+            <td style="text-align: right">{{lineItem.AccPayment |number:'1.2-2'| negativeInParenthesis}}</td>
+            <td style="text-align: right">{{lineItem.Status| percent:'2.2-2'}}</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td style="font-weight: bold;">Total before Tax</td>
+            <td></td>
+            <td style="font-weight: bold;text-align: right">{{typeOfCostLineItems.TBTContractValue
+              |number:'1.2-2'| negativeInParenthesis}}
+            </td>
+            <td style="font-weight: bold;text-align: right">{{typeOfCostLineItems.TBTPrevAccPayment
+              |number:'1.2-2'| negativeInParenthesis}}
+            </td>
+            <td style="font-weight: bold;text-align: right">{{typeOfCostLineItems.TBTCurrentPayment
+              |number:'1.2-2'| negativeInParenthesis}}
+            </td>
+            <td style="font-weight: bold;text-align: right">{{typeOfCostLineItems.TBTAccPayment |number:'1.2-2'|
+              negativeInParenthesis}}</td>
+            <td style="font-weight: bold;text-align: right">{{typeOfCostLineItems.TBTStatus| percent:'2.2-2'}}
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>Apportionment % for Retention</td>
+            <td></td>
+            <td style="text-align: right">{{typeOfCostLineItems.AppPerForRetContractValue |number:'1.6-6'|
+              negativeInParenthesis}}</td>
+            <td style="text-align: right">{{typeOfCostLineItems.AppPerForRetPrevAccPayment |number:'1.6-6'|
+              negativeInParenthesis}}</td>
+            <td style="text-align: right">{{typeOfCostLineItems.AppPerForRetCurrentPayment |number:'1.6-6'|
+              negativeInParenthesis}}</td>
+            <td style="text-align: right">{{typeOfCostLineItems.AppPerForRetAccPayment |number:'1.6-6'|
+              negativeInParenthesis}}</td>
+            <td> </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>Nett Retention</td>
+            <td></td>
+            <td> </td>
+            <td style="text-align: right">{{typeOfCostLineItems.NRPrevAccPayment |number:'1.2-2'|
+              negativeInParenthesis}}</td>
+            <td style="text-align: right">{{typeOfCostLineItems.NRCurrentPayment |number:'1.2-2'|
+              negativeInParenthesis}}</td>
+            <td style="text-align: right">{{typeOfCostLineItems.NRAccPayment |number:'1.2-2'|
+              negativeInParenthesis}}</td>
+            <td> </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td style="font-weight: bold;">Amount due under this certificate</td>
+            <td></td>
+            <td> </td>
+            <td style="font-weight: bold;text-align: right">{{typeOfCostLineItems.ADUCPrevAccPayment
+              |number:'1.2-2'|
+              negativeInParenthesis}}</td>
+            <td style="font-weight: bold;text-align: right">{{typeOfCostLineItems.ADUCCurrentPayment
+              |number:'1.2-2'|
+              negativeInParenthesis}}</td>
+            <td style="font-weight: bold;text-align: right">{{typeOfCostLineItems.ADUCAccPayment |number:'1.2-2'|
+              negativeInParenthesis}}</td>
+            <td> </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>GST Amount</td>
+            <td></td>
+            <td> </td>
+            <td style="text-align: right">{{typeOfCostLineItems.GSTAMountPrevAccPayment |number:'1.2-2'|
+              negativeInParenthesis}}</td>
+            <td style="text-align: right">{{typeOfCostLineItems.GSTAMountCurrentPayment |number:'1.2-2'|
+              negativeInParenthesis}}</td>
+            <td style="text-align: right">{{typeOfCostLineItems.GSTAMountAccPayment |number:'1.2-2'|
+              negativeInParenthesis}}</td>
+            <td> </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>GST Adjustment</td>
+            <td></td>
+            <td> </td>
+            <td style="text-align: right">{{typeOfCostLineItems.GSTAdjustmentPrevAccPayment |number:'1.2-2'|
+              negativeInParenthesis}}</td>
+            <td style="text-align: right">{{typeOfCostLineItems.GSTAdjustmentCurrentPayment |number:'1.2-2'|
+              negativeInParenthesis}}</td>
+            <td style="text-align: right">{{typeOfCostLineItems.GSTAdjustmentAccPayment |number:'1.2-2'|
+              negativeInParenthesis}}</td>
+            <td> </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td style="font-weight: bold;">Total</td>
+            <td></td>
+            <td> </td>
+            <td style="font-weight: bold;text-align: right">{{typeOfCostLineItems.TotalPrevAccPayment |number:'1.2-2'|
+              negativeInParenthesis}}</td>
+            <td style="font-weight: bold;text-align: right">{{typeOfCostLineItems.TotalCurrentPayment |number:'1.2-2'|
+              negativeInParenthesis}}</td>
+            <td style="font-weight: bold;text-align: right">{{typeOfCostLineItems.TotalAccPayment |number:'1.2-2'|
+              negativeInParenthesis}}</td>
+            <td> </td>
+          </tr>
+          <br>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="form-group text-right btn-list">
+          <button type="submit" (click)="onCancelClick()" class="btn btn-cancel">
+            <i class="fa fa-window-close" aria-hidden="true"></i> Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

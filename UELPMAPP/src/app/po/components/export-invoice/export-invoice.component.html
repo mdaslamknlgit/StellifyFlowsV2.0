@@ -1,0 +1,113 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+            <div class="flexrow space-between align-center">
+                <h3 class="item-heading"> Export Invoice </h3>
+
+                <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+
+                    <button class="btn btn-save ng-star-inserted" type="button" (click)="ExportInvoice()"
+                        *ngIf="exportPermission">
+                        <i class="fa-solid fa-file-export" ria-hidden="true" aria-hidden="true"></i> Export</button>
+
+
+                    <!-- <button class="btn customdropdown btn-transparent" style="background:none;border:none;padding:0px;" id="dropdownBasic1" ngbDropdownToggle>
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+          <button class="dropdown-item" *ngIf="exportPermission" (click) = "ExportInvoice()" >Export</button>   
+        </div> -->
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <div class="row">
+        <div #rightPanel class="rightPanel col-lg-12 col-md-12" [class.expand-rightcol]="rightsection">
+            <!-- <form class="form-horizontal" novalidate="true">                -->
+
+
+            <!-- </form> -->
+            <div c class="table-responsive" [ngStyle]="{'max-width.px': screenWidth}">
+                <div class="col-12" style="padding:0px;">
+                    <p-table [columns]="gridColumns" (sortFunction)="customSort($event)" [customSort]="true"
+                        [lazy]="true" (onLazyLoad)="onLazyLoad($event)" [paginator]="true"
+                        [scrollHeight]="'calc(100vh - 300px)'" scrollWidth="100%"
+                        [rows]="invoicePagerConfig.RecordsToFetch" [totalRecords]="invoicePagerConfig.TotalRecords"
+                        sortMode="single" [value]="invoicesList" [(selection)]="selectedInvoice">
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="6" style='text-align: center;'>
+                                    <b>{{ gridNoMessageToDisplay }}</b>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="colgroup" let-columns>
+                            <colgroup>
+                                <col *ngFor="let col of columns" [style.width]="col.width">
+                            </colgroup>
+                        </ng-template>
+                        <ng-template pTemplate="header" let-columns>
+                            <tr>
+
+                                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                    {{col.header}}
+
+                                    <span
+                                        *ngIf="(col.field=='TotalAmount'||col.field=='ItemTotal')&&col.CurrencySymbol!=null">
+                                        &nbsp; ( {{ rowData.CurrencySymbol }} )
+                                    </span>
+                                    <p-sortIcon
+                                        *ngIf="col.field==='Sno'||col.field==='Asset'||col.field==='PurchasedDate'"
+                                        [field]="col.field" ariaLabel="Activate to sort"
+                                        ariaLabelDesc="Activate to sort in descending order"
+                                        ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                </th>
+                                <th style="width: 7%">
+                                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                            <tr>
+                                <td>
+                                    {{ i + 1 }}
+                                </td>
+                                <td>
+                                    {{ rowData.InvoiceCode }}
+                                </td>
+                                <td>
+                                    {{ rowData.InvoiceId }}
+                                </td>
+                                <td>
+                                    {{ rowData.SupplierName }}
+                                </td>
+                                <td class="textright">
+                                    {{ rowData.TotalAmount | number:'1.2-2'}}
+                                </td>
+                                <td style="width: 7%">
+                                    <p-tableCheckbox [value]="rowData">
+
+                                    </p-tableCheckbox>
+
+                                </td>
+
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </div>
+        <!-- left col end here-->
+    </div>
+</div>
+
+<ng-template #locationTemplate let-r="result" let-t="term">
+    {{ r.Name }}
+</ng-template>
+
+<ng-template #companyTemplate let-r="result" let-t="term">
+    {{ r.CompanyName }}
+</ng-template>

@@ -1,0 +1,7 @@
+.rightcol-scrroll .form-group {
+    margin-bottom: 2px;
+    border-bottom: 1px solid #f8f4f4;
+}
+.rightcol-scrroll {
+    height: calc(100vh - 260px);
+}

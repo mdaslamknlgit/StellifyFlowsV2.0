@@ -1,0 +1,169 @@
+{
+	"data": [
+		{
+			"data": {
+				"Sno": 0,
+				"Count": 0,
+				"topic": "Identified",
+				"ProbabilityId": 1,
+				"Colour": "#a8fa3ced",
+				"firstName": "Mohammed",
+				"lastName": "Aslam",
+				"mobile": "123456789",
+				"emailId": "mdaslamknl@gmail.com",
+				"compName": "Sparsh Communicaitons ",
+				"StringCreatedDate": "07-18-2023"
+			},
+			"children": []
+		},
+		{
+			"data": {
+				"Sno": 0,
+				"Count": 0,
+				"topic": "Engaged",
+				"ProbabilityId": 2,
+				"Colour": "#ffad46",
+				"firstName": "Zoya",
+				"lastName": "Maheen",
+				"mobile": "12121212",
+				"emailId": "zoyamaheen@gmail.com",
+				"compName": "Zoya Communicaitons ",
+				"StringCreatedDate": "07-18-2023"
+			},
+			"children": [
+				{
+					"data": {
+						"Id": 2,
+						"topic": "Hot Lead",
+						"stage": "Engaged",
+						"firstName": "Zoya",
+						"lastName": "Maheen",
+						"mobile": "12121212",
+						"emailId": "zoyamaheen@gmail.com",
+						"compName": "Zoya Communications",
+						"Colour": "#ffad46",
+						"URL": null,
+						"ProfileId": null,
+						"JobTitle": "CEO",
+						"CreatedDate": "2023-07-18T00:00:00",
+						"UpdatedDate": "0001-01-01T00:00:00",
+						"ProbabilityId": 2,
+						"PreviousProbabilityId": 0,
+						"EstBudget": 0.0,
+						"LeadId": 0,
+						"LeadNo": 0,
+						"ActualRevenue": 0.0,
+						"OppId": 0,
+						"oppTopic": null,
+						"StringCreatedDate": "07-18-2023",
+						"Converted": false
+					}
+				}
+			]
+		},
+		{
+			"data": {
+				"Sno": 0,
+				"Count": 0,
+				"topic": "Qualified",
+				"ProbabilityId": 3,
+				"Colour": "#b3dc6c",
+				"firstName": "Zoya",
+				"lastName": "Maheen",
+				"mobile": "12121212",
+				"emailId": "a@gmail.com",
+				"compName": "Test Communicaitons "
+			},
+			"children": [
+								{
+					"data": {
+						"Id": 2,
+						"topic": "Hot ",
+						"stage": "Engaged",
+						"firstName": "Zoya",
+						"lastName": "Maheen",
+						"mobile": "12121212",
+						"emailId": "a@gmail.com",
+						"compName": "Test Communications",
+						"Colour": "#ffad46",
+						"URL": null,
+						"ProfileId": null,
+						"JobTitle": "CEO",
+						"CreatedDate": "2023-07-18T00:00:00",
+						"UpdatedDate": "0001-01-01T00:00:00",
+						"ProbabilityId": 2,
+						"PreviousProbabilityId": 0,
+						"EstBudget": 0.0,
+						"LeadId": 0,
+						"LeadNo": 0,
+						"ActualRevenue": 0.0,
+						"OppId": 0,
+						"oppTopic": null,
+						"StringCreatedDate": "07-18-2023",
+						"Converted": false
+					}
+				}
+			]
+		},
+		{
+			"data": {
+				"Sno": 0,
+				"Count": 0,
+				"topic": "Demonstration",
+				"ProbabilityId": 4,
+				"Colour": "#16A765"
+			},
+			"children": []
+		},
+		{
+			"data": {
+				"Sno": 0,
+				"Count": 0,
+				"topic": "Proposal",
+				"ProbabilityId": 5,
+				"Colour": "#9FC6E7"
+			},
+			"children": []
+		},
+		{
+			"data": {
+				"Sno": 0,
+				"Count": 0,
+				"topic": "Verified",
+				"ProbabilityId": 6,
+				"Colour": "#4987e6"
+			},
+			"children": []
+		},
+		{
+			"data": {
+				"Sno": 0,
+				"Count": 0,
+				"topic": "Negotiated",
+				"ProbabilityId": 7,
+				"Colour": "#7bd148"
+			},
+			"children": []
+		},
+		{
+			"data": {
+				"Sno": 0,
+				"Count": 0,
+				"topic": "Contracting",
+				"ProbabilityId": 8,
+				"Colour": "#AC725E"
+			},
+			"children": []
+		},
+		{
+			"data": {
+				"Sno": 0,
+				"Count": 0,
+				"topic": "Closed",
+				"ProbabilityId": 9,
+				"Colour": "#92E1C0"
+			},
+			"children": []
+		}
+	]
+}

@@ -1,0 +1,62 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6 col-sm-12 padding-null tittlediv">
+      <h3 class="item-heading">
+        <img src="../assets/images/icon1.png"> Sales Invoice Export
+      </h3>
+    </div>
+    <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+      <div ngbDropdown placement="bottom-right" *ngIf="exportPermission" style="padding:0px;" class="d-inline-block">
+        <button class="btn btn-outline-primary" style="background:none;border:none;padding:0px;" id="dropdownBasic1"
+          ngbDropdownToggle>
+          <img src="../assets/images/grid2.png">
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+          <button class="dropdown-item" *ngIf="exportPermission" (click)="exportDocument()">Export</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" style="margin-top: 20px">
+    <div class="col-xl-12">
+      <div class="respnsive-table">
+        <fieldset>
+          <p-table #dt [columns]="InvoiceListColumns" [value]="data" [rows]="1" scrollHeight="270px" [(selection)]="selectedInvoice"
+            [virtualRowHeight]="30" [virtualScroll]="true" sortMode="multiple">
+            <ng-template pTemplate="header" let-columns>
+              <tr style="height: 40px;">
+                <th *ngFor="let col of InvoiceListColumns;let i=index" [pSortableColumn]="col.field">
+                  {{col.header}}
+                  <p-sortIcon [hidden]="i==0" *ngIf="i!=InvoiceListColumns.length-1" [field]="col.field"></p-sortIcon>
+                </th>
+                <th class="aligncenter" width="7%">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="colgroup" let-columns>
+              <colgroup>
+                <col *ngFor="let col of columns" [style.width]="col.width">
+              </colgroup>
+            </ng-template>
+            <ng-template pTemplate="body" let-value let-columns let-i="rowIndex">
+              <tr style="height:30px">
+                <td>{{i+1}}</td>
+                <td>{{value.DocumentCode}}</td>
+                <td>{{value.CustomerName}}</td>
+                <td>{{value.CustomerId}}</td>
+                <td>{{value.Department}}</td>
+                <td>{{value.Location}}</td>
+                <td class="alignright">{{value.Total | number:'1.2-2' }}</td>
+                <td>{{value.WorkFlowStatus}} </td>
+                <td class="aligncenter">
+                  <p-tableCheckbox [value]="value"></p-tableCheckbox> 
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+</div>

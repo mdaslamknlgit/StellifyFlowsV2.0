@@ -1,0 +1,144 @@
+ <div class="container-fluid">
+<div class="row">
+<div class="col-md-12 col-sm-12 padding-null tittlediv">
+  <div class="flexrow space-between align-center"> 
+<h3 class="item-heading">   Items Adjustment </h3>
+ 
+ <div> 
+  <button  class="btn btn-transparent"  (click)="addRecord();" *ngIf="isDisplayMode!=false">Add New</button>  
+  <button  class="btn btn-transparent" (clickOutside)="onClickedOutside($event)"  [exclude]="'.filter-section,.submenu'" (click)="split()">  {{showfilterstext}}  </button> 
+  <img src="../assets/images/grid1.png" style="display: none;" (click)="showFullScreen()"> 
+ 
+</div> 
+</div>
+
+<div class="left-section"   [class.display-filters]="!showfilters"  > 
+  <div class="filter-section"> 
+    <div class="flexrow space-between"> 
+ <div class="left-search">
+   <input type="text" placeholder="Search requests..." class="search-filter">
+   <i class="fa fa-search" aria-hidden="true"></i>
+   </div> 
+   <div class="filter-icon"> <i class="fa fa-filter" aria-hidden="true"></i></div>
+  </div>
+   <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="filter-scroll">
+  <table class="table">
+ <tr class="listItem" (click)="onRecordSelection(record)" *ngFor="let record of itemAdjustmentList">
+   <td>
+  <h5 class="sub-heading"> {{record.ItemName}}</h5>
+   <label class="label-text">Location</label> :<label class="label-value">{{record.LocationName}}</label>
+   <label class="label-text">Qty in Hand </label> :<label class="label-value">{{record.ExistingQty}}</label>   
+   <label class="label-text">AdjustedQty</label> :<label class="label-value">{{record.AdjustedQty}}</label>
+ 
+ </td></tr>
+ 
+ </table>
+  </div>   
+  </div>   
+     </div>
+
+
+
+
+
+
+  </div>
+</div>
+
+<div class="row">
+  
+<div  #rightPanel class="rightPanel col-lg-12 col-md-12" [class.expand-rightcol]="rightsection">
+
+<div *ngIf="isDisplayMode!=null">
+<form  [formGroup]="itemAdjustmentForm"  class="form-horizontal" (ngSubmit)="onSubmit()">
+        <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="rightcol-scrroll">
+                <div class="row fullScreenLabel">
+                    <div class="col-12">
+                        <h3 class="item-heading" style="float:none;">Items Adjustment</h3>
+                    </div>
+                </div>
+    <div class="form-group row">
+        <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Location </label>  
+        <div class="col-xl-4 col-sm-6 col-6">
+            <label class="col-form-label form-text" *ngIf="isDisplayMode!=null"><b style="color:#01548e">{{ selectedRecord.LocationName }}</b></label>
+            <input formControlName="Location" type="text" *ngIf="isDisplayMode==false && selectedRecord.LocationId==0"  class="form-control" 
+                   [inputFormatter]="locationInputFormater" [ngClass]="(validateControl(itemAdjustmentForm.get('Location')))?'form-control ng-touched':'form-control'"
+                   [ngbTypeahead]="locationSearch"  [resultTemplate]="locationTemplate"/>
+          </div>
+    </div>
+
+  <div class="form-group row">
+      <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Name </label>  
+      <div class="col-xl-4 col-sm-6 col-6">
+          <label class="col-form-label form-text" *ngIf="isDisplayMode!=null"><b style="color:#01548e">{{ selectedRecord.ItemName }}</b></label>
+          <input formControlName="ItemMasterId" type="text" *ngIf="isDisplayMode==false && selectedRecord.ItemMasterId==0" (selectItem)="onChange($event)"  class="form-control" 
+                 [inputFormatter]="itemMasterInputFormater" [ngClass]="(validateControl(itemAdjustmentForm.get('ItemMasterId')))?'form-control ng-touched':'form-control'"                  
+                 [ngbTypeahead]="itemMasterSearch" [resultTemplate]="itemMasterTemplate"/>
+        </div>
+  </div>
+  
+  <!-- (selectItem)="itemMasterSelection($event)" -->
+
+   <div class="form-group row">
+      <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Item Code </label>  
+      <div class="col-xl-4 col-sm-6 col-6">   
+<label class="col-form-label form-text" >{{selectedRecord.ItemMasterCode}} </label>  
+      </div>
+     
+  </div> 
+  
+<div class="form-group row">
+<label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Qty in hand </label>  
+      <div class="col-xl-4 col-sm-6 col-6">
+          <label class="col-form-label form-text" >{{selectedRecord.ExistingQty}} </label>  
+      </div>  
+</div>
+
+<div class="form-group row">
+      <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Qty. after Adjustment </label>  
+      <div class="col-xl-4 col-sm-6 col-6">    
+          <label class="col-form-label form-text" *ngIf="isDisplayMode==true">{{selectedRecord.AdjustedQty}}</label>          
+      <input type="number"  [ngClass]="(validateControl(itemAdjustmentForm.get('AdjustedQty')))?'form-control ng-touched':'form-control'"
+           formControlName="AdjustedQty"  (change)="onChangeQty($event)"
+           placeholder="AdjustedQty" *ngIf="isDisplayMode==false"  class="form-control">     
+      </div>  
+      <div *ngIf="itemAdjustmentForm.get('AdjustedQty').errors!=null && isDisplayMode==false">
+          <span class="errorMessage" *ngIf="itemAdjustmentForm.get('AdjustedQty').errors.InValidQuantity">Adjusted Quantity cannot be greater than in hand Quantity.</span>
+      </div>
+  </div>
+    
+ <div class="form-group row">
+      <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Reason </label>  
+      <div class="col-xl-4 col-sm-6 col-6">          
+
+    <textarea rows="4" cols="50"  
+              formControlName="ReasonForAdjustment" *ngIf="isDisplayMode==false"  class="form-control">
+           </textarea>
+           <label class="col-form-label form-text descriptionStyle " *ngIf="isDisplayMode==true">{{ selectedRecord.ReasonForAdjustment }}</label>
+       </div>
+  </div>
+
+  
+  </div>
+
+  <div class="form-group text-right btn-list">
+    <button type="submit" (click)="saveRecord()"  class="btn btn-save" *ngIf="isDisplayMode==false"><i class="fa fa-check" aria-hidden="true"></i> Save</button>
+    <button type="submit" (click)="cancelRecord()"  class="btn btn-cancel" *ngIf="isDisplayMode==false"><i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+    <button type="submit"  (click)="editRecord()" class="btn btn-edit" *ngIf="isDisplayMode==true && selectedRecord.WorkFlowStatusId <= 1"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+    <button type="submit" (click)="deleteRecord()"  class="btn btn-delete" *ngIf="isDisplayMode==true && selectedRecord.WorkFlowStatusId <= 1"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+</div>
+</form>
+</div>
+</div>
+</div>
+</div>
+
+
+ <ng-template #itemMasterTemplate let-r="result" let-t="term">
+    {{ r.ItemName }}
+  </ng-template>
+  
+  <ng-template #locationTemplate let-r="result" let-t="term">
+    {{ r.Name }}
+  </ng-template>
+  

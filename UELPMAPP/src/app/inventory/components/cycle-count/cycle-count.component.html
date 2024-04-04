@@ -1,0 +1,179 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+            <div class="flexrow space-between align-center"> 
+            <h3 class="item-heading">Inventory Cycle Count </h3>
+        
+           <div> <img style="display: none;" src="../assets/images/grid1.png">
+            <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+                <button class="btn customdropdown btn-transparent" style="background:none;border:none;padding:0px;" id="dropdownBasic1" ngbDropdownToggle>
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button class="dropdown-item">Export</button>
+                </div>
+            </div>
+        </div> 
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12" [class.expand-rightcol]="rightsection">
+            <div class="saved-text" *ngIf="savedsucess">
+                <i class="fa fa-check-circle" aria-hidden="true"></i> Saved successfully</div>
+            <div class="rightPanel col-lg-12 col-md-12" >
+                <form [formGroup]="signupForm">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2 form-label">Location </label>
+                                <div class="col-sm-4">
+                                    <input [(ngModel)]="selectedLocation" type="text" class="form-control" formControlName="LocationId" [inputFormatter]="locationInputFormater"
+                                        [ngbTypeahead]="locationSearch" [ngClass]="(validateControl(signupForm.get('LocationId')))?'form-control ng-touched':'form-control'"
+                                        [resultTemplate]="locationTemplate" (selectItem)="onLocationSelection($event)" />
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="form-group text-right btn-list">
+                        <button type="submit" (click)="addRecord()" class="btn btn-save">
+                            <i class="fa fa-plus" aria-hidden="true"></i>Add New Request</button>
+                    </div>
+                    <!-- <div *ngIf="selectedLocation!=null && selectedLocation!=undefined">    -->
+
+                    <div class="col-12 table-responsive" [ngStyle]="{'max-width.px': screenWidth}">
+                        <p-table [columns]="gridColumns" (onLazyLoad)="loadGridItems($event)" [lazy]="true" [totalRecords]="totalRecords" [value]="inventorycyclecount"
+                            [paginator]="true" [rows]="recordsToFetch">
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                    <td colspan="5" style='text-align: center;'>
+                                        <b>{{ gridNoMessageToDisplay }}</b>
+                                    </td> 
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="colgroup" let-columns>
+                                <colgroup>
+                                    <col style="width:5%;">
+                                    <col style="width:10%;">
+                                    <col style="width:10%;">
+                                    <col style="width:10%;">
+                                    <col style="width:15%;">
+                                </colgroup>
+                            </ng-template>
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                        {{col.header}}
+                                        <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                <tr *ngIf="recordInEditMode!=i">
+                                    <td>
+                                        {{ i + 1 }}
+                                    </td>
+                                    <td>
+                                        {{ rowData.ItemMasterName }}
+                                    </td>
+                                    <td>
+                                        {{ rowData.SystemQty }}
+                                    </td>
+                                    <td>
+                                        {{ rowData.PhysicalQty }}
+                                    </td>
+                                    <td>
+                                        {{ rowData.LostQty }}
+                                    </td>
+                                    <td>
+                                        {{ rowData.DamagedQty }}
+                                    </td>
+                                    <td>
+                                        {{ rowData.ExpiredQty }}
+                                    </td>
+                                    <td>
+                                        <div style="float:left;width:60%;">
+                                            {{ rowData.Reasons }}
+                                        </div>
+                                        <div class="gridIconsStyle">
+                                            <i class="fa fa-edit gridEditIcon" (click)="editGridItem(i)" aria-hidden="true"></i>
+                                            &nbsp;&nbsp;&nbsp;
+                                            <i class="fa fa-trash gridRemoveIcon" (click)="removeGridItem(i)" aria-hidden="true"></i>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="recordInEditMode==i">
+                                    <td>
+                                        {{ i + 1 }}
+                                    </td>
+                                    <td>
+                                        <input formControlName="Item" *ngIf="operation=='add'" type="text" class="form-control" [ngClass]="(validateControl(signupForm.get('Item')))?'form-control ng-touched':'form-control'"
+                                            [inputFormatter]="itemMasterInputFormater" (selectItem)="itemMasterSelection($event)"
+                                            [ngbTypeahead]="itemMasterSearch" [resultTemplate]="itemMasterTemplate" /> {{ rowData.ItemMasterName }}
+                                        <div *ngIf="signupForm.get('Item').errors!=null">
+                                            <span class="errorMessage" *ngIf="signupForm.get('Item').errors.Duplicate">Item Name already Exist</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {{ signupForm.get('SystemQty').value }}
+                                    </td>
+                                    <td>
+                                        <input type="text" (change)="qtyChange($event)" formControlName="PhysicalQty" [ngClass]="(validateControl(signupForm.get('PhysicalQty')))?'form-control ng-touched':'form-control'"
+                                            placeholder="PhysicalQty" class="form-control" />
+                                        <div *ngIf="signupForm.get('PhysicalQty').errors!=null && isDisplayMode==false">
+                                            <span class="errorMessage" *ngIf="signupForm.get('PhysicalQty').errors.invalidQty">PhysicalQty cannot be greater than SystemQty</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="text" formControlName="LostQty" placeholder="LostQty" [ngClass]="(validateControl(signupForm.get('LostQty')))?'form-control ng-touched':'form-control'"
+                                            class="form-control" />
+                                    </td>
+                                    <td>
+                                        <input type="text" formControlName="DamagedQty" placeholder="DamagedQty" [ngClass]="(validateControl(signupForm.get('DamagedQty')))?'form-control ng-touched':'form-control'"
+                                            class="form-control" />
+                                    </td>
+                                    <td>
+                                        <input type="text" formControlName="ExpiredQty" placeholder="ExpiredQty" [ngClass]="(validateControl(signupForm.get('ExpiredQty')))?'form-control ng-touched':'form-control'"
+                                            class="form-control" />
+                                    </td>
+                                    <td>
+                                        <div style="float:left;width:60%;">
+                                            <input type="text" formControlName="Reasons" placeholder="Reason" class="form-control" />
+                                        </div>
+                                        <div class="gridIconsStyle">
+                                            <!-- <i *ngIf="operation==='add'" class="fa fa-check-circle gridSaveIcon" (click)="saveGridItem(i)" aria-hidden="true"></i>
+                                    <i *ngIf="operation==='edit'" class="fa fa-check-circle gridSaveIcon" (click)="updateGridItem(i)" aria-hidden="true"></i>
+                                        &nbsp;&nbsp;&nbsp; -->
+                                            <i class="fa fa-times-circle gridCancelIcon" (click)="cancelGridItem()" aria-hidden="true"></i>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+
+                    </div>
+                </form>
+                <!-- </div> -->
+                <div class="form-group text-right btn-list">
+                    <button type="submit" (click)="saveAllChanges()" class="btn btn-save">
+                        <i class="fa fa-check" aria-hidden="true"></i>Submit</button>
+                </div>
+
+            </div>
+
+        </div>
+        <!-- left col end here-->
+    </div>
+
+</div>
+
+
+<ng-template #locationTemplate let-r="result" let-t="term">
+    {{ r.Name }}
+</ng-template>
+
+<ng-template #itemMasterTemplate let-r="result" let-t="term">
+    {{ r.ItemName }}
+</ng-template>

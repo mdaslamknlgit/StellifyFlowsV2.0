@@ -1,0 +1,12 @@
+.left-search
+{
+    width:100% !important;
+}
+.filter-section
+{
+    width:100% !important;
+}
+::ng-deep.mat-menu-panel {
+    /* These numbers are my requirement, put something which suits yours */
+    transform: translate(0px, 34px);
+ }

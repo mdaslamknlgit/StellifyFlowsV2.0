@@ -1,0 +1,430 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 col-sm-12 padding-null tittlediv">
+            <h3 class="item-heading">
+                <img src="../assets/images/icon1.png"> Capex > Budget Profile </h3>
+        </div>
+        <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+            <img src="../assets/images/grid1.png">
+            <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+                <button class="btn btn-outline-primary" style="background:none;border:none;padding:0px;" id="dropdownBasic1" ngbDropdownToggle>
+                    <img src="../assets/images/grid2.png">
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">                  
+                    <button class="dropdown-item">Print</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div style="margin-right:5%;" #rightPanel class="col-lg-12 col-md-12">
+            <div>
+                <form [formGroup]="purchaseOrderForm" class="form-horizontal">
+                    <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Year</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <div class="input-group">
+                                            <input class="form-control" formControlName="Year" (click)="onDatePickerFocus(deliveryDatePicker)" ngbDatepicker #deliveryDatePicker="ngbDatepicker">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary" (click)="deliveryDatePicker.toggle()" type="button">
+                                                    <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="purchaseOrderForm.get('Year') && purchaseOrderForm.get('Year').errors!=null && purchaseOrderForm.get('Year').touched==true">
+                                            <span class="errorMessage" *ngIf="purchaseOrderForm.get('Year').errors.required">Year is required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Company Name</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <input formControlName="Company" type="text" 
+                                                class="form-control" 
+                                                [inputFormatter]="companyInputFormater" 
+                                                [ngbTypeahead]="companySearch"  [resultTemplate]="companyTemplate"/>
+                                        <div *ngIf="purchaseOrderForm.get('Company') && purchaseOrderForm.get('Company').errors!=null && purchaseOrderForm.get('Company').touched==true">
+                                            <span class="errorMessage" *ngIf="purchaseOrderForm.get('Company').errors.required">Company Name is required</span>
+                                        </div> 
+                                    </div>      
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 padding-null">
+                        <h4 class="form-heading">Budgeted</h4>
+                     
+                        <p-table [columns]="gridColumns"  [customSort]="true" sortMode="single" [value]="budgetedItems">
+                                <ng-template pTemplate="emptymessage">
+                                    <tr>
+                                        <td colspan="11" style='text-align: center;'>
+                                        <b>{{gridNoMessageToDisplay}}</b>
+                                    </td> 
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="colgroup" let-columns>
+                                    <colgroup>
+                                        <col style="width:20%;">
+                                        <col style="width:13%;">
+                                        <col style="width:13%;">
+                                        <col style="width:13%;">
+                                        <col style="width:13%;">
+                                        <col style="width:13%;">
+                                        <col style="width:13%;">
+                                    </colgroup>
+                                </ng-template>
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                            {{col.header}}
+                                            <span *ngIf="(col.field=='InvoiceAmount'||col.field=='OutStandingAmount'||col.field=='AmountToBePaid')&&selectedSupplierPaymentDetails.CurrencySymbol!=null">
+                                                &nbsp; ( {{ selectedSupplierPaymentDetails.CurrencySymbol }} )
+                                            </span>
+                                            <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                    <tr class="ui-widget-header" *ngIf="rowData.Item === 'Approval for amount utilized to-date'">
+                                        <td colspan="7">
+                                            <span>{{rowData.Item}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="rowData.Item != 'Approval for amount utilized to-date'">
+                                        <td>
+                                            <span *ngIf="rowData.Type=='Header'">{{ rowData.Item }}</span>
+                                            <li *ngIf="rowData.Type=='SubHeader'" style='margin-left: 5%'>{{ rowData.Item }}</li>
+                                        </td>
+                                        <td pEditableColumn align="right">
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="input">
+                                                    <input type="number" class="form-control">
+                                                </ng-template>
+                                                <ng-template pTemplate="output">
+                                                    {{ rowData.LandAndBuilding|number:'1.2-4' }}
+                                                </ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                        <td pEditableColumn align="right">
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="input">
+                                                    <input type="number" class="form-control">
+                                                </ng-template>
+                                                <ng-template pTemplate="output">
+                                                    {{ rowData.PlantAndMach|number:'1.2-4' }}
+                                                </ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                        <td pEditableColumn align="right">
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="input">
+                                                    <input type="number" class="form-control">
+                                                </ng-template>
+                                                <ng-template pTemplate="output">
+                                                    {{ rowData.MotorVehicles|number:'1.2-4' }}
+                                                </ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                        <td pEditableColumn align="right">
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="input">
+                                                    <input type="number" class="form-control">
+                                                </ng-template>
+                                                <ng-template pTemplate="output">
+                                                    {{ rowData.ComputerAndPeripherals|number:'1.2-4' }}
+                                                </ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                        <td pEditableColumn align="right">
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="input">
+                                                    <input type="number" class="form-control">
+                                                </ng-template>
+                                                <ng-template pTemplate="output">
+                                                    {{ rowData.Others|number:'1.2-4' }}
+                                                </ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                        <td pEditableColumn align="right">
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="input">
+                                                    <input type="number" class="form-control">
+                                                </ng-template>
+                                                <ng-template pTemplate="output">
+                                                    {{ rowData.Total|number:'1.2-4' }}
+                                                </ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                                <!-- <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-expanded="expanded" let-columns="columns">
+                                        <tr class="ui-widget-header" *ngIf="rowGroupMetadata[rowData.brand].index === rowIndex">
+                                            <td colspan="3">
+                                                <a href="#" [pRowToggler]="rowData">
+                                                    <i [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
+                                                    <span>{{rowData.brand}}</span>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="rowexpansion" let-rowData let-rowIndex="rowIndex">
+                                        <tr>
+                                            <td>{{rowData.vin}}</td>
+                                            <td>{{rowData.year}}</td>
+                                            <td>{{rowData.color}}</td>
+                                        </tr>
+                                    </ng-template> -->
+                        </p-table>
+                    </div>  
+                    <div  class="col-12 padding-null">
+                        <h4 class="form-heading">NOT Budgeted</h4>
+ 
+                        <p-table [columns]="gridColumns"  [customSort]="true" sortMode="single" [value]="nonBudgetedItems">
+                                <ng-template pTemplate="emptymessage">
+                                    <tr>
+                                        <td colspan="11" style='text-align: center;'>
+                                             <b>{{gridNoMessageToDisplay}}</b>
+                                        </td> 
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="colgroup" let-columns>
+                                    <colgroup>
+                                        <col style="width:20%;">
+                                        <col style="width:13%;">
+                                        <col style="width:13%;">
+                                        <col style="width:13%;">
+                                        <col style="width:13%;">
+                                        <col style="width:13%;">
+                                        <col style="width:13%;">
+                                    </colgroup>
+                                </ng-template>
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                            {{col.header}}
+                                            <span *ngIf="(col.field=='InvoiceAmount'||col.field=='OutStandingAmount'||col.field=='AmountToBePaid')&&selectedSupplierPaymentDetails.CurrencySymbol!=null">
+                                                &nbsp; ( {{ selectedSupplierPaymentDetails.CurrencySymbol }} )
+                                            </span>
+                                            <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                    <tr>
+                                        <td>
+                                            {{ rowData.Item }}
+                                        </td>
+                                        <td pEditableColumn align="right">
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="input">
+                                                    <input type="number" class="form-control">
+                                                </ng-template>
+                                                <ng-template pTemplate="output">
+                                                    {{ rowData.LandAndBuilding|number:'1.2-4' }}
+                                                </ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                        <td pEditableColumn align="right">
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="input">
+                                                    <input type="number" class="form-control">
+                                                </ng-template>
+                                                <ng-template pTemplate="output">
+                                                    {{ rowData.PlantAndMach|number:'1.2-4' }}
+                                                </ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                        <td pEditableColumn align="right">
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="input">
+                                                    <input type="number" class="form-control">
+                                                </ng-template>
+                                                <ng-template pTemplate="output">
+                                                    {{ rowData.MotorVehicles|number:'1.2-4' }}
+                                                </ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                        <td pEditableColumn align="right">
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="input">
+                                                    <input type="number" class="form-control">
+                                                </ng-template>
+                                                <ng-template pTemplate="output">
+                                                    {{ rowData.ComputerAndPeripherals|number:'1.2-4' }}
+                                                </ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                        <td pEditableColumn align="right">
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="input">
+                                                    <input type="number" class="form-control">
+                                                </ng-template>
+                                                <ng-template pTemplate="output">
+                                                    {{ rowData.Others|number:'1.2-4' }}
+                                                </ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                        <td pEditableColumn align="right">
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="input">
+                                                    <input type="number" class="form-control">
+                                                </ng-template>
+                                                <ng-template pTemplate="output">
+                                                    {{ rowData.Total|number:'1.2-4' }}
+                                                </ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                        </p-table>
+                    </div>   
+                    <div style="margin-top: 3%;" class="col-12 padding-null">
+                        <h4 class="form-heading">Total</h4>
+                    
+                        <p-table [columns]="gridColumns" [customSort]="true" sortMode="single" [value]="totalBudget">
+                                <ng-template pTemplate="emptymessage">
+                                    <tr>
+                                        <td colspan="11" style='text-align: center;'>
+                                            <b>{{ gridNoMessageToDisplay }}</b>
+                                        </td> 
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="colgroup" let-columns>
+                                    <colgroup>
+                                        <col style="width:20%;">
+                                        <col style="width:13%;">
+                                        <col style="width:13%;">
+                                        <col style="width:13%;">
+                                        <col style="width:13%;">
+                                        <col style="width:13%;">
+                                        <col style="width:13%;">
+                                    </colgroup>
+                                </ng-template>
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                            {{col.header}}
+                                            <span *ngIf="(col.field=='InvoiceAmount'||col.field=='OutStandingAmount'||col.field=='AmountToBePaid')&&selectedSupplierPaymentDetails.CurrencySymbol!=null">
+                                                &nbsp; ( {{ selectedSupplierPaymentDetails.CurrencySymbol }} )
+                                            </span>
+                                            <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                    <tr>
+                                        <td>
+                                            {{ rowData.Item }}
+                                        </td>
+                                        <td pEditableColumn align="right">
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="input">
+                                                    <input type="number" class="form-control">
+                                                </ng-template>
+                                                <ng-template pTemplate="output">
+                                                    {{ rowData.LandAndBuilding|number:'1.2-4' }}
+                                                </ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                        <td pEditableColumn align="right">
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="input">
+                                                    <input type="number" class="form-control">
+                                                </ng-template>
+                                                <ng-template pTemplate="output">
+                                                    {{ rowData.PlantAndMach|number:'1.2-4' }}
+                                                </ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                        <td pEditableColumn align="right">
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="input">
+                                                    <input type="number" class="form-control">
+                                                </ng-template>
+                                                <ng-template pTemplate="output">
+                                                    {{ rowData.MotorVehicles|number:'1.2-4' }}
+                                                </ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                        <td pEditableColumn align="right">
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="input">
+                                                    <input type="number" class="form-control">
+                                                </ng-template>
+                                                <ng-template pTemplate="output">
+                                                    {{ rowData.ComputerAndPeripherals|number:'1.2-4' }}
+                                                </ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                        <td pEditableColumn align="right">
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="input">
+                                                    <input type="number" class="form-control">
+                                                </ng-template>
+                                                <ng-template pTemplate="output">
+                                                    {{ rowData.Others|number:'1.2-4' }}
+                                                </ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                        <td pEditableColumn align="right">
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="input">
+                                                    <input type="number" class="form-control">
+                                                </ng-template>
+                                                <ng-template pTemplate="output">
+                                                    {{ rowData.Total|number:'1.2-4' }}
+                                                </ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group text-right btn-list">
+                                <button type="submit" (click)="saveRecord()" class="btn btn-save">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- left col end here-->
+    </div>
+</div>
+
+<ng-template #companyTemplate let-r="result" let-t="term">
+    {{ r.CompanyName }}
+</ng-template>
+<ng-template #filters>
+    <div class="flter-popover">
+
+        <form [formGroup]="signupForm" class="form-horizontal" (ngSubmit)="onSubmit()">
+
+            <div class="form-group row">
+                <label class="col-form-label col-4 form-label">Name </label>
+                <div class="col-8">
+
+                    <input type="text" id="orderlevel" name="orderlevel" formControlName="orderlevel" placeholder="Re-Order Level" class="form-control">
+
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-4 form-label">Category</label>
+                <div class="col-8">
+
+                    <input type="text" id="alertqty" name="alertqty" formControlName="alertqty" placeholder="Low Alert Qty" class="form-control">
+
+                </div>
+            </div>
+
+
+        </form>
+
+    </div>
+</ng-template>

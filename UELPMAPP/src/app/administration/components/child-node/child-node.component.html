@@ -1,0 +1,65 @@
+ 
+
+
+
+ 
+    <table cellpadding="0" cellspacing="0" border="0">
+        <tbody>
+            <tr class="nodes">
+                <td class="node" colspan="2">
+                    <table cellpadding="0" cellspacing="0" border="0">
+                        <tbody><tr class="nodes">
+                            <td class="node">
+                                <div   class="node parallel"  >
+                                    <div class="header padding-bottom-null">
+                                        <div class="row margin-bottom-null sub-heading">
+                                            <div class="col l1 padding-null">
+                                                <i class="fa fa-random"></i>
+                                            </div>
+                                            <div class="col l10 padding-null step-name">
+                                                <input class="ng-pristine" onclick="this.focus();this.select()" type="text"    >
+                                            </div>
+                                            <div class="col l1 padding-null delete-icon">
+                                                <i class="fa fa-trash-o" aria-hidden="true" (click)="removeMe(index)"></i>
+                                            </div>
+                                        </div>
+                                        <div class="row margin-bottom-null execute-when">
+
+                                           <input style="width:100%;"   class="ng-pristine "   type="text"    placeholder="Always" >
+                                             
+                                        </div>
+                                         
+                                    </div>
+                                    <div class="footer relative">
+                                        <a  style="cursor: pointer;"  (click)="createComponent()" class="bounce">
+                                          <i class="fa fa-angle-down" aria-hidden="true"></i>
+                                           
+                                        </a>
+                                    </div>
+                                    <!-- ngIf: !context.selectedBranchIds[branch.getValue('Id')] && branch.getList('Steps').length >= 1 -->
+                                    <!-- ngIf: !context.selectedBranchIds[branch.getValue('Id')] && branch.getList('Steps').length >= 2 -->
+                                    <!-- ngIf: !context.selectedBranchIds[branch.getValue('Id')] && branch.getList('Steps').length >= 3 -->
+                                </div>
+                                <table *ngIf="showchildtable">
+                                  <tr >
+                                      <td class="button-container">
+                                        <app-menu-controls></app-menu-controls>
+                                      </td>
+                                  </tr> 
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                           
+                        </tr>
+                       
+                    </tbody></table>
+                </td>
+            </tr>
+            <tr class="extend">
+                <td class="line lleft"></td>
+                <td class="line lright"></td>
+            </tr>
+        </tbody>
+    </table>
+ 

@@ -1,0 +1,13 @@
+<div class="menu 11">
+  <input type="checkbox"  class="menu-open" name="menu-open" >
+  <label class="menu-open-button ng-pristine"   (click)="openOptions($event)"   >
+    <span class="addline addline-1"></span>
+    <span class="addline addline-2"></span>
+  </label>
+  <a class="menu-item hint--right hint--bounce check" > <i class="fa fa-check" (click)="createApproval()"></i> </a>
+  <a class="menu-item hint--left hint--bounce edit"  style="visibility: hidden;" > <i class="fa fa-pencil"></i> </a>
+  
+  <a class="menu-item hint--right hint--bounce random"  (click)="createComponent()"> <i class="fa fa-random"></i> </a>
+  
+ </div> 
+ <ng-template #viewContainerRef></ng-template>

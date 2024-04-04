@@ -1,0 +1,10 @@
+.selectedRow
+{
+   background: green !important; 
+   color:white !important;
+}
+.gridSearch.left-search
+{
+    float: none;
+    width:30%;
+}

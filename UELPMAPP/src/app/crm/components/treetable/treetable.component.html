@@ -1,0 +1,26 @@
+<div style="height: calc(100vh - 149px)">
+  <h2 style="color: green">GeeksforGeeks</h2>
+  <h4>Angular PrimeNG TreeTable Loading Status</h4>
+
+  <p-treeTable [value]="files1" [lazy]="true" (onNodeExpand)="onNodeExpand($event)" >
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Account Name</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email Id</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+        <tr>
+            <td>
+<p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+{{rowData.stage}}
+</td>
+            <td>{{rowData.compName}}</td>
+            <td>{{rowData.firstName}}</td>
+            <td>{{rowData.lastName}}</td>
+        </tr>
+    </ng-template>
+</p-treeTable>
+</div>

@@ -1,0 +1,224 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+            <div class="flexrow space-between align-center"> 
+            <h3 class="item-heading">
+              Inventory Request </h3>
+     <div>
+         <button  class="btn btn-transparent" (click)="addRecord()" *ngIf="isDisplayMode!=false"> New Record </button>
+         <button  class="btn btn-transparent" (clickOutside)="onClickedOutside($event)"  [exclude]="'.filter-section'" (click)="split()">  {{showfilterstext}}  </button> 
+            <img style="display: none;" src="../assets/images/grid1.png" (click)="showFullScreen()">
+            <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+                <button class="btn customdropdown btn-transparent"   id="dropdownBasic1" ngbDropdownToggle>
+                    <i  class="fa-solid fa-bars"></i>
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button class="dropdown-item">Export</button>                    
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <div class="filter-section left-section" style="display: none;"  [class.display-filters]="showfilters" >
+                <div class="flexrow space-between">   
+            <div class="left-search">
+                <input type="text" placeholder="Search requests..." class="search-filter">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </div>
+            <div class="filter-icon">
+                <i class="fa fa-filter" aria-hidden="true"></i>
+            </div>
+        </div>  
+            <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="filter-scroll"> 
+            <div class="table">
+                <div class="flexrow" (click)="onRecordSelection(record)" *ngFor="let record of inventoryRequests">
+                 
+                        <label class="stock-id">{{ record.Code }}</label>
+                        <label class="stock-btn">
+                            <button class="filter-btn btn-reqplaced">{{ record.RequestStatus }}</button>
+                        </label>
+                        <label class="label-text">Location</label> :
+                        <label class="label-value">{{ record.LocationName }}</label>
+                        <label class="label-text">Remarks</label> :
+                        <label class="label-value descriptionStyle">{{ record.Remarks }}</label>
+                 
+                    </div>
+            </div>
+        </div>
+    </div> 
+        </div>
+    </div>
+    <div class="row">
+ 
+        <!-- left col end here-->
+
+<div #rightPanel class="rightPanel col-lg-12 col-md-12" [class.expand-rightcol]="rightsection">
+    <div *ngIf="isDisplayMode!=null">
+        <form [formGroup]="inventoryRequestForm" class="form-horizontal">
+            <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="rightcol-scrroll">
+                <div  *ngIf="isDisplayMode==true" class="form-group row">
+                    <label class="col-form-label col-xl-2 col-sm-6 col-6 form-label">Request ID</label>  
+                    <div class="col-xl-4 col-sm-6 col-6">
+                        <label class="col-form-label  form-text" ><b style="color:#01548e">{{ selectedRecord.Code }}</b></label>  
+                    </div>
+                    <div style="float:right;"><button class="filter-btn btn-reqplaced">{{ selectedRecord.RequestStatus }}</button></div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-xl-2 col-sm-6 col-6 form-label">Location</label>  
+                    <div class="col-xl-4 col-sm-6 col-6">
+                        <input formControlName="Location" type="text" 
+                                *ngIf="isDisplayMode==false && (inventoryRequestForm.get('InventoryRequestID').value==0||inventoryRequestForm.get('InventoryRequestID').value==null)"  class="form-control" 
+                                [inputFormatter]="locationInputFormater" 
+                                [ngbTypeahead]="locationSearch"  [resultTemplate]="locationTemplate"/>
+                        <label class="col-form-label   form-text" *ngIf="(isDisplayMode==true|| inventoryRequestForm.get('InventoryRequestID').value>0)">{{ selectedRecord.Location.Name }}</label>  
+                        <div *ngIf="inventoryRequestForm.get('Location').errors!=null && isDisplayMode==null">
+                            <span class="errorMessage" *ngIf="inventoryRequestForm.get('Location').errors.required">Location is required</span>
+                        </div>
+                    </div> 
+                </div>
+                <div class="col-xl-12 table-responsive" [ngStyle]="{'max-width.px': screenWidth}">
+                    <div>
+                        <div *ngIf="isDisplayMode==false" class="form-group text-right btn-list">
+                            <button type="submit"  (click)="addItem(1)"  class="btn btn-save" ><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Item</button>
+                        </div>         
+                        <fieldset *ngIf="isDisplayMode==false" formArrayName="ItemsList">
+                            <div style="text-align: center;" class="col-12">
+                                <span class="errorMessage" *ngIf="showNoRecordsErrorMessage">Please add items</span>
+                            </div>
+                            <div class="col-12 table" style="padding:0px;">
+                                <p-table [columns]="gridColumns"  [value]="inventoryRequestForm.controls.ItemsList.controls">
+                                    <ng-template pTemplate="emptymessage">
+                                        <tr>
+                                            <td colspan="4" style='text-align: center;'>
+                                                <b>{{ gridNoMessageToDisplay }}</b>
+                                            </td> 
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="colgroup" let-columns>
+                                        <colgroup>
+                                            <col style="width:5%;">
+                                            <col style="width:25%;">
+                                            <col style="width:20%;" >
+                                            <col style="width:35%;">
+                                        </colgroup>
+                                    </ng-template>
+                                    <ng-template pTemplate="header" let-columns>
+                                        <tr>
+                                            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                                {{col.header}}
+                                                <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                            </th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                            <tr  [formGroupName]="i" >
+                                                <td>
+                                                        {{  i + 1 }}
+                                                </td>
+                                                <td>
+                                                    <input formControlName="Item" type="text" 
+                                                            class="form-control" 
+                                                            [inputFormatter]="itemMasterInputFormater" (selectItem)="itemMasterSelection($event)"
+                                                            [ngbTypeahead]="itemMasterSearch" [resultTemplate]="itemMasterTemplate" />
+                                                </td>
+                                                <td>
+                                                    <input type="number" formControlName="QuantityRequired" placeholder="Qty"  class="form-control" />
+                                                </td>
+                                                <td>
+                                                    <div style="float:left;width:80%;">
+                                                        {{ recordDescriptionInEdit }}
+                                                    </div>                                                
+                                                    <div class="gridIconsStyle">
+                                                        <i  class="fa fa-trash gridRemoveIcon" (click)="removeGridItem(i)" aria-hidden="true"></i> 
+                                                    </div>
+                                                </td>
+                                              
+                                            </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>
+                        </fieldset>
+                        <p-table *ngIf="isDisplayMode==true" [columns]="gridColumns" [value]="selectedRecord.ItemsList">
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                    <td colspan="4" style='text-align: center;'>
+                                        <b>{{ gridNoMessageToDisplay }}</b>
+                                    </td> 
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="colgroup" let-columns>
+                                <colgroup>
+                                    <col style="width:5%;">
+                                    <col style="width:25%;">
+                                    <col style="width:20%;" >
+                                    <col style="width:35%;">
+                                </colgroup>
+                            </ng-template>
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                        {{col.header}}
+                                        <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                    <tr>
+                                        <td>
+                                            {{  i + 1 }}
+                                        </td>
+                                        <td>
+                                            {{ rowData.Item==null?"": rowData.Item.ItemName }}
+                                        </td>
+                                        <td>
+                                            {{ rowData.QuantityRequired }}
+                                        </td>
+                                        <td>
+                                            <div style="float:left;width:60%;">
+                                                {{rowData.Item==null?"": rowData.Item.Description }}
+                                            </div>
+                                        </td>
+                                    </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+                <div class="col-12">
+                <div class="form-group row">
+                        <label class="col-form-label col-xl-2 col-sm-6 col-6 form-label">Remarks</label>  
+                        <div class="col-xl-12 col-sm-12 col-12">
+                            <textarea 
+                                    formControlName="Remarks" 
+                                    placeholder="Priority" *ngIf="isDisplayMode==false" class="form-control">
+                            </textarea>
+                            <label showmore [value]="selectedRecord.Remarks" class="col-form-label form-text descriptionStyle" *ngIf="isDisplayMode==true">
+                            </label>
+                        </div> 
+                    </div>
+                </div>
+                
+            </div>
+            <div class="form-group text-right btn-list">
+                <button type="submit" (click)="saveRecord()"  class="btn btn-save" *ngIf="isDisplayMode==false"><i class="fa fa-check" aria-hidden="true"></i> Save</button>
+                <button type="submit" (click)="cancelRecord()" class="btn btn-cancel" *ngIf="isDisplayMode==false"><i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                <button type="submit" (click)="editRecord()" class="btn btn-edit" *ngIf="isDisplayMode==true"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                <button type="submit" (click)="deleteRecord()" class="btn btn-delete" *ngIf="isDisplayMode==true"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                </div>
+        </form>
+    </div>
+</div><!-- left col end here-->
+
+
+    </div>
+
+</div>
+
+
+<ng-template #itemMasterTemplate let-r="result" let-t="term">
+    {{ r.ItemName }}
+</ng-template>
+
+
+<ng-template #locationTemplate let-r="result" let-t="term">
+    {{ r.Name }}
+</ng-template>

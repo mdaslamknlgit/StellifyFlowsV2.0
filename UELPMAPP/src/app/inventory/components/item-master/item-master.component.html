@@ -1,0 +1,361 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+            <div class="flexrow space-between align-center">
+                <h3 class="item-heading">Item Master Form</h3>
+                <p> {{SelectedItems}}  -- {{FormMode}}  -- {{ItemMasterID}}  </p>
+                <div style="text-align: right;flex:auto;">
+
+                    <button class="btn btn-save ng-star-inserted" style="margin-right: 20px;" type="button" 
+                     (click)="ClickBack($event)" >
+                        <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> Back</button>
+
+                    <!-- <img src="../assets/images/grid1.png" style="display: none;" (click)="showFullScreen()">
+                    <button class="btn btn-transparent" (clickOutside)="onClickedOutside($event)"
+                        [exclude]="'.filter-section,.submenu '" (click)="split()"> {{showfilterstext}} </button> -->
+                </div>
+                <hr style="margin-top: 0px;" />
+            </div>
+        </div>
+    </div>
+    <!-- Edit Form Starts Here -->
+    <!-- <p>Edit Form Starts Here</p> -->
+    <div class="row">
+        <div #rightPanel class="rightPanel col-lg-12 col-md-12" [class.expand-rightcol]="rightsection">
+    
+            <div *ngIf="isDisplayMode!=null">
+    
+                <form [formGroup]="signupForm" class="form-horizontal" (ngSubmit)="onSubmit()">
+                    <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+                        <div class="row fullScreenLabel">
+                            <div class="col-12">
+                                <h3 class="item-heading" style="float:none;">Item Master</h3>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Name <i
+                                    class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"
+                                    aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <input type="text" formControlName="Name" placeholder="Name" *ngIf="isDisplayMode==false"
+                                    class="form-control"
+                                    [ngClass]="(validateControl(signupForm.get('Name')))?'form-control ng-touched':'form-control'">
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true">
+                                    <b>{{selectedItemMasterRecord.Name}}</b>
+                                </label>
+                                <div *ngIf="signupForm.get('Name').errors!=null && isDisplayMode==false">
+                                    <span class="errorMessage" *ngIf="signupForm.get('Name').errors.Duplicate">Duplicate
+                                        Name</span>
+                                </div>
+                            </div>
+    
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Expiry Date <i
+                                    class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"
+                                    aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true">
+                                    <b>{{selectedItemMasterRecord.ExpiryDate| date:"yyyy/MM/dd"}}</b>
+                                </label>
+                                <div class="input-group" *ngIf="isDisplayMode==false">
+                                    <input class="form-control" formControlName="ExpiryDate" ngbDatepicker
+                                        #d="ngbDatepicker"
+                                        [ngClass]="(validateControl(signupForm.get('ExpiryDate')))?'form-control ng-touched':'form-control'">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+                                            <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+    
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Item Code <i
+                                    class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"
+                                    aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <label class="col-form-label form-text"
+                                    *ngIf="isDisplayMode==true">{{selectedItemMasterRecord.ItemMasterCode}}</label>
+                                <input type="text" formControlName="ItemMasterCode"
+                                    [ngClass]="(validateControl(signupForm.get('ItemMasterCode')))?'form-control ng-touched':'form-control'"
+                                    placeholder="Item Code" *ngIf="isDisplayMode==false" class="form-control">
+    
+                            </div>
+    
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Department <i
+                                    class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"
+                                    aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <select formControlName="LocationId"
+                                    [ngClass]="(validateControl(signupForm.get('LocationId')))?'form-control ng-touched':'form-control'"
+                                    placeholder="location" *ngIf="isDisplayMode==false" class="form-control">
+                                    <option *ngFor="let record of locationtypes" value={{record.LocationID}}>
+                                        {{record.Name}}
+                                </select>
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true">
+                                    {{selectedItemMasterRecord.LocationName}} </label>
+                            </div>
+    
+                        </div>
+    
+    
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Type <i
+                                    class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"
+                                    aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <select formControlName="ItemTypeID"
+                                    [ngClass]="(validateControl(signupForm.get('ItemTypeID')))?'form-control ng-touched':'form-control'"
+                                    placeholder="Type" (change)="onChange($event.target.value)" *ngIf="isDisplayMode==false"
+                                    class="form-control">
+                                    <option *ngFor="let record1 of itemtypes" value={{record1.ItemTypeID}}>
+                                        {{record1.Name}}
+                                </select>
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true">
+                                    {{selectedItemMasterRecord.ItemTypeName}} </label>
+                            </div>
+    
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Category </label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true">
+                                    {{selectedItemMasterRecord.ItemCategoryName}} </label>
+                                <input type="text" disabled=true formControlName="ItemCategoryName" placeholder="Category"
+                                    *ngIf="isDisplayMode==false" class="form-control">
+    
+                            </div>
+    
+                        </div>
+    
+                        
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Item Price 
+                                <i class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false" aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <label class="col-form-label form-text"
+                                    *ngIf="isDisplayMode==true">{{selectedItemMasterRecord.Price}} </label>
+                                <input type="text" formControlName="Price"
+                                    [ngClass]="(validateControl(signupForm.get('Price')))?'form-control ng-touched':'form-control'"
+                                    placeholder="Item Price" *ngIf="isDisplayMode==false" class="form-control">    
+                            </div>
+    
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Status </label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <label class="col-form-label form-text"
+                                    *ngIf="isDisplayMode==true">{{selectedItemMasterRecord.Status==true?"Active":"InActive"}}
+                                </label>
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==false">
+                                    <mat-slide-toggle formControlName="Status"
+                                        (change)="matselect($event)"></mat-slide-toggle>
+                                    <label *ngIf="slideactive">Active</label>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Purchase Price 
+                                <i class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false" aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <label class="col-form-label form-text"
+                                    *ngIf="isDisplayMode==true">{{selectedItemMasterRecord.PurchasePrice}} </label>
+                                <input type="text" formControlName="PurchasePrice"
+                                    [ngClass]="(validateControl(signupForm.get('PurchasePrice')))?'form-control ng-touched':'form-control'"
+                                    placeholder="Purchase Price" *ngIf="isDisplayMode==false" class="form-control">    
+                            </div>
+
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Sales Price 
+                                <i class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false" aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <label class="col-form-label form-text"
+                                    *ngIf="isDisplayMode==true">{{selectedItemMasterRecord.SalesPrice}} </label>
+                                <input type="text" formControlName="SalesPrice"
+                                    [ngClass]="(validateControl(signupForm.get('SalesPrice')))?'form-control ng-touched':'form-control'"
+                                    placeholder="Sales Price" *ngIf="isDisplayMode==false" class="form-control">    
+                            </div>
+
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Track Inventory </label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <label class="col-form-label form-text"
+                                    *ngIf="isDisplayMode==true">{{selectedItemMasterRecord.TrackInventory==true?"Track":"Don't Track"}}
+                                </label>
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==false">
+                                    <mat-slide-toggle formControlName="TrackInventory"
+                                        (change)="matselect($event)"></mat-slide-toggle>
+                                    <label *ngIf="slideactive">Active</label>
+                                </label>
+                            </div>
+                        </div>
+                        <h4 class="form-heading">Details</h4>
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Manufacturer <i
+                                    class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"
+                                    aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <label class="col-form-label form-text"
+                                    *ngIf="isDisplayMode==true">{{selectedItemMasterRecord.Manufacturer}} </label>
+                                <input type="text" formControlName="Manufacturer"
+                                    [ngClass]="(validateControl(signupForm.get('Manufacturer')))?'form-control ng-touched':'form-control'"
+                                    placeholder="Manufacturer" *ngIf="isDisplayMode==false" class="form-control">
+    
+                            </div>
+    
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Brand <i
+                                    class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"
+                                    aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <label class="col-form-label form-text"
+                                    *ngIf="isDisplayMode==true">{{selectedItemMasterRecord.Brand}} </label>
+                                <input type="text" formControlName="Brand"
+                                    [ngClass]="(validateControl(signupForm.get('Brand')))?'form-control ng-touched':'form-control'"
+                                    placeholder="Brand" *ngIf="isDisplayMode==false" class="form-control">
+    
+                            </div>
+                        </div>
+    
+                        <div class="form-group row">
+                            <label *ngIf="isDisplayMode==false"
+                                class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Opening Stock <br /> Value <i
+                                    class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"
+                                    aria-hidden="true"></i></label>
+                            <label *ngIf="isDisplayMode==true"
+                                class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Opening Stock Value </label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <label class="col-form-label form-text"
+                                    *ngIf="isDisplayMode==true">{{selectedItemMasterRecord.OpeningStockValue}} </label>
+                                <input type="text" formControlName="OpeningStockValue"
+                                    [ngClass]="(validateControl(signupForm.get('OpeningStockValue')))?'form-control ng-touched':'form-control'"
+                                    placeholder="Opening Stock Value" *ngIf="isDisplayMode==false" class="form-control">
+    
+                            </div>
+    
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">UOM <i
+                                    class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"
+                                    aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <select formControlName="MeasurementUnitID"
+                                    [ngClass]="(validateControl(signupForm.get('MeasurementUnitID')))?'form-control ng-touched':'form-control'"
+                                    placeholder="UOM" *ngIf="isDisplayMode==false" class="form-control">
+                                    <!-- <option value="0">--Select--</option> -->
+                                    <option *ngFor="let record of uomtypes" value={{record.MeasurementUnitID}}>
+                                        {{record.Name}}
+    
+                                </select>
+                                <label class="col-form-label form-text" *ngIf="isDisplayMode==true">
+                                    {{selectedItemMasterRecord.UOMName}} </label>
+                            </div>
+                        </div>
+    
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">GL Code <i
+                                    class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"
+                                    aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <label class="col-form-label form-text"
+                                    *ngIf="isDisplayMode==true">{{selectedItemMasterRecord.GLCode}} </label>
+                                <input type="text" formControlName="GLCode"
+                                    [ngClass]="(validateControl(signupForm.get('GLCode')))?'form-control ng-touched':'form-control'"
+                                    placeholder="GL Code" *ngIf="isDisplayMode==false" class="form-control">
+                                <div *ngIf="signupForm.get('GLCode').errors!=null && isDisplayMode==false">
+                                    <span class="errorMessage" *ngIf="signupForm.get('GLCode').errors.Duplicate">Duplicate
+                                        GL Code</span>
+                                </div>
+    
+                            </div>
+                        </div>
+    
+                        <h4 class="form-heading">Description </h4>
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-12 col-12 form-label">Description </label>
+                            <div class="col-sm-12 col-sm-12 col-12">
+                                <textarea rows="4" cols="50" formControlName="Description" *ngIf="isDisplayMode==false"
+                                    class="form-control">
+                                    </textarea>
+                                <label class="col-form-label form-text descriptionStyle" *ngIf="isDisplayMode==true">{{
+                                    selectedItemMasterRecord.Description }}</label>
+    
+                            </div>
+                        </div>
+    
+                        <h4 class="form-heading">Settings </h4>
+    
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-md-6 col-12 form-label">Re-Order Level <i
+                                    class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false" aria-hidden="true"></i>
+                            </label>
+                            <div class="col-xl-4 col-md-6 col-12">
+                                <label class="col-form-label form-text"
+                                    *ngIf="isDisplayMode==true">{{selectedItemMasterRecord.ReOrderLevel}} </label>
+                                <input type="text" formControlName="ReOrderLevel"
+                                    [ngClass]="(validateControl(signupForm.get('ReOrderLevel')))?'form-control ng-touched':'form-control'"
+                                    placeholder="Re-Order Level" *ngIf="isDisplayMode==false" class="form-control">
+    
+                            </div>
+    
+                            <label class="col-form-label col-xl-2 col-md-6 col-12 form-label">Low Alert Qty <i
+                                    class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false"
+                                    aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-md-6 col-12">
+                                <label class="col-form-label form-text"
+                                    *ngIf="isDisplayMode==true">{{selectedItemMasterRecord.LowAlertQuantity}} </label>
+                                <input type="text" formControlName="LowAlertQuantity"
+                                    [ngClass]="(validateControl(signupForm.get('LowAlertQuantity')))?'form-control ng-touched':'form-control'"
+                                    placeholder="Low Alert Qty" *ngIf="isDisplayMode==false" class="form-control">
+    
+                            </div>
+                        </div>
+    
+    
+                    </div>
+    
+                    <div class="form-group text-right btn-list">
+                        <button type="submit" (click)="saveRecord()" class="btn btn-save" *ngIf="isDisplayMode==false">
+                            <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+                        <button type="submit" (click)="cancelRecord()" class="btn btn-cancel" *ngIf="isDisplayMode==false">
+                            <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                        <button type="submit" (click)="editRecord()" class="btn btn-edit"
+                            *ngIf="isDisplayMode==true && editPermission">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                        <button type="submit" (click)="deleteRecord()" class="btn btn-delete"
+                            *ngIf="isDisplayMode==true && deletePermission">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                    </div>
+                </form>
+            </div>
+            <p-confirmDialog></p-confirmDialog>
+        </div>
+    </div>
+    <!-- <p>Edit Form Ends Here</p> -->
+    <!-- Edit Form Ends Here -->
+
+</div>
+
+<!-- Filter Section Starts Here -->
+<ng-template #filters>
+    <div class="flter-popover">
+        <form [formGroup]="signupForm" class="form-horizontal" (ngSubmit)="onSubmit()">
+            <div class="form-group row">
+                <!-- <label class="col-form-label col-4 form-label">Name </label>   -->
+                <div class="col-8">
+                    <input type="text" formControlName="orderlevel" placeholder="Re-Order Level" class="form-control">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-4 form-label">Category</label>
+                <div class="col-8">
+                    <input type="text" formControlName="alertqty" placeholder="Low Alert Qty" class="form-control">
+                </div>
+            </div>
+        </form>
+    </div>
+</ng-template>
+<!-- Filter Section Ends Here -->
+
+
+
+<ng-template #itemMasterTemplate let-r="result" let-t="term">
+    {{ r.Name }}
+</ng-template>
+
+<ng-template #itemMasterLocationTemplate let-r="result" let-t="term">
+    {{ r.Name }}
+</ng-template>

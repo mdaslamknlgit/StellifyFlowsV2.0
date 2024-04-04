@@ -1,0 +1,17 @@
+<app-header></app-header>
+<div class="body-content" [class.showMenu]="showMenu">
+    -->
+    <div class="right-nav">
+      <div class="row">
+        <div class="col-md-12">
+          <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickLeadSettings($event)">
+            <i class="fa fa-cog" ria-hidden="true" aria-hidden="true"></i> Lead Settings</button>
+            &nbsp;&nbsp;
+            <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickContactSettings($event)">
+              <i class="fa fa-cog" ria-hidden="true" aria-hidden="true"></i> Contacts Settings</button>
+        </div>
+      </div>
+        <router-outlet></router-outlet>
+    </div>
+</div>
+<app-footer></app-footer>

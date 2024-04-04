@@ -1,0 +1,93 @@
+<div class="container-fluid">
+<div class="row">
+<div class="col-md-6 col-sm-12 padding-null tittlediv">
+<h3 class="item-heading"><img src="../assets/images/icon1.png"> Cost Centre Old </h3>
+</div>
+<div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+<img src="../assets/images/add-new.png" (click)="addRecord();" *ngIf="hideText"> 
+<img src="../assets/images/grid1.png" (click)="showFullScreen()"> 
+
+<!-- <img src="../assets/images/grid2.png">  -->
+</div>
+</div>
+<div class="row">
+ <div class="col-lg-3 col-md-4 leftdiv" [CustomSpinner]="showLeftPanelLoadingIcon"  [class.collapse-leftcol]="leftSection">   
+<div class="left-section"> 
+ <div class="filter-section"> 
+<div class="left-search" >
+  <input type="text" placeholder="Search requests..." class="search-filter" [(ngModel)]="searchKey" (keyup)="onSearch($event)">
+  <i class="fa fa-search" aria-hidden="true"></i>
+  </div>  
+
+  <!-- <div style="float:right" class="filter-icon"   > <i class="fa fa-filter" aria-hidden="true"></i></div> -->
+    <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="filter-scroll" style="width:100%; float:left;">
+      <table class="table">
+            <tr [class.activerow]="record.CostCenterId==selectedRecordDetails.CostCenterId" (click)="onRecordSelection(record.CostCenterId)" *ngFor="let record of costCentresList">
+              <td>
+                  <label class="sub-heading">{{record.CostCenterName }}</label>
+                  <br>
+                  <!-- <label class="label-text">Name</label> :<label class="label-value">{{ record.CostCenterName }}</label> -->
+                  <label class="label-text">Description</label>:
+                  <label class="label-value descriptionStyle">{{ record.Description | slice:0:50}}<span *ngIf="record.Description!= null && record.Description.length>50">...</span></label>  
+              </td>
+            </tr>
+      </table>
+      <div *ngIf="costCentresList.length==0" class="col-12 error listErrorMessage">
+          {{errorMessage}}
+      </div> 
+      <ngb-pagination [maxSize]="5" *ngIf="costCentresList.length>0" (pageChange)="pageChange($event)" [collectionSize]="costCentrePagerConfig.TotalRecords" class="d-flex justify-content-center" [pageSize]="costCentrePagerConfig.RecordsToFetch" [page]="currentPage" [boundaryLinks]="true"></ngb-pagination>
+    </div>   
+  </div>  
+</div>
+<div class="split-line" (click)="split()"></div> 
+ </div><!-- left col end here-->
+
+<div #rightPanel [CustomSpinner]="showRightPanelLoadingIcon" class="rightPanel col-lg-9 col-md-8" [class.expand-rightcol]="rightSection">    
+<form [ngClass]="{'hideRightPanel':(costCentresList.length==0 && hideText==true)}" [formGroup]="costCentreForm" class="form-horizontal">
+ <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="rightcol-scrroll">
+  <div class="row fullScreenLabel">
+      <div class="col-12">
+          <h3 class="item-heading" style="float:none;">Cost Centre</h3>
+      </div>
+  </div>
+  <div class="form-group row">
+      <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Name <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i></label>  
+      <div class="col-xl-4 col-sm-6 col-12">
+        <input type="text" formControlName="CostCenterName" placeholder="Name" maxlength="100" *ngIf="hideInput" class="form-control">
+        <label class="col-form-label  form-text" *ngIf="hideText">
+          <b style="color:#01548e">
+          {{ selectedRecordDetails.CostCenterName }}
+          </b>
+        </label>  
+        <div *ngIf="costCentreForm.get('CostCenterName') && costCentreForm.get('CostCenterName').errors!=null && costCentreForm.get('CostCenterName').touched==true">
+            <span class="errorMessage" *ngIf="costCentreForm.get('CostCenterName').errors.required">Name is required</span>
+            <span class="errorMessage" *ngIf="costCentreForm.get('CostCenterName').errors.duplicate">Duplicate Cost Centre</span>
+        </div> 
+      </div>
+  </div>
+  <h4 class="form-heading">Details</h4>
+  <div class="form-group row">
+        <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Description </label>  
+        <div class="col-xl-4 col-sm-6 col-12">
+          <textarea rows="4" cols="50"  *ngIf="hideInput" formControlName="Description" class="form-control">
+          </textarea>
+          <div *ngIf="costCentreForm.get('Description') && costCentreForm.get('Description').errors!=null && costCentreForm.get('Description').touched==true">
+              <span class="errorMessage" *ngIf="costCentreForm.get('Description').errors.required">Description is required</span>
+          </div> 
+          <div *ngIf="hideText" class="col-xl-12 col-sm-6 col-12">
+              <label class="col-form-label form-text descriptionStyle "  [innerHtml]="selectedRecordDetails.Description|TextAreaContentDisplay"></label>
+          </div>
+        </div>
+    </div>
+  </div>
+  <div class="form-group text-right btn-list">
+    <button (click)="saveRecord()"  class="btn btn-save" *ngIf="hideInput"><i class="fa fa-check" aria-hidden="true"></i> Save</button>
+    <button (click)="cancelRecord()"  class="btn btn-cancel" *ngIf="hideInput"><i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+    <button (click)="editRecord()" class="btn btn-edit" *ngIf="hideText"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+    <button (click)="deleteRecord()"  class="btn btn-delete" *ngIf="hideText"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+  </div>
+</form>
+<p-confirmDialog></p-confirmDialog>
+</div><!-- left col end here-->
+</div>
+</div>

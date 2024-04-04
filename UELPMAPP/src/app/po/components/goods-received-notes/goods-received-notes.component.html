@@ -1,0 +1,1017 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+            <div class="flexrow space-between align-center">
+                <h3 class="item-heading">
+                    {{moduleHeading}}
+                </h3>
+                <p style="text-align: center;">{{requestType}}  --  {{PurchaseOrderTypeId}}  -- {{ShowEdit}} </p>
+                <div style="text-align: right;width:90%;">
+                 
+                    <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickBack($event)">
+                        <i class="fa fa-arrow-left" ria-hidden="true" aria-hidden="true"></i> Back</button>
+
+                    <div *ngIf="!showfilters" ngbDropdown placement="bottom-right" style="padding:0px;"
+                        class="d-inline-block">
+                        <button class="btn customdropdown btn-transparent" id="dropdownBasic1" ngbDropdownToggle>
+                            <i class="fa-solid fa-bars"></i>
+                        </button>
+                        <div ngbDropdownMenu aria-labelledby="dropdownBasic1"
+                            *ngIf="printPermission || viewLogPermission">
+                            <button class="dropdown-item" (click)="onPrintPDF()">Print</button>
+                            <button class="dropdown-item" *ngIf="viewLogPermission" (click)="displayLogPopUp()">View
+                                Log</button>
+                        </div>
+                    </div>
+                </div>
+                <hr style="margin-top: 0px;" />
+            </div>
+        </div>
+        <!-- <p-table #PurchaseOrderListTable dataKey="DraftCode" [rowHover]="true" [filterDelay]="0"
+            [globalFilterFields]="['DraftCode', 'SupplierName']" [columns]="PurchaseOrdersListsCols"
+            [value]="goodsReceivedNotesList" [rows]="1" [scrollable]="true" [scrollHeight]="'calc(100vh - 400px)'"
+            scrollWidth="100%" [virtualRowHeight]="30" [virtualScroll]="true" sortMode="multiple" responsiveLayout="scroll"
+            [rowsPerPageOptions]="[10,25,50,75,100]">
+            <ng-template pTemplate="caption">
+            </ng-template>
+        
+            <ng-template pTemplate="header" let-columns>
+                <tr style="height: 40px;">
+                    <th *ngFor="let col of PurchaseOrdersListsCols;let i=index" [pSortableColumn]="col.field">
+                        {{col.header}}
+                        <p-sortIcon [hidden]="i==0" *ngIf="i!=PurchaseOrdersListsCols.length-1"
+                            [field]="col.field"></p-sortIcon>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="colgroup" let-columns>
+                <colgroup>
+                    <col *ngFor="let col of columns" [style.width]="col.width">
+                </colgroup>
+            </ng-template>
+            <ng-template pTemplate="body" let-value let-columns let-i="rowIndex">
+                <tr style="height:30px" [pSelectableRow]="rowData">
+                    <td>{{(value.WorkFlowStatusId!=workFlowStatus.Draft)?value.PurchaseOrderCode:value.DraftCode}}
+                    </td>
+                    <td>{{value.SupplierName}}</td>
+                    <td>{{value.CreatedDate | date: 'yyyy-MM-dd'}}</td>
+                    <td>{{value.WorkFlowStatusText }}</td>
+                    <td class="aligncenter">
+                        <button type="button" class="btn"
+                            (click)="RedirectPurchaseOrder(value.PurchaseOrderId,value.POTypeId,value.SupplierId)">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                        </button>
+                    </td>
+                </tr>
+        
+            </ng-template>
+            <ng-template pTemplate="emptymessage" let-columns>
+                <tr>
+                    <td [attr.colspan]="goodsReceivedNotesList.length">
+                        No records found
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table> -->
+        <!-- Main Table Ends Here -->
+        <!-- <div class="left-section" [class.display-filters]="!showfilters">
+            <div class="filter-section" ngbDropdown #myDrop="ngbDropdown">
+                <div class="flexrow space-between ">
+                    <div class="left-search">
+                        <input type="text" [(ngModel)]="goodsReceviedNotesSearchKey" placeholder="Search requests..."
+                            (keyup)="onSearchInputChange($event)" class="search-filter">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                        <div class="filter-popup" *ngIf="initDone" ngbDropdownMenu aria-labelledby="dropdownManual"
+                            (click)="$event.stopPropagation(); myDrop.open();" style="width:720px ">
+
+                            <form [formGroup]="grnFilterInfoForm" class="form-horizontal">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-3 form-label">Supplier</label>
+                                    <div class="col-xl-9 col-sm-12 col-9" style="padding-left: 0px;">
+                                        <input formControlName="SupplierName" type="text" class="form-control"
+                                            [inputFormatter]="supplierFilterInputFormater"
+                                            [ngbTypeahead]="supplierFilterSearch"
+                                            (selectItem)="onSupplierFilterChange($event)"
+                                            [resultTemplate]="supplierTemplate" (keyup)="suppliernamechange($event)" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-3 form-label">From Date</label>
+                                    <div class="col-3 input-group" style="padding-left: 0px;">
+                                        <input class="form-control" formControlName="FromDate" ngbDatepicker
+                                            #fromDate="ngbDatepicker" placeholder="yyyy-mm-dd">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" (click)="fromDate.toggle();"
+                                                type="button">
+                                                <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <label class="col-form-label col-3 form-label">To Date</label>
+                                    <div class="col-3 input-group" style="padding-left: 0px;">
+                                        <input class="form-control" formControlName="ToDate" ngbDatepicker
+                                            #toDate="ngbDatepicker" placeholder="yyyy-mm-dd">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" (click)="toDate.toggle()"
+                                                type="button">
+                                                <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-3 form-label">PO Type</label>
+                                    <div class="col-3" style="padding-left: 0px;">
+                                        <select #purchaseOrderDropDown formControlName="PoTypeId" class="form-control">
+                                            <option value=0>
+                                                --Select--
+                                            </option>
+                                            <option *ngFor="let record of purchaseOrderTypes"
+                                                value={{record.PurchaseOrderTypeId}}>
+                                                {{record.PurchaseOrderType}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <label class="col-form-label col-3 form-label">Status</label>
+                                    <div class="col-3" style="padding-left: 0px;">
+                                        <select #workFlowStatusDropDown formControlName="Status" class="form-control">
+                                            <option value=0>--Select--</option>
+                                            <option value="Draft">Draft</option>
+                                            <option value="Completed">Completed</option>
+                                            <option value="Voided">Voided</option>
+                                            <option value="Invoiced">Invoiced</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-3 form-label">GRN Number</label>
+                                    <div class="col-3" style="padding-left: 0px;">
+                                        <input type="text" #grnCode formControlName="GRNCode" class="form-control">
+                                    </div>
+
+                                    <label class="col-form-label col-3 form-label">Supplier DO No</label>
+                                    <div class="col-3" style="padding-left: 0px;">
+                                        <input type="text" formControlName="DoNumber" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-3 form-label">Department</label>
+                                    <div class="col-3" style="padding-left: 0px;">
+                                        <select (change)="onDepChage($event)" formControlName="Department"
+                                            class="form-control">
+                                            <option value=0>--Select--</option>
+                                            <option *ngFor="let record of departments" value={{record.LocationID}}>
+                                                {{record.Name}}
+                                        </select>
+                                    </div>
+                                    <label class="col-form-label col-3 form-label">Supplier Code</label>
+                                    <div class="col-3" style="padding-left: 0px;">
+                                        <input type="text" formControlName="SupplierCode" class="form-control">
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-3 form-label">PO Number</label>
+                                    <div class="col-3" style="padding-left: 0px;">
+                                        <input type="text" formControlName="PoNumber" class="form-control">
+                                    </div>
+                                    <div class="col-6" style="text-align: right">
+                                        <button type="submit" (click)="filterData()" class="btn btn-save">
+                                            <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                        <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                            <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12 error">
+                                        {{filterMessage}}
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+
+                    </div>
+                    <div class="filter-icon">
+                        <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                            <i class="fa fa-filter" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+                        <i class="fa fa-undo" aria-hidden="true"></i>
+                    </div>
+                </div>
+            </div> -->
+        <!-- <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="filter-scroll"
+                style="width:100%; float:left;">
+                <div class="table">
+                    <div (click)="hidefilter()">
+                        <table class="listtable">
+                            <tr>
+                                <th>Record Name </th>
+                                <th>Supplier DO No</th>
+                                <th>PO Number</th>
+                                <th>Status</th>
+
+                            </tr>
+                            <tr [class.activerow]="record.GoodsReceivedNoteId==selectedGRNDetails.GoodsReceivedNoteId"
+                                (click)="onRecordSelection(record.GoodsReceivedNoteId,record.PurchaseOrderId,record.POTypeId)"
+                                *ngFor="let record of goodsReceivedNotesList">
+                                <td>{{ (record.WorkFlowStatusId!=workFlowStatus.Draft)?record.GRNCode:record.DraftCode
+                                    }}</td>
+                                <td>{{ record.SupplierDoNumber }}</td>
+                                <td>{{ record.PurchaseOrderCode }}</td>
+                                <td>{{ record.WorkFlowStatusText }} </td>
+
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div *ngIf="goodsReceivedNotesList.length==0" class="col-12 listErrorMessage">
+                    {{errorMessage}}
+                </div>
+
+            </div>
+            <br clear="all" />
+            <ngb-pagination [maxSize]="5" *ngIf="goodsReceivedNotesList.length>0" (pageChange)="pageChange($event)"
+                [collectionSize]="goodsReceivedNotesPagerConfig.TotalRecords" class="d-flex justify-content-center"
+                [pageSize]="goodsReceivedNotesPagerConfig.RecordsToFetch" [(page)]="currentPage"
+                [boundaryLinks]="true"></ngb-pagination>
+        </div> -->
+    </div>
+    <div class="row">
+        <!-- left col end here-->
+        <div #rightPanel class="rightPanel col-lg-12 col-md-12" [class.expand-rightcol]="rightsection">
+            <div class="fullScreenLabel">
+                <app-header></app-header>
+            </div>
+            <div>
+                <form [formGroup]="goodsReceivedNotesForm" class="form-horizontal">
+                    <div class="row fullScreenLabel">
+                        <div class="col-12">
+                            <h3 class="item-heading" style="float:none;">Goods Received Notes</h3>
+                        </div>
+                    </div>
+                    <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+                        <div *ngIf="selectedGRNDetails.GoodsReceivedNoteId==null||selectedGRNDetails.GoodsReceivedNoteId==0"
+                            class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Select
+                                        Supplier</label>
+                                    <div class="autoComplete col-xl-8 col-sm-6 col-12">
+                                        <input type="text" formControlName="Supplier" class="form-control show"
+                                            [inputFormatter]="supplierInputFormater" [ngbTypeahead]="supplierSearch"
+                                            (selectItem)="onSupplierChange($event)"
+                                            [resultTemplate]="supplierTemplate" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Select Purchase
+                                        Order
+                                        <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                                    </label>
+                                    <div class="autoComplete3 col-xl-8 col-sm-6 col-12">
+                                        <input type="text" class="form-control show" formControlName="PurchaseOrder"
+                                            [inputFormatter]="poInputFormatter" [ngbTypeahead]="poSearch"
+                                            (selectItem)="poSelection($event)" [resultTemplate]="poTemplate" />
+                                        <span class="errorMessage" *ngIf="goodsReceivedNotesForm.get('PurchaseOrderId')!=null &&
+                                                goodsReceivedNotesForm.get('PurchaseOrderId').errors!=null ">
+                                            <span *ngIf="goodsReceivedNotesForm.get('PurchaseOrderId').errors.required">
+                                                Purchase Order is required
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="hideText && selectedGRNDetails.GoodsReceivedNoteId >0">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">GRN Number</label>
+                                    <!-- {{hideInput}} -->
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text">{{ (selectedGRNDetails.WorkFlowStatusId
+                                            != workFlowStatus.Draft)
+                                            ?selectedGRNDetails.GRNCode:selectedGRNDetails.DraftCode
+                                            }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row" *ngIf="hideText">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Requestor</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text">{{
+                                            selectedGRNDetails.RequestedByUserName }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Supplier DO No
+                                        <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label *ngIf="hideText" class="col-form-label form-text"
+                                            style="word-wrap:break-word">{{ selectedGRNDetails.SupplierDoNumber
+                                            }}</label>
+                                        <input *ngIf="hideInput" #SupplierDoNumber type="text" class="form-control"
+                                            formControlName="SupplierDoNumber" />
+                                        <div *ngIf="goodsReceivedNotesForm.get('SupplierDoNumber').errors!=null">
+                                            <span class="errorMessage"
+                                                *ngIf="goodsReceivedNotesForm.get('SupplierDoNumber').errors.Duplicate">Duplicate
+                                                Supplier DO No</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Supplier
+                                        Name</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text"
+                                            *ngIf="selectedGRNDetails.Supplier!=null">{{
+                                            selectedGRNDetails.Supplier.SupplierName }}
+                                            <!-- <label class="col-form-label form-text" *ngIf="selectedGRNDetails.Supplier!=null">{{ selectedGRNDetails.Supplier!=null ? selectedGRNDetails.Supplier.SupplierName : "" }}  <span *ngIf="selectedGRNDetails.WorkFlowStatusId!=workFlowStatus.Approved && (selectedGRNDetails.Supplier.PreviousSupplierName!=null && selectedGRNDetails.Supplier.PreviousSupplierName!=selectedGRNDetails.Supplier.SupplierName)" class="icon-popover">i <span class="popover-info"> <b style="color: #01548e;">Previous Supplier Name:</b> {{  selectedGRNDetails.Supplier.PreviousSupplierName }}</span></span></label> -->
+                                            <!-- <span
+                                                *ngIf="selectedGRNDetails.WorkFlowStatusId!=workFlowStatus.Approved && (selectedGRNDetails.Supplier.PreviousSupplierName!=null && selectedGRNDetails.Supplier.PreviousSupplierName!=selectedGRNDetails.Supplier.SupplierName)"
+                                                class="icon-popover">i
+                                                <span class="popover-info">
+                                                    <b style="color: #01548e;">Previous Supplier Name:</b> {{
+                                                    selectedGRNDetails.Supplier.PreviousSupplierName
+                                                    }}
+                                                </span>
+                                            </span> -->
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Supplier
+                                        Address</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text"
+                                            *ngIf="selectedGRNDetails.Supplier!=null"
+                                            [innerText]="goodsReceivedNotesForm.get('SupplierAddress').value"></label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Delivery
+                                        Address</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text">{{ selectedGRNDetails.DeliveryAddress
+                                            }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Fax</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text"
+                                            *ngIf="selectedGRNDetails.Supplier!=null">{{
+                                            selectedGRNDetails.Supplier.ShippingFax }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Currency
+                                        Type</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text">{{ selectedGRNDetails.CurrencyCode
+                                            }}</label>
+                                    </div>
+                                </div>
+                                <!-- <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">No. of Entries</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text">{{ (selectedGRNDetails==undefined||selectedGRNDetails.ItemsList==undefined)?0:selectedGRNDetails.ItemsList.length }}</label>
+                                    </div>
+                                </div> -->
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row" *ngIf="hideText">
+                                    <label
+                                        class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Designation</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text">{{ selectedGRNDetails.Designation
+                                            }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">PO Number</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text">{{ selectedGRNDetails.PurchaseOrderCode
+                                            }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Date</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text">{{
+                                            selectedGRNDetails.CreatedDate|DisplayDateFormat }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Status</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text">{{ selectedGRNDetails.WorkFlowStatus
+                                            }}</label>
+                                        <!-- .StatusId==1?'Draft':'Completed' }}</label> -->
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">PO Type</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text">{{ selectedGRNDetails.PurchaseOrderType
+                                            }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Cost of
+                                        Service</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text">{{ selectedGRNDetails.CostOfService
+                                            }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Department</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text">{{ selectedGRNDetails.Location
+                                            }}</label>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-12 engineers-assigned" style="padding:0px;">
+                            <div class="table-responsive" [ngStyle]="{'max-width.px': screenWidth}">
+                                <fieldset *ngIf="hideInput" formArrayName="ItemsList">
+                                    <div style="text-align: center;">
+                                        <span class="errorMessage"
+                                            *ngIf="showGridErrorMessage &&(selectedGRNDetails.ItemsList==undefined|| selectedGRNDetails.ItemsList.length==0)">
+                                            Please enter purchase order items
+                                        </span>
+                                        <span class="errorMessage" *ngIf="showGridErrorMessage1">
+                                            Please enter atleast one Item GRN Quantity
+                                        </span>
+                                    </div>
+                                    <p-table [columns]="gridColumns" (sortFunction)="customSort($event)"
+                                        [customSort]="true" sortMode="single"
+                                        [value]="goodsReceivedNotesForm.controls.ItemsList.controls">
+                                        <ng-template pTemplate="emptymessage">
+                                            <tr>
+                                                <td colspan="9" style='text-align: center;'>
+                                                    <b>{{ gridNoMessageToDisplay }}</b>
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="colgroup" let-columns>
+                                            <colgroup>
+                                                <col style="width:5%;">
+                                                <col style="width:7%;">
+                                                <col style="width:15%;">
+                                                <col style="width:15%;">
+                                                <col style="width:10%;">
+                                                <col style="width:10%;">
+                                                <col style="width:10%;">
+                                                <col style="width:10%;">
+                                                <col style="width:10%;">
+                                                <!-- <col *ngIf="goodsReceivedNotesForm.get('POTypeId').value==1" style="width:10%;"> -->
+                                                <!-- <col *ngIf="goodsReceivedNotesForm.get('POTypeId').value==2" style="width:5%;">
+                                            <col *ngIf="goodsReceivedNotesForm.get('POTypeId').value==2" style="width:5%">  -->
+                                            </colgroup>
+                                        </ng-template>
+                                        <ng-template pTemplate="header" let-columns>
+                                            <tr>
+                                                <ng-template ngFor let-data [ngForOf]="columns" let-i="index">
+                                                    <th [pSortableColumn]="data.field">
+                                                        {{data.header}}
+                                                        <span
+                                                            *ngIf="(data.field=='Unitprice'||data.field=='ItemTotal')&&selectedGRNDetails.CurrencySymbol!=null">
+                                                            &nbsp; ( {{ selectedGRNDetails.CurrencySymbol }} )
+                                                        </span>
+                                                        <p-sortIcon [field]="data.field" ariaLabel="Activate to sort"
+                                                            ariaLabelDesc="Activate to sort in descending order"
+                                                            ariaLabelAsc="Activate to sort in ascending order">
+                                                        </p-sortIcon>
+                                                    </th>
+                                                </ng-template>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-rowData let-i="rowIndex"
+                                            let-columns="columns">
+                                            <tr *ngIf="hideInput" [formGroupName]="i">
+                                                <td>
+                                                    {{ i + 1 }}
+                                                </td>
+                                                <td>
+                                                    {{
+                                                    goodsReceivedNotesForm.get('ItemsList').controls[i].get('ItemType').value
+                                                    }}
+                                                </td>
+                                                <td *ngIf="(goodsReceivedNotesForm.get('ItemsList').controls[i].get('TypeId').value === 1
+                                                        && goodsReceivedNotesForm.get('POTypeId').value!= 3)">
+                                                    {{
+                                                    goodsReceivedNotesForm.get('ItemsList').controls[i].get('Item')==null?"":goodsReceivedNotesForm.get('ItemsList').controls[i].get('Item').value.ItemName
+                                                    }}
+                                                </td>
+                                                <td
+                                                    *ngIf="goodsReceivedNotesForm.get('ItemsList').controls[i].get('TypeId').value === 2 || goodsReceivedNotesForm.get('POTypeId').value === 3">
+                                                    {{
+                                                    goodsReceivedNotesForm.get('ItemsList').controls[i].get('Service').value.Code
+                                                    }}
+                                                </td>
+                                                <td>
+                                                    {{
+                                                    goodsReceivedNotesForm.get('ItemsList').controls[i].get('ItemDescription')==null?"":goodsReceivedNotesForm.get('ItemsList').controls[i].get('ItemDescription').value
+                                                    }}
+                                                </td>
+                                                <td>
+                                                    {{
+                                                    goodsReceivedNotesForm.get('ItemsList').controls[i].get('MeasurementUnitCode')==null?"":goodsReceivedNotesForm.get('ItemsList').controls[i].get('MeasurementUnitCode').value
+                                                    }}
+                                                </td>
+                                                <td>
+                                                    {{
+                                                    goodsReceivedNotesForm.get('ItemsList').controls[i].get('OriginalQty')==null?0:goodsReceivedNotesForm.get('ItemsList').controls[i].get('OriginalQty').value
+                                                    }}
+                                                </td>
+                                                <td>
+                                                    {{
+                                                    goodsReceivedNotesForm.get('ItemsList').controls[i].get('TotalReceivedQty')==null?0:goodsReceivedNotesForm.get('ItemsList').controls[i].get('TotalReceivedQty').value
+                                                    }}
+                                                </td>
+                                                <td>
+                                                    {{
+                                                    goodsReceivedNotesForm.get('ItemsList').controls[i].get('OpenQty')==null?0:goodsReceivedNotesForm.get('ItemsList').controls[i].get('OpenQty').value
+                                                    }}
+                                                </td>
+                                                <td>
+                                                    <span class="errorMessage"
+                                                        *ngIf="goodsReceivedNotesForm.get('ItemsList').controls[i].get('GRNQty')!=null &&
+                                                             goodsReceivedNotesForm.get('ItemsList').controls[i].get('GRNQty').errors!=null ">
+                                                        <span
+                                                            *ngIf="goodsReceivedNotesForm.get('ItemsList').controls[i].get('GRNQty').errors.qtyerror1">
+                                                            GRN Quantity cannot be greater than Required Quantity
+                                                        </span>
+                                                        <span
+                                                            *ngIf="goodsReceivedNotesForm.get('ItemsList').controls[i].get('GRNQty').errors.qtyerror2">
+                                                            GRN Quantity cannot be greater than Open Quantity
+                                                        </span>
+                                                        <span
+                                                            *ngIf="goodsReceivedNotesForm.get('ItemsList').controls[i].get('GRNQty').errors.required">
+                                                            GRN Quantity is required
+                                                        </span>
+                                                    </span>
+                                                    <input type="number" min="0" (keydown)=restrictMinus($event)
+                                                        (change)="grnQtyChange(goodsReceivedNotesForm.get('ItemsList').controls[i])"
+                                                        style="text-align: right;" class="form-control"
+                                                        formControlName="GRNQty" />
+                                                </td>
+                                                <!-- <td *ngIf="goodsReceivedNotesForm.get('POTypeId').value==2">
+                                                <button class="btn btn-save" (click)="addAssetDetails(content,i)">
+                                                    Add Assets
+                                                </button>
+                                            </td> -->
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                </fieldset>
+                                <p-table class="cellwrap" *ngIf="hideText" [columns]="gridColumns"
+                                    (sortFunction)="customSort($event)" [customSort]="true" sortMode="single"
+                                    [value]="selectedGRNDetails.ItemsList">
+                                    <ng-template pTemplate="emptymessage">
+                                        <tr>
+                                            <td colspan="9" style='text-align: center;'>
+                                                <b>{{ gridNoMessageToDisplay }}</b>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="colgroup" let-columns>
+                                        <colgroup>
+                                            <col style="width:5%;">
+                                            <col style="width:10%;">
+                                            <col style="width:15%;">
+                                            <col style="width:15%;">
+                                            <col style="width:10%;">
+                                            <col style="width:10%;">
+                                            <col style="width:10%;">
+                                            <col style="width:10%;">
+                                            <col style="width:10%;">
+                                        </colgroup>
+                                    </ng-template>
+                                    <ng-template pTemplate="header" let-columns>
+                                        <tr>
+                                            <ng-template ngFor let-data [ngForOf]="columns" let-i="index">
+                                                <th *ngIf="data.field!='Add'" [pSortableColumn]="data.field">
+                                                    <!-- <th *ngFor="let col of columns" [pSortableColumn]="col.field"> -->
+                                                    {{data.header}}
+                                                    <span
+                                                        *ngIf="(data.field=='Unitprice'||data.field=='ItemTotal')&&selectedGRNDetails.CurrencySymbol!=null">
+                                                        &nbsp; ( {{ selectedGRNDetails.CurrencySymbol }} )
+                                                    </span>
+                                                    <p-sortIcon [field]="data.field" ariaLabel="Activate to sort"
+                                                        ariaLabelDesc="Activate to sort in descending order"
+                                                        ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                                </th>
+                                            </ng-template>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                        <tr>
+                                            <td>
+                                                {{ i + 1 }}
+                                            </td>
+                                            <td style="word-wrap: break-word">
+                                                {{ rowData.ItemType }}
+                                            </td>
+                                            <td *ngIf="rowData.TypeId === 1 && selectedGRNDetails.POTypeId!= 3"
+                                                style="word-wrap: break-word">
+                                                {{ rowData.Item==null?"":rowData.Item.ItemName }}
+                                            </td>
+                                            <td *ngIf="rowData.TypeId === 2 || selectedGRNDetails.POTypeId === 3"
+                                                style="word-wrap: break-word">
+                                                {{ rowData.Service==null?"":rowData.Service.Code }}
+                                            </td>
+                                            <td style="word-wrap: break-word">
+                                                <span class="descriptionStyle"
+                                                    [innerHtml]="rowData.ItemDescription|TextAreaContentDisplay"></span>
+                                            </td>
+                                            <td style="word-wrap: break-word">
+                                                {{ rowData.MeasurementUnitCode }}
+                                            </td>
+                                            <td style="word-wrap: break-word">
+                                                {{ rowData.OriginalQty }}
+                                            </td>
+                                            <td style="word-wrap: break-word">
+                                                {{ rowData.TotalReceivedQty }}
+                                            </td>
+                                            <td style="word-wrap: break-word">
+                                                {{ rowData.OpenQty }}
+                                            </td>
+                                            <td style="word-wrap: break-word">
+                                                {{ rowData.GRNQty }}
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div class="row" style="margin-top:3em;">
+                                        <div class="col-12">
+                                            <h4 class="form-heading">Remarks</h4>
+                                        </div>
+                                        <div class="col-12">
+                                            <span class="descriptionStyle" *ngIf="hideText" showmore
+                                                [value]="selectedGRNDetails.GRNRemarks"></span>
+                                            <textarea *ngIf="hideInput" class="descriptionStyle" class="form-control"
+                                                formControlName="GRNRemarks"></textarea>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="row" style="margin-top:3em;">
+                                        <div class="col-12">
+                                            <h4 class="form-heading">Delivery Terms</h4>
+                                        </div>
+                                        <div class="col-12">
+                                            <span class="descriptionStyle" showmore [value]="selectedGRNDetails.DeliveryTerm"></span>
+                                        </div>
+                                    </div>  -->
+                                    <div *ngIf="(selectedGRNDetails.WorkFlowStatusId == workFlowStatus.Void)&&hideText==true"
+                                        class="row" style="margin-top:3em;">
+                                        <div class="col-12 row">
+                                            <div class="col-12">
+                                                <h4 class="form-heading">Reasons To Void</h4>
+                                            </div>
+                                            <div class="col-12" style="margin-top:1em;">
+                                                <!-- <span class="descriptionStyle" showmore [value]='{{ selectedGRNDetails.ReasonstoVoid==null?'':selectedGRNDetails.ReasonstoVoid }}'></span> -->
+                                                <label class="col-form-label form-text">{{
+                                                    selectedGRNDetails.ReasonstoVoid==null?"":selectedGRNDetails.ReasonstoVoid
+                                                    }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-4">
+                                    <!-- Start PO Attachment -->
+                                    <div class="row" style="margin-top:3em;">
+                                        <div class="col-12">
+                                            <h4 class="form-heading">PO Attachments</h4>
+                                        </div>
+                                        <div class="col-12 attachments" *ngIf="selectedGRNDetails!=undefined">
+                                            <ul>
+                                                <li *ngFor="let data of selectedGRNDetails.Attachments;let i=index">
+                                                    <span>
+                                                        <span class="displayFileName" style="word-wrap:break-word">
+                                                            {{ data.FileName }}
+                                                        </span>
+                                                        <a style="color:black;" target="_blank"
+                                                            *ngIf="goodsReceivedNotesForm.get('POTypeId').value== 1"
+                                                            href="{{apiEndPoint}}/PurchaseOrderFileDownload?AttachmentId={{ data.AttachmentId }}&AttachmentTypeId={{ data.AttachmentTypeId }}&FileName={{data.FileName|encodeURIComponent}}&RecordId={{data.RecordId}}">
+                                                            <i class="fa fa-download"></i>
+                                                        </a>
+                                                        <a style="color:black;" target="_blank"
+                                                            *ngIf="goodsReceivedNotesForm.get('POTypeId').value== 2"
+                                                            href="{{apiEndPoint}}/fixedAssetPurchaseOrderFileDownload?AttachmentId={{ data.AttachmentId }}&AttachmentTypeId={{ data.AttachmentTypeId }}&FileName={{data.FileName|encodeURIComponent}}&RecordId={{data.RecordId}}">
+                                                            <i class="fa fa-download"></i>
+                                                        </a>
+                                                        <a style="color:black;" target="_blank"
+                                                            *ngIf="goodsReceivedNotesForm.get('POTypeId').value== 3"
+                                                            href="{{apiEndPoint}}/expensePurchaseOrderFileDownload?AttachmentId={{ data.AttachmentId }}&AttachmentTypeId={{ data.AttachmentTypeId }}&FileName={{data.FileName|encodeURIComponent}}&RecordId={{data.RecordId}}">
+                                                            <i class="fa fa-download"></i>
+                                                        </a>
+                                                    </span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <!-- End PO Attachment -->
+
+                                    <!-- Start Do Attachment -->
+                                    <div class="row" style="margin-top:3em;">
+                                        <div class="col-12">
+                                            <h4 class="form-heading">DO Attachments</h4>
+                                        </div>
+                                        <div class="col-12 attachments" *ngIf="selectedGRNDetails!=undefined">
+                                            <ul>
+                                                <ng-template ngFor let-data [ngForOf]="selectedGRNDetails.DOAttachments"
+                                                    let-i="index">
+                                                    <li *ngIf="data.IsDelete!=true||data.IsDelete==undefined">
+                                                        <span class="attcmnts_sppinv">
+                                                            <span class="displayFileName" style="word-wrap:break-word">
+                                                                {{ data.FileName }}
+                                                            </span>
+                                                            <a style="color:black;" target="_blank" *ngIf="hideText"
+                                                                href="{{apiEndPoint}}/GoodsReceivedNotesFileDownload?AttachmentId={{ data.AttachmentId }}&AttachmentTypeId={{ data.AttachmentTypeId }}&FileName={{data.FileName|encodeURIComponent}}&RecordId={{data.RecordId}}">
+                                                                <i class="fa fa-download"></i>
+                                                            </a>
+                                                            &nbsp;&nbsp;
+                                                            <i *ngIf="hideInput" (click)="attachmentDelete(i)"
+                                                                class="fa fa-trash">
+                                                            </i>
+                                                        </span>
+                                                    </li>
+                                                </ng-template>
+                                            </ul>
+                                        </div>
+                                        <div class="col-12" *ngIf="hideInput">
+                                            <div class="col-12">
+                                                <input type="file" multiple (change)="onFileUploadChange($event)"
+                                                    name="file">
+                                            </div>
+                                            <div class="col-12">
+                                                <ul class="fileList">
+                                                    <li *ngFor="let data of uploadedFiles;let i = index">
+                                                        <span>
+                                                            <span class="fileName">
+                                                                {{ data.name }}
+                                                            </span>
+                                                            <i class="fa fa-close" (click)="onFileClose(i)"></i>
+                                                        </span>
+                                                        <br>
+                                                        <span class="fileSize">{{ data.size/1024 }} KB</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- END DO Attachment -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group text-right btn-list">
+                        <!-- <button (click)="showItemsList()" class="btn btn-approve" *ngIf="selectedGRNDetails.WorkFlowStatusId==workFlowStatus.Draft&&goodsReceivedNotesForm.get('POTypeId').value== 2">
+                            <i class="fa fa-list" aria-hidden="true"></i>Add Items</button> -->
+
+                        {{hideText}} -- {{selectedGRNDetails.WorkFlowStatusId==workFlowStatus.Draft}} --
+                        {{editPermission}}
+                        <p>
+                            Work Flow Status Id : {{selectedGRNDetails.WorkFlowStatusId}} ::::
+                            Draft : {{workFlowStatus.Draft}} :::
+                            isSameUSer : {{isSameUSer}}
+                        </p>
+                        <button type="submit" (click)="saveRecord(workFlowStatus.Draft,$event)" class="btn btn-save"
+                            *ngIf="hideInput">
+                            <i class="fa fa-save" aria-hidden="true"></i> Save</button>
+
+                        <button type="submit" (click)="submit()" class="btn btn-approve" *ngIf="hideInput">
+                            <i class="fa fa-check" aria-hidden="true"></i> Submit</button>
+
+                        <button type="submit" (click)="displayVoidPopUp($event)" class="btn btn-void"
+                            *ngIf="(hideText&&selectedGRNDetails.WorkFlowStatusId==workFlowStatus.Completed && voidPermission)">
+                            <i class="fa fa-ban" aria-hidden="true"></i> Void</button>
+
+
+
+                            <button type="submit" (click)="cancelRecord($event)" class="btn btn-cancel" *ngIf="hideInput">
+                                <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+
+                        <!-- <button type="submit" (click)="editRecord($event)" class="btn btn-edit"
+                            *ngIf="(hideText&&selectedGRNDetails.WorkFlowStatusId==workFlowStatus.Draft && editPermission) && isSameUSer">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button> -->
+
+                            <button type="submit" (click)="editRecord($event)" class="btn btn-edit" *ngIf="ShowEdit">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+
+                        <!-- <button type="submit" (click)="deleteRecord()" class="btn btn-delete" 
+                            *ngIf="hideText&&selectedGRNDetails.StatusId!=2">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i> Delete
+                        </button> -->
+                    </div>
+                </form>
+            </div>
+            <p-confirmDialog></p-confirmDialog>
+            <!-- <p-dialog [contentStyle]="{'max-width':'1200px'}" header="Title" [modal]="true" [(visible)]="showAssetsDialog">
+                <form [formGroup]="assetItemsForm">
+                    <fieldset formArrayName="Assets">
+                        <div class="ui-fluid">
+                            <p-table [columns]="assetGridColumns" sortMode="single" [value]="assetItemsForm.get('Assets')['controls']">
+                                <ng-template pTemplate="emptymessage">
+                                    <tr>
+                                        <td colspan="9" style='text-align: center;'>
+                                            <b>{{ gridNoMessageToDisplay }}</b>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="colgroup" let-columns>
+                                    <colgroup>
+                                        <col *ngFor="let col of columns" [style.width]="col.width">
+                                    </colgroup>
+                                </ng-template>
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                            {{col.header}}
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                    <tr [formGroupName]="i">
+                                        <td>
+                                            <input type="text" class="form-control" formControlName="SerialNumber">
+                                        </td>
+                                        <td>
+                                            {{ rowData.get('Asset').value.AssetName }}
+                                        </td>
+                                        <td>
+                                            <div class="input-group">
+                                                <input class="form-control" formControlName="PurchasedDate" ngbDatepicker #d="ngbDatepicker">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+                                                        <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" formControlName="ManufacturedBy">
+                                        </td> -->
+            <!-- <td>
+                                            <input type="text" class="form-control" formControlName="Warranty">
+                                        </td> -->
+            <!-- <td>
+                                            <div class="input-group">
+                                                <input class="form-control" formControlName="PurchasedDate" ngbDatepicker #d1="ngbDatepicker">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-secondary" (click)="d1.toggle()" type="button">
+                                                        <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                    </fieldset>
+                </form>
+                <p-footer>
+                    <button (click)="addItems()" class="btn btn-save">Ok</button>
+                </p-footer>
+            </p-dialog> -->
+
+            <p-dialog [modal]="true" [(visible)]="showVoidPopUp">
+                <p-header>
+                    GRN Void Confirmation
+                </p-header>
+                <div [style.display]="voidPopUpTabId==1?'block':'none'">
+                    <span>Are you sure to void this GRN?</span>
+                </div>
+                <div [style.display]="voidPopUpTabId==3?'block':'none'">
+                    <span>Document cannot be "Voided" as it is "Exported" or "Paid"</span>
+                </div>
+                <div [style.display]="voidPopUpTabId==2?'block':'none'">
+                    <form [formGroup]="grnVoidForm">
+                        <div>
+                            <label class="form-label">Reasons</label>
+                            <textarea rows="4" cols="50" class="form-control" formControlName="Reasons">
+                            </textarea>
+                            <div
+                                *ngIf="grnVoidForm.get('Reasons') && grnVoidForm.get('Reasons').errors!=null && grnVoidForm.get('Reasons').touched==true">
+                                <span class="errorMessage" *ngIf="grnVoidForm.get('Reasons').errors.required">Reasons is
+                                    Required</span>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <p-footer>
+                    <button type="button" *ngIf="voidPopUpTabId==2" class="btn" (click)="voidRecord()">Ok</button>
+                    <button type="button" *ngIf="voidPopUpTabId==3" class="btn"
+                        (click)="showVoidPopUp=false">Ok</button>
+                    <button type="button" *ngIf="voidPopUpTabId==1" class="btn" (click)="voidPopUpTabId=2">Yes</button>
+                    &nbsp;
+                    <button type="button" *ngIf="voidPopUpTabId==1" class="btn"
+                        (click)="showVoidPopUp=false">No</button>
+                </p-footer>
+            </p-dialog>
+        </div>
+    </div>
+</div>
+
+
+<!-- <p-dialog [modal]="true" [(visible)]="showVoidPopUp">
+    <p-header>
+        GRN Void Confirmation
+    </p-header>
+    <div [style.display]="voidPopUpTabId==1?'block':'none'">
+        <span>Are you sure to void this GRN?</span>
+    </div>
+    <div [style.display]="voidPopUpTabId==3?'block':'none'">
+        <span>Document cannot be "Voided" as it is "Exported" or "Paid"</span>
+    </div>
+    <div [style.display]="voidPopUpTabId==2?'block':'none'">
+        <form [formGroup]="grnVoidForm">
+            <div>
+                <label class="form-label">Reasons</label>
+                <textarea rows="4" cols="50" class="form-control" formControlName="Reasons">
+                </textarea>
+                <div *ngIf="grnVoidForm.get('Reasons') && grnVoidForm.get('Reasons').errors!=null && grnVoidForm.get('Reasons').touched==true">
+                    <span class="errorMessage" *ngIf="grnVoidForm.get('Reasons').errors.required">Reasons is Required</span>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <p-footer>
+        <button type="button" *ngIf="voidPopUpTabId==2" class="btn" (click)="voidRecord()">Ok</button>
+        <button type="button" *ngIf="voidPopUpTabId==3" class="btn" (click)="showVoidPopUp=false">Ok</button>
+        <button type="button" *ngIf="voidPopUpTabId==1" class="btn" (click)="voidPopUpTabId=2">Yes</button>
+        &nbsp;
+        <button type="button" *ngIf="voidPopUpTabId==1" class="btn" (click)="showVoidPopUp=false">No</button>
+    </p-footer>
+</p-dialog> -->
+
+<ng-template #poTemplate let-r="result" let-i="index" let-t="term">
+    <table class="autoCompleteTable" style="width: 99%;">
+        <thead *ngIf='r.index==0'>
+            <tr>
+                <th style="width: 20%">
+                    PO Number
+                </th>
+                <th style="width: 25%">
+                    Requestor
+                </th>
+                <th style="width: 20%">
+                    Total
+                </th>
+                <th style="width: 20%">
+                    Date
+                </th>
+            </tr>
+        </thead>
+        <tr>
+            <td style="width: 20%">{{ r.PurchaseOrderCode }}</td>
+            <td style="width: 25%; white-space: pre-wrap; word-wrap: break-word; ">{{ r.FirstName }}</td>
+            <td style="width: 20%">{{ r.TotalAmount }}</td>
+            <td style="width: 20%">{{ r.CreatedDate |DisplayDateFormat }}</td>
+        </tr>
+    </table>
+</ng-template>
+
+<ng-template #supplierTemplate let-r="result" let-t="term">
+    <!-- {{ r.SupplierName }} -->
+    <!-- <div [ngClass]="ngb-disabled">
+        <span [ngClass]="{disabled : r.WorkFlowStatus!='Approved'}"> {{ r.WorkFlowStatus!='Approved'? r.SupplierName + " ( " + r.WorkFlowStatus + " ) " : r.SupplierName}}</span>
+    </div> -->
+    <div [ngClass]="ngb-disabled">
+        <span [ngClass]="{disabled : r.WorkFlowStatus!='Approved' || r.IsFreezed===true}"> {{
+            r.WorkFlowStatus!='Approved' ? r.SupplierName + " ( " + r.WorkFlowStatus + " ) " : r.SupplierName}}</span>
+    </div>
+</ng-template>
+
+<ng-template #userTemplate let-r="result" let-t="term">
+    {{ r.FirstName }}
+</ng-template>
+<app-auditlog *ngIf="showLogPopUp" (hideLogPopUp)="hideLogPopUp($event)"
+    [DocumentId]="selectedGRNDetails.GoodsReceivedNoteId"
+    [DocumentNumber]="(selectedGRNDetails.WorkFlowStatusId != workFlowStatus.Draft) ?selectedGRNDetails.GRNCode:selectedGRNDetails.DraftCode"
+    [PageName]="'GoodRecievedNotes'" [DocType]="'GRN'" [showLogPopUp]="showLogPopUp"></app-auditlog>

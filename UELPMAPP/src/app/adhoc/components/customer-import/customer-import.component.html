@@ -1,0 +1,94 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6 col-sm-12 padding-null tittlediv">
+      <h3 class="item-heading">
+        <img src="../assets/images/icon1.png"> Import Customers
+      </h3>
+    </div>
+  </div>
+</div>
+<input #file type="file" accept="xlsx/*" (click)="file.value = null" (change)="uploadFile($event)">
+
+<div style="margin-top:15px; padding:10px;">
+  <p-table [columns]="cols" [value]="cars" dataKey="CustomerId" [paginator]="true" [rows]="10"
+    [totalRecords]="cars.length" pageLinkSize="3" (onPage)="onPage($event)" (onRowExpand)="onRowExpand()"
+    (onRowCollapse)="onRowCollapse()" [expandedRowKeys]="expandedRows">
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th style="width: 3em">
+          <!-- <a style="cursor: pointer;font-size: 16px; color:teal;" (click)="expandAll()"><i *ngIf="!isExpanded"
+              class="fa fa-plus-circle" aria-hidden="true"></i>
+            <i *ngIf="isExpanded" class="fa fa-minus-circle" aria-hidden="true"></i></a> -->
+        </th>
+        <th *ngFor="let col of columns">
+          {{col.header}}
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
+      <tr [ngClass]="rowData.Errors.length == 0 ? 'rowbgtransparent' : 'rowbg'">
+        <td>
+          <a href="#" [pRowToggler]="rowData">
+            <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+          </a>
+        </td>
+        <td *ngFor="let col of columns">
+          {{rowData[col.field]}}
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+      <tr>
+        <td [attr.colspan]="columns.length + 1" style=" padding-left: 3em;">
+
+          <p-table [columns]="addresscols" [value]="rowData.CustomerAddresses">
+            <ng-template pTemplate="header" let-addrcolumns>
+      <tr>
+        <th *ngFor="let col of addrcolumns">
+          {{col.header}}
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-address>
+      <tr>
+        <td *ngFor="let col of addresscols">
+          {{address[col.field]}}
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <div style="height: 5px;"> </div>
+  <p-table [columns]="contactcols" [value]="rowData.CustomerContacts">
+    <ng-template pTemplate="header" let-addrcolumns>
+      <tr>
+        <th *ngFor="let col of addrcolumns">
+          {{col.header}}
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-contact>
+      <tr>
+        <td *ngFor="let col of contactcols">
+          {{contact[col.field]}}
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <ul *ngFor="let error of rowData.Errors">
+    <li><i class="fa fa-star mandatory-icon" aria-hidden="true"></i> &nbsp; {{error}}</li>
+  </ul>
+  </td>
+  </tr>
+  </ng-template>
+  <ng-template pTemplate="paginatorleft">
+    Showing {{totalRecords == 1 ? 0 : first}} to {{totalRecords> 0 ? ((rows+ first) <= totalRecords ? (rows + first-1) :
+      totalRecords) : 0}} of {{totalRecords ? totalRecords : 0}} customers </ng-template>
+      </p-table>
+</div>
+<div class="form-group text-right btn-list">
+  <button type="submit" [disabled]="disableConfirm" class="btn btn-save" (click)="upload()">
+    <i class="fa fa-download" aria-hidden="true"></i> Upload</button>
+  <button type="reset" (click)="OnCancel()" class="btn btn-cancel">
+    <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+</div>
+<p-confirmDialog></p-confirmDialog>

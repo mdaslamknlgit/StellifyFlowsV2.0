@@ -1,0 +1,120 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-4 col-sm-12 padding-null tittlediv">
+      <h3 class="item-heading">
+        <img src="../assets/images/icon1.png"> {{moduleHeading}}
+      </h3>
+    </div>
+    <div class="col-md-8 col-sm-4 align-text-top" style="text-align:right">
+      <button type="submit" (click)="resetFilters()" class="btn btn-save">
+        <i class="fa fa-refresh" ria-hidden="true"></i> Refresh</button>
+      <button type="submit" *ngIf="!isApprovalPage && addPermission" (click)="RedirectCustomer(0)" class="btn btn-save">
+        <i class="fa fa-plus" ria-hidden="true"></i> Add New</button>
+      <button type="submit" class="btn btn-save" (click)="ImportCustomers()" *ngIf="!isApprovalPage && importPermission">
+        <i class="fa fa-download" ria-hidden="true"></i> Import Customers</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <form [formGroup]="FiltersForm">
+        <div class="form-group row" style="display: flex;justify-content:space-between">
+          <label class="col-form-label form-label" style="margin: 4px 0px;">
+            Customer Type</label>
+          <div class=" col-lg-2 col-sm-3 col-3 input-group" style="margin: 4px 0px;">
+            <select formControlName="CustomerTypeId" id="CustomerTypeId" class="form-control">
+              <option value="0">--Select--</option>
+              <option *ngFor="let record of customerTypes" value="{{record.CustomerTypeId}}">
+                {{record.CustomerTypeName}}
+            </select>
+          </div>
+          <label class="col-form-label form-label" style="margin: 4px 0px; padding-left: 15px;">
+            Customer Name</label>
+          <div class=" col-lg-2 col-sm-3 col-3 input-group" style="margin: 4px 0px;">
+            <input formControlName="CustomerName" type="text" class="form-control" />
+          </div>
+          <label class="col-form-label form-label" style="margin: 4px 0px;">
+            Customer Id</label>
+          <div class=" col-lg-2 col-sm-3 col-3 input-group" style="margin: 4px 0px;">
+            <input formControlName="CustomerId" type="text" class="form-control" />
+          </div>
+
+          <div class="input-group" style="margin: 4px 10px 0px;width: auto;">
+            <button type="submit" class="btn btn-save" (click)="FilterData()">
+              <i class="fa fa-check" ria-hidden="true"></i> Submit</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="row" style="margin-top: 20px">
+    <div class="col-xl-12">
+      <div class="respnsive-table">
+        <fieldset>
+          <p-table #dt [columns]="CustomerListGridColumns" [value]="customers" [rows]="1" scrollHeight="270px"
+            [virtualRowHeight]="30" [virtualScroll]="true">
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of CustomerListGridColumns">
+                  {{col.header}}
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="colgroup" let-columns>
+              <colgroup>
+                <col *ngFor="let col of columns" [style.width]="col.width">
+              </colgroup>
+            </ng-template>
+            <ng-template pTemplate="body" let-value let-columns let-i="rowIndex">
+              <tr style="height:30px">
+                <td>{{i+1}}</td>
+                <td>{{value.CustomerTypeName}}</td>
+                <td>{{value.CustomerName}}</td>
+                <td>{{value.CustomerId}}</td>
+                <td>{{value.Department}}</td>
+                <td>{{value.Remarks}}</td>
+                <!-- <td>{{value.TypeOfBusiness}}</td> -->
+                <td>{{value.Status}} </td>
+                <td class="aligncenter">
+                  <mat-slide-toggle [checked]="value.IsActive"
+                    [disabled]="!deletePersmission || value.Status != 'Approved' " (change)="ShowRemarksPopUp(value)">
+                  </mat-slide-toggle>
+                </td>
+                <td class="aligncenter">
+                  <button type="button" class="btn" (click)="RedirectCustomer(value.CustomerIPSId)">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                  </button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+</div>
+<p-dialog [modal]="true" [(visible)]="showRemarksPopUp">
+  <p-header> Remarks </p-header>
+  <div>
+    <form [formGroup]="RemarksForm">
+      <div>
+        <label class="form-label">Reasons</label>
+        <textarea rows="4" cols="50" class="form-control" formControlName="Reasons">
+              </textarea>
+      </div>
+      <div class="errorMessage"
+        *ngIf="RemarksForm.get('Reasons') && RemarksForm.get('Reasons').errors!=null && RemarksForm.get('Reasons').touched==true">
+        <span *ngIf="RemarksForm.get('Reasons').errors.required">
+          Reason is Required
+        </span>
+        <span *ngIf="RemarksForm.get('Reasons').hasError('invaliddata')">
+          Required valid data
+        </span>
+      </div>
+    </form>
+  </div>
+  <p-footer>
+    <button type="button" class="btn" (click)="ChangeStatus()">Yes</button>
+    &nbsp;
+    <button type="button" class="btn" (click)="resetFilters()">No</button>
+  </p-footer>
+</p-dialog>

@@ -1,0 +1,208 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6 col-sm-12 padding-null tittlediv">
+      <h3 class="item-heading">
+        <img src="assets/images/icon1.png"> Bank Master
+      </h3>
+    </div>
+    <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+      <!-- <img src="assets/images/add-new.png" *ngIf="!showDetailsScreen && addPersmission" (click)="addRecord()"> -->
+
+      <button class="btn btn-save ng-star-inserted" style="margin-right: 20px;" type="button" (click)="addRecord($event)">
+        <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> New</button>
+
+
+      <div ngbDropdown placement="bottom-right" *ngIf="showDetailsScreen && logPersmission" style="padding:0px;"
+        class="d-inline-block">
+        <button class="btn btn-outline-primary" style="background:none;border:none;padding:0px;" id="dropdownBasic1"
+          ngbDropdownToggle>
+          <img src="assets/images/grid2.png">
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+          <button class="dropdown-item" (click)="displayLogPopUp()">View Log</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12 col-md-12 enlargeRightPanel">
+      <div class="enlargeRightPanelMargin">
+        <div class="rightcol-scrroll rightcol-scrrollbtn" malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
+          <div *ngIf="showDetailsScreen">
+            <form class="form-horizontal" [formGroup]="BankForm">
+              <div class="form-group row">
+                <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Bank Name
+                  <span><i class="fa fa-star mandatory-icon" aria-hidden="true"></i></span>
+                </label>
+                <div class="col-xl-4 col-sm-6 col-12">
+                  <div>
+                    <input type="text" class="form-control" formControlName="BankName">
+                    <div class="errorMessage" *ngIf="f.BankName.invalid && (f.BankName.dirty || f.BankName.touched)">
+                      <span *ngIf="f.BankName.errors.required">
+                        Bank Name is required</span>
+                      <span *ngIf="f.BankName.errors.required == null && f.BankName.errors.invaliddata">
+                        Invalid data</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Bank A/C No
+                  <i class="fa fa-star mandatory-icon" aria-hidden="true"></i>
+                </label>
+                <div class="col-xl-4 col-sm-6 col-12">
+                  <input type="text" class="form-control" formControlName="BankACNo">
+                  <div class="errorMessage" *ngIf="f.BankACNo.invalid && (f.BankACNo.dirty || f.BankACNo.touched)">
+                    <span *ngIf="f.BankACNo.errors.required">
+                      Bank A/C No is required
+                    </span>
+                    <span *ngIf="f.BankACNo.errors.required == null && f.BankACNo.errors.invaliddata">
+                      Invalid data</span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Bank Code
+                  <i class="fa fa-star mandatory-icon" aria-hidden="true"></i>
+                </label>
+                <div class="col-xl-4 col-sm-6 col-12">
+                  <input type="text" class="form-control" formControlName="BankCode">
+                  <div class="errorMessage" *ngIf="f.BankCode.invalid && (f.BankCode.dirty || f.BankCode.touched)">
+                    <span *ngIf="f.BankCode.errors.required">
+                      Bank Code is required
+                    </span>
+                    <span *ngIf="f.BankCode.errors.required == null && f.BankCode.errors.invaliddata">
+                      Invalid data</span>
+                  </div>
+                  <span class="errorMessage" *ngIf="f.BankCode!=null &&  f.BankCode.errors!=null ">
+                    <span *ngIf="f.BankCode.errors.BankCodeerror">
+                      Duplicate Bank Code
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Branch Code
+                  <i class="fa fa-star mandatory-icon" aria-hidden="true"></i>
+                </label>
+                <div class="col-xl-4 col-sm-6 col-12">
+                  <input type="text" class="form-control" formControlName="BranchCode">
+                  <div class="errorMessage"
+                    *ngIf="f.BranchCode.invalid && (f.BranchCode.dirty || f.BranchCode.touched)">
+                    <span *ngIf="f.BranchCode.errors.required">
+                      Branch Code is required
+                    </span>
+                    <span *ngIf="f.BranchCode.errors.required == null && f.BranchCode.errors.invaliddata">
+                      Invalid data</span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Swift Code
+                  <i class="fa fa-star mandatory-icon" aria-hidden="true"></i>
+                </label>
+                <div class="col-xl-4 col-sm-6 col-12">
+                  <input type="text" class="form-control" formControlName="SwiftCode">
+                  <div class="errorMessage" *ngIf="f.SwiftCode.invalid && (f.SwiftCode.dirty || f.SwiftCode.touched)">
+                    <span *ngIf="f.SwiftCode.errors.required">
+                      Swift Code is required
+                    </span>
+                    <span *ngIf="f.SwiftCode.errors.required == null && f.SwiftCode.errors.invaliddata">
+                      Invalid data</span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Misc-1 Information
+                </label>
+                <div class="col-xl-4 col-sm-6 col-12">
+                  <input type="text" class="form-control" formControlName="Misc1Information">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Misc-2 Information
+                </label>
+                <div class="col-xl-4 col-sm-6 col-12">
+                  <input type="text" class="form-control" formControlName="Misc2Information">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">QR Code</label>
+                <div class="col-xl-4 col-sm-6 col-12">
+                  <input id="file" type="file" #takeInput class="form-control" (change)="onFileUploadChange($event)">
+                  <div class="errorMessage" *ngIf="f.ImageSource.errors!=null && f.ImageSource.errors.invalidformat">
+                    <span> Invalid file format </span>
+                  </div>
+                  <img [src]="imageSrc" *ngIf="imageSrc" style="height: 200px; width:250px">
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="row" *ngIf="!showDetailsScreen">
+            <div class="col-xl-12">
+              <div class="respnsive-table">
+                <fieldset>
+                  <p-table #dt [columns]="bankColumns" [value]="bankGrid" [rows]="1" scrollHeight="400px"
+                    [virtualRowHeight]="30" [virtualScroll]="true">
+                    <ng-template pTemplate="header" let-columns>
+                      <tr>
+                        <th *ngFor="let col of bankColumns">
+                          {{col.header}}
+                        </th>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="colgroup" let-columns>
+                      <colgroup>
+                        <col *ngFor="let col of columns" [style.width]="col.width">
+                      </colgroup>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-value let-columns let-i="rowIndex">
+                      <tr style="height:30px">
+                        <td>{{i+1}}</td>
+                        <td>{{value.BankName}}</td>
+                        <td>{{value.BankACNo}}</td>
+                        <td>{{value.BankCode}}</td>
+                        <td>{{value.BranchCode}}</td>
+                        <td>{{value.SwiftCode}}</td>
+                        <td>{{value.Misc1Information}}</td>
+                        <td class="aligncenter">
+                          <mat-slide-toggle [checked]="value.IsActive" [disabled]="!deletePersmission"
+                            (change)="ChangeStatus(value)">
+                          </mat-slide-toggle>
+                        </td>
+                        <td class="aligncenter">
+                          <input class="gridCheckBox" [checked]="value.IsDefault" [disabled]="!value.IsActive"
+                            (change)="ChangeDefault(value)" type="checkbox">
+                        </td>
+                        <td>
+                          <button type="button" class="btn" (click)="EditBankDetails(value.BankMasterId)">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="showDetailsScreen" class="form-group text-right btn-list">
+          <button type="submit" class="btn btn-save" (click)="PostBank()" *ngIf="f.BankMasterId.value ==0">
+            <i class="fa fa-check" aria-hidden="true"></i>
+            Save</button>
+          <button type="submit" class="btn btn-save" (click)="PostBank()"
+            *ngIf="f.BankMasterId.value >0 && editPersmission" [disabled]="!IsFormValueChanges">
+            <i class="fa fa-check" aria-hidden="true"></i>
+            Update </button>
+          <button type="submit" (click)="cancelRecord()" class="btn btn-cancel">
+            <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<p-confirmDialog></p-confirmDialog>
+<app-auditlog *ngIf="showLogPopUp" (hideLogPopUp)="hideLogPopUp($event)" [DocumentId]="f.BankMasterId.value"
+  [CompanyId]="0" [DocumentNumber]="0" [PageName]="'BankMaster'" [showLogPopUp]="showLogPopUp">
+</app-auditlog>

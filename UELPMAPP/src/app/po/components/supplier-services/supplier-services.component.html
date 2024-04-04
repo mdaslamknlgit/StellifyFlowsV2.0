@@ -1,0 +1,212 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+            <div class="flexrow space-between align-center">
+            <h3 class="item-heading">Supplier Services </h3>
+         
+                 <div>
+                    <button class="btn  btn-transparent" (click)="addRecord()"  *ngIf="hidetext && newPermission"> New Record</button>
+                    <button  class="btn btn-transparent" (clickOutside)="onClickedOutside($event)"   (click)="split()">  {{showfilterstext}}  </button> 
+                   
+       
+            <img  style="display: none;" src="../assets/images/grid1.png" (click)="showFullScreen()">
+            </div>
+            </div>
+            <!-- <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+          <button class="btn btn-outline-primary" style="background:none;border:none;padding:0px;" id="dropdownBasic1" ngbDropdownToggle>
+              <img src="../assets/images/grid2.png">
+          </button>
+      </div> -->
+
+      <div class="left-section"   [class.display-filters]="!showfilters" ngbDropdown #myDrop="ngbDropdown">
+        <div class="filter-section">
+            <div  class="flexrow space-between">
+            <div class="left-search">
+                <input type="text" placeholder="Search requests..." class="search-filter" (keyup)="onSearch($event)">
+                <i class="fa fa-search" aria-hidden="true"></i>
+                <div class="filter-popup" *ngIf="initDone" ngbDropdownMenu aria-labelledby="dropdownManual" (click)="$event.stopPropagation(); myDrop.open();">
+
+                    <form [formGroup]="supplierServiceFilterInfoForm" class="form-horizontal">
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-6 form-label">Service Name </label>
+                            <div class="col-6">
+                                <input type="text" #ServiceName formControlName="ServiceName" placeholder="" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-6 form-label">Service Category</label>
+                            <div class="col-6">
+
+                                <!-- <select  class="form-control" formControlName="ServiceCategory">
+                  <option *ngFor="let category of serviceCategoriesList" [value]="category.CategoryName">
+                      {{category.CategoryName}}
+                  </option>
+              </select> -->
+                                <select class="form-control" formControlName="ServiceCategory">
+                                    <option *ngFor="let category of serviceCategoriesList" [value]="category.CategoryName">
+                                        {{category.CategoryName}}
+                                    </option>
+                                </select>
+
+                                <!-- <input type="text" formControlName="ServiceCategory" placeholder="" class="form-control"> -->
+
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12 error">
+                                {{filterMessage}}
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+
+                            <div class="col-12" style="text-align: right">
+                                <button type="submit" (click)="filterData()" class="btn btn-save">
+                                    <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="filter-icon">
+                <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                    <i class="fa fa-filter" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <div class="filter-icon" style="padding: 0px;" *ngIf="isFilterApplied" (click)="resetData()">
+                <i class="fa fa-undo" aria-hidden="true"></i>
+            </div>
+
+        </div>
+            <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="filter-scroll" style="width:100%; float:left;">
+                <table class="table">
+                    <tr >
+                        <td  (click)="hidefilter()" style="padding: 0;">
+
+
+
+                            <table class="listtable">
+                                <tr>
+                                    <th>Service Name </th>
+                                  <th>Service category</th>  
+                                  <th>Description</th> 
+                                   
+                                      
+                                </tr>
+                                <tr  [class.activerow]="record.SupplierServiceID==selectedSupplierCategory.SupplierServiceID" (click)="onRecordSelection(record.SupplierServiceID)"
+                                *ngFor="let record of supplierServicesList">
+                                    <td>{{record.ServiceName }}</td>
+                                    <td>{{record.ServiceCategoryName }}</td>
+                                      <td  *ngIf="record.ServiceDescription!= null && record.ServiceDescription.length<45;else elsecondition">{{ record.ServiceDescription}}</td> 
+                                       
+                                     
+                                </tr>
+                            </table>
+
+
+
+                            
+                           
+                            <ng-template #elsecondition>
+                                <p style='width:100%' class="label-value descriptionStyle">{{ record.ServiceDescription|slice:0:45 }}
+                                    <span>...</span>
+                                </p>
+                            </ng-template>
+                        </td>
+                    </tr>
+                </table>
+                <div *ngIf="supplierServicesList.length==0" class="col-12 error listErrorMessage">
+                    {{errorMessage}}
+                </div>
+               
+            </div>
+            <ngb-pagination [maxSize]="5" *ngIf="supplierServicesList.length>0" (pageChange)="pageChange($event)" [collectionSize]="supplierServicesListPagerConfig.TotalRecords"
+                class="d-flex justify-content-center" [pageSize]="supplierServicesListPagerConfig.RecordsToFetch"
+                [page]="1" [boundaryLinks]="true"></ngb-pagination>
+        </div>
+    </div>
+
+
+
+
+
+        </div>
+    </div>
+    <div class="row">
+     
+        <!-- left col end here-->
+        <div class="col-lg-12 col-md-12" [class.expand-rightcol]="rightsection">
+            <div #rightPanel class="rightPanel">
+                <div class="fullScreenLabel">
+                    <app-header></app-header>
+                </div>
+                <form [formGroup]="supplierServicesForm" class="form-horizontal">
+                    <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+                        <div class="row fullScreenLabel">
+                            <div class="col-12">
+                                <h3 class="item-heading" style="float:none;">Supplier Services</h3>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Service Name
+                                <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                            </label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <input type="text" appAutofocus formControlName="ServiceName" maxlength="100" *ngIf="hideInput" class="form-control">
+                                <label class="col-form-label  form-text" *ngIf="hidetext">
+                                    <b style="color:#01548e">{{ selectedSupplierCategory.ServiceName }}</b>
+                                </label>
+                                <div *ngIf="hideInput &&supplierServicesForm.get('ServiceName') && supplierServicesForm.get('ServiceName').errors!=null && supplierServicesForm.get('ServiceName').touched==true">
+                                    <span class="errorMessage" *ngIf="supplierServicesForm.get('ServiceName').errors.required">Service Name is required</span>
+                                    <span class="errorMessage" *ngIf="supplierServicesForm.get('ServiceName').errors.Duplicate">Duplicate Service Name</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Service Category
+                                <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                            </label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <label class="col-form-label form-text" *ngIf="hidetext">{{ selectedSupplierCategory.ServiceCategoryName }} </label>
+                                <select formControlName="ServiceCategory" placeholder="Service Category" *ngIf="hideInput" class="form-control">
+                                    <option [ngValue]="null">--Select--</option>
+                                    <option *ngFor="let record of serviceCategoriesList" [value]="record.ServiceCategoryId">{{ record.CategoryName }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <h4 class="form-heading">Details</h4>
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Description
+                                <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                            </label>
+                            <div *ngIf="hideInput" class="col-xl-4 col-sm-6 col-12">
+                                <textarea rows="4" cols="50" formControlName="ServiceDescription" class="form-control">
+                </textarea>
+                            </div>
+                            <div *ngIf="hidetext" class="col-xl-8 col-sm-6 col-12">
+                                <label class="col-form-label descriptionStyle" [innerHtml]="selectedSupplierCategory.ServiceDescription|TextAreaContentDisplay"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group text-right btn-list">
+                        <button type="submit" (click)="saveRecord()" class="btn btn-save" *ngIf="hideInput && editPermission">
+                            <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+                        <button type="submit" (click)="cancelRecord()" class="btn btn-cancel" *ngIf="hideInput">
+                            <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                        <button type="submit" (click)="editRecord()" class="btn btn-edit" *ngIf="hidetext && editPermission">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                        <button type="submit" (click)="deleteRecord()" class="btn btn-delete" *ngIf="hidetext && deletePermission">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                    </div>
+                </form>
+                <p-confirmDialog></p-confirmDialog>
+            </div>
+        </div>
+        <!-- left col end here-->
+    </div>
+</div>

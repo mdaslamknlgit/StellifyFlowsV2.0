@@ -1,0 +1,81 @@
+
+.alert-popover{ width:400px; }
+.alert-popover .unread-msg h4{ color:#0082c8; }
+.alert-popover h4{ font-size: 18px; padding-bottom:5px; border-bottom: 1px solid #7a93a9; display: block;  margin-bottom: 10px;}
+/* .alert-popover li{ border-bottom: 1px solid #e9ebec; padding-bottom: 10px; margin-bottom: 10px; padding-right: 10px;} */
+.alert-popover li{ border-bottom: 1px solid #e9ebec;width:100%;}
+.alert-popover ul li:last-child { border-bottom: inherit;}
+.alert-popover li p { position: relative;}
+/* .alert-popover li p::after { content: "\f054"; font: normal normal normal 14px/1 FontAwesome; color:#d0d0d0;  position: absolute; right: -10px; top:10px;} */
+.alert-popover li p a { color: #212529;}
+.alert-popover li p a:hover {  text-decoration: underline;}
+.alert-popover .notificationDiv
+{
+   padding: 4%;
+   cursor: pointer;
+   min-height: 65px;
+}
+
+.unread-msg .lowqty{ color: red; font-size: 16px;}
+.unread-msg .stockara{ color: #2fb214;font-size: 16px;}
+.unread-msg .sysupgra{ color:#ddc81a;font-size: 16px;}
+.auto-complete input{
+  border:none;  
+  padding-right: 40px;
+  outline: none;    
+}
+.auto-complete{ 
+    position: relative;
+    /* border: 1px solid #ced4da; */
+    /* border-radius: .25rem; */
+    border: 1px solid #a7a7ad52;    
+    transition: all 0.35s ;
+    width:100%; 
+    -webkit-box-shadow: 0 0 2px 2px #f7f4f4;
+    -moz-box-shadow: 0 0 2px 2px #f7f4f4;
+    box-shadow: 0 0 2px 2px #f7f4f4;
+}
+:host ::ng-deep .auto-complete .form-control:focus{ 
+  -webkit-box-shadow: 0 0 2px 2px #f7f4f4;
+  -moz-box-shadow: 0 0 2px 2px #f7f4f4;
+  box-shadow: 0 0 2px 2px #f7f4f4}
+.auto-complete .fa-search{ position: absolute; right: 10px; top:10px; font-size: 18px;}
+:host ::ng-deep .auto-complete .dropdown-menu{
+  border-radius: 0px;
+  border: 1px solid #a7a7ad52;   
+  -webkit-box-shadow: 0 0 2px 2px #f7f4f4;
+    -moz-box-shadow: 0 0 2px 2px #f7f4f4;
+    box-shadow: 0 0 2px 2px #f7f4f4}
+:host ::ng-deep .dropdown-item{ padding: .25rem 0.5rem;}
+:host ::ng-deep .auto-complete .dropdown-menu.show{   }
+/* .auto-complete:hover  {
+  width: 100%; 
+} */
+.auto-complete input:hover  {
+  box-shadow: inherit
+  }
+.companyName{ 
+    cursor: pointer;
+    margin-top: 2px;
+    border: 1px solid #fff; 
+    position: relative;  
+    overflow: hidden; border-radius: 5px;
+ }
+ .companyName input{ border: none !important;}
+ .companyName span{ display: inline-block;    color: #fff; font-size: 1rem;    padding: .375rem .75rem;  line-height: 1.5;}
+ .companyName .fa-caret-down{ position: absolute; right: 10px;top:8px;}
+ .read-msg{
+  background: rgba(242,245,245,0.4);
+  color:#202124;
+ } 
+ .change-my-color {
+  fill: #40a0f8;margin: 0px 10px; font-size: 20px; width: 20px;
+}
+ fa-icon,i{ color: #fff; margin: 0px 10px; font-size: 20px;}
+ .profile-info{ width:25px; height: 25px;background: #d8ecfd; overflow: hidden ; margin: 0px 10px; font-size: 11px; text-align: center; color: #3b80c4; border-radius: 50%;}
+
+  .profileImage
+  {
+    width:24px;
+    height:24px;
+  }

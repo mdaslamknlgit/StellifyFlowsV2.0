@@ -1,0 +1,96 @@
+<block-ui message="Deafult Message"></block-ui>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+          <div class="flexrow space-between align-center">
+            <h3 class="item-heading"> Item Types
+              <!-- <p> {{SelectedItemTypes}} </p> -->
+             
+            </h3>
+            <div class="divnewbutton">
+              <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickBack($event)">
+                <i class="fa fa-arrow-left" ria-hidden="true" aria-hidden="true"></i> Back</button>
+            </div>
+          </div>
+          <hr style="margin-top: 0px;" />
+        </div>
+      </div>
+      <p>Edit Form Starts Here</p>
+      <div class="row">
+          <div #rightPanel class="rightPanel col-lg-9 col-md-8" [class.expand-rightcol]="rightsection">
+
+
+            <div *ngIf="isDisplayMode!=null">
+    
+                <form [formGroup]="itemtypeForm" class="form-horizontal">
+                    <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+                        <div class="row fullScreenLabel">
+                            <div class="col-12">
+                                <h3 class="item-heading" style="float:none;">Item Types</h3>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Name
+                                <i class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false" aria-hidden="true"></i>
+                            </label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <input type="text" formControlName="Name" [ngClass]="(validateControl(itemtypeForm.get('Name')))?'form-control ng-touched':'form-control'"
+                                    placeholder="Name" *ngIf="isDisplayMode==false" class="form-control">
+    
+                                <label class="col-form-label col-sm-12 form-text" *ngIf="isDisplayMode==true">
+                                    <b style="color:#01548e">{{ selectedItemTypeRecord.Name }}</b>
+                                </label>
+                                <div *ngIf="itemtypeForm.get('Name').errors!=null && isDisplayMode==false">
+                                    <span class="errorMessage" *ngIf="itemtypeForm.get('Name').errors.Duplicate">Duplicate Item Name</span>
+                                </div>
+    
+    
+                            </div>
+                        </div>
+    
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Category
+                                <i class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false" aria-hidden="true"></i>
+                            </label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <select formControlName="ItemCategoryID" [ngClass]="(validateControl(itemtypeForm.get('ItemCategoryID')))?'form-control ng-touched':'form-control'"
+                                    placeholder="category" *ngIf="isDisplayMode==false" class="form-control">
+                                    <option [ngValue]="null">--Select--</option>
+                                    <option *ngFor="let record of itemcategorytypes" value={{record.ItemCategoryID}}>
+                                        {{record.Name}}
+    
+                                </select>
+                                <label class="col-form-label col-xl-12 col-sm-12 col-12 form-text" *ngIf="isDisplayMode==true"> {{selectedItemTypeRecord.ItemCategoryName}} </label>
+                            </div>
+                        </div>
+    
+    
+                        <h4 class="form-heading">Details</h4>
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Description </label>
+                            <div class="col-xl-4 col-sm-6 col-12">
+                                <textarea rows="4" cols="50" formControlName="Description" *ngIf="isDisplayMode==false" class="form-control">
+                    </textarea>
+                                <label class="col-form-label form-text descriptionStyle" *ngIf="isDisplayMode==true">{{ selectedItemTypeRecord.Description }}</label>
+    
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group text-right btn-list">
+                        <button type="submit" (click)="saveRecord()" class="btn btn-save" *ngIf="isDisplayMode==false">
+                            <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+                        <button type="submit" (click)="cancelRecord()" class="btn btn-cancel" *ngIf="isDisplayMode==false">
+                            <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                        <button type="submit" (click)="editRecord()" class="btn btn-edit" *ngIf="isDisplayMode==true && editPermission">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                        <button type="submit" (click)="deleteRecord()" class="btn btn-delete" *ngIf="isDisplayMode==true && deletePermission">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                    </div>
+                    <p-confirmDialog></p-confirmDialog>
+                </form>
+            </div>
+        </div>
+      </div>
+      <p>Edit Form Ends Here</p>
+
+</div>

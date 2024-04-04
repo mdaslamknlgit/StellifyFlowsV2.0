@@ -1,0 +1,13 @@
+.displayFileName
+{
+    display: inline-block;
+    padding:1em;
+}
+.attachments .fa
+{
+    font-size:16px;
+    cursor: pointer;
+}
+td{
+    padding: 10px;
+}

@@ -1,0 +1,379 @@
+<div class="container-fluid" ngbDropdown #myDrop="ngbDropdown">
+        <div class="row">
+            <div class="col-md-6 col-sm-12 padding-null tittlediv">
+                <h3 class="item-heading">
+                    <img src="../assets/images/icon1.png"> Admin > Customers </h3>
+            </div>
+            <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">               
+                <img src="../assets/images/add-new.png" (click)="addData()" *ngIf="hideText && newPermission">
+                <img src="../assets/images/grid1.png" (click)="fullScreen()">
+                <img src="../assets/images/grid2.png">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-4 leftdiv" [class.collapse-leftcol]="leftsection">
+                <div class="left-section">
+    
+                    <div class="filter-section">    
+                        <div class="left-search">
+                            <input type="text" #searchInput placeholder="Search requests..." (keyup)="onChange($event)" class="search-filter">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+    
+                            <div class="filter-popup" *ngIf="initDone" ngbDropdownMenu aria-labelledby="dropdownManual" (click)="$event.stopPropagation(); myDrop.open();">
+    
+                                <form [formGroup]="customerFilterInfoForm" class="form-horizontal">
+                                    
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-6 form-label">Customer Name </label>
+                                        <div class="col-6">    
+                                            <input type="text" #CustomerName formControlName="CustomerName" placeholder="" class="form-control"
+                                            [inputFormatter]="customerInputFormater" [ngbTypeahead]="customerSearch" [resultTemplate]="customerTemplate">    
+                                        </div>
+                                    </div>
+    
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-6 form-label">Category</label>
+                                        <div class="col-6">
+    
+                                            <input formControlName="CustomerCategory" type="text" class="form-control" [inputFormatter]="customerCategoryInputFormater"
+                                                [ngbTypeahead]="customerCategorySearch" [resultTemplate]="customerCategoryTemplate"
+                                            />
+    
+                                        </div>
+                                    </div>
+    
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-6 form-label">City</label>
+                                        <div class="col-6">
+    
+                                            <input type="text" formControlName="CustomerCity" placeholder="" class="form-control">
+    
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-12 error">
+                                            {{filterMessage}}
+                                        </div>
+                                    </div>
+    
+                                    <div class="form-group row">
+    
+                                        <div class="col-12" style="text-align: right">
+                                            <button type="submit" (click)="filterData()" class="btn btn-save">
+                                                <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                            <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                                <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+    
+                                        </div>
+                                    </div>
+    
+                                </form>
+    
+    
+    
+                            </div>
+                            <!--filterpopup end here-->
+                        </div>
+    
+    
+                        <div  class="filter-icon" *ngIf="!isFilterApplied">
+                            <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                                <i class="fa fa-filter" aria-hidden="true"></i>
+                            </button>
+                        </div>
+    
+                        <div class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+                            <i class="fa fa-undo" aria-hidden="true"></i>
+                        </div>
+    
+                        <div malihu-scrollbar class="filter-scroll" style="width:100%; float:left;">
+                           
+                            <table class="table">
+                                <tr [class.activerow]="customer.CustomerId==defaultCustomer.CustomerId" (click)="onRecordSelected(customer)" *ngFor="let customer of filteredCustomers; let i = index;">
+                                    <td>
+                                        <h5 class="sub-heading">{{customer.CustomerCode}}</h5>
+                                        <label class="label-text">Short Name</label> :
+                                        <label class="label-value">{{customer.CustomerShortName}}</label>
+                                        <label class="label-text">Category</label> :
+                                        <label class="label-value">{{customer.CategoryName}}</label>                                       
+                                    </td>
+                                </tr>
+    
+                            </table>
+                            <div *ngIf="filteredCustomers.length==0" class="col-12 listErrorMessage">
+                                {{errorMessage}}
+                            </div> 
+                            <ngb-pagination [maxSize]="5" *ngIf="filteredCustomers.length>0" (pageChange)="pageChange($event)" [collectionSize]="customerPagerConfig.TotalRecords" class="d-flex justify-content-center" [pageSize]="customerPagerConfig.RecordsToFetch" [page]="1" [boundaryLinks]="true"></ngb-pagination>
+    
+                        </div>
+    
+    
+                    </div>
+                </div>
+                <div class="split-line" (click)="split()"></div>
+            </div>
+            <!-- left col end here-->
+    
+            <div #rightPanel class="rightPanel col-lg-9 col-md-8 enlargeRightPanel" [class.expand-rightcol]="rightsection">
+              <div class="fullScreenLabel">    <app-header></app-header> </div>
+                <div class="enlargeRightPanelMargin">
+                    <form [formGroup]="customerInfoForm" class="form-horizontal" (ngSubmit)="onSubmit()" novalidate>
+                        <div malihu-scrollbar  class="rightcol-scrroll" (click)="$event.stopPropagation(); myDrop.close();">
+                            <div class="row fullScreenLabel">
+                                <div class="col-12">
+                                    <h3 class="item-heading" style="float:none;">Manage Customers</h3>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div *ngIf="hideText" class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Customer Id</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">{{  defaultCustomer.CustomerCode }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Customer Name</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="hideText">{{defaultCustomer.CustomerName }}</label>
+                                            <input  appAutofocus type="text" id="barcode" name="barcode" formControlName="CustomerName" placeholder="" *ngIf="hideInput" class="form-control"
+                                                [ngClass]="(validateControl(customerInfoForm.get('CustomerName')))?'form-control ng-touched':'form-control'">
+    
+                                        </div>
+                                    </div>
+    
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Short Name</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="hideText">{{defaultCustomer.CustomerShortName }} </label>
+                                            <input type="text" id="cusotmerShortName" name="customerShortName" formControlName="CustomerShortName" placeholder="" *ngIf="hideInput"
+                                                class="form-control" [ngClass]="(validateControl(customerInfoForm.get('CustomerShortName')))?'form-control ng-touched':'form-control'">
+                                        </div>
+                                    </div>   
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Category</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="hideText">{{defaultCustomer.CategoryName }} </label>
+                                            <select *ngIf="hideInput" class="form-control" formControlName="CustomerCategoryId" [ngClass]="(validateControl(customerInfoForm.get('CustomerCategoryId')))?'form-control ng-touched':'form-control'">
+                                                <option *ngFor="let category of customerCategroies" [value]="category.CustomerCategoryId">
+                                                    {{category.CategoryName}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>                                
+                                    <div  class="form-group row">
+                                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Remarks</label>
+                                            <div class="col-xl-8 col-sm-6 col-6">
+                                                <label *ngIf="hideText" class="col-form-label form-text">{{ defaultCustomer.Remarks }} </label>
+                                                <textarea *ngIf="hideInput" [ngClass]="(validateControl(customerInfoForm.get('Remarks')))?'form-control ng-touched':'form-control'" formControlName="Remarks" class="form-control"></textarea>
+                                            </div>
+                                        </div>                                    
+                                </div>
+                                <div class="col-sm-6">
+                                    <div *ngIf="hideText" class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Created Date</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text">{{ defaultCustomer.CreatedDate|DisplayDateFormat }}</label>
+                                        </div>
+                                    </div>
+                                 
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Payment Terms</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="hideText">{{defaultCustomer.PaymentTermCode }} </label>
+                                            <select *ngIf="hideInput" class="form-control" formControlName="PaymentTermsId" [ngClass]="(validateControl(customerInfoForm.get('PaymentTermsId')))?'form-control ng-touched':'form-control'">
+                                                <option *ngFor="let paymentTerm of paymentTerms" [value]="paymentTerm.PaymentTermsId">
+                                                    {{paymentTerm.Code}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Customer Email</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="hideText">{{defaultCustomer.CustomerEmail }}</label>
+                                            <input type="text" id="customerEmail" name="customerEmail" formControlName="CustomerEmail" placeholder="" *ngIf="hideInput"
+                                                class="form-control" [ngClass]="(validateControl(customerInfoForm.get('CustomerEmail')))?'form-control ng-touched':'form-control'">
+    
+                                        </div>
+                                    </div>                                  
+                                  
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Tax Group</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="hideText">{{defaultCustomer.TaxName }} </label>
+                                            <select *ngIf="hideInput" class="form-control" formControlName="TaxId" [ngClass]="(validateControl(customerInfoForm.get('TaxId')))?'form-control ng-touched':'form-control'">
+                                                <option *ngFor="let taxGroup of taxGroups" [value]="taxGroup.TaxId">
+                                                    {{ taxGroup.TaxName }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>    
+                                    <!-- <div *ngIf="hideText" class="form-group row">
+                                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Status</label>
+                                            <div class="col-xl-8 col-sm-6 col-6">
+                                                <label class="col-form-label form-text">{{ defaultCustomer.Status }} </label>
+                                            </div>
+                                        </div>                        -->
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 20px">
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                <div class="col-sm-6">
+                                    <h4 class="form-heading">Customer Address</h4>
+                                </div>
+                                <div class="col-sm-6" style="text-align: right;" *ngIf="hideInput">
+                                        <input type="checkbox" (change)="onChecked($event)">&nbsp; Same as Billing Address
+                                    </div>
+                                </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Billing Address</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="hideText">{{defaultCustomer.BillingAddress}} </label>
+                                            <input type="text" id="billingAddress" name="billingAddress" formControlName="BillingAddress" placeholder="" *ngIf="hideInput"
+                                                class="form-control" [ngClass]="(validateControl(customerInfoForm.get('BillingAddress')))?'form-control ng-touched':'form-control'">
+                                        </div>
+                                    </div>                               
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">PostalCode</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="hideText">{{defaultCustomer.BillingZipcode }}</label>
+                                            <input type="text" id="billingZipcode" name="billingZipcode" formControlName="BillingZipcode" placeholder="" *ngIf="hideInput"
+                                                class="form-control" [ngClass]="(validateControl(customerInfoForm.get('BillingZipcode')))?'form-control ng-touched':'form-control'">
+                                        </div>
+                                    </div>
+                                   
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Telephone</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="hideText">{{defaultCustomer.BillingTelephone }}</label>
+                                            <input type="text" id="billingTelephone" name="billingTelephone" formControlName="BillingTelephone" placeholder="" *ngIf="hideInput"
+                                                class="form-control" [ngClass]="(validateControl(customerInfoForm.get('BillingTelephone')))?'form-control ng-touched':'form-control'">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">City</label>
+                                            <div class="col-xl-8 col-sm-6 col-6">
+                                                <label class="col-form-label form-text" *ngIf="hideText">{{defaultCustomer.BillingCity }}</label>
+                                                <input type="text" id="billingCity" name="billingCity" formControlName="BillingCity" placeholder="" *ngIf="hideInput" class="form-control"
+                                                    [ngClass]="(validateControl(customerInfoForm.get('BillingCity')))?'form-control ng-touched':'form-control'">
+                                            </div>
+                                        </div>
+                                    
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Country</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="hideText">{{defaultCustomer.BillingCountry }}</label>
+                                            <select *ngIf="hideInput" class="form-control" formControlName="BillingCountryId" [ngClass]="(validateControl(customerInfoForm.get('BillingCountryId')))?'form-control ng-touched':'form-control'">
+                                                <option *ngFor="let country of countries" [value]="country.Id">
+                                                    {{country.Name}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Fax</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="hideText">{{defaultCustomer.BillingFax }}</label>
+                                            <input type="text" id="billingFax" name="billingFax" formControlName="BillingFax" placeholder="" *ngIf="hideInput" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--col end here-->
+                               
+                                <div class="col-sm-6">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Shipping Address</label>
+                                            <div class="col-xl-8 col-sm-6 col-6">
+                                                <label class="col-form-label form-text" *ngIf="hideText">{{defaultCustomer.ShippingAddress}} </label>
+                                                <input type="text" id="shippingAddress" name="shippingAddress" formControlName="ShippingAddress" placeholder="" *ngIf="hideInput"
+                                                    class="form-control" [ngClass]="(validateControl(customerInfoForm.get('ShippingAddress')))?'form-control ng-touched':'form-control'">
+                                            </div>
+                                        </div>                               
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">PostalCode</label>
+                                            <div class="col-xl-8 col-sm-6 col-6">
+                                                <label class="col-form-label form-text" *ngIf="hideText">{{defaultCustomer.ShippingZipcode }}</label>
+                                                <input type="text" id="shippingZipcode" name="shippingZipcode" formControlName="ShippingZipcode" placeholder="" *ngIf="hideInput"
+                                                    class="form-control" [ngClass]="(validateControl(customerInfoForm.get('ShippingZipcode')))?'form-control ng-touched':'form-control'">
+                                            </div>
+                                        </div>
+                                       
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Telephone</label>
+                                            <div class="col-xl-8 col-sm-6 col-6">
+                                                <label class="col-form-label form-text" *ngIf="hideText">{{defaultCustomer.ShippingTelephone }}</label>
+                                                <input type="text" id="shippingTelephone" name="shippingTelephone" formControlName="ShippingTelephone" placeholder="" *ngIf="hideInput"
+                                                    class="form-control" [ngClass]="(validateControl(customerInfoForm.get('ShippingTelephone')))?'form-control ng-touched':'form-control'">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">City</label>
+                                                <div class="col-xl-8 col-sm-6 col-6">
+                                                    <label class="col-form-label form-text" *ngIf="hideText">{{defaultCustomer.ShippingCity }}</label>
+                                                    <input type="text" id="shippingCity" name="shippingCity" formControlName="ShippingCity" placeholder="" *ngIf="hideInput" class="form-control"
+                                                        [ngClass]="(validateControl(customerInfoForm.get('ShippingCity')))?'form-control ng-touched':'form-control'">
+                                                </div>
+                                            </div>
+                                        
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Country</label>
+                                            <div class="col-xl-8 col-sm-6 col-6">
+                                                <label class="col-form-label form-text" *ngIf="hideText">{{defaultCustomer.ShippingCountry }}</label>
+                                                <select *ngIf="hideInput" class="form-control" formControlName="ShippingCountryId" [ngClass]="(validateControl(customerInfoForm.get('ShippingCountryId')))?'form-control ng-touched':'form-control'">
+                                                    <option *ngFor="let country of countries" [value]="country.Id">
+                                                        {{country.Name}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Fax</label>
+                                            <div class="col-xl-8 col-sm-6 col-6">
+                                                <label class="col-form-label form-text" *ngIf="hideText">{{defaultCustomer.ShippingFax }}</label>
+                                                <input type="text" id="shippingFax" name="shippingFax" formControlName="ShippingFax" placeholder="" *ngIf="hideInput" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                <!-- col2 end here-->
+                                <div class="col-12">
+                                    <div lclass="form-group">
+                                        <div class="error">
+                                            {{ formError }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                         
+
+                        </div>
+                        <div class="form-group text-right btn-list">
+                            <button type="submit" class="btn btn-save" *ngIf="!isDisplayMode">
+                                <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+                            <button type="reset" (click)="cancleData()" class="btn btn-cancel" *ngIf="!isDisplayMode">
+                                <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                            <button type="reset" (click)="editData()" class="btn btn-edit" *ngIf="isDisplayMode && editPermission">
+                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                            <button type="button" (click)="deleteRecord()"  class="btn btn-delete" *ngIf="isDisplayMode && deletePermission">
+                                <i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+    
+                        </div>                       
+                    </form>   
+                    <p-confirmDialog></p-confirmDialog>                
+                </div>
+            </div>
+            <!-- left col end here-->
+        </div>
+    </div>
+    
+    <ng-template #customerCategoryTemplate let-r="result" let-t="term">
+        {{ r.CategoryName }}
+    </ng-template>
+
+    <ng-template #customerTemplate let-r="result" let-t="term">
+        {{ r.CustomerName }}
+    </ng-template>

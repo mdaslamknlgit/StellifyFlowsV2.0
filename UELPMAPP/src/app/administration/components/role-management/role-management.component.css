@@ -1,0 +1,24 @@
+.error{float:left; width:100%;  color:red;}
+.error-message{ color: red;}
+.grid-Header{
+   text-align: center;
+}
+.green { color: green}
+.red{ color: red;}
+.kb-row {
+    background-color: #1CA979 !important;
+    color: #ffffff !important;
+}
+.acceslevels tr th:nth-child(14),.acceslevels tr th:nth-child(15),.acceslevels tr th:nth-child(16),.acceslevels tr th:nth-child(17),.acceslevels tr th:nth-child(18),.acceslevels tr th:nth-child(19),.acceslevels tr th:nth-child(20),.acceslevels tr th:nth-child(21),.acceslevels tr th:nth-child(22),.acceslevels tr th:nth-child(23),.acceslevels tr th:nth-child(24) {
+ display:none;
+  } 
+
+  .left-search
+  {
+    width:100% !important;
+  }
+  .divnewbutton
+  {
+     flex:auto;
+     text-align:right;
+  }

@@ -1,0 +1,1785 @@
+<block-ui message="Deafult Message"></block-ui>
+<div class="container-fluid" ngbDropdown #myDrop="ngbDropdown">
+    <div class="row" >
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+            <div class="flexrow space-between align-center">
+                <h3 class="item-heading">  {{ moduleHeading }} -- Old  </h3>
+                <p> {{IsEditForm}} == {{hideText}} -- {{isExisted}} -- {{newPermission}} -- {{!isApprovalPage}} </p>
+                <div>  
+               <input #file style="visibility: hidden;width:0px" type="file" accept="xlsx/*" (click)="file.value = null"
+                (change)="uploadFile($event)"> 
+                
+                <!-- <button class="btn  btn-transparent"  #upload
+                *ngIf="isExisted && !isApprovalPage && importPermission" 
+                (click)="file.click()"> Import Suppliers</button>
+                
+                <button class="btn  btn-transparent"  (click)="addData()"
+                *ngIf="hideText && isExisted && newPermission && !isApprovalPage "> New Record</button> -->
+
+                <button class="btn btn-save ng-star-inserted" #upload
+                *ngIf="hideText && isExisted && !isApprovalPage && importPermission" 
+                (click)="file.click()"> <i class="fa fa-file-import"></i>Import Suppliers</button>
+
+
+                <button class="btn btn-save ng-star-inserted"
+                *ngIf="hideText && isExisted && newPermission && !isApprovalPage" (click)="addData()">
+                <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> New</button>
+
+
+                <!-- <button  class="btn btn-transparent" (clickOutside)="onClickedOutside($event)"    
+                (click)="split()">  {{showfilterstext}}  </button>  -->
+
+            <img style="display: none;" src="../assets/images/grid1.png" (click)="fullScreen()" *ngIf="isExisted">
+            <div *ngIf="!IsEditForm" ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+                <button class="btn customdropdown btn-transparent" style="background:none;border:none;padding:0px;"
+                    id="dropdownBasic1" ngbDropdownToggle>
+                    <i  class="fa-solid fa-bars"></i>
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1"
+                    *ngIf="(defaultSupplier.WorkFlowStatusId == 4 && exportPermission)||viewLogPermission">
+
+                    <button class="dropdown-item" *ngIf="exportPermission" (click)="ExportAsExcel()">Suppliers Info
+                        Export</button>
+                    <button class="dropdown-item" (click)="ExportAsVendorsExcel()">Vendors Export</button>
+                    <button class="dropdown-item" *ngIf="viewLogPermission" (click)="displayLogPopUp()">View
+                        Log</button>
+                </div>
+            </div>
+                </div>
+            </div>
+            <hr style="margin-top: 0px;" />
+        </div>
+    </div>
+
+    <div class="row" *ngIf="!IsEditForm">
+        <div class="col-md-12 col-sm-12 padding-null">
+            <!-- Filter Section Start Here -->
+            <!-- <p>Filter Section Starts Here</p> -->
+            <div class="filter-section" style="width: 100%;" ngbDropdown #myDrop="ngbDropdown">
+                <form [formGroup]="supplierFilterInfoForm">
+                    <div class="form-group " style="display: flex; flex-wrap:wrap;justify-content: space-between;">
+                        <div class="col-sm-12 col-md-12 col-lg-1 mb-1">
+                            <label for="Name">Name</label>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-2 mb-1">
+                            <input type="text" #SupplierName class="form-control"
+                            formControlName="SupplierName" [inputFormatter]="supplierInputFormatter"
+                            [ngbTypeahead]="supplierNameSearch"
+                            [resultTemplate]="supplierTemplateres" />
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-2 mb-1">
+                            <label class="col-form-label  col form-label">Category</label>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-2 mb-1">
+                            <div class=" input-group" style="width: auto;">
+                                <input formControlName="SupplierCategory" type="text" class="form-control"
+                                [inputFormatter]="supplierCategoryInputFormater"
+                                [ngbTypeahead]="supplierCategorySearch"
+                                [resultTemplate]="supplierCategoryTemplate" />
+                            </div>
+                        </div>
+            
+                        <div class="col-sm-12 col-md-12 col-lg-1 mb-1">
+                            <label class="col-form-label  col form-label">Status</label>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-2 mb-1">
+                            <div class="  input-group" style="width: auto;">
+                                <select #workFlowStatusDropDown formControlName="WorkFlowStatusId"
+                                class="form-control">
+                                <option value=0>
+                                    --Select--
+                                </option>
+                                <option *ngFor="let record of workFlowStatuses"
+                                    value={{record.WorkFlowStatusid}}>
+                                    {{record.Statustext}}
+                                </option>
+                            </select>
+                            </div>
+                        </div>
+            
+                        <div class="col-sm-12 col-md-12 col-lg-2 mb-1">
+                            <button type="submit" (click)="filterData()" class="btn btn-save">
+                                <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                            <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                <i class="fa fa-refresh" aria-hidden="true"></i> Reset</button>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-wrap:wrap;justify-content:end; margin-bottom: 10px;margin-right: 20px;">                                                  
+                        <div style="text-align: right; display: flex; align-items: center;" *ngIf="!ShowToolBar">
+                            Total Records : {{TotalRecords}} &nbsp;
+                        </div>
+                        <button class="btn btn-save ng-star-inserted" mat-button [matMenuTriggerFor]="ExportMenu">
+                            <i class="fa fa-file-export" ria-hidden="true" aria-hidden="true"></i>
+                            Export</button>
+                        <mat-menu #ExportMenu="matMenu">
+                            <button mat-menu-item (click)="ExportToCSV()">
+                                <i class="fa fa-file-excel-o" ria-hidden="true" aria-hidden="true"></i> CSV
+                            </button>
+                            <button mat-menu-item (click)="ExportToExcel()">
+                                <i class="fa fa-file-excel-o" ria-hidden="true" aria-hidden="true"></i>
+                                Excel </button>
+            
+                            <button mat-menu-item (click)="ExportToPDF()">
+                                <i class="fa fa-file-pdf-o" ria-hidden="true" aria-hidden="true"></i> PDF
+                            </button>
+                        </mat-menu>                   
+                    </div>                    
+                </form>
+            </div>
+            <!-- <p>Filter Section Ends Here</p> -->
+            <!-- Filter Section Ends Here -->
+        </div>
+    </div>
+    <div class="row" *ngIf="!IsEditForm">
+        <div class="col-md-12 col-sm-12 padding-null">
+            <!-- <p>Table Starts Here</p> -->
+            <div class="left-section1" [class.display-filters]="!showfilters">
+                <div class="respnsive-table tablescroll p-datatable-wrapper">
+                    <p-table #SuppliersListTable dataKey="DraftCode" [rowHover]="true" [filterDelay]="0"
+                        [globalFilterFields]="['DraftCode', 'SupplierName']" [columns]="filteredSuppliersCols"
+                        [value]="filteredSuppliers" [rows]="this.supplierPagerConfig.RecordsToFetch"
+                        [scrollable]="true" [scrollHeight]="'calc(100vh - 360px)'" scrollWidth="100%"
+                        [virtualRowHeight]="30" [virtualScroll]="true" sortMode="multiple" responsiveLayout="scroll"
+                        [paginator]="false" [rowsPerPageOptions]="[5,10,15,25,50,75,100]">
+                        <ng-template pTemplate="header" let-columns>
+                            <tr style="height: 40px;">
+                                <th *ngFor="let col of filteredSuppliersCols;let i=index"
+                                    [pSortableColumn]="col.field">
+                                    {{col.header}}
+                                    <p-sortIcon [hidden]="i==0" *ngIf="i!=filteredSuppliersCols.length-1"
+                                        [field]="col.field"></p-sortIcon>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="colgroup" let-columns>
+                            <colgroup>
+                                <col *ngFor="let col of columns" [style.width]="col.width">
+                            </colgroup>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-value let-columns let-i="rowIndex">
+                            <tr style="height:30px" [pSelectableRow]="rowData">
+                                <td>{{(value.WorkFlowStatus==="Draft"?value.DraftCode:value.SupplierCode
+                                    )| setSupplierCode}}
+                                </td>
+                                <td>{{value.SupplierName}}</td>
+                                <td>{{value.CategoryName}}</td>                                
+                                <td>{{value.WorkFlowStatus }}</td>
+                                <td>{{value.CreatedDate | date: 'yyyy-MM-dd'}}</td>
+                                <td class="aligncenter">
+                                    <button type="button" class="btn" (click)="onRecordSelected(value.SupplierId)">
+                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    </button>
+                                </td>
+                            </tr>
+
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage" let-columns>
+                            <tr>
+                                <td [attr.colspan]="filteredSuppliers.length">
+                                    No records found
+                                </td>
+                            </tr>
+                        </ng-template>
+
+                    </p-table>
+                </div>
+                <!-- Table Ends Here -->
+                <div *ngIf="filteredSuppliers.length==0">
+                    <div class="col-12 error errorMessage">
+                        <p class="errorMessage">
+                            {{filterMessage}}
+                        </p>
+                    </div>
+                </div>
+                <!-- Table Ends Here -->
+                <div style="clear: both;"></div>
+                <ngb-pagination *ngIf="filteredSuppliers.length>0" (pageChange)="pageChange($event)"
+                    [collectionSize]="supplierPagerConfig.TotalRecords" class="d-flex justify-content-center"
+                    [pageSize]="supplierPagerConfig.RecordsToFetch" [maxSize]="5" [(page)]="currentPage"
+                    [boundaryLinks]="true">
+                    <ng-template ngbPaginationPages let-page let-pages="pages">
+                        10 of 100
+                    </ng-template>
+                </ngb-pagination>                  
+            </div>
+            <!-- <p>Table Ends Here</p> -->
+        </div>
+    </div>
+
+    <div class="row" *ngIf="!IsEditForm">
+        <div class="col-md-12 col-sm-12">
+            <div class="left-section1"   [class.display-filters]="!showfilters"  >
+                <div class="filter-section" ngbDropdown #myDrop="ngbDropdown">
+                    <!-- <div class="flexrow space-between" > 
+                        <div class="left-search">
+                            <input type="text" #searchInput placeholder="Search requests..." (keyup)="onChange($event)"
+                                class="search-filter">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+            
+                            <div class="filter-popup" *ngIf="initDone" ngbDropdownMenu aria-labelledby="dropdownManual"
+                                (click)="$event.stopPropagation(); myDrop.open();">           
+                                <form [formGroup]="supplierFilterInfoForm" class="form-horizontal">            
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-6 form-label">Supplier Name </label>
+                                        <div class="col-6">
+                                            <input type="text" #SupplierName class="form-control"
+                                                formControlName="SupplierName" [inputFormatter]="supplierInputFormatter"
+                                                [ngbTypeahead]="supplierNameSearch"
+                                                [resultTemplate]="supplierTemplateres" />                     
+                                        </div>
+                                    </div>
+            
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-6 form-label">Supplier Category</label>
+                                        <div class="col-6">
+            
+                                            <input formControlName="SupplierCategory" type="text" class="form-control"
+                                                [inputFormatter]="supplierCategoryInputFormater"
+                                                [ngbTypeahead]="supplierCategorySearch"
+                                                [resultTemplate]="supplierCategoryTemplate" />
+            
+                                        </div>
+                                    </div>
+            
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-6 form-label">Supplier City</label>
+                                        <div class="col-6">
+            
+                                            <input type="text" formControlName="SupplierCity" placeholder=""
+                                                class="form-control">
+            
+                                        </div>
+                                    </div>
+                                    <div class="form-group row" *ngIf="moduleHeading =='Supplier'">
+                                        <label
+                                            class="col-form-label col-xl-4 col-lg-4 col-sm-6 col-6 form-label">Status</label>
+                                        <div class="col-xl-8 col-lg-8 col-sm-6 col-6">
+                                            <select #workFlowStatusDropDown formControlName="WorkFlowStatusId"
+                                                class="form-control">
+                                                <option value=0>
+                                                    --Select--
+                                                </option>
+                                                <option *ngFor="let record of workFlowStatuses"
+                                                    value={{record.WorkFlowStatusid}}>
+                                                    {{record.Statustext}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row" *ngIf="moduleHeading !='Supplier'">
+                                        <label
+                                            class="col-form-label col-xl-4 col-lg-4 col-sm-6 col-6 form-label">Status</label>
+                                        <div class="col-xl-8 col-lg-8 col-sm-6 col-6">
+                                            <select #workFlowStatusDropDown formControlName="WorkFlowStatusId"
+                                                class="form-control">
+                                                <option value=0>
+                                                    --Select--
+                                                </option>
+                                                <option *ngFor="let record of workFlowStatusesSupplierApproval"
+                                                    value={{record.WorkFlowStatusid}}>
+                                                    {{record.Statustext}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-12 error">
+                                            {{filterMessage}}
+                                        </div>
+                                    </div>
+            
+                                    <div class="form-group row">
+            
+                                        <div class="col-12" style="text-align: right">
+                                            <button type="submit" (click)="filterData()" class="btn btn-save">
+                                                <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                            <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                                <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+            
+                                        </div>
+                                    </div>
+            
+                                </form>
+                            </div>
+                        </div>
+                        <div class="filter-icon">
+                            <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                                <i class="fa fa-filter" aria-hidden="true"></i>
+                            </button>
+                        </div>
+            
+                        <div style="float:right;margin:0px;" class="filter-icon" *ngIf="isFilterApplied"
+                            (click)="resetData()">
+                            <i class="fa fa-undo" aria-hidden="true"></i>
+                        </div>
+                    </div> -->
+                    <!-- <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="filter-scroll"
+                        style="width:100%; float:left;">       
+                        <table class="table">
+                            <tr>
+                                <td (click)="hidefilter()" style="padding: 0px;">
+                                    <table class="listtable">
+                                        <tr>
+                                            <th>Supplier Code </th>
+                                            <th>Supplier</th>
+                                            <th>Category</th>
+                                            <th>Supplier Status</th>                        
+                                        </tr>
+                                        <tr [class.activerow]="supplier.SupplierId==defaultSupplier.SupplierId"
+                                            (click)="onRecordSelected(supplier.SupplierId)"
+                                            *ngFor="let supplier of filteredSuppliers; let i = index;">
+                                            <td>{{ (supplier.WorkFlowStatus==="Draft"?supplier.DraftCode:supplier.SupplierCode
+                                                )| setSupplierCode }}</td>
+                                            <td>{{supplier.SupplierName}}</td>
+                                            <td>{{supplier.CategoryName}}</td>
+                                            <td>{{supplier.WorkFlowStatus}} </td>
+                        
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>        
+                        </table>
+                        <div *ngIf="filteredSuppliers.length==0" class="col-12 listErrorMessage">
+                            {{errorMessage}}
+                        </div>
+                    </div> -->
+                    <!-- <div style="clear: both;"></div>
+                    <ngb-pagination [maxSize]="5" *ngIf="filteredSuppliers.length>0"
+                        (pageChange)="pageChange($event)" [collectionSize]="supplierPagerConfig.TotalRecords"
+                        class="d-flex justify-content-center" [pageSize]="supplierPagerConfig.RecordsToFetch"
+                        [(page)]="currentPage" [boundaryLinks]="true"></ngb-pagination> -->
+                </div>
+            </div>
+        </div>
+    </div> 
+    
+    
+    <div class="row">   
+        <div *ngIf="IsEditForm">
+        <p>Edit Form Starts Here</p>
+        <div *ngIf="isExisted" [CustomSpinner]="showLeftPanelLoadingIcon"
+            class="rightPanel col-lg-12 col-md-12" [class.expand-rightcol]="rightsection">
+            <div class="fullScreenLabel">
+                <app-header></app-header>
+            </div>
+            <form [formGroup]="suppliersInfoForm" ngxScrollToFirstInvalid class="form-horizontal"
+                (ngSubmit)="onSubmit('save')" novalidate>
+                <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll"
+                    (click)="$event.stopPropagation(); myDrop.close();">
+                    <div class="row fullScreenLabel">
+                        <div class="col-12">
+                            <h3 class="item-heading" style="float:none;">Manage Suppliers</h3>
+                        </div>
+                    </div>
+                    <!-- <div *ngIf="hideInput && !isNewRecord" class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier from other Entity</label>
+                                <div class="autoComplete3 quotationReqAutoComplete col-xl-8 col-sm-6 col-6">
+                                    <input type="text" class="form-control show" [inputFormatter]="supplierInputFormatter" (selectItem)="onSupplierChange($event)"
+                                        [ngbTypeahead]="supplierSearch" [resultTemplate]="supplierTemplate" />
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                    
+                    <div class="row">
+                       
+                        <div class="col-md-6">
+                            <div *ngIf="hideText" class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Supplier ID</label>
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <label class="col-form-label form-text">
+                                        {{(defaultSupplier.SupplierApproval!=null?defaultSupplier.SupplierApproval.WorkFlowStatus==="Draft"?defaultSupplier.DraftCode:defaultSupplier.SupplierCode:"")
+                                        | setSupplierCode }}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Supplier Name
+                                    <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                                </label>
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <label class="col-form-label form-text"
+                                        *ngIf="hideText">{{defaultSupplier.SupplierName }}</label>
+                                    <input #selectedSupplierName appAutofocus type="text" id="suppliername"
+                                        name="suppliername" placeholder="" *ngIf="hideInput && !isNewRecord"
+                                        class="form-control" (blur)="OnSupplierNameEdit($event)"
+                                        [ngClass]="(validateControl(suppliersInfoForm.get('SupplierName')))?'form-control ng-touched':'form-control'"
+                                        [inputFormatter]="supplierInputFormatter"
+                                        (selectItem)="onSupplierChange($event)" [ngbTypeahead]="supplierSearch"
+                                        [resultTemplate]="supplierTemplate">
+                                    <span class="errorMessage" *ngIf="suppliersInfoForm.get('SupplierName')!=null &&
+                                    suppliersInfoForm.get('SupplierName').errors!=null ">
+                                        <span *ngIf="suppliersInfoForm.get('SupplierName').errors.required">
+                                            Supplier Name is required
+                                        </span>
+                                    </span>
+                                    <span class="errorMessage" *ngIf="hideInput && !isNewRecord">
+                                        <span
+                                            *ngIf="isExistSupplierName && suppliersInfoForm.get('SupplierName').errors">
+                                            Supplier Name is Duplicate
+                                        </span>
+                                    </span>
+
+                                    <input type="text" formControlName="SupplierName"
+                                        (keyup)="onSupplierNameChanged($event)" placeholder=""
+                                        *ngIf="hideInput && defaultSupplier.SupplierId > 0 && isNewRecord"
+                                        class="form-control" (blur)="OnSupplierNameEdit($event)"
+                                        [ngClass]="(validateControl(suppliersInfoForm.get('SupplierName')))?'form-control ng-touched':'form-control'">
+                                    <span class="errorMessage"
+                                        *ngIf="hideInput && defaultSupplier.SupplierId > 0 && isNewRecord">
+                                        <span *ngIf="suppliersInfoForm.get('SupplierName').errors">
+                                            Supplier Name is Duplicate
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group row"
+                                *ngIf="defaultSupplier.PreviousSupplierName!=null && defaultSupplier.PreviousSupplierName!=defaultSupplier.SupplierName && hideText">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Previous Supplier Name
+                                    <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                                </label>
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <label class="col-form-label form-text"
+                                        *ngIf="hideText">{{defaultSupplier.PreviousSupplierName }}</label>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Short Name
+                                    <!-- <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i> -->
+                                </label>
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <label class="col-form-label form-text" *ngIf="hideText"
+                                        style="word-wrap:break-word">{{defaultSupplier.SupplierShortName }} </label>
+                                    <input type="text" id="supplierShortName" name="supplierShortName" maxlength="15"
+                                        formControlName="SupplierShortName" placeholder="" *ngIf="hideInput"
+                                        class="form-control"
+                                        [ngClass]="(validateControl(suppliersInfoForm.get('SupplierShortName')))?'form-control ng-touched':'form-control'">
+                                </div>
+                            </div>
+
+
+
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Supplier Category
+                                    <i class="fa fa-star mandatory-icon" aria-hidden="true" *ngIf="hideInput"></i>
+                                </label>
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <label class="col-form-label form-text" *ngIf="hideText">
+                                        {{defaultSupplier.CategoryName }}
+                                        <!-- {{defaultSupplier.SupplierCategoryID === 1? "Sole Proprietor/Partnership/ Business Unit":"Private Limited Company" }} -->
+                                    </label>
+                                    <select *ngIf="hideInput" class="form-control" formControlName="SupplierCategoryID"
+                                        [ngClass]="(validateControl(suppliersInfoForm.get('SupplierCategoryID')))?'form-control ng-touched':'form-control'">
+                                        <option [ngValue]="null">--Select--</option>
+                                        <option *ngFor="let category of serviceCategroies"
+                                            [value]="category.SupplierCategoryID">
+                                            {{category.CategoryText}}
+                                        </option>
+                                    </select>
+                                    <!-- <label for="fixed" *ngIf="hideInput" class="col-form-label">
+                                        <input type="radio" id="fixed" formControlName="SupplierCategoryID" [value]="supplierCategoryType[0]"> Sole Proprietor/Partnership/ Business Unit
+                                    </label>&nbsp;&nbsp;
+
+                                    <label *ngIf="hideInput" for="variable" class="col-form-label">
+                                        <input type="radio" formControlName="SupplierCategoryID" [value]="supplierCategoryType[1]"> Private Limited Company
+                                    </label> -->
+                                </div>
+
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Supplier Service
+                                    <i class="fa fa-star mandatory-icon" aria-hidden="true" *ngIf="hideInput"></i>
+                                </label>
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <label class="col-form-label form-text"
+                                        *ngIf="hideText">{{defaultSupplier.ServiceName }} </label>
+                                    <!-- <select *ngIf="hideInput" class="form-control" formControlName="SupplierServiceID" [ngClass]="(validateControl(suppliersInfoForm.get('SupplierServiceID')))?'form-control ng-touched':'form-control'">
+                                            <option *ngFor="let service of supplierServices" [value]="service.SupplierServiceID">
+                                                {{service.ServiceName}}
+                                            </option>
+                                        </select> -->
+
+                                    <ng-multiselect-dropdown #SupplierServices class="form-control multiselect"
+                                        *ngIf="showControl" formControlName="SupplierServices" [data]="supplierServices"
+                                        [settings]="supplierServicesdropdownSettings" (onSelect)="onItemSelect($event)">
+                                    </ng-multiselect-dropdown>
+
+                                    <!-- <div class="error">{{message}}</div> -->
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Supplier Type
+                                </label>
+                                <div class="col-xl-8 col-sm-6 col-12"
+                                    *ngIf="suppliersInfoForm.get('SupplierId').value>0">
+                                    <label class="col-form-label form-text">
+                                        {{defaultSupplier.SupplierTypeID === 1? "Internal":"External" }}
+                                    </label>
+                                </div>
+                                <div class="col-xl-8 col-sm-6 col-12"
+                                    *ngIf="suppliersInfoForm.get('SupplierId').value == 0">
+                                    <label for="fixed" class="col-form-label">
+                                        <input type="radio" id="fixed" formControlName="SupplierTypeID"
+                                            (change)="supplierTypeInternalChange()" [value]="supplierCategoryType[0]">
+                                        Internal
+                                    </label>&nbsp;&nbsp;
+                                    <label for="variable" class="col-form-label">
+                                        <input type="radio" formControlName="SupplierTypeID"
+                                            (change)="supplierTypeExternalChange()" [value]="supplierCategoryType[1]">
+                                        External
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group row" *ngIf="(hideSupcode&&hideInput) && !isNewRecord">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Supplier Code
+                                    <i class="fa fa-star mandatory-icon" aria-hidden="true" *ngIf="hideInput"></i>
+                                </label>
+                                <div class="col-xl-8 col-sm-6 col-12"> 
+                                    <input type="text" id="CoSupplierCode" formControlName="CoSupplierCode"
+                                        placeholder="" (change)="supplierCodeChange()" *ngIf="hideInput" minlength="4"
+                                        maxlength="4" pattern="[0-9]*" class="form-control"
+                                        [ngClass]="(validateControl(suppliersInfoForm.get('CoSupplierCode')))?'form-control ng-touched':'form-control'">
+                                    <span class="errorMessage" *ngIf="showCodeErrorMessage">
+                                        Duplicate Supplier Code
+                                    </span>
+                                    <span class="errorMessage" *ngIf="showCodeCountErrorMessage">
+                                        Supplier Code need to give 4 digits.
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Share Capital
+
+                                </label>
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <label class="col-form-label form-text" *ngIf="hideText"
+                                        style="word-wrap:break-word">{{defaultSupplier!=null?defaultSupplier.ShareCapital:""
+                                        | number:'1.2-4'}}</label>
+                                    <input type="number" id="shareCapital" name="shareCapital"
+                                        [formControl]="suppliersInfoForm.get('ShareCapital')" placeholder=""
+                                        *ngIf="hideInput" class="form-control"
+                                        [ngClass]="(validateControl(suppliersInfoForm.get('ShareCapital')))?'form-control ng-touched':'form-control'">
+
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Currency Type
+                                    <i class="fa fa-star mandatory-icon" aria-hidden="true" *ngIf="hideInput"></i>
+                                </label>
+
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <label class="col-form-label form-text" *ngIf="hideText">
+                                        {{defaultSupplier.SupplierCompanyDetails!=null?defaultSupplier.SupplierCompanyDetails.CurrencyCode:""}}
+                                    </label>
+                                    <select
+                                        [formControl]="suppliersInfoForm.get('SupplierCompanyDetails').get('CurrencyId')"
+                                        *ngIf="hideInput" class="form-control">
+                                        <option [ngValue]="null">--Select--</option>
+                                        <option *ngFor="let record of currencies" value={{record.Id}}>
+                                            {{ record.Code }}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Co Supplier Code</label>
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text" *ngIf="hideText">{{defaultSupplier.CoSupplierCode }} </label>
+                                    <input *ngIf="hideInput" type="number" formControlName="CoSupplierCode" class="form-control"/>
+                                </div>
+                            </div> -->
+
+
+                        </div>
+
+                        <div class="col-md-6">
+                            <div *ngIf="hideText" class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Created Date</label>
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <label class="col-form-label form-text">{{
+                                        defaultSupplier.CreatedDate|DisplayDateFormat }}</label>
+                                </div>
+                            </div>
+                            <div *ngIf="hideText" class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Status</label>
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <label class="col-form-label form-text">{{
+                                        defaultSupplier.SupplierApproval!=null?defaultSupplier.SupplierApproval.WorkFlowStatus:""
+                                        }} </label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Department <i
+                                        class="fa fa-star mandatory-icon" *ngIf="hideInput"
+                                        aria-hidden="true"></i></label>
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <label class="col-form-label form-text" *ngIf="hideText">{{ defaultSupplier.Location
+                                        }}</label>
+                                    <select #dept (change)="onDepChage($event,dept)" formControlName="LocationId"
+                                        *ngIf="hideInput" class="form-control">
+                                        <option [ngValue]="null">--Select--</option>
+                                        <option *ngFor="let record of departments"
+                                            [style.color]="record.HasWorkflow?'': 'lightgray'"
+                                            [disabled]="!record.HasWorkflow" value={{record.LocationID}}>
+                                            {{record.Name}}
+                                    </select>
+                                    <div
+                                        *ngIf="suppliersInfoForm.get('LocationId') && suppliersInfoForm.get('LocationId').errors!=null &&suppliersInfoForm.get('LocationId').touched==true">
+                                        <span class="errorMessage"
+                                            *ngIf="suppliersInfoForm.get('LocationId').errors.required">Department is
+                                            required</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Reviewed Date</label>
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <label class="col-form-label form-text" *ngIf="hideText">{{
+                                        defaultSupplier.SupplierCompanyDetails!= null ?
+                                        (defaultSupplier.SupplierCompanyDetails.ReviewedDate!=null
+                                        ? (defaultSupplier.SupplierCompanyDetails.ReviewedDate| DisplayDateFormat) : "")
+                                        : "" }}</label>
+                                    <div class="input-group" *ngIf="hideInput">
+                                        <input class="form-control" placeholder="yyyy-mm-dd"
+                                            [formControl]="suppliersInfoForm.get('SupplierCompanyDetails').get('ReviewedDate')"
+                                            (dateSelect)="onDateSelect($event)" ngbDatepicker
+                                            #reviewDatePicker="ngbDatepicker">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary"
+                                                (click)="reviewDatePicker.toggle()" type="button">
+                                                <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Payment Terms
+                                    <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                                </label>
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <label class="col-form-label form-text"
+                                        *ngIf="hideText">{{defaultSupplier.PaymentTermCode }} </label>
+                                    <select *ngIf="hideInput" class="form-control"
+                                        [formControl]="suppliersInfoForm.get('SupplierCompanyDetails').get('PaymentTermsId')"
+                                        [ngClass]="(validateControl(suppliersInfoForm.get('SupplierCompanyDetails').get('PaymentTermsId')))?'form-control ng-touched':'form-control'">
+                                        <option [ngValue]="null">--Select--</option>
+                                        <option *ngFor="let paymentTerm of paymentTerms"
+                                            [value]="paymentTerm.PaymentTermsId">
+                                            {{paymentTerm.Code}}
+                                        </option>
+                                    </select>
+                                    <span class="errorMessage" *ngIf="hideInput && paymentTerms.length === 0">
+                                        There are no Payment Terms for this company, please create them.
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Remarks</label>
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <label *ngIf="hideText" class="col-form-label form-text"
+                                        style="word-wrap:break-word">{{ defaultSupplier.Remarks }} </label>
+                                    <textarea *ngIf="hideInput"
+                                        [ngClass]="(validateControl(suppliersInfoForm.get('Remarks')))?'form-control ng-touched':'form-control'"
+                                        formControlName="Remarks" class="form-control"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">GST Status
+                                    <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                                </label>
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <label class="col-form-label form-text" *ngIf="hideText">{{defaultSupplier.GSTStatus
+                                        }} </label>
+                                    <select *ngIf="hideInput" (change)="enableGSTNumber($event.target.value)"
+                                        class="form-control" [formControl]="suppliersInfoForm.get('GSTStatusId')"
+                                        [ngClass]="(validateControl(suppliersInfoForm.get('GSTStatusId')))?'form-control ng-touched':'form-control'">
+                                        <option [ngValue]="null">--Select--</option>
+                                        <option *ngFor="let GSTStatus of gststatus" [value]="GSTStatus.GSTStatusid">
+                                            {{ GSTStatus.StatusText }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">GST Number
+                                    <!-- <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i> -->
+                                </label>
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <label class="col-form-label form-text" *ngIf="hideText"
+                                        style="word-wrap:break-word">{{defaultSupplier!=null?
+                                        defaultSupplier.GSTNumber:"" }}
+                                    </label>
+
+                                    <input *ngIf="hideInput"
+                                        [ngClass]="(validateControl(suppliersInfoForm.get('GSTNumber')))?'form-control ng-touched':'form-control'"
+                                        type="text" [formControl]="suppliersInfoForm.get('GSTNumber')"
+                                        class="form-control" />
+                                </div>
+                            </div>
+                            <!-- <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Is GST Supplier</label>
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text" *ngIf="hideText">{{defaultSupplier.IsGSTSupplier ? "Yes":"No"}}</label>
+                                    <mat-checkbox style="position: relative;top: 9px;" *ngIf="hideInput" formControlName="IsGSTSupplier" [value]="suppliersInfoForm.get('isDisplayMode')"></mat-checkbox>
+                                </div>
+                            </div> -->
+
+                        </div>
+                     
+                    </div>
+
+                    <div class="row" style="margin-top: 20px">
+                        <div class="col-xl-12">
+                            <h4 class="form-heading">Supplier Address</h4>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Address Line1
+                                    <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                                </label>
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text"
+                                        *ngIf="hideText || IsAttachedPendingApproval"
+                                        style="word-wrap:break-word">{{defaultSupplier.BillingAddress1 }} </label>
+                                    <input type="text" id="billingAddress1" name="billingAddress1"
+                                        formControlName="BillingAddress1" placeholder=""
+                                        *ngIf="hideInput && !IsAttachedPendingApproval"
+                                        class="form-control"
+                                        [ngClass]="(validateControl(suppliersInfoForm.get('BillingAddress1')))?'form-control ng-touched':'form-control'">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Address Line2
+
+                                </label>
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text"
+                                        *ngIf="hideText || IsAttachedPendingApproval"
+                                        style="word-wrap:break-word">{{defaultSupplier.BillingAddress2 }}</label>
+                                    <input type="text" id="billingAddress2"
+                                        [ngClass]="(validateControl(suppliersInfoForm.get('BillingAddress2')))?'form-control ng-touched':'form-control'"
+                                        name="billingAddress2" formControlName="BillingAddress2" placeholder=""
+                                        *ngIf="hideInput && !IsAttachedPendingApproval"
+                                        class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Address Line3
+
+                                </label>
+
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text"
+                                        *ngIf="hideText || IsAttachedPendingApproval"
+                                        style="word-wrap:break-word">{{defaultSupplier.BillingAddress3 }}</label>
+                                    <input type="text" id="billingAddress3"
+                                        [ngClass]="(validateControl(suppliersInfoForm.get('BillingAddress3')))?'form-control ng-touched':'form-control'"
+                                        name="billingAddress3" formControlName="BillingAddress3" placeholder=""
+                                        *ngIf="hideInput && !IsAttachedPendingApproval"
+                                        class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Telephone
+                                    <!-- <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i> -->
+                                </label>
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text"
+                                        *ngIf="hideText || IsAttachedPendingApproval"
+                                        style="word-wrap:break-word">{{defaultSupplier.BillingTelephone }}</label>
+                                    <input type="text" id="billingTelephone" name="billingTelephone"
+                                        formControlName="BillingTelephone" placeholder=""
+                                        *ngIf="hideInput && !IsAttachedPendingApproval"
+                                        class="form-control"
+                                        [ngClass]="(validateControl(suppliersInfoForm.get('BillingTelephone')))?'form-control ng-touched':'form-control'">
+                                </div>
+
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Fax</label>
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text"
+                                        *ngIf="hideText || IsAttachedPendingApproval"
+                                        style="word-wrap:break-word">{{defaultSupplier.BillingFax }}</label>
+                                    <input type="text" id="billingFax" name="billingFax" formControlName="BillingFax"
+                                        placeholder="" *ngIf="hideInput && !IsAttachedPendingApproval"
+                                        class="form-control">
+                                </div>
+                            </div> 
+
+                        </div>
+
+
+                        <!--col end here-->
+                        <div class="col-md-6">
+
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Country
+                                    <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                                </label>
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <div style="position: relative;" class="autoComplete">
+                                        <label class="col-form-label form-text"
+                                            *ngIf="hideText || IsAttachedPendingApproval">{{defaultSupplier.BillingCountry
+                                            }}</label>
+                                        <!-- <select *ngIf="hideInput" class="form-control" formControlName="BillingCountryId" [ngClass]="(validateControl(suppliersInfoForm.get('BillingCountryId')))?'form-control ng-touched':'form-control'">
+                                        <option [ngValue]="null">--Select--</option>
+                                        <option *ngFor="let country of countries" [value]="country.Id">
+                                            {{country.Name}}
+                                        </option>
+                                    </select> -->
+                                        <input type="text" placeholder=""
+                                            *ngIf="hideInput && !IsAttachedPendingApproval"
+                                            class="form-control" formControlName="Country"
+                                            [ngClass]="(validateControl(suppliersInfoForm.get('Country')))?'form-control ng-touched':'form-control'"
+                                            [inputFormatter]="countryInputFormatter" [ngbTypeahead]="countryNameSearch"
+                                            [resultTemplate]="countryTemplate" (selectItem)="onCountryChange($event)">
+                                        <span class="errorMessage"
+                                            *ngIf="suppliersInfoForm.get('Country')!=null && suppliersInfoForm.get('Country').errors!=null ">
+                                            <span *ngIf="suppliersInfoForm.get('Country').errors.required">
+                                                Country is required
+                                            </span>
+                                        </span>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">City
+                                    <!-- <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i> -->
+                                </label>
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <label class="col-form-label form-text"
+                                        *ngIf="hideText || IsAttachedPendingApproval"
+                                        style="word-wrap:break-word">{{defaultSupplier.BillingCity }}</label>
+                                    <input type="text" id="billingCity" name="billingCity" formControlName="BillingCity"
+                                        placeholder="" *ngIf="hideInput && !IsAttachedPendingApproval"
+                                        class="form-control"
+                                        [ngClass]="(validateControl(suppliersInfoForm.get('BillingCity')))?'form-control ng-touched':'form-control'">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">PostalCode
+                                    <!-- <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i> -->
+                                </label>
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <label class="col-form-label form-text"
+                                        *ngIf="hideText || IsAttachedPendingApproval"
+                                        style="word-wrap:break-word">{{defaultSupplier.BillingZipcode }}</label>
+                                    <input type="text" id="billingZipcode" name="billingZipcode"
+                                        formControlName="BillingZipcode" placeholder=""
+                                        *ngIf="hideInput && !IsAttachedPendingApproval"
+                                        class="form-control"
+                                        [ngClass]="(validateControl(suppliersInfoForm.get('BillingZipcode')))?'form-control ng-touched':'form-control'">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label"> Company Email
+                                    <!-- <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i> -->
+                                </label>
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <label class="col-form-label form-text"
+                                        *ngIf="hideText || IsAttachedPendingApproval">
+                                        {{defaultSupplier.SupplierEmail }}
+                                    </label>
+                                    <input type="text" id="supplierEmail" name="supplierEmail"
+                                        formControlName="SupplierEmail" placeholder=""
+                                        *ngIf="hideInput && !IsAttachedPendingApproval"
+                                        class="form-control"
+                                        [ngClass]="(validateControl(suppliersInfoForm.get('SupplierEmail')))?'form-control ng-touched':'form-control'">
+
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                        <!-- col2 end here-->
+
+                    </div>
+
+                    <div class="row" style="margin-top: 20px">
+                        <div class="col-xl-12">
+                            <h4 class="form-heading">Justification for Supplier </h4>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Justification</label>
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <label class="col-form-label form-text" *ngIf="hideText">
+                                        {{defaultSupplier.SupplierCompanyDetails!=null?defaultSupplier.SupplierCompanyDetails.Justification:""}}
+                                    </label>
+                                    <textarea *ngIf="hideInput" class="form-control"
+                                        [formControl]="suppliersInfoForm.get('SupplierCompanyDetails').get('Justification')">
+                                    </textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 20px">
+                        <div class="col-xl-12">
+                            <h4 class="form-heading">Contact Person </h4>
+                        </div>
+                        <div class="table-responsive col-xl-12" [ngStyle]="{'max-width.px': screenWidth}">
+                            <fieldset *ngIf="hideInput" formArrayName="ContactPersons">
+                                <div style="text-align: center;">
+                                    <span class="errorMessage"
+                                        *ngIf="showGridErrorMessage &&(defaultSupplier.ContactPersons==undefined|| defaultSupplier.ContactPersons.length==0)">
+                                        Please select contact persons
+                                    </span>
+                                </div>
+                                <p-table [columns]="gridColumns" sortMode="single"
+                                    [value]="suppliersInfoForm.controls.ContactPersons.controls">
+                                    <ng-template pTemplate="emptymessage">
+                                        <tr>
+                                            <td colspan="7" style='text-align: center;'>
+                                                <b>{{gridNoMessageToDisplay}}</b>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="colgroup" let-columns>
+                                        <colgroup>
+                                            <col style="width:5%;">
+                                            <col style="width:5%;">
+                                            <col style="width:15%;">
+                                            <col style="width:15%;">
+                                            <col style="width:15%;">
+                                            <col style="width:15%;">
+                                            <col style="width:15%;">
+                                        </colgroup>
+                                    </ng-template>
+                                    <ng-template pTemplate="header" let-columns>
+                                        <tr>
+                                            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                                {{col.header}}
+                                                <p-sortIcon *ngIf='col.field!="SNo"' [field]="col.field"
+                                                    ariaLabel="Activate to sort"
+                                                    ariaLabelDesc="Activate to sort in descending order"
+                                                    ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                            </th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                        <tr *ngIf="hideInput" [formGroupName]="i">
+                                            <td>
+                                                {{ i + 1 }}
+                                            </td>
+                                            <td>
+                                                <input formControlName="Saluation" maxlength="150" type="text"
+                                                    class="form-control" />
+                                            </td>
+                                            <td>
+                                                <input formControlName="Surname" maxlength="150" type="text"
+                                                    class="form-control" />
+                                            </td>
+                                            <td>
+                                                <input formControlName="Name" maxlength="150" type="text"
+                                                    class="form-control" />
+                                            </td>
+                                            <td>
+                                                <input formControlName="ContactNumber" maxlength="15" type="text"
+                                                    class="form-control" />
+                                            </td>
+                                            <td>
+                                                <input formControlName="Department" maxlength="15" type="text"
+                                                    class="form-control" />
+                                            </td>
+                                            <td>
+                                                <div style="float:left;width:60%;text-align: right;">
+                                                    <input formControlName="EmailId" maxlength="100" type="text"
+                                                        class="form-control" />
+                                                </div>
+                                                <div class="gridIconsStyle" *ngIf="hideInput==true">
+                                                    <i class="fa fa-trash gridRemoveIcon" (click)="removeGridItem(i)"
+                                                        aria-hidden="true"></i>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                                <div *ngIf="isSupplierAttached">
+                                    <input type="number" [(ngModel)]="linesToAdd" [ngModelOptions]="{standalone: true}"
+                                        class="form-control linesToAdd">
+                                    <button type="button" (click)="addGridItem(linesToAdd)" class="addLine">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Line
+                                    </button>
+                                </div>
+                            </fieldset>
+                            <div class="table-responsive" [ngStyle]="{'max-width.px': screenWidth}">
+                                <p-table *ngIf="hideText" [columns]="gridColumns" sortMode="single"
+                                    [value]="defaultSupplier.ContactPersons">
+                                    <ng-template pTemplate="emptymessage">
+                                        <tr>
+                                            <td colspan="7" style='text-align: center;'>
+                                                <b>{{gridNoMessageToDisplay}}</b>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="colgroup" let-columns>
+                                        <colgroup>
+                                            <col style="width:5%;">
+                                            <col style="width:5%;">
+                                            <col style="width:15%;">
+                                            <col style="width:15%;">
+                                            <col style="width:15%;">
+                                            <col style="width:15%;">
+                                            <col style="width:15%;">
+                                        </colgroup>
+                                    </ng-template>
+                                    <ng-template pTemplate="header" let-columns>
+                                        <tr>
+                                            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                                {{col.header}}
+                                                <p-sortIcon *ngIf='col.field!="SNo"' [field]="col.field"
+                                                    ariaLabel="Activate to sort"
+                                                    ariaLabelDesc="Activate to sort in descending order"
+                                                    ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                            </th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                        <tr>
+                                            <td>
+                                                {{ i + 1 }}
+                                            </td>
+                                            <td>
+                                                {{ rowData.Saluation }}
+                                            </td>
+                                            <td>
+                                                {{ rowData.Surname }}
+                                            </td>
+                                            <td>
+                                                {{ rowData.Name }}
+                                            </td>
+                                            <td>
+                                                {{ rowData.ContactNumber }}
+                                            </td>
+                                            <td>
+                                                {{ rowData.Department }}
+                                            </td>
+                                            <td>
+                                                {{ rowData.EmailId }}
+                                            </td>
+
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-xl-12" style="margin-top: 20px">
+                        <h4 class="form-heading"
+                            style="text-align: center; border: none;width:100%; background: #d9e7f1; padding: 5px 0px;">
+                            For Finance use only </h4>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Tax Group
+                                    <!-- <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i> -->
+                                </label>
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <label class="col-form-label form-text"
+                                        *ngIf="hideText">{{defaultSupplier.SupplierCompanyDetails!=null?defaultSupplier.SupplierCompanyDetails.TaxGroupName:""
+                                        }} </label>
+                                    <select *ngIf="hideInput" class="form-control"
+                                        (change)="getTaxClasses($event.target.value)"
+                                        [formControl]="suppliersInfoForm.get('SupplierCompanyDetails').get('TaxId')"
+                                        [ngClass]="(validateControl(suppliersInfoForm.get('SupplierCompanyDetails').get('TaxId')))?'form-control ng-touched':'form-control'">
+                                        <option [ngValue]="null">--Select--</option>
+                                        <option *ngFor="let taxGroup of taxGroups" [value]="taxGroup.TaxGroupId">
+                                            {{ taxGroup.TaxGroupName }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Tax Class
+                                    <!-- <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i> -->
+                                </label>
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <label class="col-form-label form-text"
+                                        *ngIf="hideText">{{defaultSupplier.SupplierCompanyDetails!=null?defaultSupplier.SupplierCompanyDetails.TaxClass:""
+                                        }} </label>
+                                    <select *ngIf="hideInput" class="form-control"
+                                        [formControl]="suppliersInfoForm.get('SupplierCompanyDetails').get('TaxClass')"
+                                        [ngClass]="(validateControl(suppliersInfoForm.get('SupplierCompanyDetails').get('TaxClass')))?'form-control ng-touched':'form-control'">
+                                        <!-- <option [value]="record.TaxClass" *ngFor="let record of taxClasses">
+                                            {{ record.TaxClass }}
+                                        </option> -->
+                                        <option *ngIf="isTaxGroupSelected" [ngValue]="null">--Select--</option>
+                                        <option [value]="record.TaxClass" *ngFor="let record of taxClasses">
+                                            {{ record.TaxClass }}
+                                        </option>
+
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Rate Type</label>
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <label class="col-form-label form-text"
+                                        *ngIf="hideText">{{defaultSupplier.SupplierCompanyDetails!=null?defaultSupplier.SupplierCompanyDetails.RateType:""
+                                        }} </label>
+                                    <input *ngIf="hideInput" type="text"
+                                        [formControl]="suppliersInfoForm.get('SupplierCompanyDetails').get('RateType')"
+                                        class="form-control" />
+                                </div>
+                            </div>
+
+
+
+                        </div>
+
+
+
+                        <div class="col-md-6">
+
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Credit Limit</label>
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <label class="col-form-label form-text"
+                                        *ngIf="hideText">{{defaultSupplier.SupplierCompanyDetails!=null?defaultSupplier.SupplierCompanyDetails.CreditLimit:""
+                                        |number:'1.2-4' }}</label>
+                                    <input type="number" id="creditLimit" name="creditLimit"
+                                        [formControl]="suppliersInfoForm.get('SupplierCompanyDetails').get('CreditLimit')"
+                                        placeholder="" *ngIf="hideInput" class="form-control"
+                                        [ngClass]="(validateControl(suppliersInfoForm.get('SupplierCompanyDetails').get('CreditLimit')))?'form-control ng-touched':'form-control'">
+
+                                </div>
+                            </div>
+
+
+
+
+                            <!-- <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Account Set</label>
+                                <div class="col-xl-8 col-sm-6 col-6">
+                                    <label class="col-form-label form-text" *ngIf="hideText">{{defaultSupplier.SupplierCompanyDetails!=null?defaultSupplier.SupplierCompanyDetails.AccountSet:""
+                                        }} </label>
+                                    <input *ngIf="hideInput" type="number" [formControl]="suppliersInfoForm.get('SupplierCompanyDetails').get('AccountSet')"
+                                        class="form-control" />
+                                </div>
+                            </div> -->
+
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Bank Code
+                                    <!-- <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i> -->
+                                </label>
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <label class="col-form-label form-text"
+                                        *ngIf="hideText">{{defaultSupplier.SupplierCompanyDetails!=null?defaultSupplier.SupplierCompanyDetails.BankCode:""
+                                        }} </label>
+                                    <input *ngIf="hideInput"
+                                        [ngClass]="(validateControl(suppliersInfoForm.get('SupplierCompanyDetails').get('BankCode')))?'form-control ng-touched':'form-control'"
+                                        type="text"
+                                        [formControl]="suppliersInfoForm.get('SupplierCompanyDetails').get('BankCode')"
+                                        class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">GL Account
+
+                                </label>
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <label class="col-form-label form-text"
+                                        *ngIf="hideText">{{defaultSupplier.SupplierCompanyDetails!=null?defaultSupplier.SupplierCompanyDetails.GLAccount:""
+                                        }} </label>
+                                    <input *ngIf="hideInput"
+                                        [ngClass]="(validateControl(suppliersInfoForm.get('SupplierCompanyDetails').get('GLAccount')))?'form-control ng-touched':'form-control'"
+                                        type="text"
+                                        [formControl]="suppliersInfoForm.get('SupplierCompanyDetails').get('GLAccount')"
+                                        class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label ">Multiple Subcode
+                                </label>
+                                <div class="col-xl-8 col-sm-6 col-12">
+                                    <label class="col-form-label form-text" *ngIf="hideText">
+                                        {{defaultSupplier.IsSubCodeRequired === 1? "YES":"NO" }}
+                                    </label>
+                                    <label for="fixed" *ngIf="hideInput" class="col-form-label">
+                                        <input type="radio" id="fixed" (change)="isSubCodeChange(isSubCodeRequired[1])"
+                                            formControlName="IsSubCodeRequired" [value]="isSubCodeRequired[1]"> YES
+                                    </label>&nbsp;&nbsp;
+
+                                    <label *ngIf="hideInput" for="variable" class="col-form-label">
+                                        <input type="radio" (change)="isSubCodeChange(isSubCodeRequired[0])"
+                                            formControlName="IsSubCodeRequired" [value]="isSubCodeRequired[0]"> NO
+                                    </label>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <h4 class="form-heading">Sub Code Informations </h4>
+                        </div>
+                        <div class="col-xl-12">
+                            <div class="table-responsive" [ngStyle]="{'max-width.px': screenWidth}">
+                                <fieldset *ngIf="hideInput" formArrayName="SubCodes">
+                                    <p-table [columns]="subGridColumns" sortMode="single"
+                                        [value]="suppliersInfoForm.controls.SubCodes.controls">
+                                        <ng-template pTemplate="emptymessage">
+                                            <tr>
+                                                <td colspan="4" style='text-align: center;'>
+                                                    <b>{{gridNoMessageToDisplay}}</b>
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="colgroup" let-columns>
+                                            <colgroup>
+                                                <col style="width:10%;">
+                                                <col style="width:35%;">
+                                                <col style="width:25%;">
+                                                <col style="width:30%;">
+                                            </colgroup>
+                                        </ng-template>
+                                        <ng-template pTemplate="header" let-columns>
+                                            <tr>
+                                                <th *ngFor="let col of columns;let i=index"
+                                                    [pSortableColumn]="col.field">
+                                                    {{col.header}}
+                                                    <i class="fa fa-star mandatory-icon" *ngIf="hideInput && i>0"
+                                                        aria-hidden="true"></i>
+                                                    <p-sortIcon *ngIf='col.field!="SNo"' [field]="col.field"
+                                                        ariaLabel="Activate to sort"
+                                                        ariaLabelDesc="Activate to sort in descending order"
+                                                        ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                                </th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-rowData let-i="rowIndex"
+                                            let-columns="columns">
+                                            <tr *ngIf="hideInput" [formGroupName]="i">
+                                                <td>
+                                                    {{ i + 1 }}
+                                                </td>
+                                                <td>
+                                                    <!-- {{ suppliersInfoForm.get('SubCodes').controls[i].get('SubCodeDescription').value }}        -->
+                                                    <input formControlName="SubCodeDescription" type="text"
+                                                        class="form-control"
+                                                        (change)="onSubCodeDescriptionChanged(suppliersInfoForm.get('SubCodes').controls[i].get('SubCodeDescription').value,i,suppliersInfoForm.get('SubCodes').controls[i])" />
+                                                    <span class="errorMessage"
+                                                        *ngIf="suppliersInfoForm.get('SubCodes').controls[i].get('SubCodeDescription')!=null &&
+                                                 suppliersInfoForm.get('SubCodes').controls[i].get('SubCodeDescription').errors!=null ">
+                                                        <span
+                                                            *ngIf="suppliersInfoForm.get('SubCodes').controls[i].get('SubCodeDescription').errors.duplicateError">
+                                                            Sub Code Description is already existed
+                                                        </span>
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <!-- {{ suppliersInfoForm.get('SubCodes').controls[i].get('SubCode').value }}     -->
+                                                    <input formControlName="SubCode" type="text" class="form-control"
+                                                        (change)="onSubCodeChanged(suppliersInfoForm.get('SubCodes').controls[i].get('SubCode').value,i,suppliersInfoForm.get('SubCodes').controls[i])" />
+                                                    <span class="errorMessage"
+                                                        *ngIf="suppliersInfoForm.get('SubCodes').controls[i].get('SubCode')!=null &&
+                                                suppliersInfoForm.get('SubCodes').controls[i].get('SubCode').errors!=null ">
+                                                        <span
+                                                            *ngIf="suppliersInfoForm.get('SubCodes').controls[i].get('SubCode').errors.duplicateSubCodeError">
+                                                            Sub Code is already existed
+                                                        </span>
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <div style="float:left;width:80%;">
+                                                        <input formControlName="AccountSetId" type="text"
+                                                            class="form-control"
+                                                            (keyup)="onAccountSetChanged(suppliersInfoForm.get('SubCodes').controls[i].get('AccountSetId').value,i,suppliersInfoForm.get('SubCodes').controls[i])" />
+                                                        <span class="errorMessage"
+                                                            *ngIf="suppliersInfoForm.get('SubCodes').controls[i].get('AccountSetId')!=null &&
+                                                suppliersInfoForm.get('SubCodes').controls[i].get('AccountSetId').errors!=null ">
+                                                            <span
+                                                                *ngIf="suppliersInfoForm.get('SubCodes').controls[i].get('AccountSetId').errors.duplicateAccountSetError">
+                                                                Account Set Id is already existed
+                                                            </span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="gridIconsStyle"
+                                                        *ngIf="i > 0 && suppliersInfoForm.get('SubCodes').controls[i].get('SubCodeId').value === 0">
+                                                        <i class="fa fa-trash gridRemoveIcon"
+                                                            (click)="removeSubCodeGridItem(i)" aria-hidden="true"></i>
+                                                    </div>
+
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                    <div *ngIf="suppliersInfoForm.get('IsSubCodeRequired').value === 1">
+                                        <input type="number" [(ngModel)]="rowsToAdd"
+                                            [ngModelOptions]="{standalone: true}" class="form-control linesToAdd">
+                                        <button type="button" (click)="addSubCodeGridItem(rowsToAdd)" class="addLine">
+                                            <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Line
+                                        </button>
+                                    </div>
+                                </fieldset>
+                                <p-table *ngIf="hideText" [columns]="subGridColumns" sortMode="single"
+                                    [value]="defaultSupplier.SubCodes">
+                                    <ng-template pTemplate="emptymessage">
+                                        <tr>
+                                            <td colspan="4" style='text-align: center;'>
+                                                <b>{{gridNoMessageToDisplay}}</b>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="colgroup" let-columns>
+                                        <colgroup>
+                                            <col style="width:10%;">
+                                            <col style="width:35%;">
+                                            <col style="width:25%;">
+                                            <col style="width:30%;">
+                                        </colgroup>
+                                    </ng-template>
+                                    <ng-template pTemplate="header" let-columns>
+                                        <tr>
+                                            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                                {{col.header}}
+                                                <p-sortIcon *ngIf='col.field!="SNo"' [field]="col.field"
+                                                    ariaLabel="Activate to sort"
+                                                    ariaLabelDesc="Activate to sort in descending order"
+                                                    ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                            </th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                        <tr>
+                                            <td>
+                                                {{ i + 1 }}
+                                            </td>
+                                            <td>
+                                                {{ rowData.SubCodeDescription }}
+                                            </td>
+                                            <td>
+                                                {{ rowData.SubCode }}
+                                            </td>
+                                            <td>
+                                                {{ rowData.AccountSetId }}
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 20px">
+                        <div *ngIf="isEditMode" class="col-xl-12">
+                            <h4 class="form-heading">Associated Entities </h4>
+                        </div>
+                        <div class="col-xl-12 table-responsive" [ngStyle]="{'max-width.px': screenWidth}">
+                            <fieldset formArrayName="SupplierEntities">
+
+                                <p-table *ngIf="hideInput && isSupplierVerifier" [columns]="companyColumns"
+                                    sortMode="single" [value]="suppliersInfoForm.controls.SupplierEntities.controls">
+                                    <ng-template pTemplate="emptymessage">
+                                        <tr>
+                                            <td colspan="5" style='text-align: center;'>
+                                                <b>{{gridNoMessageToDisplay}}</b>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="colgroup" let-columns>
+                                        <colgroup>
+                                            <col style="width:10%;">
+                                            <col style="width:25%;">
+                                            <col style="width:25%;">
+                                            <col style="width:15%;">
+                                            <col style="width:17%;">
+                                            <col style="width:8%;">
+                                        </colgroup>
+                                    </ng-template>
+                                    <ng-template pTemplate="header" let-columns>
+                                        <tr>
+                                            <th *ngFor="let col of columns" [pSortableColumn]="col.field"
+                                                [hidden]="col.header==='Company Id'">
+                                                {{col.header}}
+                                                <p-sortIcon *ngIf='col.field!="SNo"' [field]="col.field"
+                                                    ariaLabel="Activate to sort"
+                                                    ariaLabelDesc="Activate to sort in descending order"
+                                                    ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                            </th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                        <tr *ngIf="hideInput" [formGroupName]="i">
+                                            <td>
+                                                {{ i + 1 }}
+                                            </td>
+                                            <td>
+                                                {{suppliersInfoForm.get('SupplierEntities').controls[i].get('CompanyName').value
+                                                }}
+                                            </td>
+                                            <td>
+                                                {{suppliersInfoForm.get('SupplierEntities').controls[i].get('Address1').value
+                                                }}
+                                            </td>
+                                            <td>
+                                                {{suppliersInfoForm.get('SupplierEntities').controls[i].get('Telephone').value
+                                                }}
+                                            </td>
+                                            <td>
+                                                {{suppliersInfoForm.get('SupplierEntities').controls[i].get('Email').value
+                                                }}
+                                            </td>
+                                            <td>
+                                                <div style="text-align: center">
+                                                    <i class="fa fa-chain-broken gridRemoveIcon"
+                                                        (click)="onDetachSupplier(i)"></i>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </fieldset>
+                            <p-table *ngIf="hideText" [columns]="companyColumns" sortMode="single"
+                                [value]="defaultSupplier.SupplierEntities">
+                                <ng-template pTemplate="emptymessage">
+                                    <tr>
+                                        <td colspan="6" style='text-align: center;'>
+                                            <b>{{gridNoMessageToDisplay}}</b>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="colgroup" let-columns>
+                                    <colgroup>
+                                        <col style="width:10%;">
+                                        <col style="width:25%;">
+                                        <col style="width:25%;">
+                                        <col style="width:15%;">
+                                        <col style="width:17%;">
+                                        <!-- <col style="width:8%;"> -->
+                                    </colgroup>
+                                </ng-template>
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        <th *ngFor="let col of columns" [pSortableColumn]="col.field"
+                                            [hidden]="col.header==='Company Id' || col.header==='Detach'">
+                                            {{col.header}}
+                                            <p-sortIcon *ngIf='col.field!="SNo"' [field]="col.field"
+                                                ariaLabel="Activate to sort"
+                                                ariaLabelDesc="Activate to sort in descending order"
+                                                ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                    <tr>
+                                        <td>
+                                            {{ i + 1 }}
+                                        </td>
+                                        <td>
+                                            {{ rowData.CompanyName }}
+                                        </td>
+                                        <td>
+                                            {{ rowData.Address1 }}
+                                        </td>
+                                        <td>
+                                            {{ rowData.Telephone }}
+                                        </td>
+                                        <td>
+                                            {{ rowData.Email }}
+                                        </td>
+                                        <!-- <td>
+                                            {{ rowData.IsDetached? "Detached": "Attached" }}
+                                        </td> -->
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 20px">
+                        <div class="col-12">
+                            <h4 class="form-heading">Attachments</h4>
+                        </div>
+                        <div class="col-12 attachments" *ngIf="defaultSupplier!=undefined">
+                            <ul>
+                                <ng-template ngFor let-data [ngForOf]="defaultSupplier.Attachments" let-i="index">
+                                    <li *ngIf="data.IsDelete!=true||data.IsDelete==undefined">
+                                        <span>
+                                            <span class="displayFileName">
+                                                {{ data.FileName }}
+                                            </span>
+                                            <a style="color:black;" target="_blank" *ngIf="hideText"
+                                                href="{{apiEndPoint}}/supplierFileDownload?AttachmentId={{ data.AttachmentId }}&AttachmentTypeId={{ data.AttachmentTypeId }}&FileName={{data.FileName|encodeURIComponent}}&RecordId={{data.RecordId}}">
+                                                <i class="fa fa-download"></i>
+                                            </a>
+                                            &nbsp;&nbsp;
+                                            <i *ngIf="hideInput && isSupplierAttached" (click)="attachmentDelete(i)"
+                                                class="fa fa-trash">
+                                            </i>
+                                        </span>
+                                    </li>
+                                </ng-template>
+                            </ul>
+                        </div>
+                        <div class="col-12" *ngIf="hideInput && isSupplierAttached">
+                            <div class="col-12">
+                                <input type="file" multiple (change)="onFileUploadChange($event)" name="file">
+                                <span *ngIf="isDuplicate" class="error-message">
+                                    {{errorMessage}}
+                                </span>
+                            </div>
+                            <div class="col-12">
+                                <ul class="fileList">
+                                    <li *ngFor="let data of uploadedFiles;let i = index">
+                                        <span>
+                                            <span class="fileName">
+                                                {{ data.name }}
+                                            </span>
+                                            <i class="fa fa-close" (click)="onFileClose(i)"></i>
+                                        </span>
+                                        <br>
+                                        <span class="fileSize">{{ data.size/1024 }} KB</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 20px">
+                        <div class="col-12"
+                            *ngIf="(isApprovalPage==true||(isApprovalPage==false && defaultSupplier.SupplierApproval!=null && (defaultSupplier.SupplierApproval.WorkFlowStatusId==2||defaultSupplier.SupplierApproval.WorkFlowStatusId==3))) ">
+                            <div>
+                                <h4 class="form-heading">Approval Remarks</h4>
+                            </div>
+                            <div [formGroup]="suppliersInfoForm">
+                                <textarea formControlName="ApprovalRemarks" class="form-control"
+                                    style="width:70%;display:inline-block ">
+                            </textarea>
+                                <button type="submit"
+                                    (click)="updateStatus(isApprovalPage==true?workFlowStatus.AskedForClarification:workFlowStatus.WaitingForApproval)"
+                                    style="float:inherit;vertical-align: top;" class="btn btn-edit">
+                                    <i class="fa fa-envelope" aria-hidden="true"></i>
+                                    <span *ngIf="isApprovalPage==true">
+                                        {{ defaultSupplier.WorkFlowComments|ApprovalButton }}
+                                    </span>
+                                    <span *ngIf="isApprovalPage==false">
+                                        Reply
+                                    </span>
+                                </button>
+                                <div
+                                    *ngIf="suppliersInfoForm.get('Remarks') && suppliersInfoForm.get('Remarks').errors!=null && suppliersInfoForm.get('Remarks').touched==true">
+                                    <span class="errorMessage"
+                                        *ngIf="suppliersInfoForm.get('Remarks').errors.required">Approval Remarks is
+                                        Required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="defaultSupplier.WorkFlowComments!=undefined && defaultSupplier.WorkFlowComments.length >0"
+                            class="col-xl-12 col-sm-12 col-12">
+                            <label class="col-form-label form-label">Previous Comments</label>
+                            <ul>
+                                <li *ngFor="let record of defaultSupplier.WorkFlowComments">
+                                    <span class='remarksUserName'>{{ record.UserName }}</span> -
+                                    <span class='remarksDate'>{{ record.CreatedDate|date:'dd-MM-yyyy h:mm:ss a'
+                                        }}</span>:
+                                    <br>
+                                    <span>{{ record.Remarks }}</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+
+                    <div class="col-xl-12 padding-null" style="margin-top: 20px; color:crimson">
+                        <div>
+                            <h4 class="form-heading">Information for Attachments</h4>
+                        </div>
+                        <span>(*Not Required for GLCs, Government Authorities, MNCs and well known reputable
+                            companies)</span>
+                        <br>
+                        <span>
+                            <b>Doc required to attached:</b>
+                        </span>
+                        <br>
+                        <span>Supply > $10,000 - ACRA Business Profile </span>
+                        <br>
+                        <span>Supply > $ 300,000 - BCA/GeBIZ Rating Certificate</span>
+                        <br>
+                        <span>Latest Audited Financial Statements / Certified management Accounts</span>
+                        <br>
+                        <span>(Not required if BCA/GeBIZ Rating Certificate is attached)</span>
+                    </div>
+                    
+                </div>
+
+                <div *ngIf="requestType=='request'" class="form-group text-right btn-list">
+                    <button type="submit" class="btn btn-save" *ngIf="!isSaveEnabled">
+                        <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+                    <!-- PS - {{defaultSupplier.ParentSupplierId}}
+                       WS - {{defaultSupplier.WorkFlowStatusId}}
+                       SW - {{defaultSupplier.IsWFVerifier}}
+                       C  - {{defaultSupplier.CreatedBy}}
+                       A  - {{defaultSupplier.AttachedBy}}
+                       L  - {{userDetails.UserID}} -->
+
+                    <button type="button"
+                        *ngIf="defaultSupplier.ParentSupplierId == 0 && defaultSupplier.WorkFlowStatusId == workFlowStatus.WaitingForApproval && (defaultSupplier.CreatedBy == userDetails.UserID||defaultSupplier.AttachedBy == userDetails.UserID)"
+                        (click)="recallSupplierApproval()" class="btn btn-cancel">
+                        <i class="fa fa-times-circle" aria-hidden="true"></i> Cancel Approval A
+                    </button>
+                    <button type="button"
+                        *ngIf="defaultSupplier.ParentSupplierId > 0 && defaultSupplier.WorkFlowStatusId == workFlowStatus.WaitingForApproval && defaultSupplier.IsWFVerifier && (defaultSupplier.UpdatedBy == userDetails.UserID||defaultSupplier.AttachedBy == userDetails.UserID)"
+                        (click)="recallSupplierApproval()" class="btn btn-cancel">
+                        <i class="fa fa-times-circle" aria-hidden="true"></i> Cancel Approval B
+                    </button>
+                    <button type="button"
+                        *ngIf="defaultSupplier.ParentSupplierId > 0 && defaultSupplier.WorkFlowStatusId == workFlowStatus.WaitingForApproval && !defaultSupplier.IsWFVerifier && (defaultSupplier.UpdatedBy == userDetails.UserID||defaultSupplier.AttachedBy == userDetails.UserID)"
+                        (click)="recallSupplierApproval()" class="btn btn-cancel">
+                        <i class="fa fa-times-circle" aria-hidden="true"></i> Cancel Approval C
+                    </button>
+                    <button type="button" (click)="saveRecord('send')" class="btn btn-approve"
+                        *ngIf="(((isDisplayMode==true && (defaultSupplier|DisableButton)==false)||isDisplayMode==false) && defaultSupplier.SupplierId > 0 && approvePermission)">
+                        <i class="fa fa-check" aria-hidden="true"></i> {{sendForApproveButtonText}}
+                    </button>
+                    <button type="button" (click)="editData()" class="btn btn-approve"
+                        *ngIf="isDisplayMode && isVerifyButton && defaultSupplier.WorkFlowStatus === 'Approved' && verifyPermission">
+                        <i class="fa fa-check" aria-hidden="true"></i> Verify Supplier
+                    </button>
+
+                    <button type="button" (click)="ClickBack($event)" class="btn btn-cancel">
+                        <i class="fa fa-times-circle" aria-hidden="true"></i> Cancel
+                    </button>
+
+                    <!-- <button type="reset" (click)="cancelData()" class="btn btn-cancel" *ngIf="!isDisplayMode">
+                        <i class="fa fa-ban" aria-hidden="true"></i> Cancel </button> -->
+
+                    <button type="reset" (click)="editData()" class="btn btn-edit"
+                        *ngIf="isDisplayMode && ((defaultSupplier|DisableButton)==false) && defaultSupplier.SupplierId > 0 && editPermission"
+                        [disabled]="defaultSupplier|DisableButton">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+
+                    <button type="button" (click)="deleteRecord('delete')" class="btn btn-delete"
+                        *ngIf="isDisplayMode && ((defaultSupplier|DisableButton)==false) && !isSupplierVerifier && defaultSupplier.SupplierId > 0 && deletePermission"
+                        [disabled]="defaultSupplier|DisableButton">
+                        <i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+
+                </div>
+                <div *ngIf="requestType=='approval' && defaultSupplier.WorkFlowStatus!= 'Approved'"
+                    class="form-group text-right btn-list">
+                    <button type="button" (click)="editData()" class="btn btn-approve"
+                        *ngIf="isDisplayMode && isSupplierVerifier && approvalVerifyPermission">
+                        <i class="fa fa-check" aria-hidden="true"></i> Verify Supplier
+                    </button>
+                    <button type="submit" class="btn btn-save" *ngIf="!isDisplayMode">
+                        <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+                    <button type="reset" (click)="cancelData()" class="btn btn-cancel" *ngIf="!isDisplayMode">
+                        <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                    <button *ngIf="approvePermission && doApproveOrReject && isApproverUser" type="submit"
+                        [disabled]="disableApprove" (click)="updateStatus(workFlowStatus.Approved)"
+                        class="btn btn-approve">
+                        <i class="fa fa-check" aria-hidden="true"></i>Approve</button>
+                    <button *ngIf="approvePermission && doApproveOrReject && isApproverUser" type="submit"
+                        (click)="showRejectPopup()" class="btn btn-delete">
+                        <i class="fa fa-ban" aria-hidden="true"></i> Reject</button>
+                </div>
+            </form>
+            <p-confirmDialog></p-confirmDialog>
+        </div>
+        <p>Edit Form Ends Here</p>
+        </div>
+    </div>
+    
+</div>
+
+<ng-template #supplierCategoryTemplate let-r="result" let-t="term">
+    {{ r.CategoryText }}
+</ng-template>
+
+
+<ng-template #supplierTemplate let-r="result" let-i="index" let-t="term">
+    <table class="autoCompleteTable" style="width:500px;" >
+        <thead *ngIf='r.index==0'>
+            <tr>
+                <th style="width:200px">
+                    Supplier Name
+                </th>
+                <!-- <th style="width: 200px">
+                    Status
+                </th> -->
+                <th style="width: 300px">
+                    Associated Entities
+                </th>
+            </tr>
+        </thead>
+        <tr style="border-bottom: 1px solid #d6d6d6;">
+            <td style="width: 200px; white-space: pre-wrap; word-wrap: break-word; ">{{ r.SupplierName }}</td>
+            <!-- <td style="width: 20%; white-space: pre-wrap; word-wrap: break-word;">{{ r.WorkFlowStatus }}</td> -->
+            <td style="width: 300px; white-space: pre-wrap; word-wrap: break-word;">{{ r.AssociatedEntities }}</td>
+        </tr>
+    </table>
+</ng-template>
+<ng-template #supplierTemplateres let-r="result" let-t="term">
+    {{ r.SupplierName }}
+</ng-template>
+
+<ng-template #countryTemplate let-r="result" let-i="index" let-t="term">
+
+
+    <table style="width: 99%;">
+
+        <thead *ngIf='r.index==0'>
+            <tr>
+                <th style="width: 70%">
+                    Country Name
+                </th>
+                <th style="width: 30%">
+                    Code
+                </th>
+            </tr>
+        </thead>
+        <tr>
+            <td style="width: 50%; white-space: pre-wrap; word-wrap: break-word; ">{{ r.Name }}</td>
+            <td style="width: 20%; white-space: pre-wrap; word-wrap: break-word;">{{ r.Code }}</td>
+        </tr>
+    </table>
+</ng-template>
+
+<p-dialog header="Import Supplier Log" width="400" modal='true' [(visible)]="showUploadErrorDialog">
+    <div class="form-group row">
+        {{uploadResult.SuccesRecords}} of {{uploadResult.TotalRecords}} suppliers imported successfully.
+    </div>
+    <div class="form-group row">
+        <textarea id="clipboard-example-textarea" *ngIf="uploadResult.Message!==null" cols="60" rows="10"
+            [(ngModel)]="uploadResult.Message"></textarea>
+    </div>
+    <p-footer>
+        <button style='text-align: right' (click)="showUploadErrorDialog=false" class="btn btn-save">
+            Ok
+        </button>
+    </p-footer>
+</p-dialog>
+<app-supplier-reject-popup *ngIf="showVoidPopUp" (hideVoidPopUp)="hideVoidPopUp($event)" [showVoidPopUp]="showVoidPopUp"
+    (rejectInvoice)="rejectInvoice($event)"></app-supplier-reject-popup>
+<app-auditlog *ngIf="showLogPopUp" (hideLogPopUp)="hideLogPopUp($event)" [CompanyId]="companyId"
+    [DocumentId]="supplierId" [DocumentNumber]="defaultSupplier.SupplierCode" [PageName]="'Supplier'"
+    [DocType]="'Supplier'" [showLogPopUp]="showLogPopUp"></app-auditlog>

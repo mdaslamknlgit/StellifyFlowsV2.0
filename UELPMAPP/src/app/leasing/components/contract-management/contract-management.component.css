@@ -1,0 +1,25 @@
+.rightPanel:-webkit-full-screen .fullScreenLabel{
+    display: block;
+    margin-top:1%;
+}
+.fullScreenLabel
+{
+    display:none;
+}
+.addLine
+{
+    background: #01548e;
+    color: white;
+    border: 1px solid #01548e;
+    cursor: pointer;
+    border-radius: 3px;
+    margin-left: 3px;
+}
+.linesToAdd
+{
+    width: 5%;
+    height: 24px;
+    padding: 3px;
+    display:inline-block;
+    font-size: 12px;
+}

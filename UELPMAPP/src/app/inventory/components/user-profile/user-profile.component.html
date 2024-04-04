@@ -1,0 +1,29 @@
+<form *ngIf="userProfile==undefined" [formGroup]="userProfileForm">
+
+    <div class="ui-lg-12">
+        <div class="ui-lg-6">
+                <label>
+                        UserName:
+                </label>
+        </div>
+        <div class="ui-lg-6">
+                <input type="text" formControlName="UserName" />
+        </div>
+    </div>
+    <div class="ui-lg-12">
+        <input type="button" (click)="submitUserProfile()" value="Save">
+    </div>
+</form>
+
+<div *ngIf="userProfile!=undefined">
+    <div class="ui-lg-12">
+        <div class="ui-lg-6">
+                <label>
+                        UserName:
+                </label>
+        </div>
+        <div class="ui-lg-6">
+              <span>{{ userProfile.UserName  }}</span>
+        </div>
+    </div>
+</div>

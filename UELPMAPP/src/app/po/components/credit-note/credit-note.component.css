@@ -1,0 +1,71 @@
+.error{float:left; width:100%;  color:red;}
+.error-message{ color: red;}
+.align-text-top img{ margin: 0px 2px;}
+.box-red{ border: 1px solid red;}
+.toast-message-view.error-message { border: 1px solid red; }
+.nowrap{ white-space: nowrap;}
+.table-subtotal {border-collapse: collapse}
+.table-subtotal td{ border: inherit}
+.table-totalamount td{ border: inherit;}
+.enlargeRightPanel:-webkit-full-screen 
+{  
+  min-width: 100%;  
+  min-height: 100%;  
+}
+.enlargeRightPanelMargin{
+    margin-top:3%;
+}
+
+.autoCompleteTable td{
+  border: 1px solid #c4c4c4;
+  border-collapse: separate;
+  }
+  .autoCompleteTable
+  {
+      table-layout: fixed;
+  }
+  .invoiceLink
+  {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  button.calendar, button.calendar:active {
+    width: 2.75rem;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAcCAYAAAAEN20fAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEUSURBVEiJ7ZQxToVAEIY/YCHGxN6XGOIpnpaEsBSeQC9ArZbm9TZ6ADyBNzAhQGGl8Riv4BLAWAgmkpBYkH1b8FWT2WK/zJ8ZJ4qiI6XUI3ANnGKWBnht2/ZBDRK3hgVGNsCd7/ui+JkEIrKtqurLpEWaphd933+IyI3LEIdpCYCiKD6HcuOa/nwOa0ScJEnk0BJg0UTUWJRl6RxCYEzEmomsIlPU3IPW+grIAbquy+q6fluy/28RIBeRMwDXdXMgXLj/B2uimRXpui4D9sBeRLKl+1N+L+t6RwbWrZliTTTr1oxYtzVWiTQAcRxvTX+eJMnlUDaO1vpZRO5NS0x48sIwfPc87xg4B04MCzQi8hIEwe4bl1DnFMCN2zsAAAAASUVORK5CYII=') !important;
+    background-repeat: no-repeat;
+    background-size: 23px;
+    background-position: center;
+  }
+  .linesToAdd
+{
+    width: 5%;
+    height: 24px;
+    padding: 3px;
+    display:inline-block;
+    font-size: 12px;
+}
+
+.addLine {
+  background: #01548e;
+  color: #fff;
+  border: 1px solid #01548e;
+  cursor: pointer;
+  border-radius: 3px;
+  margin-left: 3px;
+}
+
+.respnsive-table{ width:100%; overflow-x: auto; }
+.error{float:left; width:100%;  color:red;}
+
+.respnsive-table{ width:100%; overflow-x: auto; }
+
+:host /deep/  .autocompletewidth .dropdown-menu.show {
+  width: 94%;
+}
+.hidescroll{ overflow: inherit;}
+.form-control.ng-invalid.ng-touched {
+  border: 1px solid red;
+}
+:host ::ng-deep  button .disabled{ color:#afa5a5; }
+/*.form-group.row div{ padding-top: calc(.375rem + 1px);} */

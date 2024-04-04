@@ -1,0 +1,159 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 col-sm-12 padding-null tittlediv">
+            <h3 class="item-heading">
+                <img src="../assets/images/icon1.png"> FixedAssets > Asset Category </h3>
+        </div>
+        <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+            <img src="../assets/images/add-new.png" (click)="addRecord();" *ngIf="hideText && newPermission">
+            <img src="../assets/images/grid1.png" (click)="showFullScreen()">
+            <!-- <img src="../assets/images/grid2.png">  -->
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3 col-md-4 leftdiv" [CustomSpinner]="showLeftPanelLoadingIcon" [class.collapse-leftcol]="leftSection">
+            <div class="left-section">
+                <div class="filter-section" ngbDropdown #myDrop="ngbDropdown">
+                    <div class="left-search">
+                        <input type="text" placeholder="Search requests..." class="search-filter" [(ngModel)]="searchKey" (keyup)="onSearch($event)">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                        <div class="filter-popup" *ngIf="showFilterPopUp" ngbDropdownMenu aria-labelledby="dropdownManual" (click)="$event.stopPropagation();">
+                            <form [formGroup]="assetFilterForm" class="form-horizontal">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-6 form-label">Asset Category</label>
+                                    <div class="col-6">
+                                        <input type="text" #assetCategory formControlName="AssetCategory" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-6 form-label">Asset Type</label>
+                                    <div class="col-6">
+                                        <select class="form-control drp_dwn" formControlName="AssetTypeId" class="form-control">
+                                            <option *ngFor="let assetRecord of assetTypes" [value]="assetRecord.AssetTypeId">
+                                                {{ assetRecord.AssetType }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12 error">
+                                        {{filterMessage}}
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12" style="text-align: right">
+                                        <button type="submit" (click)="filterData()" class="btn btn-save">
+                                            <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                        <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                            <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- start filter code -->
+                    <div class="filter-icon">
+                        <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                            <i class="fa fa-filter" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+                        <i class="fa fa-undo" aria-hidden="true"></i>
+                    </div>
+                    <!-- end filter code -->
+                    <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="filter-scroll" style="width:100%; float:left;">
+                        <table class="table">
+                            <tr [class.activerow]="record.AssetCategoryId==selectedRecordDetails.AssetCategoryId" (click)="onRecordSelection(record.AssetCategoryId)"
+                                *ngFor="let record of assetCategoryList">
+                                <td>
+                                    <h5 class="sub-heading">{{ record.AssetCategory }}</h5>
+                                    <label class="label-text">Asset Type</label> :
+                                    <label class="label-value">{{ record.AssetType }}</label>
+                                    <label class="label-text">Description</label> :
+                                    <label class="label-value descriptionStyle">{{ record.Description | slice:0:50}}
+                                        <span *ngIf="record.Description!= null && record.Description.length>50">...</span>
+                                    </label>
+                                </td>
+                            </tr>
+                        </table>
+                        <div *ngIf="assetCategoryList.length==0" class="col-12 listErrorMessage">
+                            {{errorMessage}}
+                        </div>
+                        <ngb-pagination [maxSize]="5" *ngIf="assetCategoryList.length>0" (pageChange)="pageChange($event)" [collectionSize]="assetCategoryPagerConfig.TotalRecords"
+                            class="d-flex justify-content-center" [pageSize]="assetCategoryPagerConfig.RecordsToFetch" [page]="currentPage"
+                            [boundaryLinks]="true"></ngb-pagination>
+                    </div>
+                </div>
+            </div>
+            <div class="split-line" (click)="split()"></div>
+        </div>
+        <!-- left col end here-->
+
+        <div #rightPanel [CustomSpinner]="showRightPanelLoadingIcon" class="rightPanel col-lg-9 col-md-8" [class.expand-rightcol]="rightSection">
+            <div class="fullScreenLabel">
+                <app-header></app-header>
+            </div>
+            <form [ngClass]="{'hideRightPanel':(assetCategoryList.length==0 && hideText==true)}" [formGroup]="assetCategoryForm" class="form-horizontal">
+                <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+                    <div class="row fullScreenLabel">
+                        <div class="col-12">
+                            <h3 class="item-heading" style="float:none;">Asset Category</h3>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Category name <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i></label>
+                        <div class="col-xl-4 col-sm-6 col-12">
+                            <input type="text" appAutofocus formControlName="AssetCategory" placeholder="Name" *ngIf="hideInput" class="form-control">
+                            <label class="col-form-label form-text" *ngIf="hideText">
+                                <b style="color:#01548e">{{ selectedRecordDetails.AssetCategory }}</b>
+                            </label>
+                            <div *ngIf="assetCategoryForm.get('AssetCategory') && assetCategoryForm.get('AssetCategory').errors!=null && assetCategoryForm.get('AssetCategory').touched==true">
+                                <span class="errorMessage" *ngIf="assetCategoryForm.get('AssetCategory').errors.required">Name is required</span>
+                                <span class="errorMessage" *ngIf="assetCategoryForm.get('AssetCategory').errors.duplicate">Duplicate Category</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Asset Type <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i></label>
+                        <div class="col-xl-4 col-sm-6 col-12">
+                            <select class="form-control drp_dwn" *ngIf="hideInput" formControlName="AssetTypeId" class="form-control">
+                                <option [ngValue]="null">--Select--</option>
+                                <option *ngFor="let assetRecord of assetTypes" [value]="assetRecord.AssetTypeId">
+                                    {{ assetRecord.AssetType }}
+                                </option>
+                            </select>
+                            <label class="col-form-label  form-text" *ngIf="hideText">{{ selectedRecordDetails.AssetType }}</label>
+                            <div *ngIf="assetCategoryForm.get('AssetTypeId') && assetCategoryForm.get('AssetTypeId').errors!=null && assetCategoryForm.get('AssetTypeId').touched==true">
+                                <span class="errorMessage" *ngIf="assetCategoryForm.get('AssetTypeId').errors.required">Asset Type is required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Description </label>
+                        <div class="col-xl-4 col-sm-6 col-12">
+                            <textarea rows="4" cols="50" formControlName="Description" *ngIf="hideInput" class="form-control">
+            </textarea>
+                            <label class="col-form-label  form-text" *ngIf="hideText">{{ selectedRecordDetails.Description }}</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group text-right btn-list">
+                    <button (click)="saveRecord()" class="btn btn-save" *ngIf="hideInput">
+                        <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+                    <button (click)="cancelRecord()" class="btn btn-cancel" *ngIf="hideInput">
+                        <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                    <button (click)="editRecord()" class="btn btn-edit" *ngIf="hideText && editPermission">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                    <button (click)="deleteRecord()" class="btn btn-delete" *ngIf="hideText && deletePermission">
+                        <i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                </div>
+            </form>
+            <p-confirmDialog></p-confirmDialog>
+        </div>
+        <!-- right col end here-->
+
+
+    </div>
+
+</div>

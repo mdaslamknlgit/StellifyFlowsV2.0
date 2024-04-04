@@ -1,0 +1,123 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+            <div class="flexrow space-between align-center">
+                <h3 class="item-heading">Department {{FormMode}} -- {{DeptId}} </h3>
+
+                <div>
+                    <button class="btn  btn-transparent" (click)="addRecord();" *ngIf="hidetext && newPermission"> New
+                        Record</button>
+                    <button class="btn btn-transparent" (clickOutside)="onClickedOutside($event)" (click)="split()">
+                        {{showfilterstext}} </button>
+
+                    <img style="display: none;" src="../assets/images/grid1.png" (click)="showFullScreen()">
+                </div>
+            </div>
+            <!-- <img src="../assets/images/grid2.png">  -->
+        </div>
+    </div>
+    <div class="row">
+        <div #rightPanel [CustomSpinner]="showRightPanelLoadingIcon" class="rightPanel col-lg-12 col-md-12"
+            [class.expand-rightcol]="rightsection">
+            <div class="fullScreenLabel"> <app-header></app-header> </div>
+            <div>
+                <form [formGroup]="departmentForm" class="form-horizontal">
+                    <div class="rightcol-scrroll">
+                        <div class="row fullScreenLabel">
+                            <div class="col-12">
+                                <h3 class="item-heading" style="float:none;">Department</h3>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Name <i
+                                    class="fa fa-star mandatory-icon" *ngIf="hideinput" aria-hidden="true"></i></label>
+                            <div class="autoComplete col-xl-4 col-sm-6 col-6">
+                                <label class="col-form-label form-text" *ngIf="hidetext">
+                                    <b style="color:#01548e">{{selectedDepartmentManagementRecord.Name}}</b> </label>
+
+                                <input formControlName="Name" *ngIf="hideinput" type="text" class="form-control show" />
+                                <div
+                                    *ngIf="departmentForm.get('Name').errors==null&&selectedDepartmentManagementRecord.LocationId==0">
+                                    <span class="errorMessage"
+                                        *ngIf="departmentForm.get('Name').errors.EmptyDepartment">Please Enter
+                                        Department Name</span>
+                                </div>
+                                <div *ngIf="departmentForm.get('Name').errors!=null">
+                                    <span class="errorMessage"
+                                        *ngIf="departmentForm.get('Name').errors.DuplicateDepartment">Duplicate
+                                        Department Name</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Code <i
+                                    class="fa fa-star mandatory-icon" *ngIf="hideinput" aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-6">
+                                <label class="col-form-label form-text"
+                                    *ngIf="hidetext">{{selectedDepartmentManagementRecord.Code }}</label>
+                                <input formControlName="Code" *ngIf="hideinput" type="text" class="form-control show" />
+                                <div
+                                    *ngIf="departmentForm.get('Code').errors==null&&selectedDepartmentManagementRecord.LocationId==0">
+                                    <span class="errorMessage"
+                                        *ngIf="departmentForm.get('Code').errors.EmptyCode">Please Enter Code</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Description </label>
+                            <div class="col-xl-4 col-sm-6 col-6">
+                                <label class="col-form-label form-text"
+                                    *ngIf="hidetext">{{selectedDepartmentManagementRecord.Description }}</label>
+                                <input formControlName="Description" *ngIf="hideinput" type="text"
+                                    class="form-control show" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Is Active </label>
+                            <div class="col-xl-4 col-sm-6 col-6">
+                                <label class="col-form-label form-text"
+                                    *ngIf="hidetext">{{selectedDepartmentManagementRecord.IsDeleted==1?"No":"Yes"}}
+                                </label>
+                                <!-- <label class="col-form-label form-text"  *ngIf="hideinput">
+                      <mat-slide-toggle formControlName="IsDeleted" (change)="matselect($event)"></mat-slide-toggle>                 
+                     </label> -->
+                                <select formControlName="IsDeleted" *ngIf="hideinput" class="form-control">
+                                    <option value="0">Yes</option>
+                                    <option value="1">No</option>
+                                    <!-- <option *ngFor="let record of uomtypes" value={{record.MeasurementUnitID}}>
+                  {{record.Name}} -->
+
+                                </select>
+                            </div>
+                        </div>
+                        <!-- <label *ngIf="slideactive==1">Active</label>   -->
+                    </div>
+
+                    <div class="form-group text-right btn-list">
+                        <button type="submit" (click)="saveRecord()" class="btn btn-save" *ngIf="hideinput"><i
+                                class="fa fa-check" aria-hidden="true"></i> Save</button>
+                        <button type="submit" (click)="cancelRecord()" class="btn btn-cancel"><i
+                                class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                        <button type="submit" (click)="editRecord()" class="btn btn-edit"
+                            *ngIf="hidetext && editPermission"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                            Edit</button>
+                        <!-- <button type="submit" (click)="deleteRecord()"  class="btn btn-delete" *ngIf="hidetext"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button> -->
+                    </div>
+
+                </form>
+                <p-confirmDialog></p-confirmDialog>
+            </div>
+
+
+        </div><!-- left col end here-->
+
+
+    </div>
+
+</div>
+
+<ng-template #userTemplate let-r="result" let-t="term">
+    {{ r.UserName }}
+</ng-template>

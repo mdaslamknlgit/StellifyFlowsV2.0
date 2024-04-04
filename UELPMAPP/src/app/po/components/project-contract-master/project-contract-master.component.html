@@ -1,0 +1,2305 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+            <div class="flexrow space-between align-center">
+            <h3 class="item-heading"> {{ moduleHeading }}  </h3>
+        
+            <div>  
+            <!-- <button class="btn  btn-transparent"  (click)="addRecord()"
+            *ngIf="newPermission && hideText && !isApprovalPage"> New Record</button> -->
+
+            <button  class="btn btn-save ng-star-inserted" type="button" (click)="addRecord()"
+            *ngIf="newPermission && hideText && !isApprovalPage">
+                <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> New</button>
+
+
+            <button  class="btn btn-transparent" (clickOutside)="onClickedOutside($event)"  (click)="split()">  {{showfilterstext}}  </button> 
+      
+            <img style="display: none;" src="../assets/images/grid1.png" (click)="showFullScreen()">
+            <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+                <button class="btn customdropdown btn-transparent"  id="dropdownBasic1" ngbDropdownToggle>
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button class="dropdown-item" *ngIf="printPermission">Print</button>
+                    <!-- <button class="dropdown-item">Email</button> -->
+                    <button class="dropdown-item" *ngIf="exportPermission">Export</button>
+                    <button class="dropdown-item" *ngIf="viewLogPermission" (click)="displayLogPopUp()">
+                        View Log</button>
+                </div>
+            </div>
+        </div> </div>
+
+
+        <div class="left-section"   [class.display-filters]="!showfilters" [CustomSpinner]="showLeftPanelLoadingIcon">
+            <div class="filter-section" ngbDropdown #myDrop="ngbDropdown">
+                <div   class="flexrow space-between showlist">
+                <div class="left-search">
+                    <input type="text" [(ngModel)]="requestSearchKey" placeholder="Search requests..."
+                        (change)="onSearchInputChange($event)" class="search-filter">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                    <div class="filter-popup"  *ngIf="showFilterPopUp" ngbDropdownMenu
+                        aria-labelledby="dropdownManual" (click)="$event.stopPropagation(); myDrop.open();">
+                        <!-- (click)="$event.stopPropagation(); myDrop.open();" -->
+                        <form [formGroup]="poFilterInfoForm" class="form-horizontal">
+                            <div class="form-group row">
+                                <label class="col-form-label col-6 form-label">POPMasterCode</label>
+                                <div class="col-6">
+                                    <input type="text" #documentCode formControlName="DocumentCode"
+                                        class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-6 form-label">Supplier</label>
+                                <div class="col-6 autoComplete">
+                                    <input formControlName="Supplier" type="text" class="form-control show"
+                                        [inputFormatter]="supplierInputFormater" [ngbTypeahead]="supplierSearch"
+                                        [resultTemplate]="supplierTemplate" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label
+                                    class="col-form-label col-xl-4 col-lg-4 col-sm-6 col-6 form-label">Status</label>
+                                <div class="col-xl-8 col-lg-8 col-sm-6 col-6">
+                                    <select #workFlowStatusDropDown formControlName="WorkFlowStatusId"
+                                        class="form-control">
+                                        <option value=0>
+                                            Select
+                                        </option>
+                                        <option *ngFor="let record of workFlowStatuses"
+                                            value={{record.WorkFlowStatusid}}>
+                                            {{record.Statustext}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label  col-xl-4 col-lg-4 col-sm-6 col-6 form-label">From Date
+                                </label>
+                                <div class="col-xl-8 col-lg-8 col-sm-6 col-6 input-group">
+                                    <input class="form-control" formControlName="FromDate" ngbDatepicker
+                                        #fromDate="ngbDatepicker">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" (click)="fromDate.toggle()"
+                                            type="button">
+                                            <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-xl-4 col-lg-4 col-sm-6 col-6 form-label">To Date
+                                </label>
+                                <div class="col-xl-8 col-lg-8 col-sm-6 col-6 input-group">
+                                    <input class="form-control" formControlName="ToDate" ngbDatepicker
+                                        #toDate="ngbDatepicker">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" (click)="toDate.toggle()"
+                                            type="button">
+                                            <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-12 error errorMessage">
+                                    {{filterMessage}}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-12" style="text-align: right">
+                                    <button type="submit" (click)="filterData()" class="btn btn-save">
+                                        <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                    <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                        <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="filter-icon">
+                    <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                        <i class="fa fa-filter" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div style="float:right;margin:0px;" class="filter-icon" *ngIf="isFilterApplied"
+                    (click)="resetData()">
+                    <i class="fa fa-undo" aria-hidden="true"></i>
+                </div>
+            </div>
+
+                
+
+
+                
+                <!-- Table Starts Here -->
+
+                <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="filter-scroll" style="width:100%; float:left;">
+                    <p-table #PurchaseOrderListTable dataKey="DraftCode" [rowHover]="true" [filterDelay]="0"
+                        [globalFilterFields]="['DraftCode', 'ProjectName','ContractStartDate','WorkFlowStatus']" 
+                        [columns]="projectPoListCols" [value]="projectPoList" [rows]="25" 
+                        [scrollable]="true" [scrollHeight]="'calc(100vh - 400px)'"scrollWidth="100%" 
+                        [virtualRowHeight]="30" [virtualScroll]="true" sortMode="multiple" responsiveLayout="scroll"
+                        [rowsPerPageOptions]="[10,25,50,75,100]">
+                        <ng-template pTemplate="caption">
+                            <!-- <div class="table-header">
+                                List of Purchase Orders
+                                <span class="p-input-icon-left">
+                                    <i class="pi pi-search"></i>
+                                    <input pInputText type="text" (input)="PurchaseOrderListTable.filterGlobal($event.target.value, 'contains')"
+                                        placeholder="Global Search" />
+                                </span>
+                            </div> -->
+                        </ng-template>
+                    
+                        <ng-template pTemplate="header" let-columns>
+                            <tr style="height: 40px;">
+                                <th *ngFor="let col of projectPoListCols;let i=index" [pSortableColumn]="col.field">
+                                    {{col.header}}
+                                    <p-sortIcon [hidden]="i==0" *ngIf="i!=projectPoListCols.length-1"
+                                        [field]="col.field"></p-sortIcon>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="colgroup" let-columns>
+                            <colgroup>
+                                <col *ngFor="let col of columns" [style.width]="col.width">
+                            </colgroup>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-value let-columns let-i="rowIndex">
+                            <tr style="height:30px" [pSelectableRow]="rowData">
+                                <td>{{(value.WorkFlowStatusId!=workFlowStatus.Draft) ?
+                                    value.POPMasterCode:value.DraftCode}}</td>
+                                <td>{{value.ProjectName}}</td>
+                                <td>{{value.ContractStartDate|DisplayDateFormat}}</td>
+                                <td>{{value.WorkFlowStatus }}</td>
+                                <td class="aligncenter">
+                                    <button type="button" class="btn"
+                                        (click)="onRecordSelection(value.ProjectMasterContractId)">
+                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                    
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage" let-columns>
+                            <tr>
+                                <td [attr.colspan]="projectPoList.length">
+                                    No records found
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                <!-- Table Ends Here -->
+                <!-- List Starts Here -->
+                    <!-- <table class="table">
+                        <tr>
+                            <td style="padding: 0px;">
+                                <table class="listtable">
+                                    <tr>
+                                        <th>Record Name </th>
+                                        <th>Name</th>
+                                        <th>Start Date</th>
+                                        <th>Status </th>
+                                    </tr>
+                                    <tr [class.activerow]="record.ProjectMasterContractId==selectedProjectContractMasterId"
+                                        (click)="onRecordSelection(record.ProjectMasterContractId)"
+                                        *ngFor="let record of projectPoList">
+                                        <td> {{ (record.WorkFlowStatusId!=workFlowStatus.Draft) ?
+                                            record.POPMasterCode:record.DraftCode }}</td>
+                                        <td>{{ record.ProjectName }}</td>
+                                        <td>{{ record.ContractStartDate|DisplayDateFormat }}</td>
+                                        <td>{{ record.WorkFlowStatus }} </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table> -->
+                    <div *ngIf="projectPoList.length==0" class="col-12  listErrorMessage">
+                        {{errorMessage}}
+                    </div>
+                
+                </div>
+                <!-- List Ends Here -->
+                <ngb-pagination [maxSize]="5" *ngIf="projectPoList.length>0" (pageChange)="pageChange($event)"
+                    [collectionSize]="purchaseOrderPagerConfig.TotalRecords"
+                    class="d-flex justify-content-center" [pageSize]="purchaseOrderPagerConfig.RecordsToFetch"
+                    [(page)]="currentPage" [boundaryLinks]="true"></ngb-pagination>
+            </div>
+
+        </div>
+
+
+
+
+        </div>
+    </div>
+    <div class="row">
+     
+        <div #rightPanel class="rightPanel col-lg-12 col-md-12" [class.expand-rightcol]="rightsection">
+            <div class="fullScreenLabel">
+                <app-header></app-header>
+            </div>
+            <div>
+                <!-- [ngClass]="{'hideRightPanel1':(projectPoList.length==0 && hideText==true)}" -->
+                <form [formGroup]="projectPurchaseOrderForm" class="form-horizontal">
+                    <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+                        <div class="row fullScreenLabel">
+                            <div class="col-12">
+                                <h3 class="item-heading" style="float:none;">Project Purchase Order</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">PO Type
+                                        <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text">Project PO</label>
+                                    </div>
+                                </div>
+
+                                <div *ngIf="hideText==true" class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Requestor</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedPODetails.RequestedByUserName }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Contract Name
+                                        <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" style="word-wrap:break-word"
+                                            *ngIf="hideText">{{ selectedPODetails.ProjectName }}</label>
+                                        <input *ngIf="hideInput" type="text" formControlName="ProjectName"
+                                            class="form-control">
+                                        <div
+                                            *ngIf="hideInput && projectPurchaseOrderForm.get('ProjectName') && projectPurchaseOrderForm.get('ProjectName').errors!=null && projectPurchaseOrderForm.get('ProjectName').touched==true">
+                                            <span class="errorMessage"
+                                                *ngIf="projectPurchaseOrderForm.get('ProjectName').errors.required">Project
+                                                Name is required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Contract Start Date
+                                        <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedPODetails.ContractStartDate|DisplayDateFormat }}</label>
+                                        <div class="input-group" *ngIf="hideInput">
+                                            <input class="form-control" formControlName="ContractStartDate"
+                                                (dateSelect)="validateDates('start')"
+                                                (click)="onDatePickerFocus(startDatePicker)" ngbDatepicker
+                                                #startDatePicker="ngbDatepicker">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary"
+                                                    (click)="startDatePicker.toggle()" type="button">
+                                                    <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div
+                                            *ngIf="hideInput&&projectPurchaseOrderForm.get('ContractStartDate') && projectPurchaseOrderForm.get('ContractStartDate').errors!=null &&projectPurchaseOrderForm.get('ContractStartDate').touched==true">
+                                            <span class="errorMessage"
+                                                *ngIf="projectPurchaseOrderForm.get('ContractStartDate').errors.required">
+                                                Start Date is required</span>
+                                            <span class="errorMessage"
+                                                *ngIf="projectPurchaseOrderForm.get('ContractStartDate').errors.invalid_date">
+                                                Start Date should be less than End Date</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Contract Start Date</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label class="col-form-label form-text" *ngIf="hideText"></label>
+                                            <div class="input-group" *ngIf="hideInput">
+                                                <input class="form-control" formControlName="ContractStartDate" (dateSelect)="validateDates('start')" (click)="onDatePickerFocus(startDateDatePicker)"
+                                                    ngbDatepicker #startDateDatePicker="ngbDatepicker">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-secondary" (click)="startDateDatePicker.toggle()" type="button">
+                                                        <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="projectPurchaseOrderForm.get('ContractStartDate') && projectPurchaseOrderForm.get('ContractStartDate').errors!=null && projectPurchaseOrderForm.get('ContractStartDate').touched==true ">
+                                                <span class="errorMessage" *ngIf="projectPurchaseOrderForm.get('ContractStartDate').errors.required">Contract Start Date is required</span>
+                                                <span class="errorMessage" *ngIf="projectPurchaseOrderForm.get('ContractStartDate').errors.invalid_date">Contract Start Date should be less than End Date</span>
+                                            </div>
+                                        </div>
+                                    </div> -->
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Contract End Date
+                                        <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedPODetails.ContractEndDate|DisplayDateFormat }}</label>
+                                        <div class="input-group" *ngIf="hideInput">
+                                            <input class="form-control" formControlName="ContractEndDate"
+                                                (dateSelect)="validateDates('end')"
+                                                (click)="onDatePickerFocus(endDateDatePicker)" ngbDatepicker
+                                                #endDateDatePicker="ngbDatepicker">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary"
+                                                    (click)="endDateDatePicker.toggle()" type="button">
+                                                    <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div
+                                            *ngIf="hideInput&&projectPurchaseOrderForm.get('ContractEndDate') && projectPurchaseOrderForm.get('ContractEndDate').errors!=null &&projectPurchaseOrderForm.get('ContractEndDate').touched==true">
+                                            <span class="errorMessage"
+                                                *ngIf="projectPurchaseOrderForm.get('ContractEndDate').errors.required">End
+                                                Date is required</span>
+                                            <span class="errorMessage"
+                                                *ngIf="projectPurchaseOrderForm.get('ContractEndDate').errors.invalid_date">End
+                                                Date should be greater than Start Date</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Contract Terms
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedPODetails.ContractTerms }}</label>
+                                        <label class="col-form-label form-text" *ngIf="hideInput">{{
+                                            projectPurchaseOrderForm.get('ContractTerms').value }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">
+                                        Currency Type</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedPODetails.CurrencyCode }}</label>
+                                        <select formControlName="CurrencyId" *ngIf="hideInput" class="form-control">
+                                            <option [ngValue]="null">--Select--</option>
+                                            <option *ngFor="let record of currencies" value={{record.Id}}>
+                                                {{ record.Code }}
+                                        </select>
+                                        <div
+                                            *ngIf="projectPurchaseOrderForm.get('CurrencyId') && projectPurchaseOrderForm.get('CurrencyId').errors!=null && projectPurchaseOrderForm.get('CurrencyId').touched==true ">
+                                            <span class="errorMessage"
+                                                *ngIf="projectPurchaseOrderForm.get('CurrencyId').errors.required">
+                                                Currency Type is required
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">
+                                        Payment Terms
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text"
+                                            *ngIf="hideText">{{selectedPODetails.NoOfDays }} </label>
+                                        <select formControlName="PaymentTermsId" *ngIf="hideInput" class="form-control">
+                                            <option [ngValue]="null">--Select--</option>
+                                            <option *ngFor="let paymentTerm of paymentTerms"
+                                                [value]="paymentTerm.PaymentTermsId">
+                                                {{paymentTerm.NoOfDays}}
+                                            </option>
+                                        </select>
+                                        <div
+                                            *ngIf="projectPurchaseOrderForm.get('PaymentTermsId') && projectPurchaseOrderForm.get('PaymentTermsId').errors!=null && projectPurchaseOrderForm.get('PaymentTermsId').touched==true ">
+                                            <span class="errorMessage"
+                                                *ngIf="projectPurchaseOrderForm.get('PaymentTermsId').errors.required">
+                                                Payment Terms is required
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">
+                                        Original Contract Sum
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">
+                                            {{selectedPODetails.OriginalContractSum |number:'1.2-2'}}
+                                        </label>
+                                        <input currencyMask [options]="options2precision" (blur)="getSumValue()"
+                                            formControlName="OriginalContractSum" *ngIf="hideInput"
+                                            class="form-control" />
+                                        <div
+                                            *ngIf="projectPurchaseOrderForm.get('OriginalContractSum') && projectPurchaseOrderForm.get('OriginalContractSum').errors!=null && projectPurchaseOrderForm.get('OriginalContractSum').touched==true ">
+                                            <span class="errorMessage"
+                                                *ngIf="projectPurchaseOrderForm.get('OriginalContractSum').errors.required">Contract
+                                                Sum is required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row" *ngIf="hideText">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Total VO Sum
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text">{{selectedPODetails.TotalVOSum
+                                            |number:'1.2-2'}}</label>
+                                        <!-- <input type="number" (keydown)="restrictMinusValue($event)" min="0"  formControlName="TotalVOSum" *ngIf="hideInput" class="form-control"/>                                   -->
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">
+                                        Adjusted Contract Sum
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text"
+                                            *ngIf="hideText">{{selectedPODetails.AdjustedContractSum
+                                            |number:'1.2-2'}}</label>
+                                        <input currencyMask [options]="options2precision"
+                                            (keydown)="restrictMinusValue($event)" disabled
+                                            formControlName="AdjustedContractSum" *ngIf="hideInput"
+                                            class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">
+                                        Is Retention Applicable
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedPODetails.IsRetentionApplicable==true?'Yes':'No' }}</label>
+                                        <mat-slide-toggle *ngIf="hideInput" (change)="onRetentionChange()"
+                                            formControlName="IsRetentionApplicable"></mat-slide-toggle>
+                                    </div>
+                                </div>
+                                <div class="form-group row" *ngIf="showRetentionPer==true">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Retention (Max
+                                        %)</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedPODetails.RetentionPercentage}}</label>
+                                        <input type="number" min="0" max="100"
+                                            (keyup)="validateRetentionPercentage($event.target.value)"
+                                            (change)="onContractSumChange($event.target.value)"
+                                            formControlName="RetentionPercentage" *ngIf="hideInput"
+                                            class="form-control" />
+                                        <div
+                                            *ngIf="projectPurchaseOrderForm.get('RetentionPercentage') && projectPurchaseOrderForm.get('RetentionPercentage').errors!=null && projectPurchaseOrderForm.get('OriginalContractSum').touched==true ">
+                                            <span class="errorMessage"
+                                                *ngIf="projectPurchaseOrderForm.get('RetentionPercentage').errors.required">
+                                                Retention Percentage is required</span>
+                                        </div>
+                                        <div *ngIf="InvalidRententionPercentage">
+                                            <span class="errorMessage">Retention Percentage should be 0-100</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row" *ngIf="showRetentionMaxLimit==true">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">
+                                        Retention (Max Limit)
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text"
+                                            *ngIf="hideText">{{selectedPODetails.RetentionMaxLimit |number:'1.2-2'}}
+                                        </label>
+                                        <input (keydown)="restrictMinusValue($event)" currencyMask
+                                            [options]="options2precision" min="0" formControlName="RetentionMaxLimit"
+                                            *ngIf="hideInput" class="form-control" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row" *ngIf="showRetentionType==true">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Retention Type
+                                        <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <select *ngIf="hideInput" formControlName="RetentionTypeId" placeholder="Select"
+                                            class="form-control">
+                                            <option value="1">Fixed Retention</option>
+                                            <option value="2">Variable Retention</option>
+                                        </select>
+                                        <div
+                                            *ngIf="projectPurchaseOrderForm.get('RetentionTypeId') && projectPurchaseOrderForm.get('RetentionTypeId').errors!=null && projectPurchaseOrderForm.get('RetentionTypeId').touched==true">
+                                            <span class="errorMessage"
+                                                *ngIf="projectPurchaseOrderForm.get('RetentionTypeId').errors.required">
+                                                Retention Type is required</span>
+                                        </div>
+                                        <div *ngIf="hideText">
+                                            <label class="col-form-label">
+                                                {{ selectedPODetails.RetentionTypeId==1?"Fixed Retention" :
+                                                selectedPODetails.RetentionTypeId==2 ? "Variable Retention" : "" }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">
+                                        Contract Description
+                                        <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">
+                                            {{selectedPODetails.ContractDescription}}
+                                        </label>
+                                        <textarea required formControlName="ContractDescription" *ngIf="hideInput"
+                                            class="form-control">
+                                        </textarea>
+                                        <div
+                                            *ngIf="projectPurchaseOrderForm.get('ContractDescription') && projectPurchaseOrderForm.get('ContractDescription').errors!=null && projectPurchaseOrderForm.get('ContractDescription').touched==true">
+                                            <span class="errorMessage"
+                                                *ngIf="projectPurchaseOrderForm.get('ContractDescription').errors.required">
+                                                Contract Description is required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row" *ngIf="hideText">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Contract ID</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text">{{
+                                            selectedPODetails.WorkFlowStatusId!=workFlowStatus.Draft?selectedPODetails.POPMasterCode:selectedPODetails.DraftCode
+                                            }}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group row" *ngIf="hideText">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Status</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text">{{ selectedPODetails.WorkFlowStatus
+                                            }}&nbsp;
+                                            <span
+                                                *ngIf="selectedPODetails.CurrentApproverUserName!=''&&selectedPODetails.CurrentApproverUserName!=null">[{{
+                                                selectedPODetails.CurrentApproverUserName }}]</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group row" *ngIf="hideText">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Created Date
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text">{{
+                                            selectedPODetails.CreatedDate|DisplayDateFormat }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Department
+                                        <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedPODetails.Location }}</label>
+                                        <select #dept (change)="onDepChage($event,dept)" formControlName="LocationId"
+                                            *ngIf="hideInput" class="form-control">
+                                            <option [ngValue]="null">--Select--</option>
+                                            <option *ngFor="let record of departmentsWorkflow"
+                                                [style.color]="record.HasWorkflow?'': 'lightgray'"
+                                                [disabled]="!record.HasWorkflow" value={{record.LocationID}}>
+                                                {{record.Name}}
+                                        </select>
+                                        <div
+                                            *ngIf="projectPurchaseOrderForm.get('LocationId') && projectPurchaseOrderForm.get('LocationId').errors!=null &&projectPurchaseOrderForm.get('LocationId').touched==true">
+                                            <span class="errorMessage"
+                                                *ngIf="projectPurchaseOrderForm.get('LocationId').errors.required">
+                                                Department is required</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Supplier Name
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedPODetails.Supplier==null?"":selectedPODetails.Supplier.SupplierName
+                                            }}
+                                        </label>
+                                        <input formControlName="Supplier" type="text" *ngIf="hideInput"
+                                            class="form-control" [inputFormatter]="supplierInputFormater" #supplier
+                                            (selectItem)="supplierChange($event)" (change)="clearDefaults(supplier)"
+                                            [ngbTypeahead]="supplierActiveSearch" [resultTemplate]="supplierTemplate" />
+                                        <div
+                                            *ngIf="hideInput && projectPurchaseOrderForm.get('Supplier') && projectPurchaseOrderForm.get('Supplier').errors!=null && projectPurchaseOrderForm.get('Supplier').touched==true ">
+                                            <span class="errorMessage"
+                                                *ngIf="projectPurchaseOrderForm.get('Supplier').errors.required">Supplier
+                                                is required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Supplier Sub Codes
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedPODetails.SupplierSubCode!=null ?
+                                            selectedPODetails.SupplierSubCode.SubCode
+                                            + " ( " + selectedPODetails.SupplierSubCode.SubCodeDescription + " ) " :
+                                            ""}}</label>
+
+                                        <select *ngIf="hideInput" (change)="subCodeChange($event.target.value)"
+                                            formControlName="SupplierSubCodeId" class="form-control">
+                                            <option [ngValue]="undefined">--Select--</option>
+                                            <option *ngFor="let subCode of supplierSubCodes"
+                                                value={{subCode.SubCodeId}}>
+                                                {{subCode.SubCodeDescription}}
+                                        </select>
+
+                                        <div
+                                            *ngIf="hideInput && projectPurchaseOrderForm.get('SupplierSubCodeId') && projectPurchaseOrderForm.get('SupplierSubCodeId').errors!=null && projectPurchaseOrderForm.get('SupplierSubCodeId').touched==true">
+                                            <span class="errorMessage"
+                                                *ngIf="projectPurchaseOrderForm.get('SupplierSubCodeId').errors.required">Supplier
+                                                Sub Code is required</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Supplier ID</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">
+                                            {{selectedPODetails.Supplier==null?"":selectedPODetails.Supplier.SupplierCode}}
+                                        </label>
+                                        <label class="col-form-label form-text" *ngIf="hideInput">{{
+                                            (projectPurchaseOrderForm.get('Supplier')==null||projectPurchaseOrderForm.get('Supplier').value==undefined)?"":
+                                            projectPurchaseOrderForm.get('Supplier').value.SupplierCode }}</label>
+                                        <!-- <input formControlName="Supplier" type="text" *ngIf="hideInput" class="form-control" [inputFormatter]="supplierInputFormater"
+                                                                (selectItem)="supplierChange($event)" [ngbTypeahead]="supplierSearch" [resultTemplate]="supplierTemplate" /> 
+                                                            <div *ngIf="projectPurchaseOrderForm.get('Supplier') && projectPurchaseOrderForm.get('Supplier').errors!=null && projectPurchaseOrderForm.get('Supplier').touched==true ">
+                                                                <span class="errorMessage" *ngIf="projectPurchaseOrderForm.get('Supplier').errors.required">Supplier is required</span>
+                                                            </div>                      -->
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Supplier Address
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text"
+                                            [innerText]="projectPurchaseOrderForm.get('SupplierAddress').value">
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Type Of Service
+                                        <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                                    </label>
+                                    <div class="autoComplete col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text"
+                                            *ngIf="hideText&&selectedPODetails.Supplier!=null">{{
+                                            selectedPODetails.ServiceName }}</label>
+                                        <select formControlName="ServiceType" *ngIf="hideInput" class="form-control">
+                                            <option ngValue="0">--Select--</option>
+                                            <option *ngFor="let record of supplierServices"
+                                                value={{record.SupplierServiceID}}>
+                                                {{ record.ServiceName }}
+                                            </option>
+                                        </select>
+                                        <div
+                                            *ngIf="projectPurchaseOrderForm.get('ServiceType')&& projectPurchaseOrderForm.get('ServiceType').errors!=null &&projectPurchaseOrderForm.get('ServiceType').touched==true">
+                                            <span class="errorMessage"
+                                                *ngIf="projectPurchaseOrderForm.get('ServiceType').errors.required">
+                                                Type of service is required</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="form-group row" *ngIf="selectedPODetails.IsRetentionApplicable">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">
+                                        Retention Supplier Id
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedPODetails.RetentionSupplierCodeName}}
+                                        </label>
+                                        <select *ngIf="hideInput" formControlName="RetentionSupplierCode"
+                                            class="form-control">
+                                            <option [ngValue]="0">--Select--</option>
+                                            <option *ngFor="let subCode of retentionSubcode"
+                                                value={{subCode.SubCodeId}}>
+                                                {{subCode.SubCodeDescription}}
+                                        </select>
+                                        <div
+                                            *ngIf="projectPurchaseOrderForm.get('RetentionSupplierCode') && projectPurchaseOrderForm.get('RetentionSupplierCode').errors!=null &&projectPurchaseOrderForm.get('RetentionSupplierCode').touched==true">
+                                            <span class="errorMessage"
+                                                *ngIf="projectPurchaseOrderForm.get('RetentionSupplierCode').errors.required">
+                                                Retention Supplier Id is required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">
+                                        Tax Authority
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedPODetails.TaxGroupName }}</label>
+                                        <select formControlName="TaxAuthorityId" *ngIf="hideInput"
+                                            (change)="getTaxesByTaxAuthority($event.target.value)" class="form-control">
+                                            <option [ngValue]="0">--Select--</option>
+                                            <option *ngFor="let record of taxGroups" value={{record.TaxGroupId}}>
+                                                {{ record.TaxGroupName }}
+                                            </option>
+                                        </select>
+                                        <div
+                                            *ngIf="projectPurchaseOrderForm.get('TaxAuthorityId') && projectPurchaseOrderForm.get('TaxAuthorityId').errors!=null &&projectPurchaseOrderForm.get('TaxAuthorityId').touched==true">
+                                            <span class="errorMessage"
+                                                *ngIf="projectPurchaseOrderForm.get('TaxAuthorityId').errors.required">
+                                                Tax Authority is required</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">
+                                        Tax Rate</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedPODetails.TaxName}}</label>
+                                        <select formControlName="TaxId" *ngIf="hideInput"
+                                            (change)="calculateTotalPrice()" class="form-control">
+                                            <option [ngValue]="0">--Select--</option>
+                                            <option *ngFor="let record of taxRateTypes" value={{record.TaxId}}>
+                                                {{ record.TaxName }}
+                                            </option>
+                                        </select>
+                                        <div
+                                            *ngIf="projectPurchaseOrderForm.get('TaxId') && projectPurchaseOrderForm.get('TaxId').errors!=null &&projectPurchaseOrderForm.get('TaxId').touched==true">
+                                            <span class="errorMessage"
+                                                *ngIf="projectPurchaseOrderForm.get('TaxId').errors.required">
+                                                Tax Rate is required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">
+                                        Expense Type</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text"
+                                            *ngIf="hideText">{{selectedPODetails.ExpensesType}}</label>
+
+                                        <select formControlName="ExpensesTypeId" *ngIf="hideInput" class="form-control">
+                                            <option ngValue="0">--Select--</option>
+                                            <option *ngFor="let record of expenseTypes" value={{record.ExpensesTypeId}}>
+                                                {{ record.ExpensesType }}
+                                            </option>
+                                        </select>
+
+                                        <div
+                                            *ngIf="projectPurchaseOrderForm.get('ExpensesTypeId').errors!=null && projectPurchaseOrderForm.get('ExpensesTypeId').touched==true">
+                                            <span class="errorMessage"
+                                                *ngIf="projectPurchaseOrderForm.get('ExpensesTypeId').errors.required">
+                                                Expense Type Is Required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Remarks</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">
+                                            {{selectedPODetails.Remarks}}
+                                        </label>
+                                        <textarea formControlName="Remarks" *ngIf="hideInput" class="form-control">
+                                        </textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12" *ngIf="verifyPermission || hasCostData" style="margin-top:2%;">
+                                <h3 class="form-heading" style="float:none;">Type of Cost Category</h3>
+                            </div>
+                            <div *ngIf="verifyPermission || hasCostData" class="col-12 engineers-assigned"
+                                style="padding:0px;">
+                                <div class="col-12 table-responsive" [ngStyle]="{'max-width.px': screenWidth}">
+                                    <fieldset formArrayName="POPCostCategory">
+                                        <div style="text-align: center;">
+                                            <span class="errorMessage" *ngIf="showGridErrorMessage2">
+                                                Please Enter Cost Category Items
+                                            </span>
+                                        </div>
+                                        <p-table [columns]="POPCostCategoryColumns" (sortFunction)="customSort($event)"
+                                            [customSort]="true" sortMode="single"
+                                            [value]="hideInput?projectPurchaseOrderForm.get('POPCostCategory')['controls']:selectedPODetails.POPCostCategory">
+                                            <ng-template pTemplate="emptymessage">
+                                                <tr>
+                                                    <td colspan="12" style='text-align: center;'>
+                                                        <b>{{ gridNoMessageToDisplay }}</b>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="colgroup" let-columns>
+                                                <colgroup>
+                                                    <ng-template ngFor let-data [ngForOf]="POPCostCategoryColumns">
+                                                        <col [style.width]="data.width">
+                                                    </ng-template>
+                                                </colgroup>
+                                            </ng-template>
+                                            <ng-template pTemplate="header" let-columns>
+                                                <tr>
+                                                    <th *ngFor="let col of POPCostCategoryColumns"
+                                                        [pSortableColumn]="col.field">
+                                                        {{col.header}}
+                                                        <span
+                                                            *ngIf="(col.field=='ContractValue')&&selectedPODetails.CurrencySymbol!=null">
+                                                            &nbsp; ( {{ selectedPODetails.CurrencySymbol }} )
+                                                        </span>
+                                                        <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
+                                                            ariaLabelDesc="Activate to sort in descending order"
+                                                            ariaLabelAsc="Activate to sort in ascending order">
+                                                        </p-sortIcon>
+                                                    </th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-rowData let-i="rowIndex"
+                                                let-columns="columns">
+                                                <tr *ngIf="hideInput" [formGroupName]="i">
+                                                    <td> {{ i + 1 }} </td>
+                                                    <td>
+                                                        <input type="text" style="width:100%;" maxlength="5"
+                                                            (keyup)="onTypeOfCostKeyUp($event)"
+                                                            (change)="onTypeOfCostChange($event,i)" class="form-control"
+                                                            formControlName="TypeOfCost" />
+                                                    </td>
+                                                    <td>
+                                                        <textarea style="width:100%;" formControlName="CostDescription"
+                                                            class="form-control">
+                                                        </textarea>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" style="width:100%;"
+                                                            (focus)="displayAccountCodePopUp(i, 'GLCost')"
+                                                            formControlName="GL_Cost" class="form-control" />
+                                                    </td>
+                                                    <td>
+                                                        <textarea style="width:100%;"
+                                                            formControlName="GL_Cost_Description" class="form-control">
+                                                        </textarea>
+                                                    </td>
+                                                    <td>
+                                                        <select formControlName="GST_Group"
+                                                            (change)="getTaxTypesByTaxGroup($event.target.value,i,true)"
+                                                            class="form-control">
+                                                            <option [ngValue]="0">--Select--</option>
+                                                            <option *ngFor="let record of taxGroups"
+                                                                value={{record.TaxGroupId}}>
+                                                                {{ record.TaxGroupName }}
+                                                            </option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select formControlName="GST_Class" class="form-control">
+                                                            <option [ngValue]="undefined">--Select--</option>
+                                                            <option
+                                                                *ngFor="let item of projectPurchaseOrderForm.get('POPCostCategory').controls[i].get('Taxes').value ; "
+                                                                value={{item.TaxId}}>
+                                                                {{ item.TaxName }}
+                                                            </option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" formControlName="GL_Retention"
+                                                            style="width:100%;"
+                                                            (focus)="displayAccountCodePopUp(i, 'GLRetention')"
+                                                            class="form-control" />
+                                                    </td>
+                                                    <td>
+                                                        <textarea style="width:100%;"
+                                                            formControlName="GL_Retention_Description"
+                                                            class="form-control">
+                                                        </textarea>
+                                                    </td>
+                                                    <td>
+                                                        <select formControlName="GL_GroupRetention"
+                                                            (change)="getTaxTypesByTaxGroup($event.target.value,i,false)"
+                                                            class="form-control">
+                                                            <option [ngValue]="0">--Select--</option>
+                                                            <option *ngFor="let record of taxGroups"
+                                                                value={{record.TaxGroupId}}>
+                                                                {{ record.TaxGroupName }}
+                                                            </option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select formControlName="GL_ClassRetention"
+                                                            class="form-control">
+                                                            <option [ngValue]="undefined">--Select--</option>
+                                                            <option
+                                                                *ngFor="let item of projectPurchaseOrderForm.get('POPCostCategory').controls[i].get('RetentionTaxes').value ; "
+                                                                value={{item.TaxId}}>
+                                                                {{ item.TaxName }}
+                                                            </option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" formControlName="Prefix"
+                                                            style="float:left;width:80%;" class="form-control" />
+                                                        <div class="gridIconsStyle">
+                                                            <i class="fa fa-trash gridRemoveIcon"
+                                                                (click)="removeGridItem(i,'POPCostCategory')"
+                                                                aria-hidden="true"></i>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr *ngIf="hideText">
+                                                    <td> {{ i + 1 }} </td>
+                                                    <td> {{ rowData.TypeOfCost }}
+                                                        <div
+                                                            *ngIf="projectPurchaseOrderForm.get('POPCostCategory').controls[i].get('TypeOfCost').errors!=null">
+                                                            <span class="errorMessage"
+                                                                *ngIf="projectPurchaseOrderForm.get('POPCostCategory').controls[i].get('TypeOfCost').errors.required">
+                                                                * Required
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                    <td> {{ rowData.CostDescription }}
+                                                        <div
+                                                            *ngIf="projectPurchaseOrderForm.get('POPCostCategory').controls[i].get('CostDescription').errors!=null">
+                                                            <span class="errorMessage"
+                                                                *ngIf="projectPurchaseOrderForm.get('POPCostCategory').controls[i].get('CostDescription').errors.required">
+                                                                * Required
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                    <td> {{ rowData.GL_Cost }}
+                                                        <div
+                                                            *ngIf="projectPurchaseOrderForm.get('POPCostCategory').controls[i].get('GL_Cost').errors!=null">
+                                                            <span class="errorMessage"
+                                                                *ngIf="projectPurchaseOrderForm.get('POPCostCategory').controls[i].get('GL_Cost').errors.required">
+                                                                * Required
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                    <td> {{ rowData.GL_Cost_Description }}
+                                                        <div
+                                                            *ngIf="projectPurchaseOrderForm.get('POPCostCategory').controls[i].get('GL_Cost_Description').errors!=null">
+                                                            <span class="errorMessage"
+                                                                *ngIf="projectPurchaseOrderForm.get('POPCostCategory').controls[i].get('GL_Cost_Description').errors.required">
+                                                                * Required
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                    <td> {{ rowData.GST_GroupName }}
+                                                        <div
+                                                            *ngIf="projectPurchaseOrderForm.get('POPCostCategory').controls[i].get('GST_Group').errors!=null">
+                                                            <span class="errorMessage"
+                                                                *ngIf="projectPurchaseOrderForm.get('POPCostCategory').controls[i].get('GST_Group').errors.required">
+                                                                * Required
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                    <td> {{ rowData.GST_ClassName }}
+                                                        <div
+                                                            *ngIf="projectPurchaseOrderForm.get('POPCostCategory').controls[i].get('GST_Class').errors!=null">
+                                                            <span class="errorMessage"
+                                                                *ngIf="projectPurchaseOrderForm.get('POPCostCategory').controls[i].get('GST_Class').errors.required">
+                                                                * Required
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                    <td> {{ rowData.GL_Retention }}
+                                                        <div
+                                                            *ngIf="projectPurchaseOrderForm.get('POPCostCategory').controls[i].get('GL_Retention').errors!=null">
+                                                            <span class="errorMessage"
+                                                                *ngIf="projectPurchaseOrderForm.get('POPCostCategory').controls[i].get('GL_Retention').errors.required">
+                                                                * Required
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                    <td> {{ rowData.GL_Retention_Description }}
+                                                        <div
+                                                            *ngIf="projectPurchaseOrderForm.get('POPCostCategory').controls[i].get('GL_Retention_Description').errors!=null">
+                                                            <span class="errorMessage"
+                                                                *ngIf="projectPurchaseOrderForm.get('POPCostCategory').controls[i].get('GL_Retention_Description').errors.required">
+                                                                * Required
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                    <td> {{ rowData.GL_GroupRetentionName }}
+                                                        <div
+                                                            *ngIf="projectPurchaseOrderForm.get('POPCostCategory').controls[i].get('GL_GroupRetention').errors!=null">
+                                                            <span class="errorMessage"
+                                                                *ngIf="projectPurchaseOrderForm.get('POPCostCategory').controls[i].get('GL_GroupRetention').errors.required">
+                                                                * Required
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                    <td> {{ rowData.GL_ClassRetentionName }}
+                                                        <div
+                                                            *ngIf="projectPurchaseOrderForm.get('POPCostCategory').controls[i].get('GL_ClassRetention').errors!=null">
+                                                            <span class="errorMessage"
+                                                                *ngIf="projectPurchaseOrderForm.get('POPCostCategory').controls[i].get('GL_ClassRetention').errors.required">
+                                                                * Required
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                    <td> {{ rowData.Prefix }}
+                                                        <div
+                                                            *ngIf="projectPurchaseOrderForm.get('POPCostCategory').controls[i].get('Prefix').errors!=null">
+                                                            <span class="errorMessage"
+                                                                *ngIf="projectPurchaseOrderForm.get('POPCostCategory').controls[i].get('Prefix').errors.required">
+                                                                * Required
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                        <div *ngIf="hideInput">
+                                            <input (keydown)="restrictMinusValue($event)" min="0"
+                                                [(ngModel)]="linesToAddCostCategory"
+                                                [ngModelOptions]="{standalone: true}" class="form-control linesToAdd">
+                                            <button type="submit"
+                                                (click)="addGridItem(linesToAddCostCategory,'POPCostCategory')"
+                                                class="addLine">
+                                                <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Line
+                                            </button>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                            <div *ngIf="verifyPermission || hasApportimentData" class="col-12" style="margin-top:2%;">
+                                <h3 class="form-heading" style="float:none;">Basis of apportionment</h3>
+                            </div>
+                            <div *ngIf="verifyPermission || hasApportimentData" class="col-12 engineers-assigned"
+                                style="padding:0px;">
+                                <div class="col-12 table-responsive" [ngStyle]="{'max-width.px': screenWidth}">
+                                    <fieldset formArrayName="POPApportionment">
+                                        <div style="text-align: center;">
+                                            <span class="errorMessage" *ngIf="showGridErrorMessage2">
+                                                Please Enter Apportionments
+                                            </span>
+                                        </div>
+                                        <p-table [columns]="POPApportionmentColumns" (sortFunction)="customSort($event)"
+                                            [customSort]="true" sortMode="single"
+                                            [value]="hideInput==true?projectPurchaseOrderForm.get('POPApportionment')['controls']:selectedPODetails.POPApportionment">
+                                            <ng-template pTemplate="emptymessage">
+                                                <tr>
+                                                    <td colspan="4" style='text-align: center;'>
+                                                        <b>{{ gridNoMessageToDisplay }}</b>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="colgroup" let-columns>
+                                                <colgroup>
+                                                    <!-- <ng-template ngFor let-data [ngForOf]="columns"> -->
+                                                    <!-- <col  [style.width]="data.width"> -->
+                                                    <col colspan="1" style="width:5%;">
+                                                    <col colspan="1" style="width:15%;">
+                                                    <ng-template ngFor let-data let-count
+                                                        [ngForOf]="hideText?selectedPODetails.POPCostCategory:projectPurchaseOrderForm.get('POPCostCategory')['controls']">
+                                                        <col colspan="2" [ngStyle]="{ 'width':(70/(count*2))+'%' }">
+                                                    </ng-template>
+                                                    <col colspan="1" style="width:10%;">
+                                                    <col colspan="1" style="width:10%;">
+
+                                                    <!-- </ng-template>                      -->
+                                                </colgroup>
+                                            </ng-template>
+                                            <ng-template pTemplate="header" let-rowData let-columns>
+                                                <tr>
+                                                    <th colspan="1" style="text-align: center;" pSortableColumn="Sno">
+                                                        S.no
+                                                        <!-- <p-sortIcon [field]="data.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon> -->
+                                                    </th>
+                                                    <th colspan="1" style="text-align: center;"
+                                                        pSortableColumn="Method">
+                                                        Method
+                                                        <!-- <p-sortIcon [field]="data.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon> -->
+                                                    </th>
+                                                    <ng-template ngFor let-data let-count
+                                                        [ngForOf]="hideText?selectedPODetails.POPCostCategory:projectPurchaseOrderForm.get('POPCostCategory')['controls']">
+                                                        <th colspan="2" style="text-align: center;">
+                                                            {{ hideText?data.TypeOfCost:data.get('TypeOfCost').value }}
+                                                            <p-sortIcon [field]="data.field"
+                                                                ariaLabel="Activate to sort"
+                                                                ariaLabelDesc="Activate to sort in descending order"
+                                                                ariaLabelAsc="Activate to sort in ascending order">
+                                                            </p-sortIcon>
+                                                        </th>
+                                                    </ng-template>
+                                                    <th colspan="1" style="text-align: center;" pSortableColumn="Total">
+                                                        Total
+                                                    </th>
+                                                    <th colspan="1" style="text-align: center;"
+                                                        pSortableColumn="Remrks">
+                                                        Remarks
+                                                    </th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-rowData let-i="rowIndex"
+                                                let-columns="columns">
+                                                <tr *ngIf="hideInput" [formGroupName]="i">
+                                                    <td style="width:5%"> {{ i + 1 }} </td>
+                                                    <td style="width:15%">
+                                                        <input type="text" formControlName="Method"
+                                                            (change)="onMethodChange($event)"
+                                                            style="float:left;width:80%;" class="form-control" />
+                                                    </td>
+                                                    <ng-container style="width:70%;"
+                                                        formArrayName="ApportionmentDetails">
+                                                        <ng-container
+                                                            *ngFor="let data of rowData.get('ApportionmentDetails')['controls'];let j=index;let controlsLength = count">
+                                                            <td [formGroupName]="j"
+                                                                [ngStyle]="{ 'width':(70/(controlsLength))+'%' }">
+                                                                <!-- <input type="number"  (keydown)="restrictMinusValue($event)" min="0"  style="text-align: right;float:left;width:80%;" class="form-control" [formControlName]="data.get('RowIndex').value" /> -->
+                                                                <input currencyMask [options]="options8precision"
+                                                                    formControlName="Amount"
+                                                                    (keydown)="restrictMinusValue($event)"
+                                                                    (blur)="onAmountChange(i)"
+                                                                    style="text-align: right;float:left;width:80%;"
+                                                                    class="form-control" />
+                                                                <div class="errorMessage"
+                                                                    style="float:left; width:100%;"
+                                                                    *ngIf="projectPurchaseOrderForm.get('POPApportionment').controls[i].get('Amount')!=null &&
+                                                                    projectPurchaseOrderForm.get('POPApportionment').controls[i].get('Amount').errors!=null ">
+                                                                    <span
+                                                                        *ngIf="projectPurchaseOrderForm.get('POPApportionment').controls[i].get('Amount').errors.griderror">
+                                                                        Value should not be zero
+                                                                    </span>
+                                                                </div>
+                                                            </td>
+                                                            <td style="text-align: right"
+                                                                [ngStyle]="{ 'width':(70/(controlsLength*3))+'%' }">
+                                                                {{
+                                                                (data.get('Amount').value/rowData.get('Total').value)|
+                                                                percent:'2.8-8' }}
+                                                            </td>
+                                                        </ng-container>
+                                                    </ng-container>
+                                                    <td style="width:10%">
+                                                        {{ rowData.get('Total').value | number:'1.8-8' }}
+                                                        <div class="errorMessage" style="float:left; width:100%;"
+                                                            *ngIf="projectPurchaseOrderForm.get('POPApportionment').controls[i].get('Total')!=null &&
+                                                            projectPurchaseOrderForm.get('POPApportionment').controls[i].get('Total').errors!=null ">
+                                                            <span
+                                                                *ngIf="projectPurchaseOrderForm.get('POPApportionment').controls[i].get('Total').errors.griderror">
+                                                                Value should not be zero
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div style='float:left;width:80%;'>
+                                                            <input type="text" formControlName="Remarks"
+                                                                style="width:100%;" class="form-control" />
+                                                        </div>
+
+                                                        <!-- <div style='float:left;width:80%;'>
+                                                            <input type="text" formControlName="Remarks"
+                                                                style="width:100%;" class="form-control" />
+
+                                                        </div> -->
+                                                        <div style='float:left;width:20%;' class="gridIconsStyle">
+                                                            <i class="fa fa-trash gridRemoveIcon"
+                                                                (click)="removeGridItem(i,'POPApportionment')"
+                                                                aria-hidden="true"></i>
+                                                            <!-- (click)="removeGridItem2(i)" -->
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr *ngIf="hideText">
+                                                    <td> {{ i + 1 }} </td>
+                                                    <td> {{ rowData.Method }}
+                                                        <div style='float:left;width:80%;'
+                                                            *ngIf="projectPurchaseOrderForm.get('POPApportionment').controls[i].get('Method').errors!=null">
+                                                            <span class="errorMessage"
+                                                                *ngIf="projectPurchaseOrderForm.get('POPApportionment').controls[i].get('Method').errors.required">
+                                                                * Required</span>
+                                                        </div>
+                                                    </td>
+                                                    <ng-template ngFor let-j="index" let-data
+                                                        [ngForOf]="rowData.ApportionmentDetails">
+                                                        <td style="text-align: right">
+                                                            {{ data.Amount | number:'1.8-8' }}
+                                                        </td>
+                                                        <td style="text-align: right">
+                                                            {{ ((data.Amount)/( rowData.Total))|percent :'2.8-8' }}
+                                                        </td>
+                                                    </ng-template>
+                                                    <td style="text-align: right"> {{ rowData.Total }} </td>
+                                                    <td> {{ rowData.Remarks }}
+                                                        <div style='float:left;width:80%;'
+                                                            *ngIf="projectPurchaseOrderForm.get('POPApportionment').controls[i].get('Remarks').errors!=null">
+                                                            <span class="errorMessage"
+                                                                *ngIf="projectPurchaseOrderForm.get('POPApportionment').controls[i].get('Remarks').errors.required">
+                                                                * Required</span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                        <div *ngIf="hideInput">
+                                            <input (keydown)="restrictMinusValue($event)" min="0"
+                                                [(ngModel)]="linesToAddApportionment"
+                                                [ngModelOptions]="{standalone: true}" class="form-control linesToAdd">
+                                            <button type="submit"
+                                                (click)="addGridItem(linesToAddApportionment,'POPApportionment')"
+                                                class="addLine">
+                                                <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Line
+                                            </button>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+
+                            <div *ngIf="verifyPermission || hasDistributionData" class="col-12" style="margin-top:2%;">
+                                <h3 class="form-heading" style="float:none;">Distribution Summary</h3>
+                            </div>
+                            <div *ngIf="verifyPermission || hasDistributionData" class="col-12 table-responsive" [ngStyle]="{'max-width.px': screenWidth}">
+                                <fieldset formArrayName="POPDistributionSummaryItems">
+                                    <!-- <div style="text-align: center;">
+                                        <span class="errorMessage" *ngIf="showGridErrorMessage2">
+                                            Please enter Distribution Summary
+                                        </span>
+                                    </div> -->
+                                    <p-table [columns]="POPDistributionSummaryColumns"
+                                        (sortFunction)="customSort($event)" [customSort]="true" sortMode="single"
+                                        [value]="hideInput==true?projectPurchaseOrderForm.get('POPDistributionSummaryItems')['controls']:selectedPODetails.POPDistributionSummaryItems">
+                                        <ng-template pTemplate="emptymessage">
+                                            <tr>
+                                                <td colspan="5" style='text-align: center;'>
+                                                    <b>{{ gridNoMessageToDisplay }}</b>
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="colgroup" let-columns>
+                                            <colgroup>
+                                                <ng-template ngFor let-data [ngForOf]="POPDistributionSummaryColumns">
+                                                    <!-- <col  [style.width]="data.width"> -->
+                                                    <col colspan="1" [style.width]="data.width">
+                                                </ng-template>
+                                            </colgroup>
+                                        </ng-template>
+                                        <ng-template pTemplate="header" let-columns>
+                                            <tr>
+                                                <ng-template ngFor let-data [ngForOf]="POPDistributionSummaryColumns">
+                                                    <th style="text-align: center;" [pSortableColumn]="data.field">
+                                                        {{data.header}}
+                                                        <p-sortIcon [field]="data.field" ariaLabel="Activate to sort"
+                                                            ariaLabelDesc="Activate to sort in descending order"
+                                                            ariaLabelAsc="Activate to sort in ascending order">
+                                                        </p-sortIcon>
+                                                    </th>
+                                                </ng-template>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-rowData let-i="rowIndex"
+                                            let-columns="columns">
+                                            <tr *ngIf="hideInput==true" [formGroupName]="i">
+                                                <td>
+                                                    {{ i + 1 }}
+                                                </td>
+                                                <td>
+                                                    <select *ngIf="hideInput" formControlName="DepartmentId"
+                                                        class="form-control">
+                                                        <option [ngValue]="undefined">--Select--</option>
+                                                        <option *ngFor="let record of departments"
+                                                            value={{record.LocationID}}>
+                                                            {{record.Name}}
+                                                    </select>
+
+                                                    <!-- <input type="text" class="form-control" [inputFormatter]="companyInputFormater" [ngbTypeahead]="companySearch" [resultTemplate]="companyTemplate"
+                                                            formControlName="Company" /> -->
+                                                </td>
+                                                <td>
+                                                    <input type="number" (keydown)="restrictMinusValue($event)" min="0"
+                                                        max="100" style="text-align: right;float:left;width:80%;"
+                                                        class="form-control"
+                                                        (change)="onDistributionPercentageChange($event.target.value,i)"
+                                                        formControlName="DistributionPercentage" />
+                                                    <div class="errorMessage" style="float:left; width:100%;"
+                                                        *ngIf="projectPurchaseOrderForm.get('POPDistributionSummaryItems').controls[i].get('DistributionPercentage')!=null &&
+                                                            projectPurchaseOrderForm.get('POPDistributionSummaryItems').controls[i].get('DistributionPercentage').errors!=null ">
+                                                        <span
+                                                            *ngIf="projectPurchaseOrderForm.get('POPDistributionSummaryItems').controls[i].get('DistributionPercentage').errors.totalPercentageError">
+                                                            Percentage total must be equal to 100%
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <input type="number" (keydown)="restrictMinusValue($event)" min="0"
+                                                        max="100" style="text-align: right;float:left;width:80%;"
+                                                        class="form-control"
+                                                        (change)="onContractAmountChange($event.target.value,i)"
+                                                        formControlName="ContractAmount" />
+                                                    <div class="errorMessage" style="float:left; width:100%;"
+                                                        *ngIf="projectPurchaseOrderForm.get('POPDistributionSummaryItems').controls[i].get('ContractAmount')!=null &&
+                                                            projectPurchaseOrderForm.get('POPDistributionSummaryItems').controls[i].get('ContractAmount').errors!=null ">
+                                                        <span
+                                                            *ngIf="projectPurchaseOrderForm.get('POPDistributionSummaryItems').controls[i].get('ContractAmount').errors.totalContractAmountError">
+                                                            Percentage total must be equal to 100%
+                                                        </span>
+                                                    </div>
+
+                                                    <!-- <input type="number" (keydown)="restrictMinusValue($event)" min="0" style="text-align: right;float:left;width:80%;" class="form-control"
+                                                            (change)="onContractAmountChange($event.target.value,i)" formControlName="ContractAmount"
+                                                        />
+    
+                                                        <div class="errorMessage" style="float:left; width:100%;" *ngIf="projectPurchaseOrderForm.get('POPDistributionSummaryItems').controls[i].get('ContractAmount')!=null &&
+                                                        projectPurchaseOrderForm.get('POPDistributionSummaryItems').controls[i].get('ContractAmount').errors!=null ">
+                                                            <span *ngIf="projectPurchaseOrderForm.get('POPDistributionSummaryItems').controls[i].get('ContractAmount').errors.totalContractAmountError">
+                                                                Amount total must be equal to Retention Percentage 
+                                                            </span>
+                                                        </div> -->
+                                                </td>
+                                                <!-- <td>
+                                                            <input type="number" (keydown)="restrictMinusValue($event)" min="0" style="text-align: right;float:left;width:80%;" class="form-control"
+                                                                (change)="onContractAmountChange($event.target.value,i)" formControlName="ContractAmount"
+                                                            />
+        
+                                                            <div class="errorMessage" style="float:left; width:100%;" *ngIf="projectPurchaseOrderForm.get('POPDistributionSummaryItems').controls[i].get('ContractAmount')!=null &&
+                                                            projectPurchaseOrderForm.get('POPDistributionSummaryItems').controls[i].get('ContractAmount').errors!=null ">
+                                                                <span *ngIf="projectPurchaseOrderForm.get('POPDistributionSummaryItems').controls[i].get('ContractAmount').errors.totalContractAmountError">
+                                                                    Amount total must be equal to contract sum
+                                                                </span>
+                                                            </div>
+                                                        </td> -->
+
+                                                <td>
+                                                    <!-- <input type="number" formControlName="RetentionCode" (keydown)="restrictMinusValue($event)" min="0" style="text-align: right;float:left;width:80%;"
+                                                            class="form-control" formControlName="RetentionAmount" /> -->
+                                                    <input type="text" style="text-align: right;float:left;width:80%;"
+                                                        (focus)="displayAccountCodePopUp(i,'RetentionCode')"
+                                                        formControlName="RetentionCode" class="form-control" />
+                                                    <span class="gridIconsStyle">
+                                                        <i class="fa fa-trash gridRemoveIcon"
+                                                            (click)="removeGridItem(i,'POPDistributionSummaryItems')"
+                                                            aria-hidden="true"></i>
+                                                        <!-- (click)="removeGridItem3(i,'POPDistributionSummaryItems')" -->
+                                                    </span>
+
+                                                </td>
+                                            </tr>
+                                            <tr *ngIf="hideText">
+                                                <td>
+                                                    {{ i + 1 }}
+                                                </td>
+                                                <td>
+                                                    {{ rowData.LocationName }}
+                                                </td>
+                                                <td>
+                                                    {{ rowData.DistributionPercentage }}
+                                                </td>
+                                                <td>
+                                                    {{ rowData.ContractAmount }}
+                                                </td>
+                                                <td>
+                                                    {{rowData.RetentionCode}}
+                                                </td>
+                                                <!-- <td>
+                                                        {{ rowData.ThisCerification }}
+                                                    </td>
+                                                    <td>
+                                                        {{ rowData.RetentionAmount }}
+                                                    </td> -->
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                    <div *ngIf="hideInput">
+                                        <input type="number" (keydown)="restrictMinusValue($event)" min="0"
+                                            [(ngModel)]="linesToAddDistribution" [ngModelOptions]="{standalone: true}"
+                                            class="form-control linesToAdd">
+                                        <button type="submit"
+                                            (click)="addGridItem(linesToAddDistribution,'POPDistributionSummaryItems')"
+                                            class="addLine">
+                                            <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Line
+                                        </button>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <div class="col-12" style="margin-top:2%;">
+                                <h3 class="form-heading" style="float:none;">Line Items</h3>
+                            </div>
+                            <div class="col-12 engineers-assigned" style="padding:0px;">
+                                <div class="col-12 table-responsive" [ngStyle]="{'max-width.px': screenWidth}">
+                                    <fieldset>
+                                        <div style="text-align: center;">
+                                            <span class="errorMessage" *ngIf="showGridErrorMessage1">
+                                                Please enter amount for atleast one Line Item
+                                            </span>
+                                        </div>
+                                        <div formArrayName="ProjectMasterContractItems">
+                                            <p-table [columns]="projectMasterContractItemColumns"
+                                                (sortFunction)="customSort($event)" [customSort]="true"
+                                                sortMode="single"
+                                                [value]="hideInput==true?projectPurchaseOrderForm.get('ProjectMasterContractItems')['controls']:selectedPODetails.ProjectMasterContractItems">
+                                                <ng-template pTemplate="emptymessage">
+                                                    <tr>
+                                                        <td colspan="projectMasterContractItemColumns.length"
+                                                            style='text-align: center;'>
+                                                            <b>{{ gridNoMessageToDisplay }}</b>
+                                                        </td>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="colgroup" let-columns>
+                                                    <colgroup>
+                                                        <ng-template ngFor let-data
+                                                            [ngForOf]="projectMasterContractItemColumns">
+                                                            <col [style.width]="data.width">
+                                                        </ng-template>
+                                                    </colgroup>
+                                                </ng-template>
+                                                <ng-template pTemplate="header" let-columns>
+                                                    <tr>
+                                                        <th *ngFor="let col of projectMasterContractItemColumns"
+                                                            [pSortableColumn]="col.field">
+                                                            {{col.header}}
+                                                            <span
+                                                                *ngIf="(col.field=='ContractValue')&&selectedPODetails.CurrencySymbol!=null">
+                                                                &nbsp; ( {{ selectedPODetails.CurrencySymbol }} )
+                                                            </span>
+                                                            <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
+                                                                ariaLabelDesc="Activate to sort in descending order"
+                                                                ariaLabelAsc="Activate to sort in ascending order">
+                                                            </p-sortIcon>
+                                                        </th>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="body" let-rowData let-i="rowIndex"
+                                                    let-columns="columns">
+                                                    <tr *ngIf="hideInput" [formGroupName]="i">
+                                                        <td> {{ i + 1 }} </td>
+                                                        <td>
+                                                            <textarea formControlName="ItemDescription" autoresize
+                                                                type="text" class="form-control">
+                                                                </textarea>
+                                                        </td>
+                                                        <!-- <td>
+                                                            <select *ngIf="hideInput" class="form-control"
+                                                                formControlName="AccountCodeCategoryId"
+                                                                (change)="onCategoryChange($event.target.value,i)">
+                                                                <option value="0">--Select--</option>
+                                                                <option
+                                                                    *ngFor="let category of expenseAccountCodeCategories"
+                                                                    value="{{category.AccountCodeCategoryId}}">
+                                                                    {{category.AccountCodeName}}
+                                                                </option>
+                                                            </select>                                                             
+                                                        </td> -->
+                                                        <!-- <td>
+                                                            <input formControlName="Expense" type="text"
+                                                                (click)="itemClick(i)" class="form-control"
+                                                                [inputFormatter]="ExpenseInputFormater"
+                                                                (selectItem)="onExpenseChange($event,i)"
+                                                                [ngbTypeahead]="ExpenseitemMasterSearch"
+                                                                [resultTemplate]="AccountCodeTemplate" />
+                                                        </td> -->
+                                                        <!-- <td>
+                                                            <select formControlName="TypeOfCostName"
+                                                                class="form-control">
+                                                                <option [ngValue]="undefined">--Select--</option>
+                                                                <option
+                                                                    *ngFor="let costcategory of typeofCostCategaries"
+                                                                    value={{costcategory}}>
+                                                                    {{ costcategory }}
+                                                            </select>
+                                                            <div
+                                                                *ngIf="projectPurchaseOrderForm.get('ProjectMasterContractItems').controls[i].get('TypeOfCostName').errors!=null && projectPurchaseOrderForm.get('ProjectMasterContractItems').controls[i].get('TypeOfCostName').touched==true">
+                                                                <span class="errorMessage"
+                                                                    *ngIf="projectPurchaseOrderForm.get('ProjectMasterContractItems').controls[i].get('TypeOfCostName').errors.required">
+                                                                </span>
+                                                            </div>
+                                                        </td> -->
+                                                        <td>
+                                                            <select formControlName="ApportionmentMethod"
+                                                                class="form-control">
+                                                                <option [ngValue]="undefined">--Select--</option>
+                                                                <option
+                                                                    *ngFor="let apportionmentMethod of typeofApportionmentMethods"
+                                                                    value={{apportionmentMethod}}>
+                                                                    {{ apportionmentMethod }}
+                                                            </select>
+                                                            <div
+                                                                *ngIf="projectPurchaseOrderForm.get('ProjectMasterContractItems').controls[i].get('ApportionmentMethod').errors!=null && projectPurchaseOrderForm.get('ProjectMasterContractItems').controls[i].get('ApportionmentMethod').touched==true">
+                                                                <span class="errorMessage"
+                                                                    *ngIf="projectPurchaseOrderForm.get('ProjectMasterContractItems').controls[i].get('ApportionmentMethod').errors.required">
+                                                                </span>
+                                                            </div>
+                                                            <!-- <input type="text" class="form-control" formControlName="POPApportionmentId" /> -->
+
+                                                        </td>
+                                                        <td>
+                                                            <input currencyMask [options]="options2precision"
+                                                                (keydown)="restrictMinusValue($event)"
+                                                                style="float:left;text-align: right;width:80%;"
+                                                                class="form-control"
+                                                                (blur)="calculateTotalPrice(i,projectPurchaseOrderForm.get('ProjectMasterContractItems').controls[i])"
+                                                                formControlName="ContractValue" />
+
+                                                            <div class="errorMessage" style="float:left; width:100%;"
+                                                                *ngIf="projectPurchaseOrderForm.get('ProjectMasterContractItems').controls[i].get('ContractValue')!=null &&
+                                                                projectPurchaseOrderForm.get('ProjectMasterContractItems').controls[i].get('ContractValue').errors!=null ">
+                                                                <span
+                                                                    *ngIf="projectPurchaseOrderForm.get('ProjectMasterContractItems').controls[i].get('ContractValue').errors.griderror">
+                                                                    Value should not be zero
+                                                                </span>
+                                                                <span
+                                                                    *ngIf="projectPurchaseOrderForm.get('ProjectMasterContractItems').controls[i].get('ContractValue').errors.totalError">
+                                                                    Line total must be equal to Contract Sum
+                                                                </span>
+                                                            </div>
+                                                        </td>
+                                                        <td style="text-align: right">
+                                                            {{rowData.VOSum | number:'1.2-2'}}
+                                                        </td>
+                                                        <td style="text-align: right">
+                                                            {{rowData.VOSum+rowData.ContractValue | number:'1.2-2'}}
+                                                            &nbsp;
+                                                            <span class="gridIconsStyle">
+                                                                <i class="fa fa-trash gridRemoveIcon"
+                                                                    (click)="removeGridItem(i,'ProjectMasterContractItems')"
+                                                                    aria-hidden="true"></i>
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr *ngIf="hideText">
+                                                        <td> {{ i + 1 }} </td>
+                                                        <td>
+                                                            {{ rowData.ItemDescription }}
+                                                            <div
+                                                                *ngIf="projectPurchaseOrderForm.get('ProjectMasterContractItems').controls[i]&&projectPurchaseOrderForm.get('ProjectMasterContractItems').controls[i].get('ItemDescription').errors!=null ">
+                                                                <span class="errorMessage"
+                                                                    *ngIf="projectPurchaseOrderForm.get('ProjectMasterContractItems').controls[i].get('ItemDescription').errors.required">
+                                                                    Item Description Is Required
+                                                                </span>
+                                                            </div>
+                                                        </td>
+                                                        <!-- <td>{{ rowData.Expense.AccountCodeName}} </td>
+                                                        <td>{{ rowData.AccountCode }} </td>
+                                                        <td> {{ rowData.TypeOfCostName }}</td> -->
+                                                        <td> {{ rowData.ApportionmentMethod }}
+                                                            <div
+                                                                *ngIf="projectPurchaseOrderForm.get('ProjectMasterContractItems').controls[i]&&projectPurchaseOrderForm.get('ProjectMasterContractItems').controls[i].get('ApportionmentMethod').errors!=null ">
+                                                                <span class="errorMessage"
+                                                                    *ngIf="projectPurchaseOrderForm.get('ProjectMasterContractItems').controls[i].get('ApportionmentMethod').errors.required">
+                                                                    Apportionment Is Required
+                                                                </span>
+                                                            </div>
+                                                        </td>
+                                                        <td style="text-align: right">
+                                                            {{ (rowData.ContractValue) |number:'1.2-2' |
+                                                            negativeInParenthesis}}
+                                                            <div class="errorMessage" style="float:left; width:100%;"
+                                                                *ngIf="projectPurchaseOrderForm.get('ProjectMasterContractItems').controls[i]&&projectPurchaseOrderForm.get('ProjectMasterContractItems').controls[i].get('ContractValue')!=null &&
+                                                                projectPurchaseOrderForm.get('ProjectMasterContractItems').controls[i].get('ContractValue').errors!=null ">
+                                                                <span
+                                                                    *ngIf="projectPurchaseOrderForm.get('ProjectMasterContractItems').controls[i].get('ContractValue').errors.griderror">
+                                                                    Value should not be zero
+                                                                </span>
+                                                                <span
+                                                                    *ngIf="projectPurchaseOrderForm.get('ProjectMasterContractItems').controls[i].get('ContractValue').errors.totalError">
+                                                                    Line total must be equal to Contract Sum
+                                                                </span>
+                                                            </div>
+                                                            <!-- <div class="gridIconsStyle">
+                                                                    <i class="fa fa-trash gridRemoveIcon" (click)="removeGridItem(i,'Assest')" aria-hidden="true"></i>
+                                                                </div>-->
+                                                        </td>
+                                                        <td style="text-align: right">
+                                                            {{rowData.VOSum |number:'1.2-2' | negativeInParenthesis}}
+                                                        </td>
+                                                        <td style="text-align: right">
+                                                            {{rowData.VOSum+rowData.ContractValue |number:'1.2-2' |
+                                                            negativeInParenthesis}}
+                                                        </td>
+                                                    </tr>
+                                                </ng-template>
+
+                                                <ng-template pTemplate="footer" let-columns>
+                                                    <tr *ngIf="hideInput" class="footercolor"
+                                                        style="font-weight: bold;">
+                                                        <td colspan="6">
+                                                            <!-- <button class="addLine" type="submit">
+                                                                            <i aria-hidden="true" class="fa fa-plus"></i>&nbsp;Add Line
+                                                                         </button> -->
+                                                            <input type="number" (keydown)="restrictMinusValue($event)"
+                                                                min="0" [(ngModel)]="linesToAdd"
+                                                                [ngModelOptions]="{standalone: true}"
+                                                                class="form-control linesToAdd">
+                                                            <button type="submit"
+                                                                (click)="addGridItem(linesToAdd,'ProjectMasterContractItems')"
+                                                                class="addLine">
+                                                                <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add
+                                                                Line
+                                                            </button>
+
+                                                        </td>
+
+                                                    </tr>
+                                                    <tr *ngIf="hideInput" style="font-weight: bold;">
+                                                        <td> </td>
+                                                        <td>Sub Total</td>
+                                                        <!-- <td> </td>
+                                                        <td> </td>
+                                                        <td> </td> -->
+                                                        <td> </td>
+                                                        <td style="text-align: right"> {{
+                                                            projectPurchaseOrderForm.get('SubTotal').value
+                                                            | number:'1.2-2'
+                                                            | negativeInParenthesis
+                                                            }}
+                                                        </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr *ngIf="hideText" style="font-weight: bold;">
+                                                        <td> </td>
+                                                        <td>Sub Total</td>
+                                                        <!-- <td> </td>
+                                                        <td> </td>
+                                                        <td> </td> -->
+                                                        <td> </td>
+                                                        <td style="text-align: right">
+                                                            {{ selectedPODetails.CurrencySymbol }}
+                                                            {{ selectedPODetails.SubTotal |number:'1.2-2' |
+                                                            negativeInParenthesis }}</td>
+                                                        <td style="text-align: right">
+                                                            {{totalVOSumSubTotal |number:'1.2-2' |
+                                                            negativeInParenthesis}}</td>
+                                                        <td style="text-align: right">{{rcvSubTotal | number:'1.2-2' |
+                                                            negativeInParenthesis}}
+                                                        </td>
+                                                    </tr>
+
+                                                </ng-template>
+                                            </p-table>
+                                        </div>
+                                        <div formArrayName="DiscountLineItems">
+                                            <p-table [columns]="projectMasterContractItemColumns"
+                                                (sortFunction)="customSort($event)" [customSort]="true"
+                                                sortMode="single"
+                                                [value]="hideInput==true?projectPurchaseOrderForm.get('DiscountLineItems')['controls']:selectedPODetails.DiscountLineItems">
+                                                <ng-template pTemplate="emptymessage">
+                                                    <tr>
+                                                        <!-- <td colspan="projectMasterContractItemColumns.length" style='text-align: center;'>
+                                                                <b>{{ gridNoMessageToDisplay }}</b>
+                                                            </td> -->
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="colgroup" let-columns>
+                                                    <colgroup>
+                                                        <ng-template ngFor let-data
+                                                            [ngForOf]="projectMasterContractItemColumns">
+                                                            <col [style.width]="data.width">
+                                                        </ng-template>
+                                                    </colgroup>
+                                                </ng-template>
+
+                                                <ng-template pTemplate="body" let-rowData let-i="rowIndex"
+                                                    let-columns="columns">
+                                                    <tr *ngIf="hideInput" [formGroupName]="i">
+                                                        <td> {{ i + 1 }} </td>
+                                                        <td>
+                                                            <textarea formControlName="DisItemDescription" autoresize
+                                                                type="text" class="form-control">
+                                                            </textarea>
+                                                        </td>
+                                                        <!-- <td>
+                                                            <select *ngIf="hideInput" class="form-control"
+                                                                formControlName="AccountCodeCategoryId"
+                                                                (change)="onDiscountCategoryChange($event.target.value,i)">
+                                                                <option value="0">--Select--</option>
+                                                                <option
+                                                                    *ngFor="let category of expenseAccountCodeCategories"
+                                                                    value="{{category.AccountCodeCategoryId}}">
+                                                                    {{category.AccountCodeName}}
+                                                                </option>
+                                                            </select>
+                                                        </td> -->
+                                                        <!-- <td>
+                                                            <input formControlName="Expense" type="text"
+                                                                (click)="itemClick(i)" class="form-control"
+                                                                [inputFormatter]="DisExpenseInputFormater"
+                                                                (selectItem)="onDiscountExpenseChange($event,i)"
+                                                                [ngbTypeahead]="DisExpenseitemMasterSearch"
+                                                                [resultTemplate]="AccountCodeTemplate" />
+                                                        </td> -->
+                                                        <!-- <td>
+                                                            <select formControlName="DisTypeOfCostName"
+                                                                class="form-control">
+                                                                <option [ngValue]="undefined">--Select--</option>
+                                                                <option
+                                                                    *ngFor="let costcategory of typeofCostCategaries"
+                                                                    value={{costcategory}}>
+                                                                    {{ costcategory }}
+                                                            </select>
+                                                        </td> -->
+                                                        <td>
+                                                            <select formControlName="DisApportionmentMethod"
+                                                                class="form-control">
+                                                                <option [ngValue]="undefined">--Select--</option>
+                                                                <option
+                                                                    *ngFor="let apportionmentMethod of typeofApportionmentMethods"
+                                                                    value={{apportionmentMethod}}>
+                                                                    {{ apportionmentMethod }}
+                                                            </select>
+                                                            <!-- <input type="text" class="form-control" formControlName="POPApportionmentId" /> -->
+                                                        </td>
+                                                        <td>
+                                                            <input currencyMask [options]="options2precision"
+                                                                (keydown)="restrictMinusValue($event)" min="0"
+                                                                style="float:left;text-align: right;width:80%;"
+                                                                class="form-control"
+                                                                (blur)="setDiscountValue(i);calculateTotalPrice(i,projectPurchaseOrderForm.get('DiscountLineItems').controls[i])"
+                                                                formControlName="DiscountValue" />
+                                                        </td>
+                                                        <td> </td>
+                                                        <td style="text-align: right">
+                                                            {{rowData.DiscountValue| number:'1.2-2' |
+                                                            negativeInParenthesis}}
+                                                            &nbsp;
+                                                            <span class="gridIconsStyle">
+                                                                <i class="fa fa-trash gridRemoveIcon"
+                                                                    (click)="removeGridItem(i,'DiscountLineItems')"
+                                                                    aria-hidden="true"></i>
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr *ngIf="hideText">
+                                                        <td> {{ i + 1 }} </td>
+                                                        <td> {{ rowData.DisItemDescription }}
+                                                            <div
+                                                                *ngIf="projectPurchaseOrderForm.get('DiscountLineItems').controls[i]&&projectPurchaseOrderForm.get('DiscountLineItems').controls[i].get('DisItemDescription').errors!=null ">
+                                                                <span class="errorMessage"
+                                                                    *ngIf="projectPurchaseOrderForm.get('DiscountLineItems').controls[i].get('DisItemDescription').errors.required">
+                                                                    Item Description Is Required
+                                                                </span>
+                                                            </div>
+                                                        </td>
+                                                        <!-- <td> {{ rowData.Expense.AccountCodeName}} </td>
+                                                        <td> {{ rowData.AccountCode }} </td>
+                                                        <td> {{ rowData.DisTypeOfCostName }} </td> -->
+                                                        <td> {{ rowData.DisApportionmentMethod }}
+                                                            <div
+                                                                *ngIf="projectPurchaseOrderForm.get('DiscountLineItems').controls[i]&&projectPurchaseOrderForm.get('DiscountLineItems').controls[i].get('DisApportionmentMethod').errors!=null ">
+                                                                <span class="errorMessage"
+                                                                    *ngIf="projectPurchaseOrderForm.get('DiscountLineItems').controls[i].get('DisApportionmentMethod').errors.required">
+                                                                    Apportionment Is Required
+                                                                </span>
+                                                            </div>
+                                                        </td>
+                                                        <td style="text-align: right">
+                                                            {{ rowData.DiscountValue |number:'1.2-2' |
+                                                            negativeInParenthesis}}
+                                                        </td>
+                                                        <td style="text-align: right">
+                                                            {{rowData.VOSum | number:'1.2-2' | setParenthesis}}
+                                                        </td>
+                                                        <td style="text-align: right">
+                                                            {{rowData.VOSum - rowData.DiscountValue | number:'1.2-2' |
+                                                            setParenthesis}}
+                                                        </td>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="footer" let-rowData let-i="rowIndex"
+                                                    let-columns>
+                                                    <tr *ngIf="hideInput" class="footercolor"
+                                                        style="font-weight: bold;">
+                                                        <td colspan="6">
+                                                            <!-- <button class="addLine" type="submit">
+                                                                    <i aria-hidden="true" class="fa fa-plus"></i>&nbsp;Add Line 
+                                                                </button> -->
+                                                            <input type="number" (keydown)="restrictMinusValue($event)"
+                                                                min="0" [(ngModel)]="linesToAdd1"
+                                                                [ngModelOptions]="{standalone: true}"
+                                                                class="form-control linesToAdd">
+                                                            <button type="submit"
+                                                                (click)="addGridItem(linesToAdd1,'DiscountLineItems')"
+                                                                class="addLine">
+                                                                <i class="fa fa-plus"
+                                                                    aria-hidden="true"></i>&nbsp;Discount
+                                                            </button>
+
+                                                        </td>
+
+                                                    </tr>
+
+                                                    <tr *ngIf="hideInput" class="footercolor"
+                                                        style="font-weight: bold;">
+                                                        <td> </td>
+                                                        <td>Total Before Tax</td>
+                                                        <!-- <td> </td>
+                                                        <td> </td>
+                                                        <td> </td> -->
+                                                        <td> </td>
+                                                        <td style="text-align: right">
+                                                            {{ selectedPODetails.CurrencySymbol }} {{
+                                                            (projectPurchaseOrderForm.get('TotalBefTax')==null||projectPurchaseOrderForm.get('TotalBefTax').value==undefined)?"":
+                                                            ( projectPurchaseOrderForm.get('TotalBefTax').value
+                                                            )|number:'1.2-2' |negativeInParenthesis
+                                                            }}
+
+                                                        </td>
+                                                        <td style="text-align: right">
+                                                            {{tvsTotalBefTax | number:'1.2-2'}}</td>
+                                                        <td style="text-align: right">
+                                                            {{rcvTotalBefTax | number:'1.2-2'}}</td>
+                                                    </tr>
+                                                    <tr *ngIf="hideText" style="font-weight: bold;">
+                                                        <td> </td>
+                                                        <td>Total Before Tax</td>
+                                                        <!-- <td> </td>
+                                                        <td> </td>
+                                                        <td> </td> -->
+                                                        <td> </td>
+                                                        <td style="text-align: right">
+                                                            {{ selectedPODetails.CurrencySymbol }}
+                                                            {{ ( selectedPODetails.TotalBefTax )|number:'1.2-2'
+                                                            |negativeInParenthesis }}</td>
+                                                        <td style="text-align: right">
+                                                            {{tvsTotalBefTax | number:'1.2-2' | negativeInParenthesis}}
+                                                        </td>
+                                                        <td style="text-align: right">
+                                                            {{rcvTotalBefTax | number:'1.2-2' | negativeInParenthesis}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr *ngIf="hideInput" class="footercolor">
+                                                        <td> </td>
+                                                        <td>Tax</td>
+                                                        <!-- <td> </td>
+                                                        <td> </td>
+                                                        <td> </td> -->
+                                                        <td> </td>
+                                                        <td style="text-align: right">
+                                                            {{ selectedPODetails.CurrencySymbol }} {{
+                                                            (projectPurchaseOrderForm.get('TotalTax')==null||projectPurchaseOrderForm.get('TotalTax').value==undefined)?"":
+                                                            ( projectPurchaseOrderForm.get('TotalTax').value
+                                                            )|number:'1.2-2' | negativeInParenthesis
+                                                            }}
+                                                        </td>
+                                                        <td style="text-align: right"> {{tvsTax |number:'1.2-2' |
+                                                            negativeInParenthesis}}</td>
+                                                        <td style="text-align: right"> {{rcvTax |number:'1.2-2' |
+                                                            negativeInParenthesis}}</td>
+                                                    </tr>
+                                                    <tr *ngIf="hideText" class="footercolor">
+                                                        <td> </td>
+                                                        <td>Tax</td>
+                                                        <!-- <td> </td>
+                                                        <td> </td>
+                                                        <td> </td> -->
+                                                        <td> </td>
+                                                        <td style="text-align: right">
+                                                            {{ selectedPODetails.CurrencySymbol }}
+                                                            {{( selectedPODetails.TotalTax )|number:'1.2-2' }}
+                                                        </td>
+                                                        <td style="text-align: right"> {{tvsTax |number:'1.2-2' |
+                                                            negativeInParenthesis}}</td>
+                                                        <td style="text-align: right"> {{rcvTax |number:'1.2-2'}}</td>
+                                                    </tr>
+
+                                                    <tr *ngIf="hideInput" style="font-weight: bold;">
+                                                        <td> </td>
+                                                        <td>Total</td>
+                                                        <!-- <td> </td>
+                                                        <td> </td>
+                                                        <td> </td> -->
+                                                        <td> </td>
+                                                        <td style="text-align: right">
+                                                            {{ selectedPODetails.CurrencySymbol }}
+                                                            {{ ( projectPurchaseOrderForm.get('TotalAmount').value
+                                                            )|number:'1.2-2' | negativeInParenthesis }}
+                                                        </td>
+                                                        <td style="text-align: right"> {{tvsTotal |number:'1.2-2' |
+                                                            negativeInParenthesis}}</td>
+                                                        <td style="text-align: right"> {{rcvTotal |number:'1.2-2' |
+                                                            negativeInParenthesis}}</td>
+                                                    </tr>
+                                                    <tr *ngIf="hideText" style="font-weight: bold;">
+                                                        <td> </td>
+                                                        <td>Total</td>
+                                                        <!-- <td> </td>
+                                                        <td> </td>
+                                                        <td> </td> -->
+                                                        <td> </td>
+                                                        <td style="text-align: right">
+                                                            {{ selectedPODetails.CurrencySymbol }}
+                                                            {{( selectedPODetails.TotalAmount )|number:'1.2-2' }}
+                                                        </td>
+                                                        <td style="text-align: right"> {{tvsTotal |number:'1.2-2' |
+                                                            negativeInParenthesis}}</td>
+                                                        <td style="text-align: right"> {{rcvTotal |number:'1.2-2'}}</td>
+                                                    </tr>
+                                                </ng-template>
+                                            </p-table>
+                                        </div>
+                                        <!-- <div *ngIf="hideInput" style="display: none">
+                                                <input type="number" (keydown)="restrictMinusValue($event)" min="0" [(ngModel)]="linesToAdd" [ngModelOptions]="{standalone: true}"
+                                                    class="form-control linesToAdd">
+                                                <button type="submit" (click)="addGridItem(linesToAdd,'LineItems')" class="addLine">
+                                                    <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Line
+                                                </button>
+                                            </div> -->
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="row" style="margin-top:3em;">
+                                <div class="col-12">
+                                    <h4 class="form-heading">Attachments</h4>
+                                </div>
+                                <div class="col-12 attachments" *ngIf="selectedPODetails!=undefined">
+                                    <ul>
+                                        <ng-template ngFor let-data [ngForOf]="selectedPODetails.Attachments"
+                                            let-i="index">
+                                            <li *ngIf="data.IsDelete!=true||data.IsDelete==undefined">
+                                                <span class="attcmnts">
+                                                    <span class="displayFileName" style="word-wrap:break-word">
+                                                        {{ data.FileName }}
+                                                    </span>
+                                                    <a style="color:black;" target="_blank"
+                                                        href="{{apiEndPoint}}/ProjectPurchaseOrderFileDownload?AttachmentId={{ data.AttachmentId }}&AttachmentTypeId={{ data.AttachmentTypeId }}&FileName={{data.FileName|encodeURIComponent}}&RecordId={{data.RecordId}}">
+                                                        <i class="fa fa-download"></i>
+                                                    </a>
+                                                    &nbsp;&nbsp;
+                                                    <i *ngIf="hideInput" (click)="attachmentDelete(i)"
+                                                        class="fa fa-trash">
+                                                    </i>
+                                                </span>
+                                            </li>
+                                        </ng-template>
+                                    </ul>
+                                </div>
+                                <div class="col-12" *ngIf="hideInput">
+                                    <div class="col-12">
+                                        <input style="height: 30px" type="file" multiple
+                                            (change)="onFileUploadChange($event)" name="file">
+                                    </div>
+                                    <div class="col-12">
+                                        <ul class="fileList">
+                                            <li *ngFor="let data of uploadedFiles;let i = index">
+                                                <span>
+                                                    <span class="fileName" style="word-wrap:break-word">
+                                                        {{ data.name }}
+                                                    </span>
+                                                    <i class="fa fa-close" (click)="onFileClose(i)"></i>
+                                                </span>
+                                                <br>
+                                                <span class="fileSize">{{ data.size/1024 }} KB</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-xl-12 col-sm-12 col-12"
+                                *ngIf="(selectedPODetails.WorkFlowStatusId == workFlowStatus.Rejected)&& hideText==true">
+                                <h4 class="form-heading">Reasons To Reject</h4>
+                                <div class="col-12">
+                                    <span class="descriptionStyle" showmore
+                                        [value]="selectedPODetails.ReasonsToReject"></span>
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-sm-12 col-12"
+                                *ngIf="(isApprovalPage==true||(isApprovalPage==false && hideText==true && (selectedPODetails.WorkFlowStatusId==workFlowStatus.AskedForClarification||selectedPODetails.WorkFlowStatusId==workFlowStatus.WaitingForApproval)))">
+                                <h4 class="form-heading">Approval Remarks</h4>
+                                <div>
+                                    <textarea formControlName="ApprovalRemarks" class="form-control"
+                                        style="width:70%;display:inline-block ">
+                                        </textarea>
+                                    <button type="submit"
+                                        (click)="updateStatus(isApprovalPage==true?workFlowStatus.AskedForClarification:workFlowStatus.WaitingForApproval)"
+                                        style="float:inherit;vertical-align: top;" class="btn btn-edit">
+                                        <i class="fa fa-envelope" aria-hidden="true"></i>
+                                        <span *ngIf="isApprovalPage==true">
+                                            {{ selectedPODetails.WorkFlowComments|ApprovalButton }}
+                                        </span>
+                                        <span *ngIf="isApprovalPage==false">
+                                            Reply
+                                        </span>
+                                    </button>
+                                </div>
+                                <div
+                                    *ngIf="projectPurchaseOrderForm.get('ApprovalRemarks') && projectPurchaseOrderForm.get('ApprovalRemarks').errors!=null && projectPurchaseOrderForm.get('ApprovalRemarks').touched==true">
+                                    <span class="errorMessage"
+                                        *ngIf="projectPurchaseOrderForm.get('ApprovalRemarks').errors.required">Approval
+                                        Remarks is Required</span>
+                                </div>
+                            </div>
+                            <div *ngIf="selectedPODetails.ReasonsToCancel!=undefined && selectedPODetails.ReasonsToCancel.length >0"
+                                class="col-xl-12 col-sm-12 col-12">
+                                <h4 class="form-heading">Reason for Cancel approval</h4>
+                                <ul>
+                                    <li *ngFor="let record of selectedPODetails.ReasonsToCancel">
+                                        <span>{{ record }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div *ngIf="selectedPODetails.WorkFlowComments!=undefined && selectedPODetails.WorkFlowComments.length >0"
+                                class="col-xl-12 col-sm-12 col-12">
+                                <!-- <label class="col-form-label form-label">Previous Comments</label> -->
+                                <h4 class="form-heading">Previous Comments</h4>
+                                <ul>
+                                    <li *ngFor="let record of selectedPODetails.WorkFlowComments">
+                                        <span class='remarksUserName'>{{ record.UserName }}</span> -
+                                        <span class='remarksDate'>{{ record.CreatedDate|date:'dd-MM-yyyy h:mm:ss a'
+                                            }}</span>:
+                                        <br>
+                                        <span>{{ record.Remarks }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div  class="table-responsive" [ngStyle]="{'max-width.px': screenWidth}" *ngIf="selectedPODetails.WorkFlowStatusId==4">
+                            <h4 class="form-heading">Invoices</h4>
+                            <p-table [columns]="CMPaymentColumns" [scrollable]="true" sortMode="multiple"
+                                [value]="payments">
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        <th *ngFor="let col of columns;let i=index" [pSortableColumn]="col.field">
+                                            {{col.header}}
+                                            <p-sortIcon [hidden]="i==0" *ngIf="i!=columns.length-1" [field]="col.field">
+                                            </p-sortIcon>
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="emptymessage" let-columns>
+                                    <tr style="text-align: center;">
+                                        <td [attr.colspan]="columns.length">
+                                            No payments found
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-payment let-i="rowIndex">
+                                    <tr>
+                                        <td>
+                                            <a (click)="redirectToPaymentDetails(payment)"
+                                                style="color:#0645AD; cursor: pointer; text-decoration: underline;">{{payment.PaymentDocumentCode}}
+                                            </a>
+                                        </td>
+                                        <td class="wordbreak">{{payment.SupplierInvoiceNumber}}</td>
+                                        <td> {{payment.CertificateNo}} </td>
+                                        <td align="right"> {{payment.CPGrandTotal | number:'1.2-2'}} </td>
+                                        <td> {{payment.Status}} </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                        <br />
+                        <div  class="table-responsive" [ngStyle]="{'max-width.px': screenWidth}" *ngIf="selectedPODetails.WorkFlowStatusId==4">
+                            <h4 class="form-heading">Variation Orders</h4>
+                            <p-table [columns]="CMVOColumns" [scrollable]="true" sortMode="multiple"
+                                [value]="variationOrders">
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        <th *ngFor="let col of columns;let i=index" [pSortableColumn]="col.field">
+                                            {{col.header}}
+                                            <p-sortIcon *ngIf="i!=columns.length-1 && i!=0" [field]="col.field">
+                                            </p-sortIcon>
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="emptymessage" let-columns>
+                                    <tr style="text-align: center;">
+                                        <td [attr.colspan]="columns.length">
+                                            No Variation Orders found
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-voList let-i="rowIndex">
+                                    <tr>
+                                        <td>
+                                            <a (click)="redirectToVODetails(voList)"
+                                                style="color:#0645AD; cursor: pointer; text-decoration: underline;">{{voList.VODocumentCode}}
+                                            </a>
+                                        </td>
+                                        <td align="right"> {{voList.OriginalContractSum| number:'1.2-2'}} </td>
+                                        <td align="right"> {{voList.VOSum| number:'1.2-2'}} </td>
+                                        <td align="right"> {{voList.RevisedContractTotal | number:'1.2-2'}} </td>
+                                        <td> {{voList.Status}} </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div *ngIf="!isApprovalPage" class="form-group text-right btn-list">
+
+                                <button type="submit" (click)="saveRecord('save')" class="btn btn-save"
+                                    *ngIf="hideInput && hasWorkFlow">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+                                <button type="submit"
+                                    *ngIf="((selectedPODetails|DisableButton)==false) && hasWorkFlow && approvePermission && isSameUSer"
+                                    [disabled]="selectedPODetails|DisableButton" (click)="saveRecord('send')"
+                                    class="btn btn-approve">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Send for Approval</button>
+                                <button type="submit" (click)="cancelRecord()" class="btn btn-cancel" *ngIf="hideInput">
+                                    <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                                <button type="submit" (click)="editRecord()"
+                                    *ngIf="isSameUSer && hideText&&((selectedPODetails|DisableButton)==false) && editPermission"
+                                    [disabled]="selectedPODetails|DisableButton" class="btn btn-edit">
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                                <button type="submit"
+                                    *ngIf="(hideText && isSameUSer && ((selectedPODetails.WorkFlowStatusId==workFlowStatus.WaitingForApproval||selectedPODetails.WorkFlowStatusId==workFlowStatus.AskedForClarification)))  "
+                                    (click)="reCall()" class="btn btn-cancel">
+                                    <i class="fa fa-times-circle" aria-hidden="true"></i> Cancel Approval</button>
+                                <button type="submit" class="btn btn-cancel" *ngIf="hideinput">
+                                    <i class="fa fa-ban" aria-hidden="true"></i> Terminate</button>
+                                <!-- <button type="submit" (click)="deleteRecord()" class="btn btn-delete" *ngIf="hideText">
+                                        <i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button> -->
+                            </div>
+                            <div *ngIf="projectPoList.length>0 && isApprovalPage==true && isApproverUser && selectedPODetails.WorkFlowStatusId!=21 && selectedPODetails.WorkFlowStatusId!=4 && selectedPODetails.WorkFlowStatusId!=5"
+                                class="form-group text-right btn-list">
+                                <button type="submit" (click)="PocVerify()" class="btn btn-save"
+                                    *ngIf="verifyPermission && hideVerifyButton && (selectedPODetails.WorkFlowStatusId!=18 && selectedPODetails.WorkFlowStatusId!=20)">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Verify</button>
+
+                                <button type="submit" (click)="saveRecord('verify')" class="btn btn-save"
+                                    *ngIf="isApprovalPage==true && hideCancelinVerify">
+                                    <i class="fa fa-check" aria-hidden="true"></i>Save</button>
+                                <button type="submit" (click)="cancel()" class="btn btn-cancel"
+                                    *ngIf=" (isApprovalPage==true && hideCancelinVerify )">
+                                    <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+
+                                <button type="submit" (click)="updateStatus(workFlowStatus.Approved)"
+                                    *ngIf="doApproveReject && approvePermission" class="btn btn-approve">
+                                    <i class="fa fa-check" aria-hidden="true"></i>Approve</button>
+                                <button type="submit" (click)="displayVoidPopUp(false)"
+                                    *ngIf="doApproveReject && approvePermission" class="btn btn-delete">
+                                    <i class="fa fa-ban" aria-hidden="true"></i> Reject</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <p-confirmDialog></p-confirmDialog>
+                <void-purchase-order-popup *ngIf="showVoidPopUp" [isVoid]="isVoid" (voidApproval)="saveRecord($event)"
+                    (reject)="reject($event)" [purchaseOrderTypeId]="poTypeId"
+                    [purchaseOrderId]="selectedPODetails.ProjectMasterContractId"
+                    (onStatusUpdate)="onStatusUpdate($event)" (hideVoidPopUp)="hideVoidPopUp($event)"
+                    [showVoidPopUp]="showVoidPopUp"></void-purchase-order-popup>
+            </div>
+
+            <p-dialog header="Account Code Information" class="modalheightauto" width="500" height="300"
+                [(visible)]="showGlCodeDialog">
+                <form [formGroup]="AccountCodeInfoForm" class="form-horizontal">
+                    <div class="form-group row">
+                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Account Type</label>
+                        <div class="col-xl-8 col-sm-6 col-6">
+                            <select class="form-control" #AccountType (change)="onTypeSelection($event.target.value)"
+                                formControlName="AccountTypeId">
+                                <option [ngValue]="null">--Select--</option>
+                                <option [value]="record.AccountTypeId" *ngFor="let record of accountTypes">
+                                    {{record.AccountTypeName}}
+                                </option>
+                            </select>
+                            <!-- <div
+                                  *ngIf="AccountCodeInfoForm.get('AccountTypeId') && AccountCodeInfoForm.get('AccountTypeId').errors!=null && AccountCodeInfoForm.get('AccountTypeId').touched==true">
+                                <span class="errorMessage"
+                                  *ngIf=" errmesagevisible && AccountCodeInfoForm.get('AccountTypeId').errors.required">Please Select Account Type</span>
+                                 </div> -->
+                            <span class="error" *ngIf="errmesagevisible">Please Select Account Type</span>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-6  col-xl-4 col-sm-6 form-label">SubCategory</label>
+                        <div class="col-xl-8 col-sm-6 col-6">
+                            <select class="form-control" #SubCategory (change)="GetAccountCodesBySubCat()"
+                                formControlName="AccountCodeCategoryId">
+                                <option [ngValue]="null">--Select--</option>
+                                <option *ngFor="let category of accountCodeCategories"
+                                    [value]="category.AccountCodeCategoryId">
+                                    {{category.AccountCodeCategoryName}}
+                                </option>
+                            </select>
+                            <span class="error" *ngIf="errmesagevisible">Please Select SubCategory</span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-6  col-xl-4 col-sm-6 form-label">Account Code</label>
+                        <div class="col-xl-8 col-sm-6 col-6">
+                            <select formControlName="Item" class="form-control">
+                                <option value="null">--Select--</option>
+                                <option *ngFor="let record of accountCodes" value={{record.AccountCodeId}}>
+                                    {{record.Description}} - {{record.Code}}
+                                </option>
+                            </select>
+                            <span class="error" *ngIf="errmesagevisible">Please Select Account Code</span>
+
+                        </div>
+                        <!-- <div class="col-6  col-xl-8 col-sm-6 autoComplete autocompletewidth">
+                            <input  formControlName="Item" type="text" 
+                              class="form-control" [inputFormatter]="itemInputFormater" (selectItem)="itemMasterSelectionGlCode($event)"
+                             [ngbTypeahead]="itemMasterSearchGlCode" [resultTemplate]="itemMasterTemplategl" />
+                             <span class="error" *ngIf="errmesagevisible">Please Select the GL Code</span>
+                       </div> -->
+                    </div>
+
+                    <div class="form-group" style="text-align: right">
+                        <button (click)="SaveAccountcode('save')" class="btn btn-save">
+                            OK
+                        </button>
+                    </div>
+                </form>
+            </p-dialog>
+        </div>
+    </div>
+
+</div>
+
+
+<ng-template #itemMasterTemplate let-r="result" let-t="term">
+    {{ r.ItemName }}
+</ng-template>
+
+<ng-template #supplierTemplate let-r="result" let-t="term">
+    <div [ngClass]="ngb-disabled">
+        <span [ngClass]="{disabled : r.WorkFlowStatus!='Approved'}"> {{
+            r.WorkFlowStatus!='Approved' ? r.SupplierName + " ( " + r.WorkFlowStatus + " ) " : r.SupplierName}}</span>
+    </div>
+</ng-template>
+
+<ng-template #companyTemplate let-r="result" let-t="term">
+    {{ r.CompanyName }}
+</ng-template>
+
+<ng-template #serviceMasterTemplate let-r="result" let-t="term">
+    <div style="max-height: 100px; overflow: auto">
+        {{ r.AccountCodeName }}
+    </div>
+</ng-template>
+<ng-template #AccountCodeTemplate let-r="result" let-t="term">
+    <div style="max-height: 100px; overflow: auto">
+        {{ r.AccountCodeName}}
+    </div>
+</ng-template>
+
+
+
+<app-auditlog *ngIf="showLogPopUp" (hideLogPopUp)="hideLogPopUp($event)"
+    [DocumentId]="selectedPODetails.ProjectMasterContractId"
+    [DocumentNumber]="(selectedPODetails.WorkFlowStatusId != workFlowStatus.Draft) ?selectedPODetails.POPMasterCode:selectedPODetails.DraftCode"
+    [PageName]="'ProjectMasterContract'" [DocType]="'POP'" [showLogPopUp]="showLogPopUp"></app-auditlog>
+
+<p-dialog [header]="'Cancel Approval Reasons'" width="500" modal='true' [(visible)]="showRecallPopup">
+    <div class="form-group row">
+        <div class="col-xl-12 col-sm-12 col-12">
+            <textarea class="form-control" #reason></textarea>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-xl-12 col-sm-12 col-12">
+            <button style="float: left;" (click)="recallPoApproval(reason)" class="btn btn-save">
+                Ok
+            </button>
+            <button style="float: left;" (click)="closeReCallPopUp()" class="btn btn-cancel">
+                Cancel
+            </button>
+        </div>
+    </div>
+</p-dialog>

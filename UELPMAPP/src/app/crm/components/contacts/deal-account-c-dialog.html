@@ -1,0 +1,70 @@
+<!-- <button class="close" mat-button (click)="onNoClick($event)">Close</button> -->
+<h1 mat-dialog-title>{{data.HeaderTitle}}</h1>
+<div mat-dialog-content>
+  <div id="DivAccount" class="ClassAccount">
+    <form [formGroup]="data.AccountForm" (ngSubmit)="OnAccountFormSubmit(data.AccountForm.value,$event)" #MyAccountForm
+      style="width: 90%;margin-top: 10px;margin-left:26px !important;">
+      <div class="row">
+        <div class="col-md-12 col-sm12">
+          <div class="form-group text-right btn-list">
+            <button type="submit" class="btn btn-save" *ngIf="data.AccountForm.valid">
+              <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+
+            <button type="button" (click)="SaveClick='NO';onNoClick($event)" class="btn btn-cancel">
+              <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12 col-sm12">
+          <div class="form-group row">
+            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Account Name
+              <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+            <div class="autoComplete col-xl-8 col-sm-6 col-6">
+              <input id="AccountName" #AccountName formControlName="AccountName" placeholder="Acount Name" tabindex="1"
+                class="form-control" required />
+              <div
+                *ngIf="data.AccountForm.get('AccountName') && data.AccountForm.get('AccountName').errors!=null && data.AccountForm.get('AccountName').touched==true">
+                <span class="errorMessage" *ngIf="data.AccountForm.get('AccountName').errors.required">
+                  Account Name is required</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12 col-sm12">
+          <div class="form-group row">
+            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Main Phone</label>
+            <div class="autoComplete col-xl-8 col-sm-6 col-6">
+              <input id="MainPhone" #MainPhone formControlName="MainPhone" placeholder="Main Phone" tabindex="2"
+                class="form-control" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12 col-sm12">
+          <div class="form-group row">
+            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Website</label>
+            <div class="autoComplete col-xl-8 col-sm-6 col-6">
+              <input id="Website" #Website formControlName="Website" placeholder="Website" tabindex="3"
+                class="form-control" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </form>
+  </div>
+  <!--<span>{{selectedRows}}</span>-->
+</div>
+<!-- <div mat-dialog-actions>
+  <button class="btn btn-save" (click)="data.SaveClick='NO';onNoClick($event)">No Thanks</button>
+  <button class="btn btn-save" (click)="data.SaveClick='YES';YesClick($event,selectedRows)" 
+  *ngIf="data.AccountForm.valid==true" [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
+</div> -->

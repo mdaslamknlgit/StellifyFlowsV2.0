@@ -1,0 +1,37 @@
+<div class="row">
+  <div class="col-lg-12" style="margin-top:2%;">
+    <h4 class="form-heading" style="margin-bottom: 10px;">Attachments</h4>
+  </div>
+  <div class="col-12 attachments">
+    <ul>
+      <ng-template ngFor let-data [ngForOf]="Attachments" let-i="index">
+        <li *ngIf="data.IsDelete!=true||data.IsDelete==undefined">
+          <span>
+            <span class="displayFileName"> {{ data.FileName }} </span>
+            <a style="color:black;" target="_blank" href="{{apiEndPoint}}/DownloadAttachedFiles?AttachmentId={{ data.AttachmentId }}&AttachmentTypeId={{ data.AttachmentTypeId }}&FileName={{data.FileName}}&RecordId={{data.RecordId}}">
+              <i class=" fa fa-download"></i>
+            </a>
+            &nbsp;&nbsp;
+            <i (click)="attachmentDelete(i)" class="fa fa-trash"> </i>
+          </span>
+        </li>
+      </ng-template>
+    </ul>
+  </div>
+  <div class="col-12" *ngIf="!IsViewMode">
+    <div class="col-12">
+      <input type="file" name="file" multiple (change)="onFileUploadChange($event)" style="color: transparent">
+    </div>
+    <div class="col-12">
+      <table>
+        <tr *ngFor="let data of uploadedFiles;let i = index">
+          <td> {{ data.name }} </td>
+          <td> {{ data.size/1024 | number:'1.2-2' }} KB </td>
+          <td> <i class="fa fa-trash" (click)="onFileClose(i)"></i> </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+<br>
+<br>

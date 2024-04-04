@@ -1,0 +1,135 @@
+<header>
+    <div style="height:100%;">
+        <div class="logo">
+            <!-- <img src="../assets/images/logo.jpg" alt="logo"> -->
+            <!-- <a routerLink="/inventory/dashboard"><img src="assets/images/logo.png" alt="logo"></a> -->
+            <a routerLink="/crm/dashboard"><img src="assets/images/logo.png" alt="logo"></a>
+
+            
+            <!-- <h4>
+        Property Management
+    </h4> -->
+
+        </div>
+        <span class="mobileuserinfo" (click)="showuserinfo()"><i class="fa fa-user-circle-o"
+                aria-hidden="true"></i></span>
+        <nav [class.showuser]="showuser">
+            <ul>
+                <li style=" min-width:415px;">
+
+                    <div class="form-group row  form-horizontal">
+                        <label class="col-form-label col-sm-3 form-label"
+                            style="font-size:16px; color: #fff;">Company</label>
+                        <div class="col-sm-9" style="padding-left:0px;">
+                            <div *ngIf="showCompanyName==false" class="auto-complete">
+                                <input type="text" (blur)="showCompany()" #searchInput [(ngModel)]="defaultCompany"
+                                    class="form-control" [inputFormatter]="companyInputFormater"
+                                    [ngbTypeahead]="companySearch" [resultTemplate]="companyTemplate"
+                                    (selectItem)="oncompanySelection($event)" />
+
+                            </div>
+                            <div (click)="hideCompany(searchInput)" class="companyName" *ngIf="showCompanyName==true">
+                                <span class="col-form-label">{{ defaultCompany!=null ? defaultCompany.CompanyName :
+                                    ""}}</span>
+                                <i style="font-size:16px;" class="fa fa-caret-down"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </li>
+                <li #notificationDiv class="top-alert" style="margin-left: 10px;">
+                    <fa-icon [ngbPopover]="popContent" placement="bottom-right" (click)="getAllNotifications()"
+                        #popContent="ngbPopover" [icon]="faBell"></fa-icon>
+
+                    <span class="alert-cirlce">{{ unreadNotificationsCount }}</span>
+                    <ng-template #popContent>
+                        <div class="alert-popover" *ngIf="unreadNotificationsCount > 0">
+                            <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="popover-scroll">
+                                <div>
+                                    <ul>
+                                        <li (click)="readNotification(data)" [ngClass]="{'read-msg':data.IsRead==true}"
+                                            *ngFor="let data of notifications">
+                                            <div class='notificationDiv'>
+                                                <table>
+                                                    <tr>
+                                                        <td rowspan="5">
+                                                            <!-- <i class="fa fa-user-circle" style='font-size: 40px;color:lightgrey;padding-right: 0.1em;'></i> -->
+                                                            <!-- <img [profile-image]="data.CreatedBy" class='profileImage' /> -->
+                                                            <!-- <img [src]="data.CompanyName" class='profileImage' /> -->
+                                                            <img [src]="data.ProfileImage" class='profileImage' />
+
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <b>{{ data.NotificationType }}&nbsp;<span
+                                                                    *ngIf="data.DocumentCode!=null">( {{
+                                                                    data.DocumentCode }} )</span></b>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            {{ data.NotificationMessage }}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="color:darkgray;">
+                                                            {{ data.CompanyName }}
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+                <!-- <li class="hidemobile"><fa-icon   [icon]="faEnvelope" ></fa-icon></li>
+
+                    <li class="hidemobile">
+                        <fa-icon   [icon]="faChartLine" ></fa-icon>
+                    </li>
+                    <li class="hidemobile"> <i class="fa-solid fa-gear fa-2x"></i></li>-->
+
+                    <li>
+                        <!-- <img style="width:24px;height:24px;" src="../assets/images/profile-img.jpg" title="Alert" align="bell"/> -->
+                        
+                        <span class="profile-info" alt="Test"> <div style="font-size:16px" title="{{userdetails.FullName}}">{{userdetails.UserName}}</div></span>
+                        
+                    </li>
+                <li>
+                    <i class="fa-solid fa-arrow-right-from-bracket fa-2x" style="font-size: 23px;"
+                        (click)="Logout()"></i>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="toast-message-view" [class.toast-success-message-view]="successMessageObj.MessageType=='Success'"
+        [class.toast-error-message-view]="successMessageObj.MessageType=='Error'"
+        [class.toast-error-message-view]="successMessageObj.MessageType=='NoChange'"
+        [class.slide-down-and-up]="successMessageObj.ShowMessage">
+        <div style="text-align:right;height:5px;">
+            <!-- <i class="fa fa-times-circle" (click)="hideSuccessMessage()" aria-hidden="true"></i> -->
+        </div>
+        <i class="fa fa-check-circle" aria-hidden="true"></i>{{ successMessageObj.Message }}
+    </div>
+    <ng-template #content let-c="close" let-d="dismiss">
+        <div class="modal-header">
+            <h4 class="modal-title">Modal title</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>One fine body&hellip;</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
+        </div>
+    </ng-template>
+</header>
+<ng-template #companyTemplate let-r="result" let-t="term">
+    {{ r.CompanyName }}
+</ng-template>

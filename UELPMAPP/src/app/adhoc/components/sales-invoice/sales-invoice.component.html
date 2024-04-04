@@ -1,0 +1,723 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6 col-sm-12 padding-null tittlediv">
+      <h3 class="item-heading">
+        <img src="../assets/images/icon1.png"> Sales Invoice
+      </h3>
+    </div>
+    <div class="col-md-6 col-sm-12 align-text-top" *ngIf="InvoiceId>0" style="text-align:right">
+      <div ngbDropdown placement="bottom-right" *ngIf="viewLogPermission" style="padding:0px;" class="d-inline-block">
+        <button class="btn btn-outline-primary" style="background:none;border:none;padding:0px;" id="dropdownBasic1"
+          ngbDropdownToggle>
+          <img src="../assets/images/grid2.png">
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+          <button class="dropdown-item" *ngIf="printPermission" (click)="onPDFPrint()">Print</button>
+          <button class="dropdown-item" *ngIf="exportPermission && get('WorkflowStatus','Statustext')=='Open'"
+            (click)="exportDocument()">Export</button>
+          <button class="dropdown-item" (click)="SendDocumentEmail()">Send to Customer</button>
+          <button class="dropdown-item" (click)="showLogPopUp = true">View Log</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12 col-md-12 enlargeRightPanel">
+      <div class="enlargeRightPanelMargin">
+        <form class="form-horizontal" novalidate [formGroup]="InvoiceForm">
+          <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+            <div class="row">
+              <div class="col-sm-6">
+                <div *ngIf="InvoiceId>0" class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Requestor </label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="inputlabel"> {{get('CreatedBy','UserName')}} </label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Customer Type
+                    <i class="fa fa-star mandatory-icon" aria-hidden="true"></i>
+                  </label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <select formControlName="CustomerType" *ngIf="InvoiceId == 0" id="CustomerType"
+                      class="form-control">
+                      <option [ngValue]="null">--Select--</option>
+                      <option *ngFor="let record of customerTypes" [style.color]="record.IsActive?'': 'lightgray'"
+                        [disabled]="!record.IsActive" [ngValue]="record">
+                        {{record.CustomerTypeName}}
+                    </select>
+                    <label *ngIf="InvoiceId > 0" class="inputlabel" for="CustomerType">
+                      {{get('CustomerType','CustomerTypeName')}}
+                    </label>
+                    <div *ngIf="f.CustomerType.invalid && (f.CustomerType.dirty || f.CustomerType.touched)">
+                      <span class="errorMessage" *ngIf="f.CustomerType.errors.required">
+                        Customer Type is required</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Customer / Tenant Name<i
+                      class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <input *ngIf="InvoiceId == 0" type="text" #Customer class="form-control" formControlName="Customer"
+                      [inputFormatter]="CustomerNameInputFormatter" (selectItem)="onCustomerSelectItem($event)"
+                      [ngbTypeahead]="CustomerNameSearch" [resultTemplate]="CustomerNameTemplate" />
+                    <label *ngIf="InvoiceId > 0" class="inputlabel" for="Customer">
+                      {{get('Customer','CustomerName')}}
+                    </label>
+                    <div *ngIf="f.Customer.invalid && (f.Customer.dirty || f.Customer.touched)">
+                      <span class="errorMessage" *ngIf="f.Customer.errors.required">
+                        Customer is required</span>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="get('Customer')" class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Customer / Tenant ID<i
+                      class="fa fa-star mandatory-icon" *ngIf="verifyPermission" aria-hidden="true"></i></label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="inputlabel" for="CustomerId">
+                      {{get('Customer','CustomerId')}}
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Invoice Type</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <select *ngIf="InvoiceId == 0" formControlName="InvoiceType" class="form-control">
+                      <option [disabled]="true" [ngValue]="1">With Quotation</option>
+                      <option [ngValue]="2">With-out Quotation</option>
+                    </select>
+                    <label *ngIf="InvoiceId > 0" class="inputlabel" for="UnitNo">
+                      {{get('QuotationCode') == '' ? 'With-out Quotation' : 'With Quotation' }}
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Unit No.</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <input class="form-control" *ngIf="!IsViewMode" formControlName="UnitNo" type="text" maxlength="10"
+                      id="UnitNo">
+                    <label *ngIf="IsViewMode" class="inputlabel" for="UnitNo">
+                      {{get('UnitNo')}}
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Reference</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <input *ngIf="!IsViewMode" class="form-control" type="text" formControlName="Reference"
+                      id="Reference">
+                    <label *ngIf="IsViewMode" class="inputlabel" for="Reference">
+                      {{get('Reference')}}
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Attention</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <input class="form-control" *ngIf="!IsViewMode" type="text" maxlength="50"
+                      formControlName="Attention" id="Attention">
+                    <label *ngIf="IsViewMode" class="inputlabel" for="Attention">
+                      {{get('Attention')}}
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Address Type</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <select *ngIf="!IsViewMode" formControlName="AddressType" (change)="onAddressTypeChange()"
+                      class="form-control">
+                      <option [ngValue]="null">--Select--</option>
+                      <option *ngFor="let record of addressTypes" [ngValue]="record">
+                        {{record.AddressTypeName}}
+                    </select>
+                    <label *ngIf="IsViewMode" class="inputlabel">
+                      {{get('AddressType','AddressTypeName')}}
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Address</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <textarea class="form-control" formControlName="Address" *ngIf="!IsViewMode" type="text"
+                      id="ShortName"></textarea>
+                    <label *ngIf="IsViewMode" class="inputlabel" for="ShortName">
+                      {{get('Address')}}
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Customer's Email</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <input *ngIf="!IsViewMode" formControlName="CustomerEmail" class="form-control" type="text"
+                      id="CustomerEmail">
+                    <label *ngIf="IsViewMode" class="inputlabel" for="CustomerEmail">
+                      {{get('CustomerEmail')}}
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Invoice Detail
+                    <i class="fa fa-star mandatory-icon" aria-hidden="true"></i>
+                  </label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <input *ngIf="!IsViewMode || IsReverify" class="form-control" type="text"
+                      formControlName="InvoiceDetail" id="invoicedetails">
+                    <label *ngIf="IsViewMode && !IsReverify" class="inputlabel" for="invoicedetails">
+                      {{get('InvoiceDetail')}}
+                    </label>
+                    <div
+                      *ngIf="!IsViewMode && f.InvoiceDetail.invalid && (f.InvoiceDetail.dirty || f.InvoiceDetail.touched)">
+                      <span class="errorMessage" *ngIf="f.InvoiceDetail.errors.required">
+                        Invoice Detail is required</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div *ngIf="InvoiceId>0" class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Invoice Code</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text"> {{get('DocumentCode')}}</label>
+                  </div>
+                </div>
+                <div *ngIf="InvoiceId>0 && get('QuotationCode') != ''" class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Quotation Code</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text"> {{get('QuotationCode')}}</label>
+                  </div>
+                </div>
+                <div *ngIf="InvoiceId>0" class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Status</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">
+                      {{get('WorkflowStatus','Statustext')}} {{get('CurrentApprover','UserName')}}</label>
+                  </div>
+                </div>
+                <div *ngIf="InvoiceId>0" class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Created Date</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">
+                      {{get('CreatedDate') | DisplayDateFormat}}
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Department
+                    <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <select *ngIf="!IsViewMode" formControlName="Department" id="Department" class="form-control"
+                      (change)="onDeptChange()">
+                      <option [ngValue]="null">--Select--</option>
+                      <option *ngFor="let record of departments" [style.color]="record.HasWorkflow?'': 'lightgray'"
+                        [disabled]="!record.HasWorkflow" [ngValue]="record">
+                        {{record.Name}}
+                    </select>
+                    <label *ngIf="IsViewMode" class="inputlabel" for="Department">
+                      {{f.Department.value == null ? "" : f.Department.value.Name}}
+                    </label>
+                    <div *ngIf="f.Department.invalid && (f.Department.dirty || f.Department.touched)">
+                      <span class="errorMessage" *ngIf="f.Department.errors.required">
+                        Department is required</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Location </label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <select *ngIf="!IsViewMode && !IsReverify" formControlName="Location" id="Location"
+                      class="form-control">
+                      <option [ngValue]="null">--Select--</option>
+                      <option *ngFor="let record of locations" [style.color]="record.IsActive?'': 'lightgray'"
+                        [disabled]="!record.IsActive" [ngValue]="record">
+                        {{record.LocationName}}
+                    </select>
+                    <label *ngIf="IsViewMode || IsReverify" class="inputlabel" for="Location">
+                      {{get('Location','LocationName')}}
+                    </label>
+                    <div *ngIf="f.Location.invalid && (f.Location.dirty || f.Location.touched)">
+                      <span class="errorMessage" *ngIf="f.Location.errors.required">
+                        Location is required</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Project Name</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <input *ngIf="!IsViewMode" class="form-control" type="text" formControlName="ProjectName"
+                      id="ProjectName">
+                    <label *ngIf="IsViewMode" class="inputlabel" for="ProjectName">
+                      {{get('ProjectName')}}
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Credit Term<i
+                      class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <select *ngIf="!IsViewMode" formControlName="CreditTerm" id="CreditTerm" class="form-control">
+                      <option [ngValue]="null">--Select--</option>
+                      <option *ngFor="let record of creditTerms" [style.color]="record.IsActive?'': 'lightgray'"
+                        [disabled]="!record.IsActive" [ngValue]="record">
+                        {{record.NoOfDays}}
+                    </select>
+                    <label *ngIf="IsViewMode" class="inputlabel" for="CreditTerm">
+                      {{f.CreditTerm.value == null ? '' : f.CreditTerm.value.CreditTermCode}}
+                    </label>
+                    <div *ngIf="f.CreditTerm.invalid && (f.CreditTerm.dirty || f.CreditTerm.touched)">
+                      <span class="errorMessage" *ngIf="f.CreditTerm.errors.required">
+                        Credit Term is required</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Currency<i
+                      class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <select *ngIf="!IsViewMode" formControlName="Currency" id="Currency" class="form-control">
+                      <option [ngValue]="undefined">--Select--</option>
+                      <option *ngFor="let record of currencyTypes" [ngValue]="record">
+                        {{record.Code}}
+                    </select>
+                    <label *ngIf="IsViewMode" class="inputlabel" for="Currency">
+                      {{get('Currency','Code')}}
+                    </label>
+                    <div *ngIf="f.Currency.invalid && (f.Currency.dirty || f.Currency.touched)">
+                      <span class="errorMessage" *ngIf="f.Currency.errors.required">
+                        Currency Code is required</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label"> Tax Group
+                    <i class="fa fa-star mandatory-icon" *ngIf="verifyPermission" aria-hidden="true"></i></label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <select *ngIf="!IsViewMode" formControlName="TaxGroup" id="TaxGroup" (change)="GetTaxTypes()"
+                      class="form-control">
+                      <option [ngValue]="null">--Select--</option>
+                      <option *ngFor="let record of taxGroups" [style.color]="record.IsActive?'': 'lightgray'"
+                        [disabled]="!record.IsActive" [ngValue]="record">
+                        {{record.TaxGroupName}}
+                    </select>
+                    <label class="errorMessage inputlabel"
+                      *ngIf="f.TaxGroup.invalid && (f.TaxGroup.dirty || f.TaxGroup.touched) && f.TaxGroup.errors.required">
+                      Tax Group is required
+                    </label>
+                    <label *ngIf="IsViewMode" class="inputlabel" for="TaxGroup">
+                      {{get('TaxGroup','TaxGroupName')}}
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Bank Details<i
+                      class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <select *ngIf="!IsViewMode || IsReverify" formControlName="Bank" id="Bank" class="form-control">
+                      <option [ngValue]="undefined">--Select--</option>
+                      <option *ngFor="let record of banks" [ngValue]="record">
+                        {{record.BankInfo}}
+                    </select>
+                    <label *ngIf="IsViewMode && !IsReverify" class="inputlabel" for="Currency">
+                      {{get('Bank','BankInfo')}}
+                    </label>
+                    <div *ngIf="f.Bank.invalid && (f.Bank.dirty || f.Bank.touched)">
+                      <span class="errorMessage" *ngIf="f.Bank.errors.required">
+                        Bank is required</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Schedule No. </label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <select *ngIf="!IsViewMode || IsReverify" formControlName="Scheduler" class="form-control">
+                      <option [ngValue]="null">--Select--</option>
+                      <option *ngFor="let record of schedulers" [ngValue]=record>
+                        {{ record.SchedulerNumber }}
+                    </select>
+                    <label *ngIf="IsViewMode && !IsReverify" class="inputlabel" for="Currency">
+                      {{get('SchedulerInfo')}}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-12" style="margin-top: 20px">
+              <h4 class="form-heading"
+                style="text-align: center; border: none;width:100%; background: #d9e7f1; padding: 5px 0px;">
+                Customer Acceptance </h4>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Customer Reference No.</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <input *ngIf="!IsViewMode" class="form-control" formControlName="CustomerRefNo" id="CustomerRefNo"
+                      type="text">
+                    <label *ngIf="IsViewMode" class="inputlabel" for="CustomerRefNo">
+                      {{f.CustomerRefNo.value}}</label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Customer Accepatance Date</label>
+                  <div *ngIf="!IsViewMode" class="col-xl-8 col-sm-6 col-6" style="display: flex;">
+                    <input class="form-control" formControlName="CustomerAcceptanceDate" ngbDatepicker
+                      #CustomerAcceptanceDate="ngbDatepicker">
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-secondary" (click)="CustomerAcceptanceDate.toggle()" type="button">
+                        <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div *ngIf="IsViewMode" class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">
+                      {{get('CustomerAcceptanceDate') | DisplayDateFormat}}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Purchase Incurred</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <input *ngIf="!IsViewMode" class="inputincurred" formControlName="PurchaseIncurred"
+                      id="PurchaseIncurred" type="checkbox">
+                    <label *ngIf="IsViewMode" class="inputlabel" for="PurchaseIncurred">
+                      {{f.PurchaseIncurred.value == true ? 'Yes' : 'No'}}</label>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div *ngIf="get('PurchaseIncurred')" class="row">
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label"> Supplier Name</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <input *ngIf="InvoiceId==0" type="text" formControlName="Supplier" class="form-control show"
+                      [inputFormatter]="supplierInputFormater" [ngbTypeahead]="supplierSearch"
+                      [resultTemplate]="supplierTemplate" />
+                    <label *ngIf="InvoiceId>0" class="inputlabel">
+                      {{get('Supplier','SupplierName')}}</label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">PO Ref.</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <input *ngIf="InvoiceId==0" type="text" class="form-control show" formControlName="PoRef"
+                      [inputFormatter]="poInputFormatter" [ngbTypeahead]="poSearch" (selectItem)="poSelection($event)"
+                      [resultTemplate]="poTemplate" />
+                    <label *ngIf="InvoiceId>0" class="inputlabel" for="PORef">
+                      {{f.POCode.value}}</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="get('PurchaseIncurred')" class="row">
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Remarks</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <textarea *ngIf="!IsViewMode" class="form-control" formControlName="Remarks"
+                      id="Remarks"></textarea>
+                    <label *ngIf="IsViewMode" class="inputlabel" for="Remarks">
+                      {{f.Remarks.value}}</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-12" style="margin-top: 20px">
+              <h4 class="form-heading"
+                style="text-align: center; border: none;width:100%; background: #d9e7f1; padding: 5px 0px;">
+                Job Sheet </h4>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Job Sheet No.</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <input *ngIf="!IsViewMode" class="form-control" formControlName="JobSheetNo" id="JobSheetNo"
+                      type="text">
+                    <label *ngIf="IsViewMode" class="inputlabel" for="JobSheetNo">
+                      {{f.JobSheetNo.value}}</label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Job Status</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <input *ngIf="!IsViewMode" class="form-control" formControlName="JobSheetStatus" id="JobSheetStatus"
+                      type="text">
+                    <label *ngIf="IsViewMode" class="inputlabel" for="JobSheetStatus">
+                      {{f.JobSheetStatus.value}}</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Job Description</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <input *ngIf="!IsViewMode" class="form-control" formControlName="JobSheetDescription"
+                      id="JobSheetDescription" type="text">
+                    <label *ngIf="IsViewMode" class="inputlabel" for="JobSheetDescription">
+                      {{f.JobSheetDescription.value}}</label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Job Completed On</label>
+                  <div *ngIf="!IsViewMode" class="col-xl-8 col-sm-6 col-6" style="display: flex;">
+                    <input class="form-control" formControlName="JobCompletedDate" ngbDatepicker
+                      #JobCompletedDate="ngbDatepicker">
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-secondary" (click)="JobCompletedDate.toggle()" type="button">
+                        <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div *ngIf="IsViewMode" class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">
+                      {{get('JobCompletedDate') | DisplayDateFormat}}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <app-quotation-line-items [companyId]="companyId" [IsViewMode]="IsViewMode" [IsReverify]="IsReverify"
+              [ProcessId]="processId" [defaultTaxType]="get('TaxType')" (totalChange)="updateTotal($event)">
+            </app-quotation-line-items>
+            <div class="row">
+              <div class="col-md-8">
+                <app-attachments [Attachments]="f.Attachments.value" [IsViewMode]="IsViewMode"></app-attachments>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group " style="display: flex; justify-content: space-between;">
+                  <label class="col-form-label  form-label">Total Line Amount</label>
+                  <label class="inputlabel">{{get('TotalLineAmount') | number:'1.2-2'}}</label>
+                </div>
+                <div class="form-group " style="display: flex; justify-content: space-between;">
+                  <label class="col-form-label   form-label">Discount</label>
+                  <label class="inputlabel" style="border-bottom: 1px solid #000;min-width: 125px;text-align: right;">
+                    {{get('Discount') | number:'1.2-2'}}
+                  </label>
+                </div>
+                <div class="form-group" style="display: flex; justify-content: space-between;">
+                  <label class="col-form-label form-label">Total Before {{TaxMasterTaxName}}</label>
+                  <label class="inputlabel">
+                    {{get('TotalBeforeTax') | number:'1.2-2'}}
+                  </label>
+                </div>
+                <div class="form-group" style="display: flex; justify-content: space-between;">
+                  <label class="col-form-label  form-label">
+                    {{TaxMasterTaxName}} ({{TaxPercentage}}%)
+                  </label>
+                  <label class="inputlabel" style="border-bottom: 1px solid #000;min-width: 125px;text-align: right;">
+                    {{get('TaxAmount') | number:'1.2-2'}}
+                  </label>
+                </div>
+                <div class="form-group" style="display: flex; justify-content: space-between;">
+                  <label class="col-form-label form-label">Sub Total</label>
+                  <label class="inputlabel" style=" min-width: 125px;text-align: right;">
+                    {{get('SubTotal') | number:'1.2-2'}}
+                  </label>
+                </div>
+                <div class="form-group" style="display: flex; justify-content: space-between;">
+                  <label class="col-form-label form-label">Tax Adjustment</label>
+                  <div style="text-align: right;">
+                    <input currencyMask [options]="options2precision" style="width: 125px; display: inline-block;"
+                      (blur)="TotalAdjustment()" formControlName="TaxAdjustment" *ngIf="!IsViewMode"
+                      class="form-control" />
+                    <label class="inputlabel" *ngIf="IsViewMode"
+                      style="border-bottom: 1px solid #000;min-width: 125px;text-align: right;">
+                      {{get('TaxAdjustment') | number:'1.2-2'}}
+                    </label>
+                    <div class="errorMessage" *ngIf="f.TaxAdjustment!=null && f.TaxAdjustment.errors!=null ">
+
+                      <span *ngIf="f.TaxAdjustment.errors.TaxAdjustErr">
+                        Tax Adjustment should <br />not be greater than 0.99.
+                      </span>
+
+
+                      <span *ngIf="f.TaxAdjustment.errors.TaxAdjustMinusErr">
+                        Tax Adjustment should<br /> not be less than -0.99.
+                      </span>
+
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group" style="display: flex; justify-content: space-between;">
+                  <label class="col-form-label form-label">Net Total</label>
+                  <label class="inputlabel" style=" min-width: 125px;text-align: right;">
+                    {{get('NetTotal') | number:'1.2-2'}}
+                  </label>
+                </div>
+                <div class="form-group" style="display: flex; justify-content: space-between;">
+                  <label class="col-form-label form-label">Total Adjustment</label>
+                  <div style="text-align: right;">
+                    <input currencyMask [options]="options2precision" style="width: 125px; display: inline-block;"
+                      (blur)="TotalAdjustment()" formControlName="TotalAdjustment" *ngIf="!IsViewMode"
+                      class="form-control" />
+                    <label class="inputlabel" *ngIf="IsViewMode"
+                      style="border-bottom: 1px solid #000;min-width: 125px;text-align: right;">
+                      {{get('TotalAdjustment') | number:'1.2-2'}}
+                    </label>
+
+                    <div class="errorMessage" *ngIf="f.TotalAdjustment!=null && f.TotalAdjustment.errors!=null ">
+                      <span *ngIf="f.TotalAdjustment.errors.TotalAdjustErr">
+                        Total Adjustment should <br /> not be greater than 0.99.
+                      </span>
+                      <!-- </span>
+                  <span class="errorMessage" *ngIf="f.TotalAdjustment!=null && f.TotalAdjustment.errors!=null "> -->
+                      <span *ngIf="f.TotalAdjustment.errors.TotalAdjustMinusErr">
+                        Total Adjustment should <br /> not be less than -0.99.
+                      </span>
+                    </div>
+
+                  </div>
+                </div>
+                <div class="form-group" style="display: flex; justify-content: space-between;">
+                  <label class="col-form-label form-label">Invoice Total</label>
+                  <label class="inputlabel" style="border-bottom: 1px solid #000;min-width: 125px;text-align: right;">
+                    {{get('Total') | number:'1.2-2'}}
+                    <div style="border-top: 1px solid #000;min-width: 100%; margin-bottom: 2px;"> </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <app-document-remarks [Reason]="get('Reason')" [WorkFlowStatus]="get('WorkflowStatus')">
+            </app-document-remarks>
+            <app-approval-remarks [IsApprovalPage]="isApprovalPage" [WorkFlowComments]="get('WorkFlowComments')"
+              [DocumentId]="InvoiceId" [DocumentCode]="get('DocumentCode')"
+              [CurrentApproverUserId]="get('CurrentApprover','UserID')" [RequestUserId]="get('CreatedBy','UserID')"
+              [UserId]="userDetails.UserID" [ProcessId]="processId" [WorkFlowStatus]="get('WorkflowStatus')"
+              (backtoList)="OnCancel()" [CompanyId]="get('CompanyId')"
+              [IsSendForClarification]="get('ButtonPreferences','SendForClarification')"
+              [IsReplyForClarification]="get('ButtonPreferences','ReplyForClarification')">
+            </app-approval-remarks>
+          </div>
+          <div class="form-group text-right btn-list">
+            <div *ngIf="!isApprovalPage">
+              <button type="submit" class="btn btn-save" *ngIf="!IsViewMode || IsReverify" (click)="SaveRecord('Save')">
+                <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+              <button type="button" class="btn btn-save"
+                *ngIf="InvoiceId>0 && IsViewMode && get('ButtonPreferences','Edit') && (get('CreatedBy','UserID') == userDetails.UserID)"
+                (click)="edit()">
+                <i class="fa fa-edit" aria-hidden="true"></i> Edit</button>
+              <button type="submit" class="btn btn-approve" (click)="SaveRecord('Send')"
+                *ngIf="followWorkflow && get('ButtonPreferences','SendForApproval') && sendForApprovalPermission">
+                <i class="fa fa-check" aria-hidden="true"></i> Send for Approval
+              </button>
+              <button type="submit" class="btn btn-cancel" (click)="ShowRemarksPopUp(workFlowStatus.CancelledApproval)"
+                *ngIf="get('ButtonPreferences','CancelApproval') && (get('CreatedBy','UserID') == userDetails.UserID)">
+                <i class="fa fa-times-circle" aria-hidden="true"></i> Cancel Approval</button>
+              <button type="submit" class="btn btn-approve"
+                *ngIf="get('ButtonPreferences','CancelDraft') && InvoiceId > 0 && (get('CreatedBy','UserID') == userDetails.UserID)"
+                (click)=ShowRemarksPopUp(workFlowStatus.CancelDraft)>
+                <i class="fa fa-check" aria-hidden="true"></i> Cancel Draft
+              </button>
+              <button type="submit" class="btn btn-approve" (click)="Reverify()"
+                *ngIf="get('ButtonPreferences','ReVerify') && !IsReverify && reVerifyPermission">
+                <i class="fa fa-check" aria-hidden="true"></i> Reverify
+              </button>
+              <button type="reset" (click)="OnCancel()" class="btn btn-cancel">
+                <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+            </div>
+            <div *ngIf="isApprovalPage">
+              <button type="submit" class="btn btn-approve" (click)="edit()"
+                *ngIf="get('ButtonPreferences','Verify') && IsViewMode && verifyPermission">
+                <i class="fa fa-check" aria-hidden="true"></i> Verify
+              </button>
+              <button type="submit" class="btn btn-save" *ngIf="!IsViewMode" (click)="SaveRecord('Verify')">
+                <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+              <button type="submit" (click)="onApproveClick()" class="btn btn-approve"
+                *ngIf="get('ButtonPreferences','Approve') && approvePermission && (get('CurrentApprover','UserID') == userDetails.UserID) ">
+                <i class="fa fa-check" aria-hidden="true"></i>Approve
+              </button>
+              <button type="submit" (click)="ShowRemarksPopUp(workFlowStatus.Rejected)"
+                *ngIf="get('ButtonPreferences','Reject') && approvePermission && (get('CurrentApprover','UserID') == userDetails.UserID)"
+                class="btn btn-delete">
+                <i class="fa fa-ban" aria-hidden="true"></i> Reject
+              </button>
+              <button type="reset" (click)="OnCancel()" class="btn btn-cancel">
+                <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+            </div>
+          </div>
+          <p-confirmDialog></p-confirmDialog>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #CustomerNameTemplate let-r="result" let-t="term">
+  {{ r.CustomerName }} - {{r.CustomerId}}
+</ng-template>
+<app-auditlog *ngIf="showLogPopUp" (hideLogPopUp)="hideLogPopUp($event)" [DocumentId]="get('InvoiceId')"
+  [CompanyId]="get('CompanyId')" [DocumentNumber]="get('DocumentCode')" [PageName]="'SalesInvoice'"
+  [showLogPopUp]="showLogPopUp">
+</app-auditlog>
+<p-dialog [modal]="true" [(visible)]="showRemarksPopUp">
+  <p-header>
+    {{pmoduleHeading}}
+  </p-header>
+  <div>
+    <form [formGroup]="RemarksForm">
+      <div>
+        <label class="form-label">Reasons</label>
+        <textarea rows="4" cols="50" class="form-control" formControlName="Reasons">
+              </textarea>
+      </div>
+      <div class="errorMessage"
+        *ngIf="RemarksForm.get('Reasons') && RemarksForm.get('Reasons').errors!=null && RemarksForm.get('Reasons').touched==true">
+        <span *ngIf="RemarksForm.get('Reasons').errors.required">
+          Reason is Required
+        </span>
+        <span *ngIf="RemarksForm.get('Reasons').hasError('invaliddata')">
+          Required valid data
+        </span>
+      </div>
+    </form>
+  </div>
+  <p-footer>
+    <button type="button" class="btn" (click)="ProceedRemarks()">Yes</button>
+    &nbsp;
+    <button type="button" class="btn" (click)="showRemarksPopUp=false">No</button>
+  </p-footer>
+</p-dialog>
+<ng-template #supplierTemplate let-r="result" let-t="term">
+  <div [ngClass]="ngb-disabled">
+    <span [ngClass]="{disabled : r.WorkFlowStatus!='Approved' || r.IsFreezed===true}"> {{
+      r.WorkFlowStatus!='Approved' ? r.SupplierName + " ( " + r.WorkFlowStatus + " ) " : r.SupplierName}}</span>
+  </div>
+</ng-template>
+<ng-template #poTemplate let-r="result" let-i="index" let-t="term">
+  <table class="autoCompleteTable" style="width: 99%;">
+    <thead *ngIf='r.index==0'>
+      <tr>
+        <th style="width: 20%">
+          PO Number
+        </th>
+        <th style="width: 25%">
+          Requestor
+        </th>
+        <th style="width: 20%">
+          Total
+        </th>
+      </tr>
+    </thead>
+    <tr>
+      <td style="width: 20%">{{ r.PurchaseOrderCode }}</td>
+      <td style="width: 25%; white-space: pre-wrap; word-wrap: break-word; ">{{ r.FirstName }}</td>
+      <td style="width: 20%">{{ r.TotalAmount | number:'1.2-2' }}</td>
+    </tr>
+  </table>
+</ng-template>

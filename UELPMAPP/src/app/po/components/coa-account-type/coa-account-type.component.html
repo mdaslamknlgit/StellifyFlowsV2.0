@@ -1,0 +1,182 @@
+<div class="container-fluid">
+  <div class="row" style="position: relative;">
+  <div class="col-md-12 col-sm-12 padding-null tittlediv">
+    <div class="flexrow space-between align-center">
+  <h3 class="item-heading">COA Account Type </h3>
+  <div>
+  <button class="btn  btn-transparent" (click)="addRecord()" *ngIf="newPermission"> New Record</button>
+  <button  class="btn btn-transparent" (clickOutside)="onClickedOutside($event)"   (click)="split()">  {{showfilterstext}}  </button> 
+  <img src="../assets/images/grid1.png" style="display: none;" (click)="showFullScreen()"> 
+      </div>
+      </div>
+  </div>
+
+  <div class="left-section"    [class.display-filters]="!showfilters" [CustomSpinner]="showLeftPanelLoadingIcon" > 
+  
+    <div class="filter-section"  ngbDropdown #myDrop="ngbDropdown" >
+   
+   <div class="left-search">
+           <input type="text"  [(ngModel)]="accountTypeSearchKey" placeholder="Search requests..." class="search-filter" (keyup)="onSearchInputChange($event)">
+           <!-- <i class="fa fa-search" aria-hidden="true"></i> -->
+          <!-- <div class="filter-popup" *ngIf="initDone" ngbDropdownMenu aria-labelledby="dropdownManual" (click)="$event.stopPropagation(); myDrop.open();"> -->
+               
+                   <!-- <form [formGroup]="UserFilterInfoForm" class="form-horizontal">
+   
+                       <div class="form-group row">
+                           <label class="col-form-label col-6 form-label">User Name</label>
+                           <div  class="col-6"> 
+ 
+                               <input #userName formControlName="UserName"
+                               type="text" class="form-control show" [inputFormatter]="userInputFormater"
+                              [ngbTypeahead]="userSearch" [resultTemplate]="userTemplate"/>
+   
+                           </div>
+                       </div>
+   
+                       <div class="form-group row">
+                           <label class="col-form-label col-6 form-label">User Roles</label>
+                           <div class="col-6">
+                                   <input  type="text" formControlName="UserRoles" class="form-control">  
+                           </div>
+                       </div>  
+   
+                       <div class="form-group row">
+                           <div class="col-12 error">
+                               {{filterMessage}}
+                           </div>
+                       </div>
+   
+                       <div class="form-group row">
+   
+                           <div class="col-12" style="text-align: right">
+                               <button type="submit" (click)="filterData()" class="btn btn-save">
+                                   <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                               <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                   <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+   
+                           </div>
+                       </div>
+                   </form> -->
+           <!-- </div> -->
+   
+       </div>
+   
+        <!-- start filter code -->
+        <!-- <div class="filter-icon">
+               <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                   <i class="fa fa-filter" aria-hidden="true"></i>
+               </button>
+           </div>
+   
+           <div style="float:right;margin:0px;" class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+               <i class="fa fa-undo" aria-hidden="true"></i>
+     </div> -->
+   
+           
+         <!-- end filter code -->
+   
+   
+       <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="filter-scroll" style="width:100%; float:left;">
+       <table class="table">
+         <tr >
+                 <td (click)="hidefilter()">
+
+                    <table class="listtable">
+                        <tr>
+                            <th>Account Type </th>
+                          <th>Description</th>  
+                        </tr>
+                        <tr  [class.activerow]="record.COAAccountTypeId==selectedaccountTypeRecord.COAAccountTypeId" (click)="onRecordSelection(record.COAAccountTypeId)" *ngFor="let record of AccountTypesList">
+                            <td>{{record.AccountType}} </td>
+                            <td> {{record.Description}}</td> 
+                        </tr>
+                    </table>
+
+                      
+                 </td>
+         </tr>
+       </table>
+                 <div *ngIf="AccountTypesList.length==0" class="col-12 listErrorMessage">
+                     {{errorMessage}}
+                 </div> 
+           
+       </div>  
+       <ngb-pagination [maxSize]="5" *ngIf="AccountTypesList.length>0" (pageChange)="pageChange($event)" [collectionSize]="AccountTypePagerConfig.TotalRecords" class="d-flex justify-content-center" [pageSize]="AccountTypePagerConfig.RecordsToFetch" [page]="1" [boundaryLinks]="true"></ngb-pagination>
+    
+      </div>
+       </div>
+
+
+
+
+  
+  </div>
+  <div class="row">
+      
+ 
+  
+  <div  #rightPanel [CustomSpinner]="showRightPanelLoadingIcon" class="rightPanel col-lg-12 col-md-12"  [class.expand-rightcol]="rightsection">
+        <div class="fullScreenLabel">    <app-header></app-header> </div>
+  
+  <div >
+      <form  [formGroup]="AccountTypeForm" class="form-horizontal" >
+      <div   class="rightcol-scrroll">
+            <div class="row fullScreenLabel">
+                <div class="col-12">
+                    <h3 class="item-heading" style="float:none;"> COA Account Type</h3>
+                </div>
+            </div>
+      <div class="form-group row">
+          <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Account Type </label>  
+          <div class="autoComplete col-xl-4 col-sm-6 col-6">
+                <!-- selectedaccountTypeRecord.COAAccountTypeId!=null ||  -->
+                <label class="col-form-label form-text" *ngIf="hidetext">
+                   <b style="color:#01548e">{{selectedaccountTypeRecord.AccountType}}</b> </label>
+                   <!-- selectedaccountTypeRecord.COAAccountTypeId==null&& -->
+                   <input formControlName="AccountType" *ngIf="hideinput"
+                    type="text" class="form-control show"/>
+
+                <div *ngIf="AccountTypeForm.get('AccountType').errors!=null">
+                    <span class="errorMessage" *ngIf="AccountTypeForm.get('AccountType').errors.DuplicateAccountType">Duplicate Account Type</span>
+                </div>
+                <div *ngIf="AccountTypeForm.get('AccountType').errors==null&&selectedaccountTypeRecord.COAAccountTypeId==0">
+                    <span class="errorMessage" *ngIf="AccountTypeForm.get('AccountType').errors.EmptyAccountType">Please Enter Account Type</span>
+                </div>
+          </div>
+      </div>
+
+      <div class="form-group row">
+          <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Description </label>
+          <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">{{selectedaccountTypeRecord.Description }}</label>
+              <!-- <textarea *ngIf="hideInput" formControlName="Description" class="form-control"></textarea> -->
+
+              <input formControlName="Description" *ngIf="hideinput" type="text" class="form-control show" />
+          </div>
+      </div>
+
+      
+      </div>
+  
+      <div class="form-group text-right btn-list">
+          <button type="submit" (click)="saveRecord()"  class="btn btn-save" *ngIf="hideinput"><i class="fa fa-check" aria-hidden="true"></i> Save</button>
+          <button type="submit" (click)="cancelRecord()"  class="btn btn-cancel" *ngIf="hideinput"><i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+          <button type="submit" (click)="editRecord()" class="btn btn-edit" *ngIf="hidetext && editPermission"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+          <button type="submit" (click)="deleteRecord()"  class="btn btn-delete" *ngIf="hidetext && deletePermission"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+  </div>
+  
+      </form>
+      <p-confirmDialog></p-confirmDialog> 
+  </div>
+  
+  
+  </div><!-- left col end here-->
+  
+  
+  </div>
+   
+  </div>
+ 
+  <ng-template #userTemplate let-r="result" let-t="term">          
+    {{ r.UserName }}
+  </ng-template>

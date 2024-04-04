@@ -1,0 +1,32 @@
+ .mainmenu{ display: flex; align-items: center; justify-content: space-between;}
+.mainmenu::after{ content: "\f078"; font: normal normal normal 8px/1 FontAwesome; float:right;}
+.childMenu{margin-left:0px; font-size:14px;}
+.subchildMenu {
+   text-indent: 10px
+}
+.faicon{ display: inline-block; }
+
+.headermenuline div {
+   width: 100%;
+   height: 2px;
+   background-color: #0082c8;
+   margin: 3px 0;
+   float: right;
+ }
+ .headermenuline {
+   width: 26px;
+   right: 10px;
+   top: 29px;
+   position: absolute;
+   z-index: 9;
+   cursor: pointer;
+ }
+ li.menulist {
+  border-bottom: 1px solid #fff; padding: 10px 0px; font-size: 14px;
+}
+.submenu.activesubmenu {  display: block;}
+.mainmenu-scrroll{ height: 500px;}
+.mainmenulist {  height:calc(100vh - 100px); }
+:host /deep/ .mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {
+  width: 5px !important;
+}

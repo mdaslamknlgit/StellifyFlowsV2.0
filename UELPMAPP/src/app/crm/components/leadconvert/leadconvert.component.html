@@ -1,0 +1,80 @@
+
+<button class="close" mat-button (click)="onNoClick($event)">Close</button>
+<!-- <button mat-icon-button class="close-button" [mat-dialog-close]="true">
+  <mat-icon class="close-icon" color="warn">close</mat-icon>
+</button> -->
+
+<h1 mat-dialog-title>{{HeaderTitle}}</h1>
+
+  <div id="divReportingManager" class="ReportingMang">
+    <!-- (ngSubmit)="onSubmitLeadQualifyform(LeadQualifyForm.value,$event)"  -->
+    <form [formGroup]="LeadQualifyForm" (ngSubmit)="onConvertNewSubmit(LeadQualifyForm.value,$event)" 
+    #MyLeadQualifyForm style="width: 90%;margin-top: 10px;margin-left:26px !important;">
+    <div class="row">
+      <div class="col-12">
+        <div class="form-group text-right btn-list">
+          <button type="submit" class="btn btn-save">
+            <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+    
+          <button type="button" (click)="SaveClick='NO';onNoClick($event)" class="btn btn-cancel" *ngIf="hideInput">
+            <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+        </div>
+      </div>
+    </div>
+      <hr style="margin-top: 0px;" />
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <p>Details</p>
+          <div class="form-group row">
+            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Total Amount
+              <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+              <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                <input id="TotalAmount" #TotalAmount formControlName="TotalAmount" placeholder="Total Amount" 
+                tabindex="3" class="form-control" required />
+
+                <div *ngIf="LeadQualifyForm.get('TotalAmount') && LeadQualifyForm.get('TotalAmount').errors!=null &&LeadQualifyForm.get('TotalAmount').touched==true">
+                  <span class="errorMessage" *ngIf="LeadQualifyForm.get('TotalAmount').errors.required">
+                    First Name is required</span>
+                </div>
+              </div>
+          </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <p>Details</p>
+          <div class="form-group row">
+            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Upfront or Advance
+              <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+              <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                <input id="UpfrontOrAdvance" #UpfrontOrAdvance formControlName="UpfrontOrAdvance" placeholder="Upfront or Advance" 
+                tabindex="3" class="form-control" required />
+
+                <div *ngIf="LeadQualifyForm.get('UpfrontOrAdvance') && LeadQualifyForm.get('UpfrontOrAdvance').errors!=null &&LeadQualifyForm.get('UpfrontOrAdvance').touched==true">
+                  <span class="errorMessage" *ngIf="LeadQualifyForm.get('UpfrontOrAdvance').errors.required">
+                    First Name is required</span>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <button class="btn btn-cancel" (click)="onNoClick($event)">Cancel</button>
+ 
+        <!-- <button class="btn btn-save" type="button"
+        (click)="SaveClick='YES';YesConvertNewClick($event,LeadQualifyForm.value)" 
+        *ngIf="Type==null" [mat-dialog-close]="MyListID" cdkFocusInitial>Convert</button> -->
+      
+        <button class="btn btn-save" type="submit">Convert</button>
+      </div>
+
+    </form>
+   
+  </div>
+
+
+<!-- <div mat-dialog-actions style="text-align: center;display:block !important;">
+  <button class="btn btn-cancel" (click)="SaveClick='NO';onNoClick($event)">Cancel</button>
+ 
+  <button class="btn btn-save" type="submit" [mat-dialog-close]="MyListID" cdkFocusInitial>Convert</button>
+
+</div> -->

@@ -1,0 +1,282 @@
+.ui-chkbox .ui-chkbox-box {
+   width: 0.9em;
+   height: 0.9em;
+   line-height: 0.9em;
+}
+
+.ui-treetable-child-table-container table tbody div td {
+   border: 1px solid #ccc;
+}
+
+.ui-treetable th.ui-state-default {
+   background: #fff;
+   border: 1px solid #fff !important;
+   color: #222;
+   font-weight: 500;
+   /* font-family: 'Exo 2', sans-serif; */
+   font-style: italic;
+}
+
+.ui-treetable-row {
+   border-color: #052433;
+}
+
+.ui-tabview {
+   padding: 0em;
+}
+
+.ui-tabview-panels {
+   display: none
+}
+
+.ui-tabview .ui-tabview-nav>li.ui-state-default {
+   background-color: white;
+}
+
+.TabViewClass {
+   width: 100%;
+}
+
+.ui-tabview.ui-tabview-top>.ui-tabview-nav li a {
+   color: rgb(255, 255, 255);
+}
+
+.ui-tabview.ui-tabview-top>.ui-tabview-nav li {
+   width: 15%;
+   background-color: rgb(250, 87, 60);
+   font-size: 20px;
+   margin: 0px;
+}
+
+.ul-list {
+   display: -webkit-flex;
+   /* Safari */
+   display: flex;
+   width: 98.5%;
+   margin: 0px;
+   padding: 0px;
+}
+
+.ul-list li {
+   list-style: none;
+   -webkit-flex: 1;
+   /* Safari 6.1+ */
+   -ms-flex: 1;
+   /* IE 10 */
+   flex: 1;
+   position: relative;
+}
+
+.ul-list li:after {
+   content: '';
+   display: block;
+   border-top: 25px solid transparent;
+   border-bottom: 25px solid transparent;
+   border-left: 21px solid;
+   right: -20px;
+   top: 0px;
+   position: absolute;
+   z-index: 2;
+   border-left-color: inherit;
+}
+
+.HeaderLabel {
+   width: 15%;
+   height: 50px;
+   font-size: 13px;
+   margin: 0px;
+   text-align: center;
+   transition: width 200ms ease;
+   color: #000;
+   /* font-family: 'Exo 2', cursive; */
+   padding-top: 5px;
+}
+
+.ui-treetable-tablewrapper {
+   /* font-family: 'Poppins','Montserrat', sans-serif; */
+   color: #000;
+   font-size: 13px;
+   margin-top: 5px;
+}
+
+.ui-treetable-tbody>tbody:nth-child(0)>tr.ui-treetable-row-selectable,
+.ui-treetable-tbody>tbody:nth-child(0)>tr.ui-treetable-row-selectable:hover {
+   background-color: #a8fa3ced !important;
+   border: 1px solid #a8fa3ced;
+   color: #FFF;
+   /* #a8fa3ced */
+}
+
+.ui-treetable-tablewrapper>table>tbody:nth-child(2)>div.ui-treetable-row-selectable,
+.ui-treetable-tablewrapper>table>tbody:nth-child(2)>div.ui-treetable-row-selectable:hover {
+   background-color: #a8fa3ced !important;
+   border: 1px solid #a8fa3ced;
+   color: #FFF;
+   /* #a8fa3ced */
+}
+
+.ui-treetable-tablewrapper>table>tbody:nth-child(3)>div.ui-treetable-row-selectable,
+.ui-treetable-tablewrapper>table>tbody:nth-child(3)>div.ui-treetable-row-selectable:hover {
+   background-color: #ffad46 !important;
+   border: 1px solid #ffad46;
+   color: #FFF;
+   /* #ffad46 */
+}
+
+.ui-treetable-tablewrapper>table>tbody:nth-child(4)>div.ui-treetable-row-selectable,
+.ui-treetable-tablewrapper>table>tbody:nth-child(4)>div.ui-treetable-row-selectable:hover {
+   background-color: #b3dc6c !important;
+   border: 1px solid #b3dc6c;
+   color: #FFF;
+   /* #b3dc6c */
+}
+
+.ui-treetable-tablewrapper>table>tbody:nth-child(5)>div.ui-treetable-row-selectable,
+.ui-treetable-tablewrapper>table>tbody:nth-child(5)>div.ui-treetable-row-selectable:hover {
+   background-color: #16A765 !important;
+   border: 1px solid #16A765;
+   color: #FFF;
+   /* #16A765 */
+}
+
+.ui-treetable-tablewrapper>table>tbody:nth-child(6)>div.ui-treetable-row-selectable,
+.ui-treetable-tablewrapper>table>tbody:nth-child(6)>div.ui-treetable-row-selectable:hover {
+   background-color: #9FC6E7 !important;
+   border: 1px solid #9FC6E7;
+   color: #FFF;
+   /* #9FC6E7 */
+}
+
+.ui-treetable-tablewrapper>table>tbody:nth-child(7)>div.ui-treetable-row-selectable,
+.ui-treetable-tablewrapper>table>tbody:nth-child(7)>div.ui-treetable-row-selectable:hover {
+   background-color: #4987e6 !important;
+   border: 1px solid #4987e6;
+   color: #FFF;
+   /* #4987e6 */
+}
+
+.ui-treetable-tablewrapper>table>tbody:nth-child(8)>div.ui-treetable-row-selectable,
+.ui-treetable-tablewrapper>table>tbody:nth-child(8)>div.ui-treetable-row-selectable:hover {
+   background-color: #7bd148 !important;
+   border: 1px solid #7bd148;
+   color: #FFF;
+   /* #7bd148 */
+}
+
+.ui-treetable-tablewrapper>table>tbody:nth-child(9)>div.ui-treetable-row-selectable,
+.ui-treetable-tablewrapper>table>tbody:nth-child(9)>div.ui-treetable-row-selectable:hover {
+   background-color: #AC725E !important;
+   border: 1px solid #AC725E;
+   color: #FFF;
+   /* #AC725E */
+}
+
+.ui-treetable-tablewrapper>table>tbody:nth-child(10)>div.ui-treetable-row-selectable,
+.ui-treetable-tablewrapper>table>tbody:nth-child(10)>div.ui-treetable-row-selectable:hover {
+   background-color: #92E1C0 !important;
+   border: 1px solid #92E1C0;
+   color: #FFF;
+   /* #92E1C0 */
+}
+
+.ui-treetable-tablewrapper>table>tbody:nth-child(11)>div.ui-treetable-row-selectable,
+.ui-treetable-tablewrapper>table>tbody:nth-child(11)>div.ui-treetable-row-selectable:hover {
+   background-color: #42D692 !important;
+   border: 1px solid #42D692;
+   color: #FFF;
+   /* #42D692 */
+}
+
+.ui-treetable-tablewrapper>table>tbody:nth-child(12)>div.ui-treetable-row-selectable,
+.ui-treetable-tablewrapper>table>tbody:nth-child(12)>div.ui-treetable-row-selectable:hover {
+   background-color: #FBE983 !important;
+   border: 1px solid #FBE983;
+   color: #000;
+   /* #FBE983 */
+}
+
+.HeaderLabel1:hover,
+.HeaderLabel2:hover,
+.HeaderLabel3:hover,
+.HeaderLabel4:hover,
+.HeaderLabel5:hover,
+.HeaderLabel6:hover,
+.HeaderLabel7:hover {
+   width: 18%;
+}
+
+.TopicClass {
+   color: rgb(255, 255, 255);
+   cursor: pointer;
+}
+
+.ui-state-default .ui-corner-top>a {
+   width: 15%;
+}
+
+.ui-tabview .ui-tabview-nav li a,
+.ui-tabview.ui-tabview-collapsible .ui-tabview-nav li.ui-tabview-selected a {
+   width: 100%;
+}
+
+.ui-helper-reset {
+   line-height: 1.6;
+}
+
+.ui-state-highlight {
+   border-color: inherit;
+   background: inherit;
+   color: #000;
+}
+
+.ui-treetable th.ui-state-default {
+   background: #e8e3e3;
+}
+
+.mat-card {
+   padding: 6px !important;
+}
+
+.ui-treetable-tablewrapper a.ui-clickable {
+   color: #000 !important;
+}
+
+.HighlightClass .ui-treetable-row-selectable {
+
+   /* border:2px solid #462066 !important; */
+   border: 2px solid #1979ab !important;
+}
+
+.HighlightClass {
+
+   /* border:2px solid #462066 !important; */
+   border: 2px solid #1979ab !important;
+}
+/* 
+.btn 
+{ 
+ background: none !important;
+ background-color: black;
+} */
+
+.grid-Col td
+{
+   width:150px !important;
+}
+
+.grid-Header th
+{
+   width:150px !important;
+}
+.ui-widget-header
+{
+   height:40p !important
+}
+.ui-treetable-thead
+{
+   height:40px !important;
+}
+::ng-deep.mat-menu-panel {
+   /* These numbers are my requirement, put something which suits yours */
+   transform: translate(0px, 28px);
+}

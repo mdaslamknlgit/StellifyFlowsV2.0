@@ -1,0 +1,783 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 col-sm-12 padding-null tittlediv">
+            <h3 class="item-heading">
+                <img src="../assets/images/icon1.png">{{moduleHeading}} </h3>
+        </div>
+        <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+            <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+                <button class="btn btn-outline-primary" style="background:none;border:none;padding:0px;"
+                    id="dropdownBasic1" ngbDropdownToggle>
+                    <img src="../assets/images/grid2.png">
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <!-- *ngIf="printPermission" -->
+                    <button class="dropdown-item">Print</button>
+                    <!-- <button class="dropdown-item">Email</button> -->
+                    <!-- *ngIf="exportPermission" -->
+                    <button class="dropdown-item">Export</button>
+                    <!-- *ngIf="viewLogPermission" -->
+                    <button class="dropdown-item" (click)="displayLogPopUp()">
+                        View Log</button>
+                </div>
+                <!-- <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+          <button class="dropdown-item" (click)="onPrintPDF()">Print</button>
+        </div> -->
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div #rightPanel class="rightPanel col-lg-12 col-md-12">
+            <!-- *ngIf="isExisted" -->
+            <div class="fullScreenLabel">
+                <app-header></app-header>
+            </div>
+            <div>
+                <form [formGroup]="projectContractVariationOrderForm" class="form-horizontal">
+                    <div class="row fullScreenLabel">
+                        <div class="col-12">
+                            <h3 class="item-heading" style="float:none;">Project Contract Variation Order</h3>
+                        </div>
+                    </div>
+                    <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">PO Type
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text">Project PO</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Requestor</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label
+                                            class="col-form-label form-text">{{ selectedPODetails.RequestedByUserName }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Contract Name
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text"
+                                            style="word-wrap:break-word">{{ selectedPODetails.ProjectName }}</label>
+
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Contract Start Date
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label
+                                            class="col-form-label form-text">{{ selectedPODetails.ContractStartDate|DisplayDateFormat }}</label>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Contract End Date
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label
+                                            class="col-form-label form-text">{{ selectedPODetails.ContractEndDate|DisplayDateFormat }}</label>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Contract Terms
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label
+                                            class="col-form-label form-text">{{ selectedPODetails.ContractTerms }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Original Contract
+                                        Sum
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label
+                                            class="col-form-label form-text">{{selectedPODetails.OriginalContractSum |number:'1.2-2'}}
+                                        </label>
+
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Total VO Sum
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label
+                                            class="col-form-label form-text">{{selectedPODetails.TotalVOSum |number:'1.2-2'}}</label>
+                                        <!-- <input type="number" (keydown)="restrictMinusValue($event)" min="0"  formControlName="TotalVOSum"  class="form-control"/>                                   -->
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Adjusted Contract
+                                        Sum
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label
+                                            class="col-form-label form-text">{{selectedPODetails.AdjustedContractSum |number:'1.2-2'}}</label>
+
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Is Retention
+                                        Applicable
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label
+                                            class="col-form-label form-text">{{ selectedPODetails.IsRetentionApplicable==true?'Yes':'No' }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Retention %</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label
+                                            class="col-form-label form-text">{{ selectedPODetails.RetentionPercentage}}</label>
+
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Retention (Max
+                                        Limit)
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label
+                                            class="col-form-label form-text">{{selectedPODetails.RetentionMaxLimit |number:'1.2-2'}}
+                                        </label>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Retention Type
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+
+                                        <div>
+                                            <label class="col-form-label">
+                                                {{ selectedPODetails.RetentionTypeId==1?"Fixed Retention": "Variable Retention" }}
+                                            </label>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Contract ID</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text">{{selectedPODetails.POPMasterCode
+                              }}
+                                        </label>
+
+                                    </div>
+                                </div>
+                                <div *ngIf="voId>0" class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                        Document Code
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text">
+                                            {{ selectedVODetails.DocumentCode }}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div *ngIf="voId>0" class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                        Status
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text">
+                                            {{ selectedVODetails.Status}} &nbsp;
+                                            <span
+                                                *ngIf="selectedVODetails.CurrentApproverUserName!=''&&selectedVODetails.CurrentApproverUserName!=null">[{{ selectedVODetails.CurrentApproverUserName }}]</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Created Date
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label
+                                            class="col-form-label form-text">{{ selectedPODetails.CreatedDate|DisplayDateFormat }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Department
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text">{{ selectedPODetails.Location }}</label>
+
+                                    </div>
+                                </div>
+
+
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier ID</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label
+                                            class="col-form-label form-text">{{ selectedPODetails.Supplier==null?"":selectedPODetails.Supplier.SupplierCode }}</label>
+
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier Name
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label
+                                            class="col-form-label form-text">{{ selectedPODetails.Supplier==null?"":selectedPODetails.Supplier.SupplierName }}
+                                        </label>
+
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier Sub Codes
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text">{{ selectedPODetails.SupplierSubCode!=null ? selectedPODetails.SupplierSubCode.SubCode
+                              + " ( " + selectedPODetails.SupplierSubCode.SubCodeDescription + " ) " : ""}}</label>
+
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier Address
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <!-- <label
+                                            class="col-form-label form-text">{{selectedPODetails.Supplier==null?"":selectedPODetails.Supplier.SupplierAddress}}</label> -->
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Type Of Service
+                                    </label>
+                                    <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text"
+                                            *ngIf="selectedPODetails.Supplier!=null">{{ selectedPODetails.ServiceName }}</label>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Retention Supplier
+                                        Id
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label
+                                            class="col-form-label form-text">{{ selectedPODetails.RetentionSupplierCodeName}}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                        Tax Authority
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label
+                                            class="col-form-label form-text">{{ selectedPODetails.TaxGroupName }}</label>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                        Tax Rate</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text">{{ selectedPODetails.TaxName}}</label>
+
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                        Expense Type</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label
+                                            class="col-form-label form-text">{{selectedPODetails.ExpensesType}}</label>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Remarks</label>
+                                    <div class="col-xl-8 col-sm-6 col-6">
+                                        <label class="col-form-label form-text">{{selectedPODetails.Remarks}}</label>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="row" style="margin-top: 20px">
+                            <div class="col-xl-12">
+                                <h4 class="form-heading">Project Line Items </h4>
+                            </div>
+                        </div>
+                        <div class="tablescroll">
+                            <div formArrayName="ProjectContractVariationOrderItems">
+                                <div align="center" *ngIf="!validVOData()" class="col-xl-10">
+                                    <p style="color: red;">Please provide atleast one VO Details</p>
+                                </div>
+                                <p-table [columns]="projectContractVariationColumns" [scrollable]="false"
+                                    sortMode="single" [value]="selectedPODetails.ProjectMasterContractItems">
+                                    <ng-template pTemplate="emptymessage">
+                                        <tr>
+                                            <!-- <td colspan="projectPOInterimColumns.length" style='text-align: center;'>
+                                          <b>{{ gridNoMessageToDisplay }}</b>
+                                      </td> -->
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="colgroup" let-columns>
+                                        <colgroup>
+                                            <col style="width:70px;">
+                                            <col style="width:170px;">
+                                            <col style="width:150px;">
+                                            <col style="width:150px;">
+                                            <col style="width:150px;">
+                                            <col style="width:180px;">
+                                            <col style="width:180px;">
+                                            <col style="width:150px;">
+                                            <col style="width:180px;">
+                                        </colgroup>
+
+                                    </ng-template>
+                                    <ng-template pTemplate="header" let-columns>
+                                        <tr>
+                                            <th style="height:40px " *ngFor="let col of projectContractVariationColumns"
+                                                [pSortableColumn]="col.field">
+                                                {{col.header}}
+                                                <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
+                                                    ariaLabelDesc="Activate to sort in descending order"
+                                                    ariaLabelAsc="Activate to sort in ascending order">
+                                                </p-sortIcon>
+                                            </th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                        <tr [formGroupName]="i">
+                                            <td>
+                                                {{ i + 1 }}
+                                            </td>
+                                            <td>
+                                                <textarea *ngIf="rowData.ProjectMasterContractItemId==0 && !IsViewMode"
+                                                    formControlName="ItemDescription" autoresize type="text"
+                                                    class="form-control">
+                                                </textarea>
+                                                <span>
+                                                    {{ rowData.ItemDescription }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <select *ngIf="rowData.ProjectMasterContractItemId==0 && !IsViewMode"
+                                                    class="form-control" formControlName="AccountCodeCategoryId"
+                                                    (change)="onCategoryChange($event.target.value,i)">
+                                                    <option value="0">--Select--</option>
+                                                    <option *ngFor="let category of expenseAccountCodeCategories"
+                                                        value="{{category.AccountCodeCategoryId}}">
+                                                        {{category.AccountCodeName}}
+                                                    </option>
+                                                </select>
+                                                <span>
+                                                    {{ rowData.Expense.AccountCodeName}}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <input *ngIf="rowData.ProjectMasterContractItemId==0 && !IsViewMode"
+                                                    formControlName="Expense" type="text" (click)="itemClick(i)"
+                                                    class="form-control" [inputFormatter]="ExpenseInputFormater"
+                                                    (selectItem)="onExpenseChange($event,i)"
+                                                    [ngbTypeahead]="ExpenseitemMasterSearch"
+                                                    [resultTemplate]="AccountCodeTemplate" />
+                                                <span>
+                                                    {{ rowData.AccountCode }}
+                                                </span>
+                                            </td>
+
+                                            <td>
+                                                <select *ngIf="rowData.ProjectMasterContractItemId==0 && !IsViewMode"
+                                                    formControlName="TypeOfCostName" class="form-control">
+                                                    <option [ngValue]="undefined">--Select--</option>
+                                                    <option *ngFor="let costcategory of typeofCostCategaries"
+                                                        value={{costcategory}}>
+                                                        {{ costcategory }}
+                                                </select>
+                                                <span>
+                                                    {{ rowData.TypeOfCostName }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <select *ngIf="rowData.ProjectMasterContractItemId==0 && !IsViewMode"
+                                                    formControlName="ApportionmentMethod" class="form-control">
+                                                    <option [ngValue]="undefined">--Select--</option>
+                                                    <option
+                                                        *ngFor="let apportionmentMethod of typeofApportionmentMethods"
+                                                        value={{apportionmentMethod}}>
+                                                        {{ apportionmentMethod }}
+                                                </select>
+                                                <span>
+                                                    {{ rowData.ApportionmentMethod }}
+                                                </span>
+                                            </td>
+                                            <td style="text-align: right">
+                                                {{ (rowData.ContractValue) |number:'1.2-2'}}
+                                            </td>
+                                            <td style="text-align: right">
+                                                <span *ngIf="IsViewMode ">
+                                                    <!-- {{ rowData.TotalVOSum }}  -->
+                                                    {{ ( projectContractVariationOrderForm.get('ProjectContractVariationOrderItems').controls[i].get('TotalVOSum').value 
+                                        )|number:'1.2-2' }}
+                                                </span>
+                                                <span>
+                                                    <input type="number" *ngIf="!IsViewMode" style="text-align: right;"
+                                                        class="form-control" formControlName="TotalVOSum" required
+                                                        (change)="calculateRevisedContractValue(i,projectContractVariationOrderForm.get('ProjectContractVariationOrderItems').controls[i])"
+                                                        min="0" />
+                                                </span>
+                                            </td>
+                                            <td align="right">
+                                                <!-- {{ rowData.RevisedContractValue }}  -->
+                                                {{ ( projectContractVariationOrderForm.get('ProjectContractVariationOrderItems').controls[i].get('RevisedContractValue').value 
+                                                      )|number:'1.2-2' }}
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="footer" let-columns>
+                                        <tr style="font-weight: bold;">
+                                            <td> </td>
+                                            <td>Sub Total</td>
+                                            <td> </td>
+                                            <td> </td>
+                                            <td> </td>
+                                            <td> </td>
+                                            <td style="text-align: right">
+                                                {{ ( selectedPODetails.SubTotal )|number:'1.2-2' }}
+                                            </td>
+                                            <td style="text-align: right">
+                                                {{ ( projectContractVariationOrderForm.get('SubTotalVOSum').value )|number:'1.2-2'}}
+                                            </td>
+                                            <td style="text-align: right">
+                                                {{ ( projectContractVariationOrderForm.get('SubTotalRevisedContractValue').value )|number:'1.2-2'}}
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>
+                            <div formArrayName="ProjectContractVariationOrderDiscountItems">
+                                <p-table [columns]="projectContractVariationColumns" [scrollable]="false"
+                                    sortMode="single" [value]="selectedPODetails.DiscountLineItems">
+                                    <ng-template pTemplate="emptymessage">
+                                        <tr>
+                                            <!-- <td colspan="projectPOInterimColumns.length" style='text-align: center;'>
+                                          <b>{{ gridNoMessageToDisplay }}</b>
+                                      </td> -->
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="colgroup" let-columns>
+
+                                        <colgroup>
+                                            <col style="width:70px;">
+                                            <col style="width:170px;">
+                                            <col style="width:150px;">
+                                            <col style="width:150px;">
+                                            <col style="width:150px;">
+                                            <col style="width:180px;">
+                                            <col style="width:180px;">
+                                            <col style="width:150px;">
+                                            <col style="width:180px;">
+                                        </colgroup>
+
+                                    </ng-template>
+
+                                    <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+
+                                        <tr [formGroupName]="i">
+                                            <td>
+                                                {{ i + 1 }}
+                                            </td>
+                                            <td>
+                                                {{ rowData.DisItemDescription }}
+                                            </td>
+                                            <td>
+                                                {{ rowData.Expense.AccountCodeName}}
+                                            </td>
+                                            <td>
+                                                {{ rowData.AccountCode }}
+                                            </td>
+
+                                            <td>
+                                                {{ rowData.DisTypeOfCostName }}
+                                            </td>
+                                            <td>
+                                                {{ rowData.DisApportionmentMethod }}
+                                            </td>
+                                            <td style="text-align: right">
+                                                {{ rowData.DiscountValue |number:'1.2-2'}}
+
+                                            </td>
+                                            <td style="text-align: right">
+                                                {{ rowData.TotalVOSum }}
+
+                                            </td>
+                                            <td align="right">
+                                                {{ ( projectContractVariationOrderForm.get('ProjectContractVariationOrderDiscountItems').controls[i].get('DiscountValue').value 
+                                                      )|number:'1.2-2' }}
+                                            </td>
+                                        </tr>
+
+                                    </ng-template>
+
+                                    <ng-template pTemplate="footer" let-rowData let-i="rowIndex" let-columns>
+                                        <tr style="font-weight: bold;">
+                                            <td> </td>
+                                            <td>Total Before Tax</td>
+                                            <td> </td>
+                                            <td> </td>
+                                            <td> </td>
+                                            <td> </td>
+                                            <td style="text-align: right">
+                                                {{ ( selectedPODetails.TotalBefTax )|number:'1.2-2' }}
+                                            </td>
+
+                                            <td style="text-align: right">
+                                                <!-- {{ ( projectContractVariationOrderForm.get('SubTotalRevisedContractValue').value )|number:'1.2-2'}} -->
+                                            </td>
+                                            <td style="text-align: right">
+                                                {{ ( projectContractVariationOrderForm.get('TotalBefTaxRevisedContractValue').value )|number:'1.2-2'}}
+                                            </td>
+
+                                        </tr>
+                                        <tr class="footercolor">
+                                            <td> </td>
+                                            <td>Tax</td>
+                                            <td> </td>
+                                            <td> </td>
+                                            <td> </td>
+                                            <td> </td>
+                                            <td style="text-align: right">
+                                                {{( selectedPODetails.TotalTax )|number:'1.2-2' }}
+                                            </td>
+                                            <td> </td>
+                                            <td style="text-align: right">
+                                                {{ ( projectContractVariationOrderForm.get('TaxRevisedContractValue').value )|number:'1.2-2'}}
+
+                                            </td>
+
+                                        </tr>
+
+                                        <tr style="font-weight: bold;">
+                                            <td> </td>
+                                            <td>Total</td>
+                                            <td> </td>
+                                            <td> </td>
+                                            <td> </td>
+                                            <td> </td>
+                                            <td style="text-align: right">
+                                                {{( selectedPODetails.TotalAmount )|number:'1.2-2' }}
+                                            </td>
+                                            <td style="text-align: right">
+
+                                            </td>
+                                            <td style="text-align: right">
+                                                {{ (( this.projectContractVariationOrderForm.get('TotalBefTaxRevisedContractValue').value ) + ( this.projectContractVariationOrderForm.get('TaxRevisedContractValue').value ))|number:'1.2-2'}}
+
+                                            </td>
+
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>
+                        </div>
+                        <div *ngIf="!IsViewMode">
+                            <input type="number" (keydown)="restrictMinusValue($event)" [(ngModel)]="linesToAdd"
+                                [ngModelOptions]="{standalone: true}" class="form-control linesToAdd">
+                            <button type="submit" (click)="addVOItem(linesToAdd,'ProjectContractVariationOrderItems')"
+                                class="addLine">
+                                <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Line
+                            </button>
+                        </div>
+                        <br />
+                        <!-- <div class="col-sm-4">
+                            <div class="row" style="margin-top:3em;">
+                                <div class="col-12">
+                                    <h4 class="form-heading">Attachments</h4>
+                                </div>
+                                <div class="col-12 attachments" *ngIf="selectedVODetails!=undefined">
+                                    <ul>
+                                        <ng-template ngFor let-data [ngForOf]="selectedVODetails.Attachments"
+                                            let-i="index">
+                                            <li *ngIf="data.IsDelete!=true||data.IsDelete==undefined">
+                                                <span class="attcmnts">
+                                                    <span class="displayFileName" style="word-wrap:break-word">
+                                                        {{ data.FileName }}
+                                                    </span>
+                                                    <a style="color:black;" target="_blank" *ngIf="!IsViewMode"
+                                                        href="{{apiEndPoint}}/DownloadAttachedFiles?AttachmentId={{ data.AttachmentId }}&AttachmentTypeId={{ data.AttachmentTypeId }}&FileName={{data.FileName|encodeURIComponent}}&RecordId={{data.RecordId}}">
+                                                        <i class="fa fa-download"></i>
+                                                    </a>
+                                                    &nbsp;&nbsp;
+                                                    <i *ngIf="!IsViewMode" (click)="attachmentDelete(i)"
+                                                        class="fa fa-trash">
+                                                    </i>
+                                                </span>
+                                            </li>
+                                        </ng-template>
+                                    </ul>
+                                </div>
+                                <div class="col-12" *ngIf="!IsViewMode">
+                                    <div class="col-12">
+                                        <input style="height: 30px" type="file" multiple
+                                            (change)="onFileUploadChange($event)" name="file">
+                                    </div>
+                                    <div class="col-12">
+                                        <ul class="fileList">
+                                            <li *ngFor="let data of uploadedFiles;let i = index">
+                                                <span>
+                                                    <span class="fileName" style="word-wrap:break-word">
+                                                        {{ data.name }}
+                                                    </span>
+                                                    <i class="fa fa-close" (click)="onFileClose(i)"></i>
+                                                </span>
+                                                <br>
+                                                <span class="fileSize">{{ data.size/1024 }} KB</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+                        <div class="form-group row">
+                            <div class="col-xl-12 col-sm-12 col-12"
+                                *ngIf="selectedVODetails.WorkFlowStatusId==workFlowStatus.AskedForClarification||selectedVODetails.WorkFlowStatusId==workFlowStatus.WaitingForApproval">
+                                <h4 class="form-heading">Approval Remarks</h4>
+                                <div>
+                                    <textarea appAutofocus class="form-control" formControlName="ApprovalRemarks"
+                                        style="width:70%;display:inline-block ">
+                                    </textarea>
+                                    <button type="submit"
+                                        (click)="updateStatus(isApprovalPage?workFlowStatus.AskedForClarification:workFlowStatus.WaitingForApproval)"
+                                        style="float:inherit;vertical-align: top;" class="btn btn-edit">
+                                        <i class="fa fa-envelope" aria-hidden="true"></i>
+                                        <span *ngIf="isApprovalPage">
+                                            {{ selectedVODetails.WorkFlowComments|ApprovalButton }}
+                                        </span>
+                                        <span *ngIf="!isApprovalPage">
+                                            Reply
+                                        </span>
+                                    </button>
+                                </div>
+                                <div
+                                    *ngIf="projectContractVariationOrderForm.get('ApprovalRemarks') && projectContractVariationOrderForm.get('ApprovalRemarks').errors!=null && projectContractVariationOrderForm.get('ApprovalRemarks').touched==true">
+                                    <span class="errorMessage"
+                                        *ngIf="projectContractVariationOrderForm.get('ApprovalRemarks').errors.required">Approval
+                                        Remarks is Required</span>
+                                </div>
+                            </div>
+                            <div *ngIf="selectedVODetails.WorkFlowComments!=undefined && selectedVODetails.WorkFlowComments.length >0"
+                                class="col-xl-12 col-sm-12 col-12">
+                                <h4 class="form-heading">Previous Comments</h4>
+                                <ul>
+                                    <li *ngFor="let record of selectedVODetails.WorkFlowComments">
+                                        <span class='remarksUserName'>{{ record.UserName }}</span> -
+                                        <span
+                                            class='remarksDate'>{{ record.CreatedDate|date:'dd-MM-yyyy h:mm:ss a' }}</span>:
+                                        <br>
+                                        <span>{{ record.Remarks }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div *ngIf="projectMasterContractId>0" class="col-12">
+                            <div *ngIf="!isApprovalPage" class="form-group text-right btn-list">
+                                <button type="submit" *ngIf="!IsViewMode" (click)="saveRecord('save')"
+                                    class="btn btn-save">
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                    {{voId==0? 'Save':'Update'}}
+                                </button>
+                                <button type="submit"
+                                    *ngIf="(selectedVODetails.WorkFlowStatusId==0||selectedVODetails.WorkFlowStatusId==21||selectedVODetails.WorkFlowStatusId==workFlowStatus.Draft)"
+                                    (click)="saveRecord('send')" class="btn btn-approve">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Send for Approval</button>
+                                <button type="submit"
+                                    *ngIf="IsViewMode && selectedVODetails.WorkFlowStatusId==workFlowStatus.Draft"
+                                    (click)="editRecord()" class="btn btn-edit">
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                                <button type="submit"
+                                    *ngIf="(selectedVODetails.WorkFlowStatusId==workFlowStatus.WaitingForApproval||selectedVODetails.WorkFlowStatusId==workFlowStatus.AskedForClarification)"
+                                    (click)="recallPoApproval()" class="btn btn-cancel">
+                                    <i class="fa fa-times-circle" aria-hidden="true"></i> Cancel Approval</button>
+                                <button type="submit" (click)="cancelRecord()" class="btn btn-cancel">
+                                    <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                            </div>
+                            <div *ngIf="isApprovalPage" class="form-group text-right btn-list">
+                                <button type="submit" (click)="onVerify()" class="btn btn-save"
+                                    *ngIf="verifyPermission &&!doUpdate && (selectedVODetails.WorkFlowStatusId!=18 && selectedVODetails.WorkFlowStatusId!=20)">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Verify</button>
+                                <button type="submit" *ngIf="doUpdate" (click)="saveRecord('verify')"
+                                    class="btn btn-save">
+                                    <i class="fa fa-check" aria-hidden="true"></i>Update</button>
+                                <button type="submit" (click)="onApproveClick('approve')" *ngIf="approvePermission"
+                                    class="btn btn-approve">
+                                    <i class="fa fa-check" aria-hidden="true"></i>Approve</button>
+                                <button type="submit" (click)="displayVoidPopUp(false)" *ngIf="approvePermission"
+                                    class="btn btn-delete">
+                                    <i class="fa fa-ban" aria-hidden="true"></i> Reject</button>
+                                <button type="submit" (click)="cancelRecord()" class="btn btn-cancel">
+                                    <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #projectContractTemplate let-r="result" let-i="index" let-t="term">
+    <table class="autoCompleteTable" style="width: 99%;table-layout: fixed">
+        <thead *ngIf='r.index==0'>
+            <tr>
+                <th style="width: 27%">
+                    Contract Number
+                </th>
+                <th style="width: 33%">
+                    Project Name
+                </th>
+                <th style="width: 22%">
+                    Contract Sum
+                </th>
+                <th style="width: 18%">
+                    Created Date
+                </th>
+            </tr>
+        </thead>
+        <tr>
+            <td style="width: 27%">{{ r.POPMasterCode }}</td>
+            <td style="width: 33%">{{ r.ProjectName }}</td>
+            <td style="width: 22%">{{ r.OriginalContractSum }}</td>
+            <td style="width: 18%">{{ r.CreatedDate |DisplayDateFormat }}</td>
+        </tr>
+    </table>
+</ng-template>
+<ng-template #AccountCodeTemplate let-r="result" let-t="term">
+    <div style="max-height: 100px; overflow: auto">
+        {{ r.AccountCodeName}}
+    </div>
+</ng-template>
+<app-auditlog *ngIf="showLogPopUp" (hideLogPopUp)="hideLogPopUp($event)" [DocumentId]="this.voId"
+    [DocumentNumber]="(selectedVODetails.WorkFlowStatusId != workFlowStatus.Draft) ?selectedVODetails.DocumentCode:selectedVODetails.DraftCode"
+    [PageName]="'ProjectContractVariationOrder'" [DocType]="'PVO'" [showLogPopUp]="showLogPopUp">
+</app-auditlog>

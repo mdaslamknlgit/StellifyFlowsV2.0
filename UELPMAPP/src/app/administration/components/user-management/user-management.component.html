@@ -1,0 +1,783 @@
+<div class="container-fluid">
+    <div class="row" style="position: relative;">
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+            <div class="flexrow space-between align-center">
+            <h3 class="item-heading"> User Management </h3>
+            <p>{{ShowEditForm}}</p>            
+        <div>
+            <!-- <button class="btn btn-transparent" *ngIf="importPermission" (click)="GetLDAPUserProfile()">Import LDAP User
+                Profile</button>
+            <button class="btn btn-transparent" (click)="OpenUserNamepopup()">Search AD User</button> -->
+        
+            <!-- <button class="btn  btn-transparent" (click)="addRecord();" *ngIf="hideText && newPermission"> New Record</button> -->
+
+            <button  class="btn btn-save ng-star-inserted" type="button" 
+                *ngIf="hideText && newPermission" (click)="addRecord()">
+                <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> New</button>
+
+            <!-- <button class="btn btn-transparent" (clickOutside)="onClickedOutside($event)" (click)="split()"> {{showfilterstext}}
+            </button> -->
+        
+            <img style="display: none;" src="../assets/images/grid1.png" (click)="showFullScreen()">
+            <img style="display: none;" src="../assets/images/grid2.png">
+        </div>
+
+
+        </div>
+    </div>
+
+
+
+
+    <div class="left-section"   [class.display-filters]="!showfilters" >
+
+        <div class="filter-section" ngbDropdown #myDrop="ngbDropdown">
+
+            <div class="left-search">
+                <input type="text" [(ngModel)]="userSearchKey" placeholder="Search requests..."
+                    class="search-filter" (keyup)="onSearchInputChange($event)">
+                <i class="fa fa-search" aria-hidden="true"></i>
+                <div class="filter-popup" *ngIf="initDone" ngbDropdownMenu aria-labelledby="dropdownManual"
+                    (click)="$event.stopPropagation(); myDrop.open();">
+
+                    <form [formGroup]="UserFilterInfoForm" class="form-horizontal">
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-6 form-label">User Name</label>
+                            <div class="col-6">
+
+                                <!-- <input  type="text" #userName formControlName="UserName" class="form-control"> -->
+
+                                <input #userName formControlName="UserName" type="text"
+                                    class="form-control show" [inputFormatter]="userInputFormater"
+                                    [ngbTypeahead]="userSearch" [resultTemplate]="userTemplate" />
+
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-6 form-label">User Roles</label>
+                            <div class="col-6">
+                                <input type="text" formControlName="UserRoles" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-12 error">
+                                {{filterMessage}}
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+
+                            <div class="col-12" style="text-align: right">
+                                <button type="submit" (click)="filterData()" class="btn btn-save">
+                                    <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+            <!-- start filter code -->
+
+            <!-- <div class="filter-icon">
+      <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+          <i class="fa fa-filter" aria-hidden="true"></i>
+      </button>
+  </div> -->
+
+            <div style="float:right;margin:0px;" class="filter-icon" *ngIf="isFilterApplied"
+                (click)="resetData()">
+                <i class="fa fa-undo" aria-hidden="true"></i>
+            </div>
+
+
+            <!-- end filter code -->
+
+            <div *ngIf="!ShowEditForm">
+                <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="filter-scroll"
+                    style="width:100%; float:left;">
+                    <!-- p-table Starts Here -->
+                    <!-- <p-table #UsersListTable 
+                    dataKey="FirstName"
+                    [rowHover]="true" 
+                    [filterDelay]="0"
+                    [globalFilterFields]="['FirstName', 'EmailId']" 
+                    [columns]="UserManagementListCols" [value]="UserManagementList" [rows]="1" scrollHeight="270px"
+                    [virtualRowHeight]="30" [virtualScroll]="true" sortMode="multiple" [rowsPerPageOptions]="[10,25,50,75,100]"> -->
+                    <p-table #UsersListTable dataKey="UserName" [rowHover]="true" [filterDelay]="0"
+                    [globalFilterFields]="['FirstName', 'UserName','EmailId','PhoneNumber']" [columns]="UserManagementListCols"
+                    [value]="UserManagementList" [rows]="1" [scrollable]="true"
+                    [scrollHeight]="'calc(100vh - 330px)'" scrollWidth="100%" [virtualRowHeight]="30" [virtualScroll]="true"
+                    sortMode="multiple" responsiveLayout="scroll" [rowsPerPageOptions]="[10,25,50,75,100]">
+                    <ng-template pTemplate="caption">
+                    </ng-template>
+
+                    <ng-template pTemplate="header" let-columns>
+                        <tr style="height: 40px;">
+                        <th *ngFor="let col of UserManagementListCols;let i=index" [pSortableColumn]="col.field">
+                            {{col.header}}
+                            <p-sortIcon [hidden]="i==0" *ngIf="i!=UserManagementListCols.length-1" [field]="col.field"></p-sortIcon>
+                        </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="colgroup" let-columns>
+                        <colgroup>
+                        <col *ngFor="let col of columns" [style.width]="col.width">
+                        </colgroup>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-value let-columns let-i="rowIndex">
+                        <tr style="height:30px" [pSelectableRow]="rowData">
+                        <td>{{value.FirstName}}</td>
+                        <td>{{value.UserName}}</td>
+                        <td>{{value.EmailId}}</td>
+                        <td>{{value.PhoneNumber }}</td>
+                        <td>{{value.Designation }}</td>
+                        <td class="aligncenter">
+                            <button type="button" class="btn" (click)="RedirectUser(value.UserID)">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                            </button>
+                        </td>
+                        </tr>
+                    </ng-template>
+                    </p-table>
+                    <!-- p-table Ends Here -->
+                    <!-- <table class="table">
+                        <tr >
+                            <td (click)="hidefilter()">
+                                <table class="listtable">
+                                    <tr>
+                                    <th>First Name </th>  <th>Email</th> <th>Phone </th> <th>Designation </th>
+                                    </tr>
+                                    <tr [class.activerow]="record.UserID==selectedUserManagementRecord.UserID"
+                                    (click)="onRecordSelection(record.UserID)" *ngFor="let record of UserManagementList">
+                                        <td>{{record.FirstName}}</td>
+                                        <td>{{record.EmailId}}</td>
+                                        <td>{{record.PhoneNumber}}</td> 
+                                        <td>{{record.Designation}} </td>
+                                        
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table> -->
+                    <div *ngIf="UserManagementList.length==0" class="col-12 listErrorMessage">
+                        {{errorMessage}}
+                    </div>
+                
+                </div>
+                <div style="clear: both;"></div>
+                <ngb-pagination [maxSize]="5" *ngIf="UserManagementList.length>0"
+                    (pageChange)="pageChange($event)" [collectionSize]="UserManagementPagerConfig.TotalRecords"
+                    class="d-flex justify-content-center" [pageSize]="UserManagementPagerConfig.RecordsToFetch"
+                    [page]="1" [boundaryLinks]="true"></ngb-pagination>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    </div>
+    <p>Edit Form Starts Here</p>
+    <div class="row" *ngIf="ShowEditForm">
+        <div #rightPanel [CustomSpinner]="showRightPanelLoadingIcon" class="rightPanel col-lg-12 col-md-12"
+            [class.expand-rightcol]="rightsection">
+            <div class="fullScreenLabel">
+                <app-header></app-header>
+            </div>
+            <div>
+                <form [formGroup]="userManagementForm" class="form-horizontal">
+                    <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+                        <div class="row fullScreenLabel">
+                            <div class="col-12">
+                                <!-- <h3 class="item-heading" style="float:none;">User Management</h3> -->
+                                <h3 class="item-heading"> User Management </h3>
+                            </div>
+                            
+                        </div>
+                        <hr style="margin-top: 0px;"/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- <div class="form-group row">
+                    <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">User Name </label>  
+                    <div class="autoComplete col-xl-4 col-sm-6 col-6">
+                          <label class="col-form-label form-text" *ngIf="selectedUserManagementRecord.UserID!=null || hideText">
+                            <b style="color:#01548e">{{selectedUserManagementRecord.UserName}}</b> </label>
+
+                            <input formControlName="UserProfile" *ngIf="selectedUserManagementRecord.UserID==null&&hideInput"
+                              type="text" class="form-control show" [inputFormatter]="userInputFormater"
+                            [ngbTypeahead]="userSearch" [resultTemplate]="userTemplate" (selectItem)="onUserChange($event)" />
+
+                          <div *ngIf="userManagementForm.get('UserProfile').errors!=null">
+                              <span class="errorMessage" *ngIf="userManagementForm.get('UserProfile').errors.DuplicateUser">Duplicate User Name</span>
+                          </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">User Roles</label>
+                  <div class="col-xl-4 col-sm-6 col-6">
+                      <label class="col-form-label form-text" *ngIf="hideText">{{selectedUserManagementRecord.UserRolesName }}</label>
+                      <select *ngIf="hideInput" class="form-control" formControlName="UserRoles"
+                      [ngClass]="(validateControl(userManagementForm.get('UserRoles')))?'form-control ng-touched':'form-control'">
+                          <option *ngFor="let roles of userRoles" [value]="roles.RoleID">
+                              {{roles.RoleName}}
+                          </option>
+                      </select>
+                  </div>
+              </div> -->
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">First Name <i
+                                            class="fa fa-star mandatory-icon" *ngIf="hideInput"
+                                            aria-hidden="true"></i></label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedUserManagementRecord.FirstName }}</label>
+                                        <label class="col-form-label form-text"
+                                            *ngIf="hideInput&&(selectedUserManagementRecord.UserID!=null && selectedUserManagementRecord.isADUser==true)">{{
+                                            selectedUserManagementRecord.FirstName }}</label>
+                                        <input formControlName="FirstName"
+                                            *ngIf="hideInput && selectedUserManagementRecord.UserID!=null&&selectedUserManagementRecord.isADUser==false"
+                                            type="text" class="form-control" />
+                                        <input formControlName="FirstName"
+                                            *ngIf="hideInput && selectedUserManagementRecord.UserID==null" type="text"
+                                            class="form-control" />
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Email <i
+                                            class="fa fa-star mandatory-icon" *ngIf="hideInput"
+                                            aria-hidden="true"></i></label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedUserManagementRecord.Emailid }}</label>
+                                        <label class="col-form-label form-text"
+                                            *ngIf="hideInput&&(selectedUserManagementRecord.UserID!=null && selectedUserManagementRecord.isADUser==true)">{{
+                                            selectedUserManagementRecord.Emailid }}</label>
+                                        <input formControlName="Emailid"
+                                            *ngIf="hideInput && selectedUserManagementRecord.UserID!=null&&selectedUserManagementRecord.isADUser==false"
+                                            type="text" class="form-control" />
+                                        <input formControlName="Emailid"
+                                            *ngIf="hideInput && selectedUserManagementRecord.UserID==null" type="text"
+                                            class="form-control" />
+
+
+
+                                        <!-- <label class="col-form-label form-text" *ngIf="hideText">{{ selectedUserManagementRecord.Emailid }}</label>                                        
+                      <input formControlName="Emailid" *ngIf="hideInput" type="text" class="form-control" />                                   -->
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Phone Number
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedUserManagementRecord.PhoneNumber }}</label>
+                                        <input formControlName="PhoneNumber" *ngIf="hideInput" type="text"
+                                            class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Address1 <i
+                                            class="fa fa-star mandatory-icon" *ngIf="hideInput"
+                                            aria-hidden="true"></i></label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedUserManagementRecord.Address1 }}</label>
+                                        <input formControlName="Address1" *ngIf="hideInput" type="text"
+                                            class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Address2</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedUserManagementRecord.Address2 }}</label>
+                                        <input formControlName="Address2" *ngIf="hideInput" type="text"
+                                            class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Address3</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedUserManagementRecord.Address3 }}</label>
+                                        <input formControlName="Address3" *ngIf="hideInput" type="text"
+                                            class="form-control" />
+                                    </div>
+                                </div>
+                                <!-- <div class="form-group row">
+                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Country <i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i></label>  
+                    <div class="col-xl-8 col-sm-6 col-6">
+                        <label class="col-form-label form-text" *ngIf="hideText">{{ selectedUserManagementRecord.CountryName }}</label>                                         -->
+                                <!-- <input formControlName="Country" *ngIf="hideInput" type="text" class="form-control" />                                   -->
+                                <!-- <select *ngIf="hideInput" class="form-control" formControlName="CountryId">
+                            <option [ngValue]="null">--Select--</option>
+                            <option *ngFor="let country of countries" [value]="country.Id">
+                                {{country.Name}}
+                            </option>
+                        </select>
+                    </div>      
+                </div>    -->
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Country <i
+                                            class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i>
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <div style="position: relative;" class="autoComplete">
+                                            <label class="col-form-label form-text"
+                                                *ngIf="hideText">{{selectedUserManagementRecord.CountryName }}</label>
+
+                                            <input type="text" placeholder="" *ngIf="hideInput" class="form-control"
+                                                formControlName="Country"
+                                                [ngClass]="(validateControl(userManagementForm.get('Country')))?'form-control ng-touched':'form-control'"
+                                                [inputFormatter]="countryInputFormatter"
+                                                [ngbTypeahead]="countryNameSearch" [resultTemplate]="countryTemplate"
+                                                (selectItem)="onCountryChange($event)">
+                                            <span class="errorMessage"
+                                                *ngIf="userManagementForm.get('Country')!=null && userManagementForm.get('Country').errors!=null ">
+
+                                            </span>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">ZipCode <i
+                                            class="fa fa-star mandatory-icon" *ngIf="hideInput"
+                                            aria-hidden="true"></i></label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedUserManagementRecord.ZipCode }}</label>
+                                        <input formControlName="ZipCode" *ngIf="hideInput" type="text"
+                                            class="form-control" />
+                                    </div>
+                                </div>
+                                <!--we are not using now Alternate Approver-->
+                                <!-- <div class="form-group row">
+                    <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Alternate Approver</label>  
+                    <div class="col-xl-8 col-sm-6 col-6">
+                        <label class="col-form-label form-text" *ngIf="hideText">{{ selectedUserManagementRecord.User==null?"":selectedUserManagementRecord.User.UserName }}</label>                                         -->
+                                <!-- <input formControlName="AlternateApprover" *ngIf="hideInput" type="text" class="form-control" />                                   -->
+                                <!-- <input  formControlName="User" type="text" class="form-control" [inputFormatter]="userInputFormater"  *ngIf="hideInput" 
+                        [ngbTypeahead]="userSearch" [resultTemplate]="userTemplate" />
+                    </div>      
+                </div> -->
+                                <div class="form-group row" *ngIf="selectedUserManagementRecord.UserID!=null">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Locked</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedUserManagementRecord.isLocked==true?"Locked":"UnLocked" }}</label>
+                                        <label class="col-form-label form-text" *ngIf="hideInput">
+                                            <mat-slide-toggle formControlName="isLocked" (change)="matselect1($event)">
+                                            </mat-slide-toggle>
+                                            <label *ngIf="slideactive1">Locked</label>
+                                        </label>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Last Name <i
+                                            class="fa fa-star mandatory-icon" *ngIf="hideInput"
+                                            aria-hidden="true"></i></label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedUserManagementRecord.LastName }}</label>
+                                        <label class="col-form-label form-text"
+                                            *ngIf="hideInput&&(selectedUserManagementRecord.UserID!=null && selectedUserManagementRecord.isADUser==true)">{{
+                                            selectedUserManagementRecord.LastName }}</label>
+                                        <input formControlName="LastName"
+                                            *ngIf="hideInput && selectedUserManagementRecord.UserID!=null && selectedUserManagementRecord.isADUser==false"
+                                            type="text" class="form-control" />
+                                        <input formControlName="LastName"
+                                            *ngIf="hideInput && selectedUserManagementRecord.UserID==null" type="text"
+                                            class="form-control" />
+
+                                        <!-- <label class="col-form-label form-text" *ngIf="hideText">{{ selectedUserManagementRecord.LastName }}</label>
+                        <label class="col-form-label form-text" *ngIf="hideInput&&(selectedUserManagementRecord.UserID!=null && selectedUserManagementRecord.isADUser==true)">{{ selectedUserManagementRecord.LastName }}</label>                                        
+                        <input formControlName="LastName" *ngIf="hideInput&&selectedUserManagementRecord.isADUser==false" type="text" class="form-control" />                                   -->
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Email
+                                        Signature</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedUserManagementRecord.EmailSignature }}</label>
+                                        <textarea rows="4" cols="50" formControlName="EmailSignature" *ngIf="hideInput"
+                                            class="form-control">
+                          </textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Designation</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedUserManagementRecord.Designation }}</label>
+                                        <label class="col-form-label form-text"
+                                            *ngIf="hideInput&&(selectedUserManagementRecord.UserID!=null && selectedUserManagementRecord.isADUser==true)">{{
+                                            selectedUserManagementRecord.Designation }}</label>
+                                        <input formControlName="Designation"
+                                            *ngIf="hideInput && selectedUserManagementRecord.UserID!=null&&selectedUserManagementRecord.isADUser==false"
+                                            type="text" class="form-control" />
+                                        <input formControlName="Designation"
+                                            *ngIf="hideInput && selectedUserManagementRecord.UserID==null" type="text"
+                                            class="form-control" />
+
+                                        <!-- <label class="col-form-label form-text" *ngIf="hideText">{{ selectedUserManagementRecord.Designation }}</label>                                        
+                        <input formControlName="Designation" *ngIf="hideInput" type="text" class="form-control" />                                   -->
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">User Name <i
+                                            class="fa fa-star mandatory-icon" *ngIf="hideInput"
+                                            aria-hidden="true"></i></label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text"
+                                            *ngIf="hideText || selectedUserManagementRecord.UserID!=null">{{
+                                            selectedUserManagementRecord.UserName }}</label>
+                                        <input formControlName="UserName"
+                                            *ngIf="hideInput && selectedUserManagementRecord.UserID==null" type="text"
+                                            (change)="userselect($event.target.value)" class="form-control" />
+                                        <span class="errorMessage" *ngIf="showCodeErrorMessage">
+                                            Duplicate User Name
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Status</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedUserManagementRecord.IsActive==1?"Active":"InActive" }}</label>
+                                        <label class="col-form-label form-text" *ngIf="hideInput">
+                                            <mat-slide-toggle formControlName="IsActive" (change)="matselect($event)">
+                                            </mat-slide-toggle>
+                                            <label *ngIf="slideactive">Active</label>
+                                        </label>
+                                    </div>
+                                </div>
+                              
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label">Reporting manager
+                                         <!-- {{ManagerName}} -->
+                                    </label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">
+                                            {{selectedUserManagementRecord.ManagerName }}
+                                        </label>
+                                            <!-- <div class="input-group">
+                                                <input type="text" class="form-control" placeholder="Search" id="inputGroup" />
+                                                <span class="input-group-addon" (click)="SelectReportingManager($event)">
+                                                    <i class="fa fa-list"></i>
+                                                </span>
+                                            </div> -->
+                                            <div class="input-group">
+                                                <input formControlName="ManagerName" *ngIf="hideInput" type="text"
+                                                class="form-control" readonly (click)="SelectReportingManager($event)" />
+                                                <button type="button" (click)="SelectReportingManager($event)"
+                                                 class="btn btn-default" style="width:40px !important;">
+                                                    <i class="fa fa-wpforms" aria-hidden="true"></i> 
+                                                </button>  
+                                            </div>      
+                                        <label class="col-form-label form-text" *ngIf="hideInput">
+
+                                        </label>
+                                        <!-- <mat-form-field class="example-full-width" style="width:100%">
+                                            <input matInput type="text" [readonly]="IsReadonly" 
+                                            formControlName="ManagerName" 
+                                                readonly placeholder="Reporting manager" autocomplete="off">
+
+                                            <mat-icon matSuffix  
+                                            
+                                            (click)="SelectReportingManager($event)">folder
+                                            </mat-icon>
+                                          </mat-form-field> -->
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-sm-6 col-12 form-label" *ngIf="hideText">AD
+                                        User</label>
+                                    <div class="col-xl-8 col-sm-6 col-12">
+                                        <label class="col-form-label form-text" *ngIf="hideText">{{
+                                            selectedUserManagementRecord.isADUser ==1? "Yes":"No" }}</label>
+                                        <!-- <input formControlName="isADUser" *ngIf="hideInput"  class="form-control" />   -->
+                                        <!-- <label class="col-form-label form-text" >{{ userManagementForm.get('isADUser').value }}</label> -->
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+
+                            <!-- start Roles Grid -->
+                            <div class="col-12 contractor-details">
+                                <div class="row" style="margin-top:2em;">
+                                    <div class="col-sm-6">
+                                        <h4 class="form-heading">Roles</h4>
+                                    </div>
+                                    <div class="col-12 table-responsive1" [ngStyle]="{'max-width.px': screenWidth}">
+                                        <fieldset *ngIf="hideInput" formArrayName="RolesDetails">
+                                            <div style="text-align: center;">
+                                                <span class="errorMessage" *ngIf="showGridErrorMessage">
+                                                    Please Enter Roles Details
+                                                </span>
+                                            </div>
+                                  
+                                            <!-- <div class="respnsive-table tablescroll p-datatable-wrapper"> -->
+                                            <!-- <p-table [columns]="gridRolesColumns" [customSort]="true" sortMode="single"
+                                                [value]="userManagementForm.controls.RolesDetails.controls"
+                                                [rowHover]="true"  scrollWidth="100%" responsiveLayout="scroll"
+                                                [scrollable]="true" [scrollHeight]="'calc(100vh - 400px)'" > -->
+                                                <p-table [columns]="gridRolesColumns" [customSort]="true" sortMode="single"
+                                                [value]="userManagementForm.controls.RolesDetails.controls">
+                                                    <ng-template pTemplate="colgroup" let-columns>
+                                                        <colgroup>
+                                                            <col style="width:5%;">
+                                                            <col style="width:30%;">
+                                                            <col style="width:25%;">
+                                                            <col style="width:30%;">
+                                                            <col style="width:10%;">
+                                                        </colgroup>
+                                                    </ng-template>
+                                                    <ng-template pTemplate="header" let-columns>
+                                                        <tr>
+                                                            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                                                {{col.header}}
+                                                                <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
+                                                                    ariaLabelDesc="Activate to sort in descending order"
+                                                                    ariaLabelAsc="Activate to sort in ascending order">
+                                                                </p-sortIcon>
+                                                            </th>
+                                                        </tr>
+                                                    </ng-template>
+                                                    <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                                        <tr *ngIf="hideInput" [formGroupName]="i">
+                                                            <td>
+                                                                {{ i + 1 }}
+                                                            </td>
+                                                            <td>
+                                                                <!-- (selectItem)="oncompanySelection($event, i)"  -->
+                                                                <input formControlName="Company" placement="top-left" #company type="text" class="form-control"
+                                                                    [inputFormatter]="companyInputFormater" [ngbTypeahead]="companySearch"
+                                                                    [resultTemplate]="companyTemplate" />
+                                            
+                                                            </td>
+                                                            <td>
+                                                                <!-- <input [ngClass]="userManagementForm.get('RolesDetails').controls[i].get('IsDuplicate').value? 'validator' : 'novalidator'"  formControlName="Role"  placement="top-left" type="text" class="form-control" [inputFormatter]="userroleInputFormater"
+                                                                                                [ngbTypeahead]="userroleSearch" (change)="onRoleChange(i, $event)"  (selectItem)="onRoleSelect(i, userManagementForm.get('RolesDetails').controls[i], $event)"  [resultTemplate]="userroleTemplate" /> -->
+                                                                <!-- Error: {{userManagementForm.get('RolesDetails').controls[i].get('Role').errors |json}} -->
+                                                                <!-- IsDuplciate: {{userManagementForm.get('RolesDetails').controls[i].get('IsDuplicate').value  }} -->
+                                                                <!-- <span class="errorMessage" *ngIf="userManagementForm.get('RolesDetails').controls[i].get('IsDuplicate').value">                                                  
+                                                                                                      Role is already existed for company ' {{ userManagementForm.get('RolesDetails').controls[i].get('Company').value.CompanyName }} '
+                                                                                               </span>                                                  -->
+                                                                <ng-multiselect-dropdown class="multiselect padding-null form-control" formControlName="Role"
+                                                                    [placeholder]="'Roles'" [data]="userRoles" [settings]="RoleListSettings">
+                                                                </ng-multiselect-dropdown>
+                                            
+                                            
+                                                            </td>
+                                                            <td>
+                                                                <ng-multiselect-dropdown class="multiselect padding-null form-control"
+                                                                    (click)="getDepartments($event,userManagementForm.get('RolesDetails').controls[i].get('Company').value.CompanyId)"
+                                                                    formControlName="DepartmentList" [placeholder]="'Departments'" [data]="departmentsList"
+                                                                    [settings]="departmentListSettings">
+                                                                </ng-multiselect-dropdown>
+                                                            </td>
+                                                            <td>
+                                                                <div style="float:left;width:80%;">
+                                            
+                                                                    <input type="checkbox" formControlName="IsSelected" (change)="SelectRoles($event,i)">
+                                            
+                                                                </div>
+                                                                <div class="gridIconsStyle">
+                                                                    <i class="fa fa-trash gridRemoveIcon" (click)="removeRoleGridItem(i)" aria-hidden="true"></i>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </ng-template>
+                                                </p-table>
+                                            <!-- </div> -->
+                                            <div *ngIf="hideInput">
+                                                <input type="number" [(ngModel)]="linesToAdd"
+                                                    [ngModelOptions]="{standalone: true}"
+                                                    class="form-control linesToAdd">
+                                                <button type="submit" (click)="addGridItem(linesToAdd)" class="addLine">
+                                                    <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Line
+                                                </button>
+                                            </div>
+                                        </fieldset>
+
+                                        <p-table *ngIf="hideText" [columns]="gridRolesColumns" [customSort]="true"
+                                            sortMode="single" [value]="selectedUserManagementRecord.RolesDetails">
+                                            <ng-template pTemplate="colgroup" let-columns>
+                                                <colgroup>
+                                                    <col style="width:5%;">
+                                                    <col style="width:30%;">
+                                                    <col style="width:25%;">
+                                                    <col style="width:30%;">
+                                                    <col style="width:10%;">
+                                                </colgroup>
+                                            </ng-template>
+                                            <ng-template pTemplate="header" let-columns>
+                                                <tr>
+                                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                                        {{col.header}}
+                                                        <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
+                                                            ariaLabelDesc="Activate to sort in descending order"
+                                                            ariaLabelAsc="Activate to sort in ascending order">
+                                                        </p-sortIcon>
+                                                    </th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-rowData let-i="rowIndex"
+                                                let-columns="columns">
+                                                <tr>
+                                                    <td>
+                                                        {{ i + 1 }}
+                                                    </td>
+                                                    <td>
+                                                        {{ rowData.Company.CompanyName }}
+                                                    </td>
+                                                    <td>
+                                                        <div *ngFor="let role of rowData.Role">
+                                                            {{role.RoleName}}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div *ngFor="let dept of rowData.DepartmentList">
+                                                            {{dept.Name}}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div style="float:left;width:60%;text-align: left;">
+                                                            {{ rowData.IsSelected==1?"Yes":"No" }}
+                                                        </div>
+                                                        <div class="gridIconsStyle" *ngIf="hideInput">
+                                                            <!-- <i class="fa fa-trash gridRemoveIcon" (click)="removeRoleGridItem(i)" aria-hidden="true"></i> -->
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                        <div style="color: red; margin: 10px 0px;">
+                                            {{formError}}</div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- end Roles Grid -->
+                            <p-dialog header="Search AD UserName" class="modalheightauto searchusername" width="600"
+                                height="300" modal='true' [(visible)]="showSelectUsernameDialog">
+                                <form [formGroup]="SelectUserInfoForm" class="form-horizontal">
+                                    <div class="form-group row">
+
+                                        <label class="col-form-label col-6  col-xl-4 col-sm-6 form-label">Search AD
+                                            UserName</label>
+                                        <div class="col-6  col-xl-8 col-sm-6 autoComplete autocompletewidth">
+                                            <input formControlName="UserID" type="text" class="form-control"
+                                                [inputFormatter]="usernameInputFormater"
+                                                (selectItem)="userNameSelection($event)" [ngbTypeahead]="userNameSearch"
+                                                [resultTemplate]="userNameTemplate" />
+                                            <span class="error" *ngIf="errmesagevisible">Please Select AD
+                                                UserName</span>
+                                            <span class="error" *ngIf="norecordserrmesagevisible">No AD UserName to
+                                                display</span>
+                                        </div>
+                                    </div>
+
+
+                                    <p-footer>
+                                        <button (click)="SaveUserName('save')" aria-hidden="true" class="btn btn-save">
+                                            OK
+                                        </button>
+                                    </p-footer>
+
+                                </form>
+                            </p-dialog>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group text-right btn-list">
+                        <!-- {{hideInput}}-{{hideText}} -->
+                        <button type="submit" (click)="saveRecord()" class="btn btn-save" *ngIf="hideInput"><i
+                                class="fa fa-check" aria-hidden="true"></i> Save</button>
+                        
+                                <button type="submit" (click)="retainStructure()" class="btn btn-save"
+                            *ngIf="selectedUserManagementRecord.IsWorkFlowAssigned && editPermission && hideText"><i
+                                class="fa fa-check" aria-hidden="true"></i> Retain Workflow Structure </button>
+                        
+                                <button type="submit" (click)="cancelRecord()" class="btn btn-cancel" *ngIf="hideInput"><i
+                                class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                       
+                        <button type="submit" (click)="editRecord()" class="btn btn-edit"
+                            *ngIf="hideText && editPermission"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                            Edit</button>
+                        <!-- <button type="submit" (click)="deleteRecord()"  class="btn btn-delete" *ngIf="hideText"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button> -->
+                    </div>
+
+                </form>
+                <p-confirmDialog></p-confirmDialog>
+            </div>
+
+
+        </div><!-- left col end here-->
+
+
+    </div>
+    <p>Edit Form Ends Here</p>
+</div>
+
+<ng-template #userNameTemplate let-r="result" let-t="term">
+    <div style="max-height: 100px; overflow: auto">
+        {{ r.UserName }}
+    </div>
+</ng-template>
+<ng-template #userTemplate let-r="result" let-t="term">
+    {{ r.UserName }}
+</ng-template>
+
+<ng-template #companyTemplate let-r="result" let-t="term">
+    {{ r.CompanyName }}
+</ng-template>
+
+<ng-template #userroleTemplate let-r="result" let-t="term">
+    {{ r.RoleName }}
+</ng-template>
+<ng-template #countryTemplate let-r="result" let-i="index" let-t="term">
+
+
+    <table style="width: 99%;">
+
+        <thead *ngIf='r.index==0'>
+            <tr>
+                <th style="width: 70%">
+                    Country Name
+                </th>
+                <th style="width: 30%">
+                    Code
+                </th>
+            </tr>
+        </thead>
+        <tr>
+            <td style="width: 50%; white-space: pre-wrap; word-wrap: break-word; ">{{ r.Name }}</td>
+            <td style="width: 20%; white-space: pre-wrap; word-wrap: break-word;">{{ r.Code }}</td>
+        </tr>
+    </table>
+</ng-template>

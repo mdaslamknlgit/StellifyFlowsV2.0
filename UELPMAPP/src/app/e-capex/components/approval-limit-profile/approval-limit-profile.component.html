@@ -1,0 +1,98 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 col-sm-12 padding-null tittlediv">
+            <h3 class="item-heading"><img src="../assets/images/icon1.png"> Capex > Approval Limit Profile </h3>
+        </div>
+        <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+            <img src="../assets/images/grid1.png"> 
+            <img src="../assets/images/grid2.png"> 
+        </div>
+    </div>
+    <div class="row">
+        <div  style="margin-right:5%;" #rightPanel class="col-lg-12 col-md-12">
+            <div>
+                <form  [formGroup]="approvalLimitProfileForm" class="form-horizontal">
+                    <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="rightcol-scrroll">
+                        <div class="row">
+                            <div class="col-sm-12 col-xl-6">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-5  col-sm-12  form-label">Approval Type</label>  
+                                    <div class="col-xl-7 col-sm-12">
+                                        <select (change)="onApprovalTypeChange($event)" formControlName="ApprovalTypeId" class="form-control">
+                                            <option value=1>  
+                                                Capex
+                                            </option>   
+                                            <option value=2>  
+                                                Disposal
+                                            </option>                                           
+                                        </select>
+                                    </div>      
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-5  col-sm-12 form-label">Approval Lower Limit (Budgeted)</label>  
+                                    <div class="col-xl-7 col-sm-12">
+                                        <input formControlName="ApprovalLowerLimitBudgeted" type="number" class="form-control" />
+                                        <div *ngIf="approvalLimitProfileForm.get('ApprovalLowerLimitBudgeted') && approvalLimitProfileForm.get('ApprovalLowerLimitBudgeted').errors!=null && approvalLimitProfileForm.get('ApprovalLowerLimitBudgeted').touched==true">
+                                            <span class="errorMessage" *ngIf="approvalLimitProfileForm.get('ApprovalLowerLimitBudgeted').errors.required">Approval Lower Limt is required</span>
+                                        </div> 
+                                    </div>      
+                                </div>
+                                <div *ngIf="approvalLimitProfileForm.get('ApprovalTypeId').value==1" class="form-group row">
+                                        <label class="col-form-label col-xl-5  col-sm-12 form-label">Approval Lower Limit (Non Budgeted)</label>  
+                                        <div class="col-xl-7 col-sm-12">
+                                            <input formControlName="ApprovalLowerLimitNonBudgeted" type="number" class="form-control" />
+                                            <div *ngIf="approvalLimitProfileForm.get('ApprovalLowerLimitNonBudgeted') && approvalLimitProfileForm.get('ApprovalLowerLimitNonBudgeted').errors!=null && approvalLimitProfileForm.get('ApprovalLowerLimitNonBudgeted').touched==true">
+                                                <span class="errorMessage" *ngIf="approvalLimitProfileForm.get('ApprovalLowerLimitNonBudgeted').errors.required">Approval Lower Limt  (Non Budgeted) is required</span>
+                                            </div> 
+                                        </div>      
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-xl-6">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-5  col-sm-12 form-label">Approver</label>  
+                                    <div class="col-xl-7 col-sm-12">
+                                        <input formControlName="Approver" type="text" 
+                                                class="form-control" 
+                                                [inputFormatter]="userInputFormater" (selectItem)="onApproverChange($event)"
+                                                [ngbTypeahead]="userSearch"  [resultTemplate]="companyTemplate"/>
+                                        <div *ngIf="approvalLimitProfileForm.get('Approver') && approvalLimitProfileForm.get('Approver').errors!=null && approvalLimitProfileForm.get('Approver').touched==true">
+                                            <span class="errorMessage" *ngIf="approvalLimitProfileForm.get('Approver').errors.required">Approver is required</span>
+                                        </div> 
+                                    </div>      
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-5  col-sm-12 form-label">Approval Upper Limit (Budgeted)</label>  
+                                    <div class="col-xl-7 col-sm-12">
+                                        <input formControlName="ApprovalUpperLimitBudgeted" type="number" class="form-control" />
+                                        <div *ngIf="approvalLimitProfileForm.get('ApprovalUpperLimitBudgeted') && approvalLimitProfileForm.get('ApprovalUpperLimitBudgeted').errors!=null && approvalLimitProfileForm.get('ApprovalUpperLimitBudgeted').touched==true">
+                                            <span class="errorMessage" *ngIf="approvalLimitProfileForm.get('ApprovalUpperLimitBudgeted').errors.required">Approval Upper Limt is required</span>
+                                        </div> 
+                                    </div>      
+                                </div>
+                                <div *ngIf="approvalLimitProfileForm.get('ApprovalTypeId').value==1" class="form-group row">
+                                        <label class="col-form-label col-xl-5  col-sm-12 form-label">Approval Upper Limit (Non Budgeted)</label>  
+                                        <div class="col-xl-7 col-sm-12">
+                                            <input formControlName="ApprovalUpperLimitNonBudgeted" type="number" class="form-control" />
+                                            <div *ngIf="approvalLimitProfileForm.get('ApprovalUpperLimitNonBudgeted') && approvalLimitProfileForm.get('ApprovalUpperLimitNonBudgeted').errors!=null && approvalLimitProfileForm.get('ApprovalUpperLimitNonBudgeted').touched==true">
+                                                <span class="errorMessage" *ngIf="approvalLimitProfileForm.get('ApprovalUpperLimitNonBudgeted').errors.required">Approval Upper Limt (Non Budgeted) is required</span>
+                                            </div> 
+                                        </div>      
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="form-group text-right btn-list">
+                                <button type="submit" (click)="saveRecord()"  class="btn btn-save" ><i class="fa fa-check" aria-hidden="true"></i> Save</button>
+                            </div>
+                        </div>
+                    </div>   
+                </form>
+            </div>
+        </div><!-- left col end here-->
+    </div> 
+</div>
+<ng-template #companyTemplate let-r="result" let-t="term">
+    {{ r.CompanyName }}
+</ng-template>

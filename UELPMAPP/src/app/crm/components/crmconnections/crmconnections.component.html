@@ -1,0 +1,91 @@
+<block-ui message="Deafult Message"></block-ui>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12 col-sm-12 padding-null tittlediv">
+      <div class="flexrow space-between align-center">
+        <h3 class="item-heading"> CRM - Connections </h3>
+        <div>
+          <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickBack($event)">
+            <i class="fa fa-arrow-left" ria-hidden="true" aria-hidden="true"></i> Back</button>
+
+        </div>
+      </div>
+      <hr style="margin-top: 0px;" />
+    </div>
+  </div>
+  <!-- Edit Form Starts Here -->
+  <div class="row">
+    <div #rightPanel [CustomSpinner]="showLoadingIcon" style='background: white' class="rightPanel1 col-lg-12 col-md-12">
+      <!-- <div class="fullScreenLabel">
+            <app-header></app-header>
+        </div> -->
+      <div>
+        <form (ngSubmit)="onSubmit(ListForm.value,myPanel,$event)" [formGroup]="ListForm" 
+        class="form-horizontal">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <div class="form-group text-right btn-list">
+                  <button type="submit" class="btn btn-save">
+                    <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+
+                  <button type="submit" (click)="ClickBack($event)" class="btn btn-cancel">
+                    <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                </div>
+              </div>
+            </div>
+            <mat-accordion [multi]="true">
+              <mat-expansion-panel [expanded]="true" #myPanel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    List Details
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group row">
+                      <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">List Name<i
+                          class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+                      <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                        <input id="ListName" #ListName formControlName="ListName" placeholder="List Name" tabindex="1" class="form-control" />
+
+                        <div *ngIf="ListForm.get('ListName') && ListForm.get('ListName').errors!=null &&ListForm.get('ListName').touched==true">
+                          <span class="errorMessage" *ngIf="ListForm.get('ListName').errors.required">
+                            List Name is required</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group row">
+                      <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Description. </label>
+                      <div class="col-xl-8 col-sm-6 col-6">
+                        <textarea class="form-control" autoresize placeholder="Description" tabindex="2"
+                        formControlName="ListDesc"></textarea>
+                        <!-- <input type="text" formControlName="ListDesc" tabindex="2" placeholder="Desc"
+                          class="form-control"> -->
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group row">
+                      <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Active.</label>
+                      <div class="col-xl-8 col-sm-6 col-6">
+                          <input formControlName="IsActive" type="checkbox" class="form-control" />
+                      </div>
+                  </div>
+                  </div>
+
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+
+        </form>
+        <p-confirmDialog></p-confirmDialog>
+
+      </div>
+    </div>
+
+  </div>
+  <!-- Edit Form Ends Here -->

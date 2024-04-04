@@ -1,0 +1,39 @@
+<div *ngIf="payments.length>0" class="form-group row">
+  <div class="col-5">
+    <h4 class="form-heading">Payment Details</h4>
+  </div>
+  <div class="col-xl-12 col-sm-12 col-12 ui-table ui-widget">
+    <table class="table-bordered">
+      <thead class="ui-table-thead">
+        <tr>
+          <th class="ui-sortable-column" *ngFor="let column of PaymentColumns">{{column.header}}</th>
+        </tr>
+      </thead>
+      <tbody class="ui-table-tbody">
+        <tr *ngFor="let i=index;let payment of payments">
+          <td>{{i+1}}</td>
+          <td>{{payment.BatchNo}}</td>
+          <td>{{payment.ImportedByUserName}}</td>
+          <td>{{payment.ChequeNo}}</td>
+          <td> {{payment.ChequeDate | date:"dd/MM/yyyy"}} </td>
+          <td align="right"> {{payment.PaymentAmount | number:'1.2-2'}} </td>
+          <td>{{payment.Remarks}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="display: flex; justify-content: flex-end; width:100%">
+    <div class="col-sm-4 mobilecol1" style="float:right; padding:0px;">
+      <table class="table table-subtotal">
+        <tr>
+          <td width="50%">Total Paid Amount : </td>
+          <td class="rightfloat" style="padding-right: 16px;">{{ CurrencySymbol }} {{totalPaid | number:'1.2-2'}} </td>
+        </tr>
+        <tr>
+          <td>O/S Amount : </td>
+          <td class="rightfloat" style="padding-right: 16px;">{{ CurrencySymbol }} {{totalOS | number:'1.2-2' | negativeInParenthesis }} </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

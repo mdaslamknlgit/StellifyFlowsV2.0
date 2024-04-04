@@ -1,0 +1,41 @@
+export class ActivityDTO
+{
+    ActivityId:number;
+    ActivityId_FK:number;
+    ActivityTypeId:number;
+    ActivityTypeName:string;
+    ActivitySubject:string;
+    ActivityDesc:string;
+    RegardingId:number;
+    RegarId:number;
+    RegardingName:string;
+    PriorityId:number;
+    ActivityActionID:number;
+    LeadID:number;
+    OppID:number;
+    QuoteID:number;
+    InspID:number;
+    AccountId:number;
+    ContactID:number;
+    StartDate:string;
+    EndDate:string;
+    DueDate:string;
+    StartTime:string;
+    EndTime:string;
+    DueTime:string;
+    Duration:number;
+    StatReasonId:number;
+    OwnerId:number;
+    CreatedBy:number;
+    CreatedDate:string;
+    UpdatedBy:number;
+    UpdatedDate:string;
+    DeletedBy:number;
+    DeletedDate:string;
+    LastModifiedBy:number;
+    LastModifiedDate:string;
+    ActivityStatusId:number;
+    ActivityStatusName:string;
+    IsClosed:boolean;
+}
+

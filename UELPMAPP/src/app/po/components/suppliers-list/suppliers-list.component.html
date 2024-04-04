@@ -1,0 +1,267 @@
+<div class="container-fluid" ngbDropdown #myDrop="ngbDropdown">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+            <div class="flexrow space-between align-center">
+                <h3 class="item-heading"><i class="fa-solid fa-list"></i> {{ moduleHeading }} </h3>
+                <div>
+                    <input #file style="visibility: hidden;width:0px" type="file" accept="xlsx/*"
+                        (click)="file.value = null" (change)="uploadFile($event)">
+                   
+                        <button class="btn btn-save ng-star-inserted" #upload
+                        *ngIf="isExisted && !isApprovalPage && importPermission" (click)="file.click()"> <i
+                            class="fa fa-file-import"></i>Import Suppliers</button>
+
+
+                        <button class="btn btn-save ng-star-inserted"
+                        *ngIf="hideText && isExisted && newPermission && !isApprovalPage" (click)="ClickNewSupplier($event)">
+                        <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> New</button>
+
+                    <!-- <button  class="btn btn-transparent" (clickOutside)="onClickedOutside($event)"    
+                (click)="addRecord()">  {{showfilterstext}}  </button>  -->
+
+                    <img style="display: none;" src="../assets/images/grid1.png" (click)="fullScreen()"
+                        *ngIf="isExisted">
+                    <div *ngIf="!showfilters" ngbDropdown placement="bottom-right" style="padding:0px;"
+                        class="d-inline-block">
+                        <button class="btn customdropdown btn-transparent"
+                            style="background:none;border:none;padding:0px;" id="dropdownBasic1" ngbDropdownToggle>
+                            <i class="fa-solid fa-bars"></i>
+                        </button>
+                        <div ngbDropdownMenu aria-labelledby="dropdownBasic1"
+                            *ngIf="(defaultSupplier.WorkFlowStatusId == 4 && exportPermission)||viewLogPermission">
+
+                            <button class="dropdown-item" *ngIf="exportPermission" (click)="ExportAsExcel()">Suppliers
+                                Info
+                                Export</button>
+                            <button class="dropdown-item" (click)="ExportAsVendorsExcel()">Vendors Export</button>
+                            <button class="dropdown-item" *ngIf="viewLogPermission" (click)="displayLogPopUp()">View
+                                Log</button>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <hr style="margin-top: 0px;" />
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <!-- Filter Section Start Here -->
+                    <!-- <p>Filter Section Starts Here</p> -->
+                    <div class="filter-section" style="width: 100%;" ngbDropdown #myDrop="ngbDropdown">
+                        <form [formGroup]="supplierFilterInfoForm">
+                            <div class="form-group " style="display: flex; flex-wrap:wrap;justify-content: space-between;">
+                                <div class="col-sm-12 col-md-12 col-lg-1 mb-1">
+                                    <label for="Name">Name</label>
+                                </div>
+                                <div class="col-sm-12 col-md-12 col-lg-2 mb-1">
+                                    <input type="text" #SupplierName class="form-control"
+                                    formControlName="SupplierName" [inputFormatter]="supplierInputFormatter"
+                                    [ngbTypeahead]="supplierNameSearch"
+                                    [resultTemplate]="supplierTemplateres" />
+                                </div>
+                                <div class="col-sm-12 col-md-12 col-lg-2 mb-1">
+                                    <label class="col-form-label  col form-label">Category</label>
+                                </div>
+                                <div class="col-sm-12 col-md-12 col-lg-2 mb-1">
+                                    <div class=" input-group" style="width: auto;">
+                                        <input formControlName="SupplierCategory" type="text" class="form-control"
+                                        [inputFormatter]="supplierCategoryInputFormater"
+                                        [ngbTypeahead]="supplierCategorySearch"
+                                        [resultTemplate]="supplierCategoryTemplate" />
+                                    </div>
+                                </div>
+                    
+                                <div class="col-sm-12 col-md-12 col-lg-1 mb-1">
+                                    <label class="col-form-label  col form-label">Status</label>
+                                </div>
+                                <div class="col-sm-12 col-md-12 col-lg-2 mb-1">
+                                    <div class="  input-group" style="width: auto;">
+                                        <select #workFlowStatusDropDown formControlName="WorkFlowStatusId"
+                                        class="form-control">
+                                        <option value=0>
+                                            --Select--
+                                        </option>
+                                        <option *ngFor="let record of workFlowStatuses"
+                                            value={{record.WorkFlowStatusid}}>
+                                            {{record.Statustext}}
+                                        </option>
+                                    </select>
+                                    </div>
+                                </div>
+                    
+                                <div class="col-sm-12 col-md-12 col-lg-2 mb-1">
+                                    <button type="submit" (click)="filterData()" class="btn btn-save">
+                                        <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                    <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                        <i class="fa fa-refresh" aria-hidden="true"></i> Reset</button>
+                                </div>
+                            </div>
+                            <div style="display: flex; flex-wrap:wrap;justify-content:end; margin-bottom: 10px;margin-right: 20px;">                                                  
+                                <div style="text-align: right; display: flex; align-items: center;" *ngIf="!ShowToolBar">
+                                    Total Records : {{TotalRecords}} &nbsp;
+                                </div>
+                               <button class="btn btn-save ng-star-inserted" mat-button [matMenuTriggerFor]="ExportMenu">
+                                    <i class="fa fa-file-export" ria-hidden="true" aria-hidden="true"></i>
+                                    Export</button>
+                                <mat-menu #ExportMenu="matMenu">
+                                    <button mat-menu-item (click)="ExportToCSV()">
+                                        <i class="fa fa-file-excel-o" ria-hidden="true" aria-hidden="true"></i> CSV
+                                    </button>
+                                    <button mat-menu-item (click)="ExportToExcel()">
+                                        <i class="fa fa-file-excel-o" ria-hidden="true" aria-hidden="true"></i>
+                                        Excel </button>
+                    
+                                    <button mat-menu-item (click)="ExportToPDF()">
+                                        <i class="fa fa-file-pdf-o" ria-hidden="true" aria-hidden="true"></i> PDF
+                                    </button>
+                                </mat-menu>                   
+                            </div>                    
+                        </form>
+                    </div>
+                    <!-- <p>Filter Section Ends Here</p> -->
+                    <!-- Filter Section Ends Here -->
+                </div>              
+            </div>
+            <!-- <p>Table Starts Here</p> -->
+            <div class="left-section1" [class.display-filters]="!showfilters">
+                <div class="respnsive-table tablescroll p-datatable-wrapper">
+                    <p-table #SuppliersListTable dataKey="DraftCode" [rowHover]="true" [filterDelay]="0"
+                        [globalFilterFields]="['DraftCode', 'SupplierName']" [columns]="filteredSuppliersCols"
+                        [value]="filteredSuppliers" [rows]="this.supplierPagerConfig.RecordsToFetch"
+                        [scrollable]="true" [scrollHeight]="'calc(100vh - 360px)'" scrollWidth="100%"
+                        [virtualRowHeight]="30" [virtualScroll]="true" sortMode="multiple" responsiveLayout="scroll"
+                        [paginator]="false" [rowsPerPageOptions]="[5,10,15,25,50,75,100]">
+                        <ng-template pTemplate="header" let-columns>
+                            <tr style="height: 40px;">
+                                <th *ngFor="let col of filteredSuppliersCols;let i=index"
+                                    [pSortableColumn]="col.field">
+                                    {{col.header}}
+                                    <p-sortIcon [hidden]="i==0" *ngIf="i!=filteredSuppliersCols.length-1"
+                                        [field]="col.field"></p-sortIcon>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="colgroup" let-columns>
+                            <colgroup>
+                                <col *ngFor="let col of columns" [style.width]="col.width">
+                            </colgroup>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-value let-columns let-i="rowIndex">
+                            <tr style="height:30px" [pSelectableRow]="rowData">
+                                <td>{{(value.WorkFlowStatus==="Draft"?value.DraftCode:value.SupplierCode
+                                    )| setSupplierCode}}
+                                </td>
+                                <td>{{value.SupplierName}}</td>
+                                <td>{{value.CategoryName}}</td>                                
+                                <td>{{value.WorkFlowStatus }}</td>
+                                <td>{{value.CreatedDate | date: 'yyyy-MM-dd'}}</td>
+                                <td class="aligncenter">
+                                    <button type="button" class="btn" (click)="onRecordSelected(value.SupplierId)">
+                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    </button>
+                                </td>
+                            </tr>
+
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage" let-columns>
+                            <tr>
+                                <td [attr.colspan]="filteredSuppliers.length">
+                                    No records found
+                                </td>
+                            </tr>
+                        </ng-template>
+
+                    </p-table>
+                </div>
+                <!-- Table Ends Here -->
+                <div *ngIf="filteredSuppliers.length==0">
+                    <div class="col-12 error errorMessage">
+                        <p class="errorMessage">
+                            {{filterMessage}}
+                        </p>
+                    </div>
+                </div>
+                <!-- Table Ends Here -->
+                <div style="clear: both;"></div>
+                <ngb-pagination *ngIf="filteredSuppliers.length>0" (pageChange)="pageChange($event)"
+                    [collectionSize]="supplierPagerConfig.TotalRecords" class="d-flex justify-content-center"
+                    [pageSize]="supplierPagerConfig.RecordsToFetch" [maxSize]="5" [(page)]="currentPage"
+                    [boundaryLinks]="true">
+                    <ng-template ngbPaginationPages let-page let-pages="pages">
+                        10 of 100
+                    </ng-template>
+                </ngb-pagination>                  
+            </div>
+            <!-- <p>Table Ends Here</p> -->
+        </div>
+    </div>
+</div>
+
+<ng-template #supplierCategoryTemplate let-r="result" let-t="term">
+    {{ r.CategoryText }}
+</ng-template>
+
+
+<ng-template #supplierTemplate let-r="result" let-i="index" let-t="term">
+    <table class="autoCompleteTable" style="width:500px;">
+        <thead *ngIf='r.index==0'>
+            <tr>
+                <th style="width:200px">
+                    Supplier Name
+                </th>
+                <th style="width: 300px">
+                    Associated Entities
+                </th>
+            </tr>
+        </thead>
+        <tr style="border-bottom: 1px solid #d6d6d6;">
+            <td style="width: 200px; white-space: pre-wrap; word-wrap: break-word; ">{{ r.SupplierName }}</td>
+            <td style="width: 300px; white-space: pre-wrap; word-wrap: break-word;">{{ r.AssociatedEntities }}</td>
+        </tr>
+    </table>
+</ng-template>
+<ng-template #supplierTemplateres let-r="result" let-t="term">
+    {{ r.SupplierName }}
+</ng-template>
+
+<ng-template #countryTemplate let-r="result" let-i="index" let-t="term">
+
+
+    <table style="width: 99%;">
+
+        <thead *ngIf='r.index==0'>
+            <tr>
+                <th style="width: 70%">
+                    Country Name
+                </th>
+                <th style="width: 30%">
+                    Code
+                </th>
+            </tr>
+        </thead>
+        <tr>
+            <td style="width: 50%; white-space: pre-wrap; word-wrap: break-word; ">{{ r.Name }}</td>
+            <td style="width: 20%; white-space: pre-wrap; word-wrap: break-word;">{{ r.Code }}</td>
+        </tr>
+    </table>
+</ng-template>
+
+<p-dialog header="Import Supplier Log" width="400" modal='true' [(visible)]="showUploadErrorDialog">
+    <div class="form-group row">
+        {{uploadResult.SuccesRecords}} of {{uploadResult.TotalRecords}} suppliers imported successfully.
+    </div>
+    <div class="form-group row">
+        <textarea id="clipboard-example-textarea" *ngIf="uploadResult.Message!==null" cols="60" rows="10"
+            [(ngModel)]="uploadResult.Message"></textarea>
+    </div>
+    <p-footer>
+        <button style='text-align: right' (click)="showUploadErrorDialog=false" class="btn btn-save">
+            Ok
+        </button>
+    </p-footer>
+</p-dialog>
+<app-supplier-reject-popup *ngIf="showVoidPopUp" (hideVoidPopUp)="hideVoidPopUp($event)" [showVoidPopUp]="showVoidPopUp"
+    (rejectInvoice)="rejectInvoice($event)"></app-supplier-reject-popup>
+<app-auditlog *ngIf="showLogPopUp" (hideLogPopUp)="hideLogPopUp($event)" [CompanyId]="companyId"
+    [DocumentId]="supplierId" [DocumentNumber]="defaultSupplier.SupplierCode" [PageName]="'Supplier'"
+    [DocType]="'Supplier'" [showLogPopUp]="showLogPopUp"></app-auditlog>

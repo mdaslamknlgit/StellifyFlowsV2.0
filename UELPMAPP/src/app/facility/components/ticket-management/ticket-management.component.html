@@ -1,0 +1,1130 @@
+    <div class="container-fluid">
+    <div class="row">
+    <div class="col-md-12 col-sm-12 padding-null tittlediv">
+        <div class="flexrow space-between align-center"> 
+    <h3 class="item-heading">  Ticket Management </h3>
+ 
+       <div>
+        <button class="btn  btn-transparent" (click)="addRecord()" > New Record</button>
+        <button  class="btn btn-transparent" (clickOutside)="onClickedOutside($event)"   (click)="split()">  {{showfilterstext}}  </button> 
+
+
+        
+    
+        <img style="display: none;" src="../assets/images/grid1.png" (click)="showFullScreen()">
+        <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+            <button class="btn customdropdown btn-transparent" style="background:none;border:none;padding:0px;" id="dropdownBasic1" ngbDropdownToggle>
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+              <!-- <button class="dropdown-item" (click)="onPrintScreen($event)">Print</button> -->
+              <button class="dropdown-item" (click)="sendMailtoSuppliers()">Email</button>
+            </div>
+        </div>
+    </div> 
+ </div>
+
+
+
+ <div class="left-section"   [class.display-filters]="!showfilters"> 
+
+    <div class="filter-section"  ngbDropdown #myDrop="ngbDropdown" >
+    <div class="left-search">
+            <input type="text"  [(ngModel)]="ticketSearchKey" placeholder="Search requests..." class="search-filter" (keyup)="onSearchInputChange($event)">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <div class="filter-popup" *ngIf="initDone" ngbDropdownMenu aria-labelledby="dropdownManual" (click)="$event.stopPropagation(); myDrop.open();">
+        
+                    <form [formGroup]="TicketFilterInfoForm" class="form-horizontal">
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-6 form-label">Ticket Number</label>
+                            <div  class="col-6">
+                                <input  type="text" #unitCode formControlName="TicketNo" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-6 form-label">Facility</label>
+                            <div class="col-6">
+                                    <input  type="text" formControlName="Facility" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-6 form-label">Priority</label>
+                            <div  class="col-6">
+                                <input  type="text" formControlName="Priority" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-12 error">
+                                {{filterMessage}}
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+
+                            <div class="col-12" style="text-align: right">
+                                <button type="submit" (click)="filterData()" class="btn btn-save">
+                                    <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+
+                            </div>
+                        </div>
+                    </form>
+            </div>
+
+        </div>
+
+        <!-- start filter code -->
+        <div class="filter-icon">
+                <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                    <i class="fa fa-filter" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <div class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+                <i class="fa fa-undo" aria-hidden="true"></i>
+    </div>
+
+            
+            <!-- end filter code -->
+
+
+        <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="filter-scroll" style="width:100%; float:left;">
+        <table class="table">
+        <tr [class.activerow]="record.TicketId==selectedticketManagementRecord.TicketId" (click)="onItemRecordSelection(record.TicketId)" *ngFor="let record of ticketList">
+                <td>
+                    <label class="stock-id">{{record.TicketNo}}</label> 
+                    <label class="stock-btn">
+                        <button class="filter-btn btn-pending"> 
+                            <span>{{record.JobStatus}}</span>
+                            <!-- <span  *ngIf="record.JobStatus=='2'">InProgress</span>
+                            <span  *ngIf="record.JobStatus=='3'">Pending</span>
+                            <span  *ngIf="record.JobStatus=='4'">Complete</span> -->
+                        </button> 
+                    </label>
+                    <label class="label-text">Date</label> :<label class="label-value">{{record.PreferredServiceDatetime | DisplayDateFormat}}</label>
+                    <label class="label-text">Facility</label> :<label class="label-value">{{ record.UnitNumber }}</label>
+                    <label class="label-text">Priority</label> :<label class="label-value">
+                            <span  *ngIf="record.PriorityName=='High'">High</span>
+                            <span  *ngIf="record.PriorityName=='Medium'">Medium</span>
+                            <span  *ngIf="record.PriorityName=='Low'">Low</span>
+                        </label>
+                    
+                </td>
+        </tr>
+        </table>
+            <div *ngIf="ticketList.length==0" class="col-12 listErrorMessage">
+                    {{errorMessage}}
+                </div> 
+            <ngb-pagination [maxSize]="5" *ngIf="ticketList.length>0" (pageChange)="pageChange($event)" [collectionSize]="ticketPagerConfig.TotalRecords" class="d-flex justify-content-center" [pageSize]="ticketPagerConfig.RecordsToFetch" [page]="1" [boundaryLinks]="true"></ngb-pagination>
+        </div>  
+
+    
+    </div>
+        </div>
+
+
+
+
+    </div>
+    </div>
+    <div class="row">
+
+ 
+
+    <div #rightPanel [CustomSpinner]="showRightPanelLoadingIcon" class="rightPanel col-lg-12 col-md-12" [class.expand-rightcol]="rightsection">  
+    <div>
+    <form   [formGroup]="signupForm" class="form-horizontal" novalidate="true" >
+    <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="rightcol-scrroll">
+        <div class="row fullScreenLabel">
+            <div class="col-12">
+                <h3 class="item-heading" style="float:none;">Ticket Management</h3>
+            </div>
+        </div>
+    <div class="row">
+    <div class="col-md-6">
+    <div class="form-group row" *ngIf="hidetext">
+        <label class="col-form-label col-sm-4 form-label" >Ticket Number </label>  
+        <div class="col-sm-8">
+    <!-- <input type="text" 
+            formControlName="TicketNo"
+            placeholder="Ticket No" *ngIf="hideinput" class="form-control"> -->
+
+        <label class="col-form-label  form-text"><b style="color:#01548e">{{selectedticketManagementRecord.TicketNo}}</b> </label>  
+        </div>
+    </div>
+
+        <div class="form-group">
+        <div class="row-selected" [class.romoveborder]="facilitymanagement==undefined">
+            <div  class="row">
+            <label class="col-form-label col-sm-4 form-label">Facility </label>  
+        <div class="col-sm-8">
+            <label class="col-form-label  form-text" *ngIf="hidetext"><b style="color:#01548e">{{selectedticketManagementRecord.UnitNumber}}</b> </label>
+
+            <input formControlName="Facility" type="text" *ngIf="hideinput"  class="form-control" 
+            [inputFormatter]="faclityInputFormater" [ngClass]="(validateControl(signupForm.get('Facility')))?'form-control ng-touched':'form-control'"
+            [ngbTypeahead]="facilitySearch"  [resultTemplate]="facilityTemplate"  (selectItem)="onFacilitySelection($event)"  />
+            
+        </div> 
+        </div>  
+        </div>    
+    </div>
+        
+
+        <div class="form-group row">
+        <label class="col-form-label col-sm-4 form-label">Priority</label>  
+        <div class="col-sm-8">
+            <label class="col-form-label  form-text" *ngIf="hidetext">{{selectedticketManagementRecord.PriorityName}} </label>
+
+            <select formControlName="TicketPriority" [ngClass]="(validateControl(signupForm.get('TicketPriority')))?'form-control ng-touched':'form-control'"
+                placeholder="Priority" *ngIf="hideinput" class="form-control">
+                <option value="0">--Select--</option>
+                <option *ngFor="let record of prioritytypes" value={{record.PriorityId}}>
+                    {{record.PriorityName}}
+            </select>
+            <!-- <select formControlName="TicketPriority" *ngIf="hideinput"
+                class="form-control" >
+                    <option Value="1">High</option>  
+                    <option Value="2">Medium</option>  
+                    <option Value="3">Low</option>                                          
+        </select> 
+        <label class="col-form-label  form-text" *ngIf="hidetext">
+            <span  *ngIf="selectedticketManagementRecord.TicketPriority=='1'">High</span>
+            <span  *ngIf="selectedticketManagementRecord.TicketPriority=='2'">Medium</span>
+            <span  *ngIf="selectedticketManagementRecord.TicketPriority=='3'">Low</span>
+        </label>   -->
+        </div>
+    </div> 
+
+    <div class="form-group row">
+    <label class="col-form-label col-sm-4 form-label">Preferred Service Date </label>  
+    <div class="col-xl-4 col-sm-6 col-6">
+        <label class="col-form-label form-text" *ngIf="hidetext">{{selectedticketManagementRecord.PreferredServiceDatetime| DisplayDateFormat}}</label>
+        <div class="input-group" style="width: 100%" *ngIf="hideinput">
+        <input class="form-control" formControlName="PreferredServiceDatetime" ngbDatepicker #d="ngbDatepicker" 
+        [ngClass]="(validateControl(signupForm.get('PreferredServiceDatetime')))?'form-control ng-touched':'form-control'">
+    <div class="input-group-append">
+    <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+        <i class="fa fa-calendar"  style="cursor: pointer;"></i>
+    </button>
+    </div>
+    </div>  
+    </div>
+
+    </div>
+
+    <div class="form-group row">
+    <label class="col-form-label col-sm-4 form-label">Preferred Service Time </label>  
+    <label class="col-form-label  form-text" *ngIf="hidetext">{{selectedticketManagementRecord.PrefferedFromTime |  date:'HH:mm'}} - {{selectedticketManagementRecord.PrefferedToTime| date:'HH:mm'}}</label>  
+
+    <div class="col-sm-8" *ngIf="hideinput">
+        <p-calendar [timeOnly]="true" formControlName="PrefferedFromTime"  showTime="true" hourFormat="24"></p-calendar>
+    
+        <p-calendar [timeOnly]="true" formControlName="PrefferedToTime" showTime="true"  hourFormat="24" ></p-calendar>  
+    </div> 
+    
+    </div>
+
+    <div class="form-group row">
+        <label class="col-form-label col-sm-4 form-label">Job Description </label>  
+        <div class="col-sm-8">
+        <textarea 
+                formControlName="JobDesciption" 
+                placeholder="Job Desciption"  *ngIf="hideinput" class="form-control">
+        </textarea>
+    
+            <label class="col-form-label form-text"  *ngIf="hidetext">{{selectedticketManagementRecord.JobDesciption}}</label>
+            </div> 
+    </div>
+    
+    <div class="form-group row">
+    <label class="col-form-label col-sm-4 form-label">Billable </label>  
+    <div class="col-sm-8">
+        <label class="col-form-label form-text" *ngIf="hidetext">{{selectedticketManagementRecord.isBillable==true?"Yes":"No"}} </label>
+            <label class="col-form-label form-text"  *ngIf="hideinput">
+                <mat-slide-toggle formControlName="isBillable"  (change)="matselect($event)"></mat-slide-toggle>
+            <label *ngIf="slideactive">Yes</label>  
+        </label>
+        </div> 
+    </div>
+
+    <div class="form-group row">
+    <label class="col-form-label col-sm-4 form-label">Bill To </label>
+    <div class="col-sm-8">
+        <label class="col-form-label form-text" *ngIf="hidetext">{{selectedticketManagementRecord.IsbilltoTenant==0?"Tenant":"Owner"}} </label>
+                      
+                <label class="col-form-label"  *ngIf="hideinput">
+                    <input type="radio" value="0" formControlName="IsbilltoTenant" /> Tenant 
+                </label>
+                <label class="col-form-label" style="margin-left: 10px;" *ngIf="hideinput">
+                    <input type="radio" value="1" formControlName="IsbilltoTenant" /> Owner
+                </label>
+        
+        </div> 
+    </div>
+
+    <div class="form-group row">
+    <label class="col-form-label col-sm-4 form-label">Bill Amount</label>  
+    <div class="col-sm-8">
+    <input type="text" 
+            formControlName="BillAmount" [ngClass]="(validateControl(signupForm.get('BillAmount')))?'form-control ng-touched':'form-control'"
+            placeholder="Amount"  *ngIf="hideinput" class="form-control">
+
+        <label class="col-form-label form-text"  *ngIf="hidetext">{{selectedticketManagementRecord.BillAmount==0?"":"$"+selectedticketManagementRecord.BillAmount}}</label>  
+        </div> 
+    </div>
+
+    <div class="form-group row">
+            <label class="col-form-label col-sm-4 form-label">Status</label>  
+            <div class="col-sm-8">
+                <label class="col-form-label form-text" *ngIf="hidetext">{{selectedticketManagementRecord.JobStatus}}</label>         
+                </div> 
+            </div>
+
+
+    </div>
+
+
+    <div class="col-md-6">
+    <div class="arrow_box" *ngIf="facilitymanagement!=undefined">
+    <div class="form-heading">Owner Details</div>
+
+    <div class="form-group row">
+    <label class="col-form-label col-sm-4 form-label">Name</label>  
+    <div class="col-sm-8">
+        <label class="col-form-label  form-text">{{facilitymanagement.OwnerName}}</label>  
+        </div> 
+    </div>
+
+    <div class="form-group row">
+    <label class="col-form-label col-sm-4 form-label">Contact No</label>  
+    <div class="col-sm-8">
+        <label class="col-form-label  form-text">{{facilitymanagement.OwnerContactNo}}</label>  
+        </div> 
+    </div>
+
+    <div class="form-group row">
+    <label class="col-form-label col-sm-4 form-label">Email</label>  
+    <div class="col-sm-8">
+        <label class="col-form-label  form-text">{{facilitymanagement.OwnerEmail}}</label>  
+        </div> 
+    </div>
+
+    <h4 class="form-heading">Tenant Details</h4>
+
+    <div class="form-group row">
+    <label class="col-form-label col-sm-4 form-label">Name</label>  
+    <div class="col-sm-8">
+        <label class="col-form-label  form-text" >{{facilitymanagement.TenantName}}</label>  
+        </div> 
+    </div>
+
+    <div class="form-group row">
+    <label class="col-form-label col-sm-4 form-label">Contact No</label>  
+    <div class="col-sm-8">
+        <label class="col-form-label  form-text" >{{facilitymanagement.TenantContactNo}}</label>  
+        </div> 
+    </div>
+
+    <div class="form-group row">
+    <label class="col-form-label col-sm-4 form-label">Email</label>  
+    <div class="col-sm-8">
+        <label class="col-form-label form-text" >{{facilitymanagement.TenantEmail}}</label>  
+    </div> 
+    </div>
+    </div>
+    </div>
+
+    </div>
+
+    <div class="col-12 engineers-assigned" style="padding:0px;">
+    <div class="row">
+    <div class="col-sm-6"><h4 class="form-heading">Engineers Assigned</h4></div>
+    <div class="col-sm-6 text-right" *ngIf="hideinput">
+        <button type="submit" (click)="open(assignengineer,selectedticketManagementRecord.EngineerAssignList,employeeassign)"  class="btn btn-add" >
+        <i class="fa fa-plus" aria-hidden="true"></i> Assign Engineer
+        </button>
+    </div>
+    </div> 
+    <div style="text-align: center;">
+        <span class="errorMessage" *ngIf="showGridErrorMessage1">
+            Please Assign any Engineer
+        </span>
+    </div> 
+    <p-table [columns]="gridEngineerColumns" [responsive]="true" [value]="selectedticketManagementRecord.EngineerAssignList" [style]="tablestyle" 
+    [totalRecords]="totalRecords" [paginator]="true" [rows]="recordsToFetch">
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="11" style='text-align: center;'>
+                    <b>{{ gridNoMessageToDisplay }}</b>
+                </td> 
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+                    <col style="width:10%;"> 
+                    <col style="width:25%;">
+                    <col style="width:20%;">
+                    <col style="width:25%;">
+                    <col style="width:20%;">
+            </colgroup>
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                    {{col.header}}
+                    <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order"
+                    ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+            <tr>
+                <td>
+                    {{ i + 1 }}
+                </td>
+                <td>
+                    {{ rowData.Name }} 
+                </td>
+                <td style="text-align:center">
+                    {{ rowData.ContactNo }}
+                </td>      
+                <td style="text-align:center">
+                    {{ rowData.Email }}
+                </td>  
+                <td>
+                    <div style="float:left;width:80%;">
+                        {{ rowData.StatusName }}
+                    </div>                
+                <!-- <div class="gridIconsStyle" *ngIf="hideinput">
+                    <i  class="fa fa-trash gridRemoveIcon" (click)="removeGridItem(i)" aria-hidden="true"></i> 
+                </div> -->
+                </td>
+            </tr>    
+        </ng-template>
+        </p-table>
+    
+    </div>
+
+
+    <div class="col-12 inventory-req" style="padding:0px;">
+    <div class="row" style="margin-top:2em;">
+        <div class="col-sm-6">
+        <h4 class="form-heading">Inventory Required</h4>
+        </div>
+        
+        <!-- start inventory grid -->
+        <div class="col-12">
+            <fieldset *ngIf="hideinput" formArrayName="InventoryItems">
+                <div style="text-align: center;">
+                    <span class="errorMessage" *ngIf="showGridErrorMessage">
+                        Please enter Inventory Details
+                    </span>
+                </div> 
+                <p-table [columns]="gridInventoryColumns" [customSort]="true" sortMode="single" [value]="signupForm.controls.InventoryItems.controls">
+                    <ng-template pTemplate="colgroup" let-columns>
+                        <colgroup>
+                            <col style="width:5%;">
+                            <col style="width:12%;">
+                            <col style="width:15%;">
+                            <col style="width:10%;">
+                            <col style="width:8%;">
+                            <col style="width:10%;">
+                            <col style="width:10%;">
+                            <col style="width:10%;">
+                            <col style="width:17%;">
+                        </colgroup>
+                    </ng-template>
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                {{col.header}}
+                                <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                        <tr  *ngIf="hideinput"  [formGroupName]="i">
+                            <td>
+                                {{ i + 1 }}
+                            </td>
+                            <td>
+                                <input  formControlName="Item" type="text" class="form-control" [inputFormatter]="itemMasterInputFormater" (selectItem)="itemMasterSelection($event,i)"
+                                [ngbTypeahead]="itemMasterSearch"  (click)="onItemClick(i)" [resultTemplate]="itemMasterTemplate"
+                            />
+                            </td>
+                            <td>
+                                <textarea formControlName="ItemDescription" autoresize type="text" class="form-control">
+                                </textarea>
+                            </td>
+                            <td>
+                                <select formControlName="MeasurementUnitID" *ngIf="hideinput" class="form-control">
+                                    <option *ngFor="let record of measurementUnits" value={{record.MeasurementUnitID}}>
+                                        {{ record.Name }}
+                                    </option>
+                                </select>
+                            </td>
+                            <td >
+                                    {{signupForm.get('InventoryItems').controls[i].get('ExistingQuantity').value }}
+                            </td>
+                            <td>
+                                <input type="number" style="text-align: right;" class="form-control" (change)="checkQuantity(i)" (keydown)=restrictMinus($event)
+                                    formControlName="ItemQty" />
+                            </td>
+                            <td>
+                                <input type="number" style="text-align: right;" class="form-control" (keydown)=restrictMinus($event)
+                                formControlName="Price" />
+                            </td>     
+                            <td>
+                                <div style="float:right;">                      
+                                    {{ ( signupForm.get('InventoryItems').controls[i].get('ItemQty').value * signupForm.get('InventoryItems').controls[i].get('Price').value)|number:'1.2-4'}}                                
+                                </div>
+                            </td>    
+                            <td *ngIf="signupForm.get('InventoryItems').controls[i].get('Status').value==''">
+                                    <div>
+                                        {{ signupForm.get('InventoryItems').controls[i].get('Status').value }}
+                                    </div>
+                                    <div class="gridIconsStyle" >
+                                        <i class="fa fa-trash gridRemoveIcon" (click)="removeInventoryGridItem(i)" aria-hidden="true"></i>
+                                    </div>
+                            </td> 
+                            <td *ngIf="signupForm.get('InventoryItems').controls[i].get('Status').value=='Stock Available'">
+                                <div style="float:left;width:60%; background-color: green">
+                                    {{ signupForm.get('InventoryItems').controls[i].get('Status').value }}
+                                </div>
+                                <div class="gridIconsStyle" >
+                                    <i class="fa fa-trash gridRemoveIcon" (click)="removeInventoryGridItem(i)" aria-hidden="true"></i>
+                                </div>
+                            </td>
+                            <td *ngIf="signupForm.get('InventoryItems').controls[i].get('Status').value =='Stock Not Available'">
+                                <div style="float:left;width:60%; background-color:red">
+                                    {{ signupForm.get('InventoryItems').controls[i].get('Status').value }}
+                                </div>
+                                <div class="gridIconsStyle" >
+                                    <i class="fa fa-trash gridRemoveIcon" (click)="removeInventoryGridItem(i)" aria-hidden="true"></i>
+                                </div>
+                            </td>
+
+                        </tr>
+                    </ng-template>
+                </p-table>
+                <div *ngIf="hideinput">
+                    <input type="number" [(ngModel)]="linesToAdd" [ngModelOptions]="{standalone: true}" class="form-control linesToAdd">
+                    <button type="submit" (click)="addGridItem(linesToAdd)" class="addLine">
+                        <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Line
+                    </button>
+                </div>
+            </fieldset>
+            <p-table *ngIf="hidetext" [columns]="gridInventoryColumns"  [customSort]="true" sortMode="single"
+                [value]="selectedticketManagementRecord.InventoryItems">
+                <ng-template pTemplate="colgroup" let-columns>
+                    <colgroup>
+                        <col style="width:5%;">
+                        <col style="width:12%;">
+                        <col style="width:15%;">
+                        <col style="width:10%;">
+                        <col style="width:8%;">
+                        <col style="width:10%;">
+                        <col style="width:10%;">
+                        <col style="width:10%;">
+                        <col style="width:17%;">
+                    </colgroup>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr>   															              
+                        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                            {{col.header}}
+                            <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                    <tr>   															              
+                        <td>
+                            {{ i + 1 }}
+                        </td>
+                        <td>
+                            {{ rowData.Item.ItemName }}
+                        </td>
+                        <td>
+                            <span class="descriptionStyle" [innerHtml]="rowData.ItemDescription|TextAreaContentDisplay"></span>
+                        </td>
+                        <td >
+                            {{ rowData.MeasurementUnitCode }}
+                        </td>
+                        <td>
+                            {{ rowData.Item.ExistingQuantity }}
+                        </td>
+                        <td>
+                            {{ rowData.ItemQty }}
+                        </td>
+                        <td>
+                            {{ rowData.Price }}
+                        </td>
+                        <td>
+                            {{ (rowData.ItemQty * rowData.Price)|number:'1.2-4' }}
+                        </td>
+                        <td  *ngIf="rowData.Status=='Stock Available'">
+                            <div style="float:left;width:60%;text-align: left;background-color: green">
+                                <!-- {{ signupForm.get('InventoryItems').controls[i].get('Status').value }} -->
+                                {{ rowData.Status }}
+                            </div>
+                            <div class="gridIconsStyle" *ngIf="hideinput" >
+                                <!-- <i class="fa fa-edit gridEditIcon" (click)="editGridItem(i)" aria-hidden="true"></i>
+                                &nbsp;&nbsp;&nbsp; -->
+                                <i class="fa fa-trash gridRemoveIcon" (click)="removeInventoryGridItem(i)" aria-hidden="true"></i>
+                            </div>
+                        </td>
+                        <td  *ngIf="rowData.Status=='Stock Not Available'">
+                            <div style="float:left;width:60%;text-align: left;background-color:red">
+                                <!-- {{ signupForm.get('InventoryItems').controls[i].get('Status').value }} -->
+                                {{ rowData.Status }}
+                            </div>
+                            <div class="gridIconsStyle" *ngIf="hideinput" >
+                                <!-- <i class="fa fa-edit gridEditIcon" (click)="editGridItem(i)" aria-hidden="true"></i>
+                                &nbsp;&nbsp;&nbsp; -->
+                                <i class="fa fa-trash gridRemoveIcon" (click)="removeInventoryGridItem(i)" aria-hidden="true"></i>
+                            </div>
+                        </td>
+                    </tr>   
+                </ng-template>
+            </p-table>
+        </div>
+
+        <!-- end inventory grid -->
+    
+    </div>  
+    </div>
+
+
+
+    <div class="col-12 contractor-details" style="padding:0px;">
+        <div class="row" style="margin-top:2em;">
+            <div class="col-sm-6">
+                <h4 class="form-heading">Sub-Contractor Details</h4>
+            </div> 
+
+            <!-- start supplier grid -->
+                <div class="col-12">
+                        <fieldset *ngIf="hideinput" formArrayName="SubContractorItem">
+                            <div style="text-align: center;">
+                                <span class="errorMessage" *ngIf="showGridErrorMessage">
+                                    Please enter Sub Contractor Details
+                                </span>
+                            </div> 
+                            <p-table [columns]="gridSupplierColumns" [customSort]="true" sortMode="single" [value]="signupForm.controls.SubContractorItem.controls">
+                                <ng-template pTemplate="colgroup" let-columns>
+                                    <colgroup>
+                                        <col style="width:5%;">
+                                        <col style="width:17%;">
+                                        <col style="width:15%;">
+                                        <col style="width:10%;">
+                                        <col style="width:20%;">
+                                        <col style="width:10%;">
+                                        <col style="width:18%;">
+                                        <col style="width:15%;">
+                                    </colgroup>
+                                </ng-template>
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                            {{col.header}}
+                                            <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                    <tr  *ngIf="hideinput"  [formGroupName]="i">
+                                        <td>
+                                            {{ i + 1 }}
+                                        </td>
+                                        <td>
+                                            <select formControlName="SupplierCategoryID"  (change)="categorySelection($event.target.value)" class="form-control">
+                                                    <option [ngValue]="undefined">--Select--</option>
+                                                    <option *ngFor="let record of supplierCategory" value={{record.SupplierCategoryID}}>
+                                                        {{ record.CategoryText }}
+                                                    </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input  formControlName="Supplier" type="text" class="form-control" [inputFormatter]="supplierInputFormater" (selectItem)="supplierSelection($event,i)"
+                                            [ngbTypeahead]="supplierSearch"  (click)="onSupplierItemClick(i)" [resultTemplate]="supplierTemplate" />
+                                        </td>
+                                        <td >
+                                            {{signupForm.get('SubContractorItem').controls[i].get('BillingTelephone').value }}
+                                        </td>
+                                        <td >
+                                            {{signupForm.get('SubContractorItem').controls[i].get('SupplierEmail').value }}
+                                        </td>                              
+                                        <td >
+                                            <input type="number" style="text-align: right;"  min="0" class="form-control" (keydown)=restrictMinus($event)
+                                            formControlName="QuotationAmount" />
+                                        </td>      
+                                        <td>
+                                            <div class="col-12 attachments" *ngIf="selectedticketManagementRecord!=undefined">
+                                                <ul>
+                                                    <li *ngFor="let data of selectedticketManagementRecord.TicketQuotationAttachment;let k=index">
+                                                        <span *ngIf="data.RowId==i">
+                                                            <span>
+                                                                <span class="displayFileName">
+                                                                    {{ data.FileName }}
+                                                                </span>
+                                                                <a style="color:black;" *ngIf="hidetext" href="{{apiEndPoint}}/TicketQuotationFileDownload?SubContractorQuotationId={{ data.SubContractorQuotationId }}&TicketId={{ data.TicketId }}&FileName={{data.FileName}}&SubContractorId={{data.SubContractorId}}&RowId={{data.RowId}}">
+                                                                    <i class="fa fa-download"></i>
+                                                                </a>
+                                                                &nbsp;&nbsp;
+                                                                <i *ngIf="hideinput" (click)="ticketQuotationAttachmentDelete(k)" class="fa fa-trash">
+
+                                                                </i>
+                                                            </span>
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-12" *ngIf="hideinput">
+                                                <ul class="fileList">
+                                                    <ng-container *ngFor="let data of vendoruploadedFiles;let j = index">
+                                                        <li *ngIf="data.RowIndex==i">
+                                                            <span>
+                                                                <span>
+                                                                    <span class="fileName">
+                                                                        {{ data.File.name }}
+                                                                    </span>
+                                                                    <i class="fa fa-close" (click)="onVendorFileClose(i)"></i>
+                                                                </span>
+                                                                <br>
+                                                                <span class="fileSize">{{ data.File.size/1024 }} KB</span>
+                                                            </span>
+                                                        </li>
+                                                    </ng-container>
+
+                                                </ul>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <div style="float:left;width:40%;">
+                                                <button type="file" (click)="fileInput.click();selectedFileRowIndex=(i)" style="text-align:center">
+                                                    <i aria-hidden="true"></i> Choose
+                                                </button>
+                                            </div>
+                                            <div class="gridIconsStyle" >
+                                                <i class="fa fa-trash gridRemoveIcon" (click)="removeSupplierGridItem(i)" aria-hidden="true"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                            <div *ngIf="hideinput">
+                                <input type="number" [(ngModel)]="linesToAdd" [ngModelOptions]="{standalone: true}" class="form-control linesToAdd">
+                                <button type="submit" (click)="addGridItem1(linesToAdd)" class="addLine">
+                                    <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Line
+                                </button>
+                            </div>
+                        </fieldset>
+                        <p-table *ngIf="hidetext" [columns]="gridSupplierColumns" [customSort]="true" sortMode="single"
+                            [value]="selectedticketManagementRecord.SubContractorItem">
+                            <ng-template pTemplate="colgroup" let-columns>
+                                <colgroup>
+                                    <col style="width:5%;">
+                                    <col style="width:17%;">
+                                    <col style="width:15%;">
+                                    <col style="width:10%;">
+                                    <col style="width:20%;">
+                                    <col style="width:10%;">
+                                    <col style="width:18%;">
+                                    <col style="width:15%;">
+                                </colgroup>
+                            </ng-template>
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>   															              
+                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                        {{col.header}}
+                                        <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                <tr>   															              
+                                    <td>
+                                        {{ i + 1 }}
+                                    </td>
+                                    <td>
+                                        {{ rowData.CategoryText }}
+                                    </td>                               
+                                    <td >
+                                        {{ rowData.Supplier.SupplierName }}
+                                    </td>
+                                    <td >
+                                        {{ rowData.BillingTelephone }}
+                                    </td>
+                                    <td >
+                                        {{ rowData.SupplierEmail }}
+                                    </td>
+                                    <td >
+                                        {{ rowData.QuotationAmount }}
+                                    </td>
+                                    <td >
+                                        <div class="col-12 attachments" *ngIf="selectedticketManagementRecord!=undefined">
+                                            <ul>
+                                                <li *ngFor="let data of selectedticketManagementRecord.TicketQuotationAttachment;let k=index">
+                                                    <span *ngIf="data.RowId==i">
+                                                        <span>
+                                                            <span class="displayFileName">
+                                                                {{ data.FileName }}
+                                                            </span>
+                                                            <a style="color:black;" *ngIf="hidetext"  href="{{apiEndPoint}}/TicketQuotationFileDownload?SubContractorQuotationId={{ data.SubContractorQuotationId }}&TicketId={{ data.TicketId }}&FileName={{data.FileName}}&SubContractorId={{data.SubContractorId}}&RowId={{data.RowId}}">
+                                                                <i class="fa fa-download"></i>
+                                                            </a>
+                                                            &nbsp;&nbsp;
+                                                            <i *ngIf="hideinput" (click)="attachmentDelete(i)" class="fa fa-trash">
+                                                            </i>
+                                                        </span>
+                                                    </span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="float:left;width:60%;text-align: right;">
+                                            <!-- {{ rowData.QuotationAmount }} -->
+                                        </div>
+                                        <div class="gridIconsStyle" *ngIf="hideinput" >
+                                            <!-- <i class="fa fa-edit gridEditIcon" (click)="editGridItem(i)" aria-hidden="true"></i>
+                                            &nbsp;&nbsp;&nbsp; -->
+                                            <i class="fa fa-trash gridRemoveIcon" (click)="removeSupplierGridItem(i)" aria-hidden="true"></i>
+                                        </div>
+                                    </td>
+                                </tr>   
+                            </ng-template>
+                        </p-table>
+                </div>
+
+
+
+
+            <!-- end supplier grid -->
+
+
+            
+        </div> 
+    </div>
+
+    <div class="col-12 invoice" style="padding:0px;">
+    <!-- <div class="row" style="margin-top:2em;">
+    <div class="col-sm-6"><h4 class="form-heading">Invoice</h4></div> 
+        <div class="col-sm-6 text-right">
+            <button type="submit" (click)="savedata()"  class="btn btn-add" ><i class="fa fa-plus" aria-hidden="true"></i> Add Invoice</button>
+        </div>
+    </div>  -->
+
+    <!-- <table  class="table table-border" *ngIf="hidetext"  style="width:97%">
+    <tr>
+    <th>S. no.</th>
+    <th>Invoice Number</th>
+    <th>Date</th>
+    <th>Amount</th>
+    <th>Status</th>  
+    </tr>
+    <tr>   															              
+    <td> 1 </td>
+    <td>#587456 </td>
+    <td>10-NOov-2018</td>   
+    <td>$200</td>  
+    <td>Pending <div class='edit-list'><i class="fa fa-plus-circle" aria-hidden="true"></i>  <i class="fa fa-minus-circle" aria-hidden="true"></i></div></td>
+    </tr>
+    <tr>   															              
+    <td> 2 </td>
+    <td>#587456 </td>
+    <td>10-NOov-2018</td>   
+    <td>$200</td>  
+    <td>Pending <div class='edit-list'><i class="fa fa-plus-circle" aria-hidden="true"></i>  <i class="fa fa-minus-circle" aria-hidden="true"></i></div></td>
+    </tr>
+    <tr>   															              
+    <td> 3 </td>
+    <td>#587456 </td>
+    <td>10-NOov-2018</td>   
+    <td>$200</td>  
+    <td>Pending <div class='edit-list'><i class="fa fa-plus-circle" aria-hidden="true"></i>  <i class="fa fa-minus-circle" aria-hidden="true"></i></div></td>
+    </tr>
+    </table>
+    
+    <table  class="table table-border"  *ngIf="hideinput"  style="width:97%">
+    <tr>
+    <th>S. no.</th>
+    <th>Invoice Number</th>
+    <th>Date</th>
+    <th>Amount</th>
+    <th>Status</th>  
+    </tr>
+    <tr>   															              
+    <td></td>
+    <td></td>
+    <td></td> 
+    <td></td>  
+    <td > <div class='edit-list'><i class="fa fa-plus-circle" aria-hidden="true"></i>  <i class="fa fa-minus-circle" aria-hidden="true"></i></div></td>
+    </tr>  
+    </table> -->
+
+
+    </div>
+
+
+    <div class="form-group row" style="margin-top:2em;">
+        <!-- <label class="col-form-label col-sm-2 form-label">Remarks</label>  
+            <div class="col-sm-8">
+            <textarea 
+                    formControlName="Remarks" 
+                    placeholder="Remarks" *ngIf="hideinput" class="form-control">
+            </textarea>
+
+        <label class="col-form-label form-text" *ngIf="hidetext">{{selectedticketManagementRecord.Remarks}}</label>
+        </div>  -->
+            <div class="col-xl-12 col-sm-12 col-12" *ngIf="selectedticketManagementRecord.TicketId!=0">
+                <!-- *ngIf="selectedticketManagementRecord.WorkFlowStatusId==2||selectedticketManagementRecord.WorkFlowStatusId==3"> -->
+                <h4 class="form-heading">Comments</h4>
+                <div>
+                    <select formControlName="Engineerlist" style="float:inherit;vertical-align: top; margin-right:10px; height:30px; max-width:150px" >
+                            <option value="0">Tenant</option>
+                            <option *ngFor="let record of engineerList" value={{record.EngineerId}}>
+                                    {{record.EngineerName}}
+                                    
+                    </select>
+                    <textarea formControlName="Remarks" class="form-control" style="width:70%;display:inline-block ">
+                    </textarea>
+                    <button type="submit" (click)="sendMessages()" style="float:inherit;vertical-align: top;" class="btn btn-edit">
+                        <i class="fa fa-envelope" aria-hidden="true"></i>Send
+                    </button>
+                </div>
+                <div *ngIf="signupForm.get('Remarks') && signupForm.get('Remarks').errors!=null && signupForm.get('Remarks').touched==true">
+                    <span class="errorMessage" *ngIf="signupForm.get('Remarks').errors.required">Remarks is Required</span>
+                </div>
+            </div>
+
+            <div *ngIf="selectedticketManagementRecord.TicketSendMessages!=undefined && selectedticketManagementRecord.TicketSendMessages.length >0" class="col-xl-12 col-sm-12 col-12">
+                <label class="col-form-label form-label">Previous Comments</label>
+                <ul>
+                    <li *ngFor="let record of selectedticketManagementRecord.TicketSendMessages">
+                        <span class='remarksUserName'>{{ record.UserName }} to {{ record.Engineer_TenantName }}</span>:
+                        <br>
+                        <span>{{ record.Remarks }}</span>
+                    </li>
+                </ul>
+            </div>
+
+
+
+    </div>
+
+    <div  class="row">
+        <div class="col-12"><h4 class="form-heading">Attachments</h4></div>
+        <div class="col-12 attachments" *ngIf="selectedticketManagementRecord!=undefined">
+            <ul>
+                <li *ngFor="let data of selectedticketManagementRecord.Attachments;let i=index">
+                    <span>
+                        <span class="displayFileName">
+                            {{ data.FileName }}
+                        </span>
+                        <a style="color:black;"  *ngIf="hidetext" href="{{apiEndPoint}}/TicketFileDownload?AttachmentId={{ data.AttachmentId }}&AttachmentTypeId={{ data.AttachmentTypeId }}&FileName={{data.FileName}}&RecordId={{data.RecordId}}">
+                            <i class="fa fa-download"></i>
+                        </a>
+                        &nbsp;&nbsp;
+                        <i  *ngIf="hideinput" (click)="attachmentDelete(i)" class="fa fa-trash"></i>
+                    </span>
+                </li>
+            </ul>
+        </div>
+        <div class="col-12"  *ngIf="hideinput">
+            <div class="col-12">
+                    <input type="file"  (change)="onFileUploadChange($event)" name="file">
+            </div> 
+            <div class="col-12">
+                <ul class="fileList">
+                    <li  *ngFor="let data of uploadedFiles;let i = index" style="padding:0px;">
+                        <span>
+                            <span class="fileName">
+                                {{ data.name }}
+                            </span>
+                            <i class="fa fa-close" (click)="onFileClose(i)"></i>
+                        </span>
+                        <br>
+                        <span class="fileSize">{{ data.size/1024 }} KB</span>
+                    </li>
+                </ul>
+            </div> 
+        </div>   
+    </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+        <div class="form-group text-right btn-list">
+            <button type="submit" (click)="saveRecord()"  class="btn btn-save" *ngIf="hideinput"><i class="fa fa-check" aria-hidden="true"></i> Save</button>
+            <button type="submit" (click)="cancelRecord()"  class="btn btn-cancel" *ngIf="hideinput"><i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+            <button type="submit" (click)="editRecord()" class="btn btn-edit" *ngIf="hidetext"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+            <button type="submit" (click)="deleteRecord()"  class="btn btn-delete" *ngIf="hidetext"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+        </div>
+        </div>
+    </div>
+
+
+    </form>
+    </div>
+    </div><!-- left col end here-->
+    </div>
+    
+
+    <ng-template #assignengineer let-c="close" let-d="dismiss" >
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Assign Engineer</h4>
+        <!-- <button type="button" class="close" aria-label="Close" (click)="c('Cross click')">
+        <span aria-hidden="true">&times;</span>
+        </button> -->
+    </div>
+    <div class="modal-body">
+        <form  [formGroup]="engineerForm">
+        <div class="row">
+            <div class="col-sm-12  col-xl-3">
+        <div class="form-group">
+            <label for="search">Search</label>
+            <div class="input-group">
+            <input  formControlName="User" type="text" class="form-control" [inputFormatter]="engineerInputFormater"
+            [ngbTypeahead]="engineerSearch" 
+            [resultTemplate]="engineerTemplate" (selectItem)="onengineerSelection($event)" />
+            </div>
+        </div>
+            </div>
+
+            <div class="col-sm-12  col-xl-3">
+        <div class="form-group">
+            <label for="search">Date</label>
+            <div class="input-group"> 
+            <div class="input-group" style="width: 100%">
+                <input class="form-control" formControlName="Date"  (dateSelect)="checkavailability()"
+                ngbDatepicker #d="ngbDatepicker" >
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+                <i class="fa fa-calendar"  style="cursor: pointer;"></i>
+            </button>
+            </div>
+        </div>  
+                
+            </div>
+        </div>
+            </div>
+
+    <div class="col-sm-12 col-xl-3">
+        <div class="form-group">
+            <label for="search">Time From</label>
+            <div class="input-group" style="width: 100%">
+            <p-calendar [timeOnly]="true" inputStyleClass="calendarClass" formControlName="FromEmployeeTime" (onSelect)="checkavailability()"
+            showTime="true" hourFormat="24"></p-calendar>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-xl-3">
+        <div class="form-group">
+            <label for="search">To</label>
+            <div class="input-group" style="width: 100%">
+            <p-calendar [timeOnly]="true" inputStyleClass="calendarClass"  formControlName="ToEmployeeTime" (onSelect)="checkavailability()"
+            showTime="true" hourFormat="24"></p-calendar>
+            </div>
+        </div>
+            </div>
+
+    <div class="col-12" style="padding:0px;"> 
+        <h4 class="form-heading">Engineers Availability</h4>
+            <p-table [columns]="gridColumns" [responsive]="true" [value]="employeeassign" [style]="tablestyle" [totalRecords]="totalRecords"    
+            [paginator]="true" [rows]="recordsToFetch">
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="11" style='text-align: center;'>
+                    <b>{{ gridNoMessageToDisplay }}</b>
+                    </td> 
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="colgroup" let-columns>
+                <colgroup>
+                    <col style="width:10%;">
+                    <col style="width:30%;">
+                    <col style="width:30%;">
+                    <col style="width:30%;">
+                </colgroup>
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                        {{col.header}}
+                        <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order"
+                        ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                <tr>
+                    <td>
+                        {{ i + 1 }}
+                    </td>
+                    <td>
+                        {{ rowData.Name }}
+                    </td>
+                    <td style="text-align:center">
+                    <i class="fa fa-check" aria-hidden="true" *ngIf="rowData.IsAvailable=='available'" style="color:navy"></i>
+                    <i class="fa fa-times" aria-hidden="true" *ngIf="rowData.IsAvailable!='available'" style="color:red"></i>
+                    </td>       
+                    <td >
+                        <div style="float:left;width:20%;">
+                                <!-- <button type="button" class="btn btn-done"  *ngIf="rowData.IsAvailable!='available'"  style="text-align:center"><i class="fa fa-check" aria-hidden="true"></i> Assign</button> -->
+
+                        <button type="button" class="btn btn-done"  *ngIf="rowData.IsAvailable=='available'&&rowData.IsAssigned==false" (click)="checkstatus(i,true)" style="text-align:center"><i class="fa fa-check" aria-hidden="true"></i> Assign</button>
+                        <button type="button" class="btn btn-done"  *ngIf="rowData.IsAssigned==true"  (click)="checkstatus(i,false)"  style="text-align:center;background: green;"><i class="fa fa-check" aria-hidden="true"></i> Assigned</button>
+                        <!-- <button type="button" class="btn btn-done"  *ngIf="rowData.IsAssigned!=true" (click)="checkstatus(i)" style="text-align:center"><i class="fa fa-check" aria-hidden="true"></i> Assign</button>
+                        <button type="button" class="btn btn-done"  *ngIf="rowData.IsAssigned==true"  style="text-align:center;background: green;"><i class="fa fa-check" aria-hidden="true"></i> Assigned</button> -->
+                        
+                        </div>               
+                    </td>
+                </tr>    
+            </ng-template>
+            </p-table>
+
+    </div>
+
+        </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-done" (click)="c('Done click')"><i class="fa fa-check" aria-hidden="true"></i> Done</button>
+        <!-- <button type="button" class="btn btn-reset" (click)="c('Save click')"><i class="fa fa-undo" aria-hidden="true"></i> Reset</button> -->
+    </div>
+    </ng-template>
+    
+
+    </div>
+
+    <input type="file" style='display:none;' #fileInput multiple (change)="onFileVendorUploadChange($event)" name="file">
+
+    <ng-template #facilityTemplate let-r="result" let-t="term">
+    {{ r.UnitNumber }}
+    </ng-template>
+
+    <ng-template #engineerTemplate let-r="result" let-t="term">
+    {{ r.Name }}
+    </ng-template>
+
+    <ng-template #itemMasterTemplate let-r="result" let-t="term">
+        {{ r.ItemName }}
+    </ng-template>
+
+    <ng-template #supplierTemplate let-r="result" let-t="term">
+            {{ r.SupplierName }}
+    </ng-template>
+
+    <ng-template #categoryTemplate let-r="result" let-t="term">
+            {{ r.CategoryText }}
+    </ng-template>
+

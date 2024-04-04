@@ -1,0 +1,8 @@
+.hideAppBar
+{
+    display: none;
+}
+.rightNavBar
+{
+    margin-left: 0px !important; 
+}

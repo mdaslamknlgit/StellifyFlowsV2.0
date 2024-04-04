@@ -1,0 +1,92 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12 col-sm-12 padding-null tittlediv">
+      <div class="flexrow space-between align-center">
+        <h3 class="item-heading">  Import Payments </h3>
+   
+        <div>
+          <input #file style="visibility: hidden;width:0px" type="file" accept="xlsx/*" (click)="file.value = null"
+            (change)="uploadFile($event)">
+        
+          <button class="btn btn-save ng-star-inserted" #upload (click)="file.click()">
+            <i class="fa-solid fa-file-import " ria-hidden="true" aria-hidden="true"></i> Import Payments </button>
+        
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="rightPanel "> 
+  <div class="row">
+    <div class="col-sm-12 table-responsive" [ngStyle]="{'max-width.px': screenWidth}">
+      <form [formGroup]="paymentformGroup">
+        <div formArrayName="Payments">
+          <p-table [columns]="importPaymentColumns"   sortMode="multiple"
+            [value]="paymentformGroup.get('Payments')['controls']">
+            <ng-template pTemplate="colgroup" let-columns>
+              <colgroup>
+                <col style="width:4%;">
+                <col style="width:11%;">
+                <col style="width:6%;">
+                <col style="width:10%;">
+                <col style="width:6%;">
+                <col style="width:6%;">
+                <col style="width:15%;">
+                <col style="width:7%;">
+                <col style="width:7%;">
+                <col style="width:7%;">
+                <col style="width:10%;">
+              </colgroup>
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns;let i=index" [pSortableColumn]="col.field">
+                  {{col.header}}
+                  <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-payment let-i="rowIndex">
+              <tr [formGroupName]="i">
+                <td> {{ i + 1 }} </td>
+                <td class="breakword"> {{payment.get('SupplierInvoiceRefNo').value}} </td>
+                <td>
+                  <span *ngIf="payment.InvoiceDate!='0001-01-01T00:00:00'">{{payment.get('InvoiceDate').value
+                    |date:"dd/MM/yyyy"}}
+                  </span>
+                </td>
+                <td> {{payment.get('ChequeNo').value}} </td>
+                <td>
+                  <span *ngIf="payment.ChequeDate!='0001-01-01T00:00:00'"> {{payment.get('ChequeDate').value |
+                    date:"dd/MM/yyyy"}}
+                  </span>
+                </td>
+                <td> {{payment.get('VendorId').value}} </td>
+                <td class="breakword"> {{payment.get('SupplierName').value}} </td>
+                <td align="right"> {{payment.get('PaymentAmount').value |number:'1.2-2'}} </td>
+                <td> {{payment.get('DocumentNo').value}} </td>
+                <td>
+                  <span *ngIf="payment.get('Status').value">Valid</span>
+                  <span *ngIf="!payment.get('Status').value">Invalid</span>
+                  <i title="{{payment.get('StatusText').value}}" style="float: right;padding-top: 5px;"
+                    *ngIf="!payment.get('Status').value" class="fa fa-info-circle" aria-hidden="true"></i>
+                </td>
+                <td>
+                  <input width="100%" class="form-control" formControlName="Remarks"
+                    *ngIf="payment.get('IsOverPayment').value" type="text">
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </form>
+      <div class="form-group text-right btn-list" style="width:100% ;">
+        <button type="button" (click)="onConfirm()" [disabled]="disableConfirm" class="btn btn-save">
+          <i class="fa fa-check" aria-hidden="true"></i> Confirm</button>
+        <button type="button" (click)="onCancel()" class="btn btn-save">
+          <i class="fa fa-check" aria-hidden="true"></i> Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<p-confirmDialog></p-confirmDialog>

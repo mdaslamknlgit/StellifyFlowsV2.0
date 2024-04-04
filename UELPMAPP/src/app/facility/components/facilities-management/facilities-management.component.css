@@ -1,0 +1,8 @@
+.autoCompleteTable td{
+    border: 1px solid #c4c4c4;
+    border-collapse: separate;
+    }
+    .autoCompleteTable
+    {
+        table-layout: fixed;
+    }

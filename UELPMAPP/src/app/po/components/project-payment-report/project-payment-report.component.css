@@ -1,0 +1,36 @@
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+/* .textright {
+  text-align: right
+}
+
+.textcenter {
+  text-align: center
+}
+
+.bold {
+  font-weight: bold;
+} */
+
+/* .header {
+  background-color: #dceaf6;
+  color: black;
+} */
+
+/* .typeofcosttitle {
+  background-color: yellowgreen;
+} */
+
+/* .invoicenumber {
+  background-color: yellow;
+} */

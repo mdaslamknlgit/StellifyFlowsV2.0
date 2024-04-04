@@ -1,0 +1,315 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+            <div class="flexrow space-between align-center">
+                <h3 class="item-heading"> Purchase Order Approval List</h3>
+                <div>
+                    <button class="btn btn-transparent" (clickOutside)="onClickedOutside($event)" (click)="split()">
+                        {{showfilterstext}} </button>
+
+                    <img style="display: none;" src="../assets/images/grid1.png" (click)="showFullScreen()">
+                    <!-- <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+                        <button class="btn customdropdown btn-transparent"
+                            style="background:none;border:none;padding:0px;" id="dropdownBasic1" ngbDropdownToggle>
+                            <i class="fa-solid fa-bars"></i>
+                        </button>
+                        <div ngbDropdownMenu aria-labelledby="dropdownBasic1"
+                            *ngIf="(printPermission && showPrintButton)||viewLogPermission">
+                            <button class="dropdown-item" *ngIf="viewLogPermission" (click)="displayLogPopUp()">View
+                                Log</button>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+            <div class="left-section1" [class.display-filters]="!showfilters">
+                <!-- <p>Filter Section Start Here</p> -->
+                <!-- Filter Section Starts Here -->
+                <div class="flexrow space-between showlist">
+                    <div class="filter-section" style="width: 100%;" ngbDropdown #myDrop="ngbDropdown">
+                        <form [formGroup]="poFilterInfoForm">
+                            <div class="form-group " style="display: flex; flex-wrap:wrap;justify-content: space-between;">
+                                <label class="col-form-label col form-label">PO #</label>
+                                <div>
+                                    <input style="width: 100px;" type="text" #poCode formControlName="POCode" class="form-control">
+                                </div>
+                                <label class="col-form-label col form-label">Supplier</label>
+                                <div class=" autoComplete">
+                                    <input style="width: 100px;" formControlName="SupplierName" type="text" class="form-control show"
+                                        [inputFormatter]="supplierInputFormater" [ngbTypeahead]="supplierSearch"
+                                        (selectItem)="onSupplierFilterChange($event)" [resultTemplate]="supplierTemplate"
+                                        (keyup)="suppliernamechange($event)" />
+                                </div>
+                                <label class="col-form-label  col form-label">From Date</label>
+                                <div class=" input-group" style="width: auto;">
+                                    <input style="width: 100px;" class="form-control fromcontrol" formControlName="FromDate" ngbDatepicker
+                                        #fromDate="ngbDatepicker" [readonly]="true">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" (click)="fromDate.toggle();toDate.close()" type="button">
+                                            <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <label class="col-form-label col form-label">To Date</label>
+                                <div class="  input-group" style="width: auto;">
+                                    <input style="width: 100px;" class="form-control" formControlName="ToDate" ngbDatepicker
+                                        #toDate="ngbDatepicker" [readonly]="true">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" (click)="toDate.toggle();fromDate.close()" type="button">
+                                            <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                    
+                                <label class="col-form-label col form-label">PO Type</label>
+                                <div class=" ">
+                                    <select #purchaseOrderDropDown formControlName="PoTypeId" class="form-control">
+                                        <option value=0>
+                                            Select
+                                        </option>
+                                        <option *ngFor="let record of purchaseOrderTypes" value={{record.PurchaseOrderTypeId}}>
+                                            {{record.PurchaseOrderType}}
+                                        </option>
+                                    </select>
+                                </div>
+                                <!-- <label class="col-form-label col form-label">Status</label>
+                                <div class=" ">
+                                    <select #workFlowStatusDropDown formControlName="WorkFlowStatusId" class="form-control">
+                                        <option value=0>
+                                            Select
+                                        </option>
+                                        <option *ngFor="let record of workFlowStatuses" value={{record.WorkFlowStatusid}}>
+                                            {{record.Statustext}}
+                                        </option>
+                                    </select>
+                                </div> -->
+                                <div class="col_1">
+                                    <button type="button" (click)="filterData()" class="btn btn-save">
+                                        <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                    <button type="button" (click)="resetFilters()" class="btn btn-save">
+                                        <i class="fa fa-refresh" aria-hidden="true"></i> Reset</button>
+                                </div>
+                            </div>
+                            <div style="display: flex; flex-wrap:wrap;justify-content:end; margin-bottom: 10px;">
+                                    
+                                <div style="text-align: left; display: flex; align-items: center;position:absolute;left:0px;">
+                                    Total Records : {{TotalRecords}} &nbsp;
+                                </div>
+
+                                <!-- <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickNewRecord()">
+                                    <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> New</button> -->
+
+                                <button class="btn btn-save ng-star-inserted" mat-button
+                                    [matMenuTriggerFor]="ExportMenu">
+                                    <i class="fa fa-file-export" ria-hidden="true" aria-hidden="true"></i>
+                                    Export</button>
+                                <!-- <mat-menu #ExportMenu="matMenu" yPosition="below"> -->
+                                <mat-menu #ExportMenu="matMenu">
+                                    <button mat-menu-item (click)="ExportToCSV()">
+                                        <i class="fa fa-file-excel-o" ria-hidden="true" aria-hidden="true"></i> CSV
+                                    </button>
+                                    <button mat-menu-item (click)="ExportToExcel()">
+                                        <i class="fa fa-file-excel-o" ria-hidden="true" aria-hidden="true"></i>
+                                        Excel </button>
+                                    <button mat-menu-item (click)="ExportToPDF()">
+                                        <i class="fa fa-file-pdf-o" ria-hidden="true" aria-hidden="true"></i> PDF
+                                    </button>
+                                </mat-menu>
+
+                                <div *ngIf="!showfilters" ngbDropdown placement="bottom-right" style="padding:0px;"
+                                    class="d-inline-block">
+                                   
+                                    <!-- <div ngbDropdownMenu aria-labelledby="dropdownBasic1"
+                                        *ngIf="hideText && (printPermission || emailPermission) && (showPrintButton || showEmailButton) || viewLogPermission">
+                                        <button class="dropdown-item"
+                                            *ngIf="showPrintButton && printPermission && hideText"
+                                            (click)="onPDFPrint()">Print</button>
+                                        <button class="dropdown-item"
+                                            *ngIf="showEmailButton && emailPermission && hideText"
+                                            (click)="displayEmailPopUp()">Email</button>
+                                    </div> -->
+                                </div>
+
+                                <div *ngIf="showdilogbox" class="dialogdropdown">
+                                    <select #purchaseOrderDropDown class="form-control" #mySelect
+                                        (change)='onOptionsSelected(mySelect.value)'>
+                                        <option *ngFor="let record of purchaseOrderTypes"
+                                            value={{record.PurchaseOrderTypeId}}>
+                                            {{record.PurchaseOrderType}}
+                                        </option>
+                                    </select>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- Filter Section Ends Here -->
+                <!-- Filter Section Start Here -->
+                <div class="filter-section" ngbDropdown #myDrop="ngbDropdown">
+                    <div class="flexrow space-between">
+                        <div class="left-search">
+                            <input type="text" [(ngModel)]="purchaseOrderSearchKey" placeholder="Search requests..."
+                                (change)="onSearchInputChange($event)" class="search-filter">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                            <div class="filter-popup" *ngIf="showFilterPopUp" ngbDropdownMenu
+                                aria-labelledby="dropdownManual" (click)="$event.stopPropagation(); myDrop.open();">
+                                <form [formGroup]="poFilterInfoForm" class="form-horizontal">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-6 form-label">PO Number</label>
+                                        <div class="col-6">
+                                            <input type="text" #poCode formControlName="POCode" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-6 form-label">Supplier</label>
+                                        <div class="col-6 autoComplete">
+                                            <input formControlName="SupplierName" type="text" class="form-control show"
+                                                [inputFormatter]="supplierInputFormater" [ngbTypeahead]="supplierSearch"
+                                                [resultTemplate]="supplierTemplate"
+                                                (keyup)="suppliernamechange($event)" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">PO Type</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <select #purchaseOrderDropDown formControlName="PoTypeId"
+                                                class="form-control">
+                                                <option value=0>
+                                                    Select
+                                                </option>
+                                                <option *ngFor="let record of purchaseOrderTypes"
+                                                    value={{record.PurchaseOrderTypeId}}>
+                                                    {{record.PurchaseOrderType}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-12 error errorMessage">
+                                            {{filterMessage}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-12" style="text-align: right">
+                                            <button type="submit" (click)="filterData()" class="btn btn-save">
+                                                <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                            <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                                <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="filter-icon">
+                            <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                                <i class="fa fa-filter" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <div style="float:right;margin:0px;" class="filter-icon" *ngIf="isFilterApplied"
+                            (click)="resetData()">
+                            <i class="fa fa-undo" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                    <!-- <p>Filter Section Ends Here</p> -->
+                    <!-- Filter Section Ends Here -->
+                </div>
+                <!-- Table Starts Here -->
+                <div malihu-scrollbar class="filter-scroll" style="width:100%; float:left;">
+                    <!-- Purchase Order Approval List Starts here -->
+                    <!-- <div *ngIf="IsList"> -->
+                    <p-table #PurchaseOrderListTable dataKey="DraftCode" [rowHover]="true" [filterDelay]="0"
+                        [globalFilterFields]="['DraftCode', 'SupplierName','POTypeId']" [columns]="PurchaseOrdersListsCols"
+                        [value]="purchaseOrdersList" [rows]="1" [scrollable]="true"
+                        [scrollHeight]="'calc(100vh - 360px)'" scrollWidth="100%" [virtualRowHeight]="30"
+                        [virtualScroll]="true" sortMode="multiple" responsiveLayout="scroll"
+                        [rowsPerPageOptions]="[10,20,30,70,80,90,100]">
+                        <ng-template pTemplate="caption">
+                        <!--<div class="table-header">
+                                List of Purchase Orders
+                                <span class="p-input-icon-left">
+                                    <i class="pi pi-search"></i>
+                                    <input pInputText type="text" (input)="PurchaseOrderListTable.filterGlobal($event.target.value, 'contains')"
+                                        placeholder="Global Search" />
+                                </span>
+                            </div> -->
+                        </ng-template>
+                        <ng-template pTemplate="header" let-columns>
+                            <tr style="height: 40px;">
+                                <th *ngFor="let col of PurchaseOrdersListsCols;let i=index"
+                                    [pSortableColumn]="col.field">
+                                    {{col.header}}
+                                    <p-sortIcon [hidden]="i==0" *ngIf="i!=PurchaseOrdersListsCols.length-1"
+                                        [field]="col.field"></p-sortIcon>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="colgroup" let-columns>
+                            <colgroup>
+                                <col *ngFor="let col of columns" [style.width]="col.width">
+                            </colgroup>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-value let-columns let-i="rowIndex">
+                            <tr style="height:30px" [pSelectableRow]="rowData">
+                                <td>{{(value.WorkFlowStatusId!=workFlowStatus.Draft)?value.PurchaseOrderCode:value.DraftCode}}</td>
+                                <td>{{value.SupplierName}}</td>
+                                <td>{{value.CreatedDate | date: 'yyyy-MM-dd'}}</td>
+                                <td>{{this.getPoTypeName(value.POTypeId) }}</td>
+                                <td class="aligncenter">
+                                    <button type="button" class="btn"
+                                        (click)="onRecordSelection(value.PurchaseOrderId,value.POTypeId)">
+                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage" let-columns>
+                            <tr>
+                                <td [attr.colspan]="purchaseOrdersList.length">
+                                    No records found
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    <!-- </div> -->
+                    <!-- Purchase Order Approval List Ends here -->
+                    <!-- Old Table Starts Here -->
+                    <!-- <table class="table">
+                        <tr>
+                            <td (click)="hidefilter()">
+                                <table class="listtable">
+                                    <tr>
+                                        <th>Record Name </th>
+                                        <th>Supplier Name</th>
+                                    </tr>
+                                    <tr [class.activerow]="record.PurchaseOrderId==selectedPurchaseOrderId"
+                                        (click)="onRecordSelection(record.PurchaseOrderId,record.POTypeId)"
+                                        *ngFor="let record of purchaseOrdersList">
+                                        <td>{{ (record.WorkFlowStatusId!=workFlowStatus.Draft) ?
+                                            record.PurchaseOrderCode:record.DraftCode }}</td>
+                                        <td>{{ record.SupplierName }}</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table> -->
+                    <!-- Old Table Ends Here -->
+                    <div *ngIf="purchaseOrdersList.length==0" class="col-12 error listErrorMessage">
+                        {{errorMessage}}
+                    </div>
+                    <ngb-pagination [maxSize]="5" *ngIf="purchaseOrdersList.length>0"
+                        (pageChange)="pageChange($event)" [collectionSize]="purchaseOrderPagerConfig.TotalRecords"
+                        class="d-flex justify-content-center" [pageSize]="purchaseOrderPagerConfig.RecordsToFetch"
+                        [(page)]="currentPage" [boundaryLinks]="true"></ngb-pagination>
+                </div>
+                <!-- Table Ends Here -->
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #supplierTemplate let-r="result" let-t="term">
+    {{ r.SupplierName }}
+</ng-template>
+<app-auditlog *ngIf="showLogPopUp" (hideLogPopUp)="hideLogPopUp($event)" [DocumentId]="selectedPurchaseOrderId"
+    [DocumentNumber]="purchaseOrderSearchKey" [PageName]="selectedPurchaseOrderTypeId" [DocType]="'PO'"
+    [showLogPopUp]="showLogPopUp">
+</app-auditlog>

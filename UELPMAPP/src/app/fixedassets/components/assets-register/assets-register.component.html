@@ -1,0 +1,195 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6 col-sm-12 padding-null tittlediv">
+      <h3 class="item-heading">
+        <img src="../assets/images/icon1.png"> FixedAssets > Asset Register </h3>
+    </div>
+    <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+     
+      <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+        <button class="btn btn-outline-primary" style="background:none;border:none;padding:0px;" id="dropdownBasic1" ngbDropdownToggle>
+          <img src="../assets/images/grid2.png">
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+          <button class="dropdown-item" (click)="ExportAsExcel()">Export</button>   
+          <button class="dropdown-item" (click)="onPDFPrint()">Print</button>           
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+      <div #rightPanel class="rightPanel"  class="col-lg-12 col-md-12" [class.expand-rightcol]="rightsection">
+        <!-- <form class="form-horizontal" novalidate="true">                -->
+                <div class="row fullScreenLabel">
+                    <div class="col-12">
+                        <h3 class="item-heading" style="float:none;">Asset Register</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div ngbDropdown #myDrop="ngbDropdown" class="form-group table-search">
+                            <div class="table-search-input">
+                                <input class="search-filter" [(ngModel)]="searchKey" (keyup)="onSearch($event)" placeholder="Search requests..." type="text">
+                                <i aria-hidden="true" class="fa fa-search"></i>
+                            </div>
+                            <div class="filter-popup" *ngIf="showFilterPopUp" ngbDropdownMenu aria-labelledby="dropdownManual" (click)="$event.stopPropagation();">
+                                <form [formGroup]="assetFilterForm" class="form-horizontal">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-6 form-label">Asset Name</label>
+                                        <div  class="col-6">
+                                          <input  type="text" #assetName formControlName="AssetName" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-6 form-label">Company</label>
+                                        <div  class="col-6">
+                                          <input formControlName="Company" type="text"  class="form-control" [inputFormatter]="companyInputFormater"
+                                                [ngbTypeahead]="companySearch" [resultTemplate]="companyTemplate" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-6 form-label">Location</label>
+                                        <div  class="col-6">
+                                          <input formControlName="Location" type="text"  class="form-control" [inputFormatter]="locationInputFormater"
+                                                [ngbTypeahead]="locationSearch" [resultTemplate]="locationTemplate" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-6 form-label">Purchase Date</label>
+                                        <div  class="col-6">
+                                            <div class="input-group">
+                                                <input class="form-control" formControlName="PurchasedDate" ngbDatepicker #purchaseDatePicker="ngbDatepicker">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-secondary" (click)="purchaseDatePicker.toggle()" type="button">
+                                                        <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-6 form-label">Bar Code</label>
+                                        <div  class="col-6">
+                                          <input  type="text" formControlName="BarCode" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-12 errorMessage">
+                                            {{ filterMessage }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-12" style="text-align: right">
+                                            <button type="submit" (click)="filterData()" class="btn btn-save">
+                                                <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                            <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                                <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                          <!-- start filter code -->
+                          <div style="float:left;margin:0px 0px 0px 16px;" class="filter-icon">
+                              <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                                  <i class="fa fa-filter" aria-hidden="true"></i>
+                              </button>
+                          </div>
+                          <div style="float:left;margin:0px;" class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+                              <i class="fa fa-undo" aria-hidden="true"></i>
+                          </div>                    
+                          <!-- end filter code -->
+                            <!-- <div class="filter-icon" placement="right" style="float:left"> <i aria-hidden="true" class="fa fa-filter"></i></div> -->
+                        </div>
+                    </div>
+                </div>
+        <!-- </form> -->
+        <div class="table-responsive">
+            <div class="col-12" style="padding:0px;">
+                <p-table [columns]="gridColumns" (sortFunction)="customSort($event)"
+                         [customSort]="true" 
+                         [lazy]="true"
+                         (onLazyLoad)="onLazyLoad($event)" 
+                         [paginator]="true"
+                         [rows]="assetRegisterPagerConfig.RecordsToFetch" 
+                         [totalRecords]="assetRegisterPagerConfig.TotalRecords" sortMode="single" [value]="assetsList">
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="12" style='text-align: center;'>
+                                <b>{{ gridNoMessageToDisplay }}</b>
+                            </td> 
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="colgroup" let-columns>
+                        <colgroup>
+                            <col  *ngFor="let col of columns" [style.width]="col.width">
+                        </colgroup>
+                    </ng-template>
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                {{col.header}}
+
+                                <span *ngIf="(col.field=='Unitprice'||col.field=='ItemTotal')&&selectedPODetails.CurrencySymbol!=null">
+                                    &nbsp; ( {{ selectedPODetails.CurrencySymbol }} )
+                                </span>
+                                <p-sortIcon *ngIf="col.field==='Sno'||col.field==='Asset'||col.field==='PurchasedDate'" [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                        <tr>  
+                            <td>
+                                {{ rowData.SerialNumber }}
+                            </td>
+                            <td>
+                                {{ rowData.Asset.AssetName }}
+                            </td>
+                            <td>
+                                {{ rowData.BarCode }}
+                            </td>
+                            <td>
+                                {{ rowData.PurchasedDate|DisplayDateFormat }}
+                            </td>           
+                            <td>
+                                {{ rowData.Supplier==null?"":rowData.Supplier.SupplierName }}
+                            </td>
+                            <td>
+                                {{ rowData.Invoice==null?"":rowData.Invoice.InvoiceCode }}
+                            </td>
+                            
+                            <td>
+                                {{ rowData.Location==null?"": rowData.Location.Name }}
+                           </td>
+                            <td>
+                                {{ rowData.PurchasedValue }}
+                            </td>
+                            <td>
+                                {{ rowData.SalvageValue }}
+                            </td>
+                            <td>
+                                {{ rowData.CurrentValue }}
+                            </td>
+                            <td>
+                                <i (click)="showAssetPostingDetails(rowData)" class="gridView fa fa-th"></i>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+      </div>
+    <!-- left col end here-->
+  </div>
+</div>
+
+<ng-template #locationTemplate let-r="result" let-t="term">
+    {{ r.Name }}
+</ng-template>
+
+<ng-template #companyTemplate let-r="result" let-t="term">
+    {{ r.CompanyName }}
+</ng-template>
+
+<asset-posting-details *ngIf="showPopUp" (hideVoidPopUp)="hidePopUp()" [assetRecord]="selectedAsset"></asset-posting-details>
+         
+

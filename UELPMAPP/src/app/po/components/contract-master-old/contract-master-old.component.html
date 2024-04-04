@@ -1,0 +1,178 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 col-sm-12 padding-null tittlediv">
+            <h3 class="item-heading">
+                <img src="../assets/images/icon1.png">
+                <span *ngIf="isMaster"> Purchase order > Contract Master </span>
+                <span *ngIf="!isMaster"> Purchase order > POC </span>
+            </h3>
+        </div>
+        <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+            <div class="leftmenuline"  (click)="showLeftCol($event)"    >
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+            <button class="btn btn-edit" *ngIf="backButtonVisible" (click)="onCpoBack()">Back To CPO</button> 
+            <img src="../assets/images/add-new.png" (click)="addRecord()" *ngIf="hideText==true&&isMaster==true && newPermission">
+            <img src="../assets/images/grid1.png" (click)="showFullScreen()">
+            <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+                <button class="btn btn-outline-primary" style="background:none;border:none;padding:0px;" id="dropdownBasic1" ngbDropdownToggle>
+                    <img src="../assets/images/grid2.png">
+                </button>            
+                <div  *ngIf="(hideText && printPermission && showPrintButton)||(viewLogPermission && isMaster)" ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button class="dropdown-item" (click)="onPDFPrint()">Print</button>
+                    <button class="dropdown-item" *ngIf="viewLogPermission && isMaster"  (click)="displayLogPopUp()">View Log</button>
+                    <!-- <button class="dropdown-item"  *ngIf="showEmailButton" (click)="sendMailtoSupplier()">Email</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class='col-lg-3 col-md-4 leftdiv' [CustomSpinner]="showLeftPanelLoadingIcon"  [class.collapse-leftcol]="leftsection">
+            <div class="left-section">
+                <div class="filter-section" ngbDropdown #myDrop="ngbDropdown">
+                    <div class="left-search">
+                        <input type="text" [(ngModel)]="purchaseOrderSearchKey" placeholder="Search requests..." (change)="onSearchInputChange($event)"
+                            class="search-filter">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                        <div class="filter-popup" *ngIf="showFilterPopUp" ngbDropdownMenu aria-labelledby="dropdownManual" (click)="$event.stopPropagation(); myDrop.open();">
+                            <form [formGroup]="poFilterInfoForm" class="form-horizontal">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-6 form-label" *ngIf="isMaster; else childform">Contract ID</label>
+                                    <ng-template #childform>
+                                        <label class="col-form-label col-6 form-label">POC ID</label>
+                                    </ng-template>
+                                    <div class="col-6">
+                                        <input type="text" #poCode formControlName="POCode" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-6 form-label">Supplier</label>
+                                    <div class="col-6 autoComplete">             
+                                        <input formControlName="SupplierName" type="text" class="form-control show" [inputFormatter]="supplierInputFormater"
+                                            [ngbTypeahead]="supplierSearch" [resultTemplate]="supplierTemplate" /> 
+                                    </div>
+                                </div>
+                                <!-- Showing Status For POCMaster -->
+                                <div class="form-group row" *ngIf="!isMaster">
+                                    <label class="col-form-label col-xl-4 col-lg-4 col-sm-6 col-6 form-label">Status</label>
+                                    <div class="col-xl-8 col-lg-8 col-sm-6 col-6">
+                                        <select #workFlowStatusDropDown formControlName="WorkFlowStatusId"  class="form-control">
+                                            <option value=0>
+                                                --Select--
+                                            </option>
+                                            <option *ngFor="let record of workFlowStatusesPoc" value={{record.WorkFlowStatusid}}>
+                                                {{record.Statustext}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- Showing Status For Master -->
+                                <div class="form-group row" *ngIf="isMaster">
+                                    <label class="col-form-label col-xl-4 col-lg-4 col-sm-6 col-6 form-label">Status</label>
+                                    <div class="col-xl-8 col-lg-8 col-sm-6 col-6">
+                                        <select #workFlowStatusDropDown formControlName="WorkFlowStatusId"  class="form-control">
+                                            <option value=0>
+                                                --Select--
+                                            </option>
+                                            <option *ngFor="let record of workFlowStatuses" value={{record.WorkFlowStatusid}}>
+                                                {{record.Statustext}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label  col-xl-4 col-lg-4 col-sm-6 col-6 form-label">Start Date</label>
+                                    <div class="col-xl-8 col-lg-8 col-sm-6 col-6 input-group">
+                                        <input class="form-control" formControlName="FromDate"  ngbDatepicker #fromDate="ngbDatepicker">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" (click)="fromDate.toggle()" type="button">
+                                            <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                            </button>
+                                        </div>
+                                    </div>                            
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-xl-4 col-lg-4 col-sm-6 col-6 form-label">End Date</label>
+                                    <div class="col-xl-8 col-lg-8 col-sm-6 col-6 input-group">
+                                        <input class="form-control" formControlName="ToDate"  ngbDatepicker #toDate="ngbDatepicker">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" (click)="toDate.toggle()" type="button">
+                                            <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12 error errorMessage">
+                                        {{filterMessage}}
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12" style="text-align: right">
+                                        <button type="submit" (click)="filterData()" class="btn btn-save">
+                                            <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                        <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                            <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- start filter code -->
+                    <div class="filter-icon">
+                        <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                        <i class="fa fa-filter" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div style="float:right;margin:0px;" class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+                        <i class="fa fa-undo" aria-hidden="true"></i>
+                    </div>
+                    <div malihu-scrollbar class="filter-scroll" style="width:100%; float:left;">
+                        <table class="table">
+                            <tr [class.activerow]="record.CPOID==selectedPurchaseOrderId" (click)="onRecordSelection(record.CPOID)"
+                                *ngFor="let record of purchaseOrdersList">
+                                <td (click)="hidefilter()">
+                                    <!-- <h5 class="sub-heading">{{ record.IsDocumentApproved?record.CPONumber:record.DraftCode }}</h5> -->
+                                    <h5 class="sub-heading">{{ record.WorkFlowStatusId!=workFlowStatus.Draft?record.CPONumber:record.DraftCode }}</h5>
+                                    
+
+                                    <label class="label-text">Supplier</label> :
+                                    <label class="label-value">{{ record.Supplier.SupplierName }}</label>
+                                    <br>
+                                    <label class="label-text">PO Status</label> :
+                                    <label class="label-value">{{ record.WorkFlowStatusText }}</label>                            
+                                </td>
+                            </tr>
+                        </table>
+                        <div *ngIf="purchaseOrdersList.length==0" class="col-12 listErrorMessage">
+                            {{errorMessage}}
+                        </div>    
+                        <ngb-pagination *ngIf="purchaseOrdersList.length>0" (pageChange)="pageChange($event)" [collectionSize]="purchaseOrderPagerConfig.TotalRecords" class="d-flex justify-content-center" [pageSize]="purchaseOrderPagerConfig.RecordsToFetch" [maxSize]="5"  [(page)]="currentPage" [boundaryLinks]="true"></ngb-pagination>
+                    </div>
+                  
+                </div>
+             
+            </div>
+            <div class="split-line" (click)="splite()"></div>
+        </div>
+        <!-- left col end here-->
+
+    <div   #rightPanel class="rightPanel col-lg-9 col-md-8"  [class.expand-rightcol]="rightsection">
+       <div [ngClass]="{'hideRightPanel':(purchaseOrdersList.length==0 && hideText==true)}">
+        <app-contract-purchase-order [remarks]='remarks' [isMaster]="isMaster"  [isApprovalPage]="isApprovalPage"  [selectedPurchaseOrderTypeId]='selectedPurchaseOrderTypeId' [selectedPoId]='selectedPurchaseOrderId' (cancelChanges)="cancelChanges()"  (updateStatus)="updateStatus($event)"  (readListView)="readListView($event)"></app-contract-purchase-order> 
+        <app-auditlog *ngIf="showLogPopUp" (hideLogPopUp)="hideLogPopUp($event)" [DocumentId]="selectedPurchaseOrderId" [DocumentNumber]="selectedPurchaseOrderCode" [PageName]="selectedPurchaseOrderTypeId" [DocType]="'PO'" [showLogPopUp]="showLogPopUp"></app-auditlog>
+       </div>
+    </div>
+    <!-- left col end here-->
+    </div>
+</div>
+
+<ng-template #itemMasterTemplate let-r="result" let-t="term">
+    {{ r.ItemName }}
+</ng-template>
+
+<ng-template #supplierTemplate let-r="result" let-t="term">
+    {{ r.SupplierName }}
+</ng-template>

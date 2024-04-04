@@ -1,0 +1,22 @@
+.DivAutoMap
+{
+  width:80%;
+  overflow: auto;
+  height:calc(100vh - 17rem);
+}
+
+.mat-form-field {
+  width: 98% !important;
+}
+li{ list-style: inside;}
+.divnewbutton
+{
+   flex:auto;
+   text-align:right;
+}
+
+.table {
+  width: 90%;
+  margin-bottom: 1rem;
+  background-color: transparent;
+}

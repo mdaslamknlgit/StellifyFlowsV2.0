@@ -1,0 +1,12 @@
+.mat-dialog-content {
+    display: grid;
+  
+    grid-template-columns: auto auto;
+    grid-template-rows: auto;
+    grid-column-gap: 16px;
+  
+    @include mobile {
+      grid-template-columns: auto;
+    }
+  
+  }

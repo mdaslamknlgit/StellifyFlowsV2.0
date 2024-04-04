@@ -1,0 +1,135 @@
+<div class="container-fluid">
+  <div class="row">
+  <div class="col-md-6 col-sm-12 padding-null tittlediv">
+  <h3 class="item-heading"><img src="../assets/images/icon1.png"> Leasing > Utility Management </h3>
+  </div>
+  <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+  <img src="../assets/images/add-new.png" (click)="editdata();" *ngIf="hidetext">  
+  <img src="../assets/images/grid1.png" (click)="showFullScreen()">
+  <img src="../assets/images/grid2.png"> 
+ 
+  </div>
+  </div>
+  <div class="row">
+   <div class="col-lg-3 col-md-4 leftdiv"  [class.collapse-leftcol]="leftsection">   
+  <div class="left-section"> 
+   <div class="filter-section">
+   
+  <div class="left-search">
+    <input type="text" placeholder="Search requests..." class="search-filter">
+    <i class="fa fa-search" aria-hidden="true"></i>
+    </div>  
+  
+  <div class="filter-icon"   > <i class="fa fa-filter" aria-hidden="true"></i></div>
+  <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="filter-scroll" style="width:100%; float:left;">
+  <table class="table">
+  <tr><td>
+   <h5 class="sub-heading">Electricity</h5>
+    <label class="label-text">Description</label> :<label class="label-value">Electritcity</label>
+     <p>bill payments... </p>
+      
+  </td></tr>
+  <tr><td>
+   <h5 class="sub-heading">Water</h5>
+      <label class="label-text">Description</label> :<label class="label-value">Water Bill</label>
+     <p>Test Descriptionr... </p>
+  </td></tr>
+   
+  
+  </table>
+   </div>   
+   </div>  
+      </div>
+        <div class="split-line" (click)="splite()"></div> 
+   </div><!-- left col end here-->
+  
+  <div #rightPanel class="col-lg-9 col-md-8" [class.expand-rightcol]="rightsection">
+      
+  <form    class="form-horizontal" >
+  <div  class="saved-text"  *ngIf="savedsucess"><i class="fa fa-check-circle"  aria-hidden="true"></i> Saved successfully</div> 
+    <div class="form-group row">
+        <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Name </label>  
+        <div class="col-xl-4 col-sm-6 col-12">
+   <input type="text" 
+             id="name" 
+             name="name" 
+             formControlName="name" 
+             placeholder="Name" *ngIf="hideinput" class="form-control">
+  
+       <label class="col-form-label  form-text" *ngIf="hidetext"><b style="color:#01548e">Electricity</b> </label>  
+        </div>
+    </div>
+  
+  
+  <h4 class="form-heading">Details</h4>
+   <div class="form-group row">
+        <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Electricity </label>  
+        <div class="col-xl-4 col-sm-6 col-12">
+  
+      <textarea rows="4" cols="50"  
+             id="description" 
+            *ngIf="hideinput" class="form-control">
+             </textarea>
+   <p *ngIf="hidetext">test Description for Utility.</p>
+  
+        </div>
+    </div>
+  
+  
+  
+   <div class="form-group text-right btn-list">
+      <button type="submit" (click)="savedata()"  class="btn btn-save" *ngIf="hideinput"><i class="fa fa-check" aria-hidden="true"></i> Save</button>
+      <button type="submit" (click)="canledata()"  class="btn btn-cancel" *ngIf="hideinput"><i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+  
+       <button type="submit" (click)="editdata()" class="btn btn-edit" *ngIf="hidetext"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+      <button type="submit"  class="btn btn-delete" *ngIf="hidetext"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+  
+    </div>
+  </form>
+  
+  
+  
+  </div><!-- left col end here-->
+  
+  
+  </div>
+   
+  </div>
+  
+  
+  
+  <ng-template #filters>
+     <div class="flter-popover">
+         
+   <form  [formGroup]="signupForm" class="form-horizontal" (ngSubmit)="onSubmit()">
+         
+         <div class="form-group row">
+        <label class="col-form-label col-4 form-label">Name </label>  
+        <div class="col-8">
+            
+   <input type="text" 
+             id="orderlevel" 
+             name="orderlevel" 
+             formControlName="orderlevel" 
+             placeholder="Re-Order Level"   class="form-control">
+       
+        </div>
+         </div>
+     <div class="form-group row">
+        <label class="col-form-label col-4 form-label">Category</label>  
+        <div class="col-8">
+            
+   <input type="text" 
+             id="alertqty" 
+             name="alertqty" 
+             formControlName="alertqty" 
+             placeholder="Low Alert Qty"   class="form-control">
+    
+        </div>
+    </div>
+  
+     
+   </form>
+    
+     </div>
+  </ng-template>

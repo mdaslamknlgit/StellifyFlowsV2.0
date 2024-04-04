@@ -1,0 +1,14 @@
+.error{float:left; width:100%;  color:red;}
+.error-message{ color: red;}
+.align-text-top img{ margin: 0px 2px;}
+.box-red{ border: 1px solid red;}
+.toast-message-view.error-message { border: 1px solid red; }
+.enlargeRightPanel:-webkit-full-screen 
+{  
+  min-width: 100%;  
+  min-height: 100%;  
+}
+.enlargeRightPanelMargin{
+    margin-top:3%;
+}
+

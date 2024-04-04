@@ -1,0 +1,762 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6 col-sm-12 padding-null tittlediv">
+      <h3 class="item-heading">
+        <img src="../assets/images/icon1.png"> Project > Project Creation </h3>
+    </div>
+    <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+      <img src="../assets/images/add-new.png" (click)="addData();" *ngIf="hidetext">
+      <img src="../assets/images/grid1.png" (click)="showFullScreen()">
+      <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+        <button class="btn btn-outline-primary" style="background:none;border:none;padding:0px;" id="dropdownBasic1" ngbDropdownToggle>
+          <img src="../assets/images/grid2.png">
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+          <button class="dropdown-item">Export</button>         
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-3 col-md-4 leftdiv" [class.collapse-leftcol]="leftsection">
+      <div class="left-section">
+
+        <div class="filter-section">
+          <div class="left-search">
+            <input type="text" placeholder="Search projects..." class="search-filter">
+            <i class="fa fa-search" aria-hidden="true"></i>
+          </div>
+
+          <div class="filter-icon">
+            <i class="fa fa-filter" aria-hidden="true"></i>
+          </div>
+          <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="filter-scroll" style="width:100%; float:left;">
+            <table class="table">
+              <tr>
+                <td>
+                  <h5 class="sub-heading"> #56454525 </h5>
+                  <label class="label-text">Location</label> :
+                  <label class="label-value">Unit 1</label>
+                  <label class="label-text">Name</label> :
+                  <label class="label-value">Inventory Project</label>
+                  <label class="label-text">Owner </label> :
+                  <label class="label-value">Johy</label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <h5 class="sub-heading"> #4343325 </h5>
+                  <label class="label-text">Location</label> :
+                  <label class="label-value">Unit 2</label>
+                  <label class="label-text">Name</label> :
+                  <label class="label-value">Asset Project</label>
+                  <label class="label-text">Owner </label> :
+                  <label class="label-value">Williams</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <h5 class="sub-heading"> #3334525 </h5>
+                  <label class="label-text">Location</label> :
+                  <label class="label-value">Unit 3</label>
+                  <label class="label-text">Name</label> :
+                  <label class="label-value">Fixed Assets</label>
+                  <label class="label-text">Owner </label> :
+                  <label class="label-value">Joseph</label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <h5 class="sub-heading"> #84334525 </h5>
+                  <label class="label-text">Location</label> :
+                  <label class="label-value">Unit 4</label>
+                  <label class="label-text">Name</label> :
+                  <label class="label-value">Facility Project</label>
+                  <label class="label-text">Owner </label> :
+                  <label class="label-value">David</label>
+                </td>
+              </tr>
+            </table>
+
+
+          </div>
+
+
+        </div>
+      </div>
+      <div class="split-line" (click)="split()"></div>
+    </div>
+    <!-- left col end here-->
+
+    <div 
+    #rightPanel class="rightPanel col-lg-9 col-md-8"  [class.expand-rightcol]="rightsection"> 
+      <form [formGroup]="signupForm" class="form-horizontal">
+        <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+            <div class="row fullScreenLabel">
+                <div class="col-12">
+                    <h3 class="item-heading" style="float:none;">Project Creation</h3>
+                </div>
+            </div>
+          <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Location</label>
+            <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">Unit 1</label>
+              <select *ngIf="hideinput" class="form-control" formControlName="LocationID">
+                <option *ngFor="let location of locations" [value]="location.LocationID">
+                  {{location.Name}}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Project ID</label>
+            <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">#56454525</label>
+              <label class="col-form-label form-text" *ngIf="isEditMode">#56454525 </label>
+              <input type="text" id="category" name="category" formControlName="ProjectID" placeholder="Project ID" *ngIf="hideinput && !isEditMode"
+                class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Project Code</label>
+            <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">NP45445555 </label>
+              <label class="col-form-label form-text" *ngIf="isEditMode">NP45445555 </label>
+              <input type="text" id="category" name="category" formControlName="ProjectCode" placeholder="Project Code" *ngIf="hideinput && !isEditMode"
+                class="form-control">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Project Name</label>
+            <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">Inventory Project</label>
+              <input type="text" id="category" name="category" formControlName="ProjectName" placeholder="ProjectName" *ngIf="hideinput"
+                class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Project Owner</label>
+            <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">Williams</label>
+              <select *ngIf="hideinput" class="form-control" formControlName="OwnerID">
+                <option *ngFor="let user of users" [value]="user.Id">
+                  {{user.Name}}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Tentative Start Date</label>
+            <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">{{tentativeStartDate| date:"yyyy/MM/dd"}} </label>
+              <div class="input-group" *ngIf="hideinput">
+                <input class="form-control" formControlName="TentativeStartDate" placeholder="Tentative Start Date" ngbDatepicker #d="ngbDatepicker">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+                    <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Tentative End Date</label>
+            <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">{{tentativeEndDate| date:"yyyy/MM/dd"}} </label>
+              <div class="input-group" *ngIf="hideinput">
+                <input class="form-control" formControlName="TentativeEndDate" placeholder="Tentative End Date" ngbDatepicker #d="ngbDatepicker">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+                    <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Is CapEx</label>
+            <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">Yes </label>
+              <!-- <select placeholder="Purchased Value" *ngIf="hideinput" class="form-control">
+                <option></option>
+              </select> -->
+
+              <label class="col-form-label form-text" *ngIf="hideinput">
+                <mat-slide-toggle formControlName="IsCapEx" (change)="matselect($event)"></mat-slide-toggle>
+                <label *ngIf="slideactive">Yes</label>
+              </label>
+
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Project Description</label>
+            <div class="col-xl-4 col-sm-6 col-6">
+              <label class="col-form-label form-text" *ngIf="hidetext">Project is related to inventory </label>
+              <textarea type="text" id="category" name="category" formControlName="Description" placeholder="Project Description" *ngIf="hideinput"
+                class="form-control"></textarea>
+            </div>
+          </div>
+
+
+          <h4 class="form-heading">Project Milestones</h4>
+
+          <div class="form-group row">
+            <div class="col-12">
+              <table class="table table-border" *ngIf="hidetext" style="width:97%">
+                <tr>
+                  <th>S.no.</th>
+                  <th>Key Milestones</th>
+                  <th>Startdate </th>
+                  <th>Enddate </th>
+                  <th>Is-Billable </th>
+                  <th>Percentage </th>
+                </tr>
+                <tr *ngFor="let x of projectMileStones; let i = index;">
+                  <td> {{x.sno}} </td>
+                  <td>{{x.KeyMilestones}}</td>
+                  <td>{{x.StartDate}}</td>
+                  <td>{{x.Enddate}}</td>
+                  <td>{{x.IsBillable}}</td>
+                  <td>{{x.Percentage}}
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" (click)="deleteRow(i)" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <table class="table table-border" *ngIf="hideinput" style="width:97%">
+                <tr>
+                  <th>S.no.</th>
+                  <th>Key Milestones</th>
+                  <th>Startdate </th>
+                  <th>Enddate </th>
+                  <th>Is-Billable </th>
+                  <th>Percentage </th>
+                </tr>
+                <tr>
+                  <td> </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+
+              </table>
+            </div>
+          </div>
+
+
+
+          <h4 class="form-heading">Sub Contarctors</h4>
+
+          <div class="form-group row">
+            <div class="col-12">
+              <table class="table table-border" *ngIf="hidetext" style="width:97%">
+                <tr>
+                  <th>S. no.</th>
+                  <th>Contractors name</th>
+                  <th>Startdate </th>
+                  <th>Enddate </th>
+                </tr>
+                <tr>
+                  <td> 1 </td>
+                  <td>Contractor 1</td>
+                  <td>19-Jul-2017</td>
+                  <td>19-Aug-2018
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td> 2 </td>
+                  <td>Contractor 2</td>
+                  <td>19-Jul-2017</td>
+                  <td>19-Aug-2018
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td> 3 </td>
+                  <td>Contractor 3</td>
+                  <td>19-Jul-2017</td>
+                  <td>19-Aug-2018
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td> 4 </td>
+                  <td>Contractor 4</td>
+                  <td>19-Jul-2017</td>
+                  <td>19-Aug-2018
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <table class="table table-border" *ngIf="hideinput" style="width:97%">
+                <tr>
+                  <th>S. no.</th>
+                  <th>Contractors name</th>
+                  <th>Startdate </th>
+                  <th>Enddate </th>
+                </tr>
+                <tr>
+                  <td> </td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+
+          <h4 class="form-heading">Meterials</h4>
+
+          <div class="form-group row">
+            <div class="col-12">
+              <table class="table table-border" *ngIf="hidetext" style="width:97%">
+                <tr>
+                  <th>S. no.</th>
+                  <th>Item No </th>
+                  <th>Description</th>
+                  <th>Qty. </th>
+                  <th>Price </th>
+                  <th>Total </th>
+                </tr>
+                <tr>
+                  <td> 1 </td>
+                  <td>#5545455</td>
+                  <td>First Item details</td>
+                  <td>100</td>
+                  <td>$50</td>
+                  <td>$50000
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td> 2 </td>
+                  <td>#5545456</td>
+                  <td>Second Item details</td>
+                  <td>100</td>
+                  <td>$50</td>
+                  <td>$50000
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td> 3 </td>
+                  <td>#5545457</td>
+                  <td>Third Item details</td>
+                  <td>10</td>
+                  <td>$50</td>
+                  <td>$500
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <table class="table table-border" *ngIf="hideinput" style="width:97%">
+                <tr>
+                  <th>S. no.</th>
+                  <th>Item No </th>
+                  <th>Description</th>
+                  <th>Qty. </th>
+                  <th>Price </th>
+                  <th>Total </th>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+
+          <h4 class="form-heading">Assets</h4>
+
+          <div class="form-group row">
+            <div class="col-12">
+              <table class="table table-border" *ngIf="hidetext" style="width:97%">
+                <tr>
+                  <th>S. no.</th>
+                  <th>Item No </th>
+                  <th>Description </th>
+                  <th>Qty. </th>
+                  <th>Price </th>
+                  <th>Total </th>
+                </tr>
+                <tr>
+                  <td> 1 </td>
+                  <td>#5545455</td>
+                  <td>Asset 1 details</td>
+                  <td>100</td>
+                  <td>$50</td>
+                  <td>$50000
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td> 2 </td>
+                  <td>#5545456</td>
+                  <td>Asset 2 details</td>
+                  <td>100</td>
+                  <td>$50</td>
+                  <td>$50000
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td> 3 </td>
+                  <td>#5545457</td>
+                  <td>Asset 3 details</td>
+                  <td>100</td>
+                  <td>$50</td>
+                  <td>$50000
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <table class="table table-border" *ngIf="hideinput" style="width:97%">
+                <tr>
+                  <th>S. no.</th>
+                  <th>Item No </th>
+                  <th>Description </th>
+                  <th>Qty. </th>
+                  <th>Price </th>
+                  <th>Total </th>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+          <h4 class="form-heading">Quotations</h4>
+
+          <div class="form-group row">
+            <div class="col-12">
+              <table class="table table-border" *ngIf="hidetext" style="width:97%">
+                <tr>
+                  <th>S. no.</th>
+                  <th>Quote No </th>
+                  <th>SupplierName </th>
+                  <th>Date</th>
+                  <th>Status </th>
+                </tr>
+                <tr>
+                  <td> 1 </td>
+                  <td>#5545455</td>
+                  <td>Supplier 1</td>
+                  <td>19-Aug-2018 </td>
+                  <td>Active
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td> 2 </td>
+                  <td>#5545456</td>
+                  <td>Supplier 2</td>
+                  <td>19-Aug-2018 </td>
+                  <td>Active
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td> 3 </td>
+                  <td>#5545457</td>
+                  <td>Supplier 3</td>
+                  <td>19-Aug-2018 </td>
+                  <td>Active
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <table class="table table-border" *ngIf="hideinput" style="width:97%">
+                <tr>
+                  <th>S. no.</th>
+                  <th>Quote No </th>
+                  <th>SupplierName </th>
+                  <th>Date</th>
+                  <th>Status </th>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+
+          <h4 class="form-heading">Purchase orders</h4>
+
+          <div class="form-group row">
+            <div class="col-12">
+              <table class="table table-border" *ngIf="hidetext" style="width:97%">
+                <tr>
+                  <th>S. no.</th>
+                  <th>PO no </th>
+                  <th>Supplier Name</th>
+                  <th>Date </th>
+                  <th>Total </th>
+                </tr>
+                <tr>
+                  <td> 1 </td>
+                  <td>#5545455</td>
+                  <td>Supplier 1</td>
+                  <td>19-Aug-2018 </td>
+                  <td>$2000
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td> 2 </td>
+                  <td>#5545456</td>
+                  <td>Supplier 2</td>
+                  <td>19-Aug-2018 </td>
+                  <td>$2000
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td> 3 </td>
+                  <td>#5545457</td>
+                  <td>Supplier 3</td>
+                  <td>19-Aug-2018 </td>
+                  <td>$2000
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <table class="table table-border" *ngIf="hideinput" style="width:97%">
+                <tr>
+                  <th>S. no.</th>
+                  <th>PO no </th>
+                  <th>Supplier Name</th>
+                  <th>Date </th>
+                  <th>Total </th>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+
+          <h4 class="form-heading">Invoice </h4>
+
+          <div class="form-group row">
+            <div class="col-12">
+              <table class="table table-border" *ngIf="hidetext" style="width:97%">
+                <tr>
+                  <th>S. no.</th>
+                  <th>Invoice no </th>
+                  <th>Supplier Name </th>
+                  <th>Date</th>
+                  <th>Tota </th>
+                </tr>
+                <tr>
+                  <td> 1 </td>
+                  <td>#5545455 </td>
+                  <td>Supplier 1</td>
+                  <td>19-Aug-2018</td>
+                  <td>$2000
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td> 2 </td>
+                  <td>#5545455 </td>
+                  <td>Supplier 2</td>
+                  <td>19-Aug-2018</td>
+                  <td>$2000
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td> 3 </td>
+                  <td>#5545455 </td>
+                  <td>Supplier 3</td>
+                  <td>19-Aug-2018</td>
+                  <td>$2000
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <table class="table table-border" *ngIf="hideinput" style="width:97%">
+                <tr>
+                  <th>S. no.</th>
+                  <th>Invoice no </th>
+                  <th>Supplier Name </th>
+                  <th>Date</th>
+                  <th>Tota </th>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <div class='edit-list'>
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+ 
+        </div>
+
+        <div class="form-group text-right btn-list">
+          <button type="submit" (click)="saveData()" class="btn btn-save" *ngIf="hideinput">
+            <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+          <button type="submit" (click)="cancleData()" class="btn btn-cancel" *ngIf="hideinput">
+            <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+
+          <button type="submit" (click)="editData()" class="btn btn-edit" *ngIf="hidetext">
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+          <button type="submit" class="btn btn-delete" *ngIf="hidetext">
+            <i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+
+        </div>
+        
+      </form>
+
+
+
+    </div>
+    <!-- left col end here-->
+
+
+  </div>
+
+</div>

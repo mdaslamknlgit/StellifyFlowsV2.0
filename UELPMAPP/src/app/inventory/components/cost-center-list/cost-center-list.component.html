@@ -1,0 +1,159 @@
+<block-ui message="Deafult Message"></block-ui>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12 col-sm-12 padding-null tittlediv">
+      <div class="flexrow space-between align-center">
+        <h3 class="item-heading"> Cost Center
+          <!-- <p> {{SelectedItemCategory}} </p> -->         
+        </h3>
+        <div class="divnewbutton">
+            <button class="btn btn-save ng-star-inserted" style="margin-right: 20px;" type="button"
+            (click)="ClickNewCostCenter($event)">
+            <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> New</button>
+        </div>
+      </div>
+      <hr style="margin-top: 0px;" />
+    </div>
+  </div>
+    <!-- Filter Section Start Here -->
+    <div class="row">    
+      <div class="filter-section" style="width: 100%;" ngbDropdown #myDrop="ngbDropdown">
+      <form [formGroup]="CostCenterFilterForm">
+          <div class="form-group " style="display: flex; flex-wrap:wrap;justify-content: space-between;">
+          <div class="col-sm-12 col-md-12 col-lg-1 mb-1">
+              <label for="Name">Name</label>
+          </div>
+          <div class="col-sm-12 col-md-12 col-lg-2 mb-1">
+              <input type="text" #Name id="Name" class="form-control" formControlName="Name">
+          </div>
+
+          <div class="col-sm-12 col-md-12 col-lg-2 mb-1">
+              <label class="col-form-label  col form-label">Description</label>
+          </div>
+          <div class="col-sm-12 col-md-12 col-lg-2 mb-1">
+              <div class=" input-group" style="width: auto;">
+              <input type="text" #Description id="Description" formControlName="Description" placeholder="" class="form-control">
+
+              </div>
+          </div>
+
+          <div class="col-sm-12 col-md-12 col-lg-2 mb-1">
+            <!-- {{filterMessage}} -->
+              <button type="submit" (click)="filterData()" class="btn btn-save">
+              <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+              <button type="submit" (click)="resetFilters()" class="btn btn-save">
+              <i class="fa fa-refresh" aria-hidden="true"></i> Reset</button>
+          </div>
+          </div>
+          <div style="display: flex; flex-wrap:wrap;justify-content:end; margin-bottom: 10px;margin-right: 20px;">
+          <div style="text-align: right; display: flex; align-items: center;">
+              Total Records : {{TotalRecords}} &nbsp;
+          </div>
+          <button class="btn btn-save ng-star-inserted" mat-button [matMenuTriggerFor]="ExportMenu">
+              <i class="fa fa-file-export" ria-hidden="true" aria-hidden="true"></i>
+              Export</button>
+          <mat-menu #ExportMenu="matMenu">
+              <button mat-menu-item (click)="ExportToCSV()">
+              <i class="fa fa-file-excel-o" ria-hidden="true" aria-hidden="true"></i> CSV
+              </button>
+              <button mat-menu-item (click)="ExportToExcel()">
+              <i class="fa fa-file-excel-o" ria-hidden="true" aria-hidden="true"></i>
+              Excel </button>
+
+              <button mat-menu-item (click)="ExportToPDF()">
+              <i class="fa fa-file-pdf-o" ria-hidden="true" aria-hidden="true"></i> PDF
+              </button>
+          </mat-menu>
+          </div>
+
+      </form>
+      </div>
+  </div>
+  <!-- Filter Section Ends Here -->
+
+    <!-- Table Starts Here -->
+    <div class="row">
+      <div class="respnsive-table tablescroll p-datatable-wrapper">
+        <p-table #ContactsListTable 
+        [globalFilterFields]="['Code','Name','Abbreviation','Email','Description']"
+        [value]="costCentresList" [columns]="costCentresListCols" selectionMode="single | multiple" 
+          [rows]="this.costCentrePagerConfig.RecordsToFetch" [scrollable]="true"
+          [scrollHeight]="'calc(100vh - 340px)'" scrollWidth="100%" [virtualRowHeight]="30" [virtualScroll]="true"
+          [(selection)]="selectedItems" (sortFunction)="customSort($event)" [customSort]="true" responsiveLayout="scroll"
+          [paginator]="false" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
+          [rowsPerPageOptions]="[5,10,15,25,50,75,100]">
+          <ng-template pTemplate="header" let-columns>
+            <tr style="height: 40px;">
+              <th style="width: 36px;">
+                <p-tableHeaderCheckbox (click)="onRowUnselect($event)">
+                </p-tableHeaderCheckbox>
+              </th>
+              <!-- <th *ngFor="let col of itemCategories;let i=index" style="width: 100px;"
+                              [pSortableColumn]="col.field">
+                              {{col.header}}
+                              <p-sortIcon [hidden]="i==1" *ngIf="i!=itemCategories.length-1"
+                                  [field]="col.field"></p-sortIcon>
+                          </th> -->
+
+              <!-- Testing Column Custom Sort -->
+              <th style="width: 400px;" pSortableColumn="CostCenterName">Name <p-sortIcon field="CostCenterName"></p-sortIcon></th>
+              <th style="width: 400px;" pSortableColumn="Description">Description <p-sortIcon
+                  field="Description"></p-sortIcon></th>
+              <th style="width: 100px;" pSortableColumn="CreatedDate">Created On <p-sortIcon
+                  field="CreatedDate"></p-sortIcon></th>
+              <th style="width: 50px;">Action</th>
+            </tr>
+          </ng-template>
+          <!-- <ng-template pTemplate="colgroup" let-columns>
+                        <colgroup>
+                            <col *ngFor="let col of columns" [style.width]="col.width">
+                        </colgroup>
+                    </ng-template> -->
+          <ng-template pTemplate="body" let-value let-people let-rowData let-columns let-i="rowIndex">
+            <tr style="height:30px" [pSelectableRow]="costCentresList">
+              <td style="width: 36px;">
+                <p-tableCheckbox [value]="people"></p-tableCheckbox>
+              </td>
+              <td style="width: 400px;">{{value.CostCenterName}}</td>
+              <td style="width: 400px;">{{value.Description}}</td>
+              <td style="width: 100px;">{{value.CreatedDate | date: 'yyyy-MM-dd'}}</td>
+              <td style="width: 50PX;" class="aligncenter">
+                <button type="button" class="btn" (click)="ClickEditCostCenter(value.CostCenterId)">
+                  <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                </button>
+              </td>
+            </tr>
+
+          </ng-template>
+          <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+              <td [attr.colspan]="costCentresList.length">
+                No records found
+              </td>
+            </tr>
+          </ng-template>
+
+        </p-table>
+        <div *ngIf="costCentresList.length==0">
+          <div class="col-12 error errorMessage">
+            <p class="errorMessage">
+              {{filterMessage}}
+            </p>
+          </div>
+        </div>
+        <div style="clear: both;"></div>
+        <!-- {{costCentrePagerConfig.TotalRecords}} -->
+        <ngb-pagination *ngIf="costCentresList.length>0" (pageChange)="pageChange($event)" style="z-index: auto;"
+          [collectionSize]="costCentrePagerConfig.TotalRecords" class="d-flex justify-content-center"
+          [pageSize]="costCentrePagerConfig.RecordsToFetch" [maxSize]="5" [(page)]="currentPage"
+          [boundaryLinks]="true">
+          <ng-template ngbPaginationPages let-page let-pages="pages">
+            10 of 100
+          </ng-template>
+        </ngb-pagination>
+      </div>
+    </div>
+    <!-- Table Ends Here -->
+
+
+</div>

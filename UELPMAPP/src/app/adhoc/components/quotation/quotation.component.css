@@ -1,0 +1,15 @@
+.inputlabel{
+    padding: 7px 0 0 0;
+}
+.inputincurred{
+    margin: 10px 0px 0 0;
+    width: 15px;
+    height: 15px;
+}
+.autoCompleteTable td{
+    border: 1px solid #c4c4c4;
+    border-collapse: separate;
+}
+.autoCompleteTable {
+    table-layout: fixed;
+}

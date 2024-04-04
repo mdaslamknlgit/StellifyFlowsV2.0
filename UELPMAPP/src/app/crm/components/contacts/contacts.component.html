@@ -1,0 +1,574 @@
+<block-ui message="Deafult Message"></block-ui>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12 col-sm-12 padding-null tittlediv">
+      <div class="flexrow space-between align-center">
+        <h3 class="item-heading"> CRM - Contacts {{ContactId}}  {{ShowAccountDropDown}} </h3>
+        <div>
+          <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickBack($event)">
+            <i class="fa fa-arrow-left" ria-hidden="true" aria-hidden="true"></i> Back</button>
+        </div>
+      </div>
+      <hr style="margin-top: 0px;" />
+      <!-- <p>Lead Id : {{LeadInfo.Id}}</p>
+        <p>First Name : {{LeadInfo.FirstName}}</p>
+        <p>Last Name : {{LeadInfo.LastName}}</p>
+        <p>Company Name : {{LeadInfo.CompName}}</p> -->
+    </div>
+  </div>
+ 
+<div class="row">
+    <div #rightPanel [CustomSpinner]="showLoadingIcon" style='background: white' class="rightPanel1 col-lg-12 col-md-12"
+        [class.expand-rightcol]="rightsection">
+        <!-- <div class="fullScreenLabel">
+            <app-header></app-header>
+        </div> -->
+        <div>
+            <form (ngSubmit)="onSubmit(ContactForm.value,myPanel,$event)" [formGroup]="ContactForm"
+                class="form-horizontal">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group text-right btn-list">
+                                <button type="submit" (click)="saveRecord($event)" class="btn btn-save">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+
+                                <button type="submit" (click)="cancelRecord($event)" class="btn btn-cancel"
+                                    *ngIf="hideInput">
+                                    <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                    <mat-accordion [multi]="true">
+                        <mat-expansion-panel [expanded]="true" #myPanel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Contact Details
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">First Name<i
+                                                class="fa fa-star mandatory-icon" *ngIf="hideInput"
+                                                aria-hidden="true"></i></label>
+                                        <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                                            <input formControlName="FirstName" placeholder="First Name" tabindex="1"
+                                                *ngIf="hideInput" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Business
+                                            Phone</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <!-- <label class="col-form-label form-text"
+                                                                                                                    *ngIf="hideText&&selectedPODetails.Supplier!=null">{{
+                                                                                                                    selectedPODetails.Supplier.BillingFax }}</label> -->
+                                            <input formControlName="BusinessPhone" onlyNumber
+                                                placeholder="Business Phone" tabindex="3" *ngIf="hideInput"
+                                                class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Job
+                                            Title</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <!-- <label class="col-form-label form-text"
+                                                                                                                    *ngIf="hideText&&selectedPODetails.Supplier!=null"
+                                                                                                                    style="word-wrap:break-word">{{ selectedPODetails.ContactPersonName }}</label> -->
+                                            <input formControlName="JobTitle" placeholder="Job Title" tabindex="6"
+                                                *ngIf="hideInput" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Account</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <label *ngIf="ShowAccountDropDown">
+                                                {{AccountName}}
+                                            </label>
+                                            <div *ngIf="!ShowAccountDropDown">                                               
+                                                <!-- <ng-select [items]="AccountsDomainItemList" bindValue="AccountId"
+                                                    bindLabel="AccountName" placeholder="Select Account"
+                                                    formControlName="AccountId">
+                                                </ng-select> -->
+
+                                                <ng-select id="NGBAccountId" #NGBAccountId 
+                                                [items]="AccountsDomainItemList" 
+                                                 bindValue="AccountId" 
+                                                 bindLabel="AccountName"                       
+                                                 placeholder="Select Account/Company" 
+                                                 [hideSelected]="true"               
+                                                 [hideSelected]="true"
+                                                 formControlName="AccountId" 
+                                                 (change)="OnAccountSelect($event)" 
+                                                 (open)="OnAccountOpen($event)"
+                                                 (close)="OnAccountClose($event)"
+                                                 >
+                                                 <ng-template ng-header-tmp>
+                                                   Select Account
+                                                 </ng-template>
+                                                 <ng-template ng-label-tmp let-item="item">
+                                                   <!-- <img height="15" width="15" [src]="item.avatar"/> -->
+                                                   <b>{{item.AccountName}}</b> 
+                                                 </ng-template>
+                                                 <ng-template ng-option-tmp let-item="item" let-index="index">
+                                                   <!-- <img height="15" width="15" [src]="item.avatar"/> -->
+                                                   <b>{{item.AccountName}}</b>
+                                                 </ng-template>
+                                                 <ng-template ng-footer-tmp>
+                                                   
+                                                 &nbsp;&nbsp;&nbsp;&nbsp;
+                                                   <button type="button" (click)="ClickNewAccount($event)" class="btn btn-save" [disabled]="IsQualified">
+                                                     <i class="fa fa-plus" ria-hidden="true"></i>New Account</button>
+                                                 </ng-template>
+                                               </ng-select>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Contact Type.
+                                            &nbsp;[{{ContactTypeName}}]
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <input formControlName="ContactType" type="checkbox" class="form-control"
+                                                (change)="OnContactTypeChange($event)"
+                                                style="text-align: left;flex-direction: row;flex-wrap: wrap; width: 35px;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Last Name.
+                                            <i class="fa fa-star mandatory-icon" *ngIf="hideInput"
+                                                aria-hidden="true"></i></label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <input type="text" formControlName="LastName" tabindex="2"
+                                                placeholder="Last Name" *ngIf="hideInput" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                                            Mobile
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <!-- <label class="col-form-label form-text" *ngIf="hideText">
+                                                                                                                    {{ selectedPODetails.InventoryRequestId }}</label> -->
+                                            <input type="text" formControlName="Mobile" onlyNumber tabindex="4"
+                                                placeholder="Mobile" maxlength="100" *ngIf="hideInput"
+                                                class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Email</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <!-- <label class="col-form-label form-text"
+                                                                                                                    *ngIf="hideText&&selectedPODetails.Supplier!=null"
+                                                                                                                    style="word-wrap:break-word">{{ selectedPODetails.ContactPersonName }}</label> -->
+                                            <input formControlName="EmailId" placeholder="Job Title" tabindex="6"
+                                                *ngIf="hideInput" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Primary
+                                            Contact.</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <!-- <label class="col-form-label form-text"
+                                                 *ngIf="hideText&&selectedPODetails.Supplier!=null"
+                                                 style="word-wrap:break-word">{{ selectedPODetails.ContactNo }}</label> -->
+
+                                            <input formControlName="IsPrimary" type="checkbox" class="form-control"
+                                                style="text-align: left;flex-direction: row;flex-wrap: wrap; width: 35px;">
+
+                                            <!-- <input formControlName="IsPrimary" tabindex="8" *ngIf="hideInput" class="form-control" /> -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </mat-expansion-panel>
+
+                        <mat-expansion-panel [expanded]="IsExpandActiviesDetails">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Personal Details
+                                </mat-panel-title>
+
+                            </mat-expansion-panel-header>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Marital
+                                            Status</label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <!-- <select #purchaseOrderDropDown class="form-control">
+                                                <option *ngFor="let record of MaritalStatusList" value={{record.MaritalStatusID}}>
+                                                    {{record.MaritalStatusName}}
+                                                </option>
+                                            </select> -->
+
+                                            <select (change)="onCurrencyChange($event)"
+                                                formControlName="MaritalStatusId" *ngIf="hideInput"
+                                                class="form-control">
+                                                <option [ngValue]="undefined">--Select--</option>
+                                                <option *ngFor="let record of MaritalStatusList"
+                                                    value={{record.MaritalStatusID}}>
+                                                    {{ record.MaritalStatusName }}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Date Of Birth
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <div class="input-group">
+                                                <input class="form-control" formControlName="DateOfBirth"
+                                                    valueDefault={null} [minDate]="{year: 1970, month: 1, day: 1}"
+                                                    [maxDate]="{year: 2023, month: 12, day: 31}"
+                                                    (click)="onDatePickerFocus(DateOfBirthPicker,$event)" ngbDatepicker
+                                                    #DateOfBirthPicker="ngbDatepicker">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-secondary"
+                                                        (click)="DateOfBirthPicker.toggle()" type="button">
+                                                        <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <br><br>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Anniversay Date
+                                        </label>
+                                        <div class="col-xl-8 col-sm-6 col-6">
+                                            <div class="input-group">
+                                                <input class="form-control" formControlName="AnniversaryDate"
+                                                    valueDefault={null} [minDate]="{year: 1970, month: 1, day: 1}"
+                                                    [maxDate]="{year: 2024, month: 3, day: 30}"
+                                                    (click)="onDatePickerFocus(AnniversaryDatePicker,$event)"
+                                                    ngbDatepicker #AnniversaryDatePicker="ngbDatepicker">
+
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-secondary"
+                                                        (click)="AnniversaryDatePicker.toggle()" type="button">
+                                                        <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                        </mat-expansion-panel>
+                        <mat-expansion-panel [expanded]="IsExpandLeads" *ngIf="FormMode=='EDIT'">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Leads
+                                </mat-panel-title>
+
+                            </mat-expansion-panel-header>
+                            <div class="col-md-12">
+                                <div style="text-align:right !important;">
+                                    <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickNewDeal($event)">
+                                        <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> Add Deal</button>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickNewLead($event)">
+                                        <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> Add Lead</button>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p> Lead Lists</p>
+                                    </div>
+                    
+                                </div>
+                            </div>
+                        </mat-expansion-panel>
+
+                        <mat-expansion-panel [expanded]="IsExpandActiviesDetails" *ngIf="FormMode=='EDIT'">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Activities
+                                </mat-panel-title>
+
+                            </mat-expansion-panel-header>
+                            <div class="row">
+                                <div class="divnewbutton"> 
+                                    <!-- <button class="btn btn-save ng-star-inserted" style="margin-right: 20px;" type="button" (click)="ClickNewContact($event)">
+                                      <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> New</button> -->
+                  
+                                      &nbsp;&nbsp;
+                                      <!-- <button type="button" class="btn btn-save ng-star-inserted" mat-button [matMenuTriggerFor]="NewMenu">
+                                          <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i>
+                                          New </button>
+                                      <mat-menu #NewMenu="matMenu">
+                                          <button mat-menu-item (click)="ClickNewActivity($event,'Phone');">
+                                              <i class="fa fa-file-excel-o" ria-hidden="true" aria-hidden="true"></i> Phone
+                                          </button>
+                                          <button mat-menu-item (click)="ClickNewActivity($event,'Email');">
+                                              <i class="fa fa-file-excel-o" ria-hidden="true" aria-hidden="true"></i> Email
+                                          </button>
+                          
+                                          <button mat-menu-item (click)="ClickNewActivity($event,'Appointment');">
+                                              <i class="fa fa-file-pdf-o" ria-hidden="true" aria-hidden="true"></i> Appointment
+                                          </button>
+                                      </mat-menu> -->
+
+                                      <!-- Activity Menu With Sub Menu Starts Here -->
+                                      <button type="button" class="btn btn-save ng-star-inserted" style="margin-right: 20px;"
+                                            [matMenuTriggerFor]="ActivityMenu">
+                                            <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> New 
+                                      </button>
+
+                                      <mat-menu #ActivityMenu="matMenu">
+                                        <button mat-menu-item [matMenuTriggerFor]="Call">Phone</button>
+                                        <button mat-menu-item (click)="ClickNewPhoneActivity(0,3,'Email','NEW',$event);">Email</button>
+                                        <button mat-menu-item (click)="ClickNewPhoneActivity(0,4,'Appointment','NEW',$event);">Appointment</button>
+                                      </mat-menu>
+                                      <mat-menu #Call="matMenu">
+                                        <button mat-menu-item (click)="ClickNewPhoneActivity(0,1,'Phone','NEW',$event);">Schedule a call</button>
+                                        <button mat-menu-item (click)="ClickNewPhoneActivity(0,2,'Phone','NEW',$event);">Log a call</button>
+                                      </mat-menu>
+
+                                      <!-- Activity Menu With Sub Menu Ends Here -->
+                              </div> 
+                            </div>
+                                    <!-- Activity Table Starts Here -->
+                                    <!-- <div class="row"> -->
+                                    <!-- [scrollHeight]="'calc(100vh - 460px)'" -->
+                                    <div style="height:300px; overflow:scroll;">
+                                    <p-table #ActivityListTable
+                                        [globalFilterFields]="['ActivityTypeName','ActivitySubject','StartDate','EndDate','DueDate']"
+                                        [columns]="ActivityListsCols" selectionMode="single | multiple" [value]="ActivityLists"
+                                        [rows]="this.ActivityListsPagerConfig.RecordsToFetch" [scrollHeight]="'300px'"
+                                        scrollWidth="100%" [virtualRowHeight]="30" [virtualScroll]="true" [(selection)]="selectedItems"
+                                        (sortFunction)="customSort($event)" [customSort]="true" responsiveLayout="scroll" [paginator]="false"
+                                        (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
+                                        [rowsPerPageOptions]="[5,10,15,25,50,75,100]">
+                                        <ng-template pTemplate="header" let-columns>
+                                            <tr style="height: 40px;">
+                                                <th style="width: 36px;">
+                                                    <p-tableHeaderCheckbox (click)="onRowUnselect($event)">
+                                                    </p-tableHeaderCheckbox>
+                                                </th>
+                                                <!-- <th *ngFor="let col of ContactsLists;let i=index" style="width: 100px;"
+                                                                                                [pSortableColumn]="col.field">
+                                                                                                {{col.header}}
+                                                                                                <p-sortIcon [hidden]="i==1" *ngIf="i!=ContactsLists.length-1"
+                                                                                                    [field]="col.field"></p-sortIcon>
+                                                                                            </th> -->
+                                    
+                                                <!-- Testing Column Custom Sort -->
+                                                <!-- <th pSortableColumn="status">Status<p-sortIcon field="status"></p-sortIcon></th> -->
+                                                <th style="width: 100px;" pSortableColumn="ActivityTypeName">Activity Type <p-sortIcon
+                                                        field="ActivityTypeName"></p-sortIcon></th>
+                                                <th style="width: 100px;" pSortableColumn="ActivitySubject">Subject <p-sortIcon
+                                                        field="ActivitySubject"></p-sortIcon></th>
+                                                <th style="width: 100px;" pSortableColumn="RegardingName">Regarding <p-sortIcon
+                                                        field="RegardingName"></p-sortIcon></th>
+                                                <th style="width: 100px;" pSortableColumn="StartDate">Start Date <p-sortIcon field="StartDate"></p-sortIcon>
+                                                </th>
+                                                <th style="width: 100px;" pSortableColumn="EndDate">End Date <p-sortIcon field="EndDate"></p-sortIcon></th>
+                                                <th style="width: 100px;" pSortableColumn="DueDate">Due Date <p-sortIcon field="DueDate"></p-sortIcon></th>
+                                                <th style="width: 100px;" pSortableColumn="ActivityStatusName">Status <p-sortIcon
+                                                        field="ActivityStatusName"></p-sortIcon></th>
+                                    
+                                                <th style="width: 100px;" pSortableColumn="CreatedDate">Created On <p-sortIcon
+                                                        field="CreatedDate"></p-sortIcon></th>
+                                                <th style="width: 50px;">Action</th>
+                                            </tr>
+                                        </ng-template>
+                                        <!-- <ng-template pTemplate="colgroup" let-columns>
+                                                                                        <colgroup>
+                                                                                            <col *ngFor="let col of columns" [style.width]="col.width">
+                                                                                        </colgroup>
+                                                                                    </ng-template> -->
+                                        <ng-template pTemplate="body" let-value let-people let-rowData let-columns let-i="rowIndex">
+                                            <tr style="height:30px" [pSelectableRow]="ActivityLists">
+                                                <td style="width: 36px;">
+                                                    <p-tableCheckbox [value]="people"></p-tableCheckbox>
+                                                </td>
+                                                <td style="width: 100px;">{{value.ActivityTypeName }}</td>
+                                                <td style="width: 100px;">{{value.ActivitySubject}}</td>
+                                                <td style="width: 100px;">{{value.RegardingName}}</td>
+                                                <td style="width: 100px;">{{value.StartDate}}</td>
+                                                <td style="width: 100px;">{{value.EndDate }}</td>
+                                                <td style="width: 100px;">{{value.DueDate }}</td>
+                                                <!-- {{(value.WorkFlowStatusId!=workFlowStatus.Draft)?value.PurchaseOrderCode:value.DraftCode}} -->
+                                                <!-- <td style="width: 100px;">{{(value.isClose==true)?'Close':'Open' }}</td> -->
+                                                <td style="width: 100px;">{{value.ActivityStatusName }}</td>
+                                                
+                                    
+                                                <td style="width: 100px;">{{value.CreatedDate | date: 'yyyy-MM-dd'}}</td>
+                                                <td style="width: 50PX;" class="aligncenter">
+                                                    <!-- ClickNewPhoneActivity(0,1,'Phone','NEW',$event) -->
+                                                    <button type="button" class="btn"
+                                                        (click)="EditActivity(value.ActivityId,value.ActivityTypeId,value.ActivityTypeName,'EDIT',$event)">
+                                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                    
+                                        </ng-template>
+                                        <ng-template pTemplate="emptymessage" let-columns>
+                                            <tr>
+                                                <td [attr.colspan]="ActivityLists.length">
+                                                    No records found
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                    
+                                    </p-table>
+                                    </div>
+                                    <div *ngIf="ActivityLists.length==0">
+                                        <div class="col-12 error errorMessage">
+                                            <p class="errorMessage">
+                                                {{filterMessage}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div style="clear: both;"></div>
+                                    <ngb-pagination *ngIf="ActivityLists.length>0" (pageChange)="pageChange($event)" style="z-index: auto;"
+                                        [collectionSize]="ActivityListsPagerConfig.TotalRecords" class="d-flex justify-content-center"
+                                        [pageSize]="ActivityListsPagerConfig.RecordsToFetch" [maxSize]="5" [(page)]="currentPage" [boundaryLinks]="true">
+                                        <ng-template ngbPaginationPages let-page let-pages="pages">
+                                            10 of 100
+                                        </ng-template>
+                                    </ngb-pagination>
+                                    <br>
+                                    <br>
+                                    <!-- </div> -->
+                                    <!-- Activity Table Ends Here -->
+                        </mat-expansion-panel>
+
+                        <mat-expansion-panel [expanded]="true" #MyNotes *ngIf="FormMode=='EDIT'">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Notes
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                        
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div style="text-align:right !important;">
+                                        <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickNewNote($event)">
+                                            <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> Add Note</button>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div id="divNotesScroll" class="NotesList">
+                                                <div id="divNotesList">
+                                                    <div *ngFor='let entry of timeLine;let i = index'>
+                                                        <a href="#" class="list-group-item">
+                                                            <h4 class="list-group-item-heading" *ngIf="UserId==entry.UserId">
+                                                                <label class="username">{{UserName}}</label>
+                                                                <label class="noteentry">{{entry.year}}</label>
+                                                            </h4>
+                                                            <h4 class="list-group-item-heading" *ngIf="UserId!=entry.UserId">
+                                                                <label class="username">{{entry.year}}</label>
+                                                                <label class="noteentry">{{UserName}}</label>
+                                                            </h4>
+                        
+                                                            <div [innerHtml]="entry.detail"></div>
+                        
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                        
+                                    </div>
+                                </div>
+                            </div>
+                        
+                        </mat-expansion-panel>
+
+                        <mat-expansion-panel *ngIf="ShowContactGroups" [expanded]="IsContactGroupsExpand">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Contact Groups -- Total Selected Groups : {{TotalSelectedConnections}}
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="row">
+                                <div style="text-align: right;flex: auto;flex-direction: row;">
+                                    <button type="button" class="btn btn-save" (click)="UpdateContactGroups($event)">
+                                        <i class="fa fa-check" aria-hidden="true"></i> Update</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <p-table #ConnectionsListTable [globalFilterFields]="['ListName', 'ListDesc']"
+                                        [columns]="ConnectionsListsCols" selectionMode="single | multiple"
+                                        [value]="ConnectionsLists" [rows]="100" [scrollable]="true"
+                                        [scrollHeight]="'calc(100vh - 500px)'" scrollWidth="600px"
+                                        [virtualRowHeight]="30" [virtualScroll]="true" [(selection)]="SelectedListItems"
+                                        (sortFunction)="customSort($event)" [customSort]="true"
+                                        responsiveLayout="scroll" [paginator]="false"
+                                        (onRowSelect)="OnMarketingRowSelect($event)"
+                                        (onRowUnselect)="OnMarketingRowUnSelect($event)"
+                                        [rowsPerPageOptions]="[5,10,15,25,50,75,100]">
+                                        <ng-template pTemplate="caption">
+                                            <div style="text-align: right">
+                                                <i class="pi pi-search" style="margin:4px 4px 0 0"> </i>
+                                                <input type="text" pInputText size="50"
+                                                    placeholder="Search List Name ..."
+                                                    (input)="ConnectionsListTable.filterGlobal($event.target.value, 'contains')"
+                                                    style="width:auto" />
+                                            </div>
+                                        </ng-template>
+                                        <ng-template pTemplate="header" let-columns>
+                                            <tr style="height: 40px;">
+                                                <th style="width: 20px !important;">
+                                                    <p-tableHeaderCheckbox (click)="onRowUnselect($event)">
+                                                    </p-tableHeaderCheckbox>
+                                                </th>
+                                                <th style="width: 100px;" pSortableColumn="ListName">Name <p-sortIcon
+                                                        field="ListName"></p-sortIcon></th>
+                                                <th style="width: 200px;" pSortableColumn="ListDesc">Description
+                                                    <p-sortIcon field="ListName"></p-sortIcon></th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-value let-people let-columns let-i="rowIndex">
+                                            <tr style="height:30px" [pSelectableRow]="SelectedListItems">
+                                                <td style="width: 20px;">
+                                                    <p-tableCheckbox [value]="people"></p-tableCheckbox>
+                                                </td>
+                                                <td style="width: 100px;">{{value.ListName}}</td>
+                                                <td style="width: 200px;">{{value.ListDesc }}</td>
+                                            </tr>
+
+                                        </ng-template>
+                                        <ng-template pTemplate="emptymessage" let-columns>
+                                            <tr>
+                                                <td [attr.colspan]="ConnectionsLists.length">
+                                                    No records found
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+
+                                    </p-table>
+                                </div>
+                            </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                    <br>
+                    <br>
+                </div>
+
+            </form>
+            <p-confirmDialog></p-confirmDialog>
+
+        </div>
+    </div>
+    <!-- left col end here-->
+</div>
+</div>

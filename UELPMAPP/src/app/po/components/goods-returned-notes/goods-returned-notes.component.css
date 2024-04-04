@@ -1,0 +1,26 @@
+.error{float:left; width:100%;  color:red;}
+.error-message{ color: red;}
+.align-text-top img{ margin: 0px 2px;}
+.box-red{ border: 1px solid red;}
+.toast-message-view.error-message { border: 1px solid red; }
+.nowrap{ white-space: nowrap;}
+.table-subtotal {border-collapse: collapse}
+.table-subtotal td{ border: inherit}
+.table-totalamount td{ border: inherit;}
+.enlargeRightPanel:-webkit-full-screen 
+{  
+  min-width: 100%;  
+  min-height: 100%;  
+}
+.enlargeRightPanelMargin{
+    margin-top:3%;
+}
+
+.autoCompleteTable td{
+  border: 1px solid #c4c4c4;
+  border-collapse: separate;
+  }
+  .autoCompleteTable
+  {
+      table-layout: fixed;
+  }

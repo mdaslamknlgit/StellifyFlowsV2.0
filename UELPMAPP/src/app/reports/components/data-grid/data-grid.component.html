@@ -1,0 +1,87 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6 col-sm-12 padding-null tittlediv">
+      <h4 class="form-heading">{{reportParam.Title}} Report</h4>
+    </div>
+    <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+      export as
+      <select (change)="export_xls('exportContent')">
+        <option value=""> </option>
+        <!-- <option value="pdf">pdf</option> -->
+        <option value="excel">excel</option>
+      </select>
+    </div>
+    <br>
+  </div>
+</div>
+<form class="form-horizontal" [formGroup]="form">
+  <div class="flexrow" width="100%" style="column-gap: 50px;flex-wrap: wrap;">
+    <div *ngIf="reportParamConfig.Entity" class="flexrow">
+      <label class="labeltext">Enitity :</label>
+      <p-multiSelect [options]="entities" formControlName="Entities" optionLabel="Name" optionValue="Id">
+      </p-multiSelect>
+    </div>
+    <div *ngIf="reportParamConfig.Department" class="flexrow">
+      <label class="labeltext"> Department :</label>
+      <p-multiSelect [options]="departments" formControlName="Departments" optionLabel="Name"></p-multiSelect>
+    </div>
+    <div *ngIf="reportParamConfig.Status" class="flexrow">
+      <label class="labeltext">Status:</label>
+      <p-multiSelect [options]="statuses" formControlName="Statuses" optionLabel="Name"></p-multiSelect>
+    </div>
+    <div *ngIf="reportParamConfig.SupplierType" class="flexrow">
+      <label class="labeltext">Supplier Type:</label>
+      <p-multiSelect [options]="supplierTypes" formControlName="SupplierTypes" optionLabel="Name"></p-multiSelect>
+    </div>
+    <div *ngIf="reportParamConfig.Requester" class="flexrow">
+      <label class="labeltext">Requester:</label>
+      <p-multiSelect [options]="requesters" formControlName="Requesters" optionLabel="Name"></p-multiSelect>
+    </div>
+    <div class="flexrow">
+      <button type="submit" (click)="getFilterData()">Submit</button>
+    </div>
+  </div>
+</form>
+<div id="exportContent">
+  <p-table [value]="reportData" [columns]="reportColumns" [scrollable]="true">
+    <ng-template pTemplate="header" let-columns>
+      <tr style="height: 40px;background-color: #dceaf6; color: black;">
+        <th [width]="50">S.No.</th>
+        <ng-container *ngFor="let col of reportColumns;">
+          <th style="word-break: break-word ; overflow-wrap: break-word" [width]="col.width"
+            [pSortableColumn]="col.field">{{col.header}}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+          </th>
+        </ng-container>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage" let-columns>
+      <tr style="text-align: center;">
+        <td [attr.colspan]="columns.length"> No records found </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-data let-i="rowIndex">
+      <tr>
+        <td [width]="50" class="aligncenter">{{i+1}}</td>
+        <ng-container *ngFor="let col of reportColumns;">
+          <td [width]="col.width" [align]="col.alignment">
+            <ng-template [ngIf]="col.dataType == 0">{{data[col.field]}}</ng-template>
+            <ng-template [ngIf]="col.dataType == 1">{{data[col.field] | number:'1.2-2' }}</ng-template>
+            <ng-template [ngIf]="col.dataType == 2">{{data[col.field] }}</ng-template>
+            <ng-template [ngIf]="col.dataType == 3">{{data[col.field]}}</ng-template>
+          </td>
+        </ng-container>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="footer" let-data>
+      <tr>
+        <td [width]="50" class="aligncenter"> </td>
+        <ng-container *ngFor="let col of reportColumns;">
+          <td [width]="col.width" [align]="col.alignment">
+            <ng-template [ngIf]="col.hasFooter == true"><b>{{sum(col.field)| number:'1.2-2' }}</b></ng-template>
+          </td>
+        </ng-container>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

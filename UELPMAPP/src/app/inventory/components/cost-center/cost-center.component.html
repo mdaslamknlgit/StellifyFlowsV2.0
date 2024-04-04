@@ -1,0 +1,83 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12 col-sm-12 padding-null tittlediv">
+      <div class="flexrow space-between align-center">
+        <h3 class="item-heading"> Cost Center
+          <!-- <p> {{SelectedItemCategory}} </p> -->         
+        </h3>
+        <div class="divnewbutton">
+          <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickBack($event)">
+            <i class="fa fa-arrow-left" ria-hidden="true" aria-hidden="true"></i> Back</button>
+        </div>
+      </div>
+      <hr style="margin-top: 0px;" />
+    </div>
+  </div>
+
+  <p>Edit Form Starts Here</p>
+  <div class="row">
+    <div #rightPanel [CustomSpinner]="showRightPanelLoadingIcon" class="rightPanel col-lg-9 col-md-8"
+      [class.expand-rightcol]="rightSection">
+      <form [formGroup]="costCentreForm"
+        class="form-horizontal">
+        <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+          <div class="row fullScreenLabel">
+            <div class="col-12">
+              <h3 class="item-heading" style="float:none;">Cost Centre</h3>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Name <i class="fa fa-star mandatory-icon"
+                *ngIf="hideInput" aria-hidden="true"></i></label>
+            <div class="col-xl-4 col-sm-6 col-12">
+              <input type="text" formControlName="CostCenterName" placeholder="Name" maxlength="100" *ngIf="hideInput"
+                class="form-control">
+              <label class="col-form-label  form-text" *ngIf="hideText">
+                <b style="color:#01548e">
+                  {{ selectedRecordDetails.CostCenterName }}
+                </b>
+              </label>
+              <div
+                *ngIf="costCentreForm.get('CostCenterName') && costCentreForm.get('CostCenterName').errors!=null && costCentreForm.get('CostCenterName').touched==true">
+                <span class="errorMessage" *ngIf="costCentreForm.get('CostCenterName').errors.required">Name is
+                  required</span>
+                <span class="errorMessage" *ngIf="costCentreForm.get('CostCenterName').errors.duplicate">Duplicate Cost
+                  Centre</span>
+              </div>
+            </div>
+          </div>
+          <h4 class="form-heading">Details</h4>
+          <div class="form-group row">
+            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Description </label>
+            <div class="col-xl-4 col-sm-6 col-12">
+              <textarea rows="4" cols="50" *ngIf="hideInput" formControlName="Description" class="form-control">
+          </textarea>
+              <div
+                *ngIf="costCentreForm.get('Description') && costCentreForm.get('Description').errors!=null && costCentreForm.get('Description').touched==true">
+                <span class="errorMessage" *ngIf="costCentreForm.get('Description').errors.required">Description is
+                  required</span>
+              </div>
+              <div *ngIf="hideText" class="col-xl-12 col-sm-6 col-12">
+                <label class="col-form-label form-text descriptionStyle "
+                  [innerHtml]="selectedRecordDetails.Description|TextAreaContentDisplay"></label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group text-right btn-list">
+          <button (click)="saveRecord()" class="btn btn-save" *ngIf="hideInput"><i class="fa fa-check"
+              aria-hidden="true"></i> Save</button>
+          <button (click)="cancelRecord()" class="btn btn-cancel" *ngIf="hideInput"><i class="fa fa-ban"
+              aria-hidden="true"></i> Cancel</button>
+          <button (click)="editRecord()" class="btn btn-edit" *ngIf="hideText"><i class="fa fa-pencil-square-o"
+              aria-hidden="true"></i> Edit</button>
+          <button (click)="deleteRecord()" class="btn btn-delete" *ngIf="hideText"><i class="fa fa-trash-o"
+              aria-hidden="true"></i> Delete</button>
+        </div>
+      </form>
+      <p-confirmDialog></p-confirmDialog>
+    </div><!-- left col end here-->
+  </div>
+<p>Edit Form Ends Here</p>
+
+</div>

@@ -1,0 +1,4 @@
+::ng-deep.mat-menu-panel {
+    /* These numbers are my requirement, put something which suits yours */
+    transform: translate(0px, 28px);
+ }

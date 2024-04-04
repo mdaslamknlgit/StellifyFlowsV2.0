@@ -1,0 +1,175 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6 col-sm-12 padding-null tittlediv">
+      <h3 class="item-heading">
+        <img src="../assets/images/icon1.png"> Purchases > Service Types </h3>
+    </div>
+    <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+      <img src="../assets/images/add-new.png" (click)="addRecord();" *ngIf="isDisplayMode!=false">
+      <img src="../assets/images/grid1.png" (click)="showFullScreen()">
+      <img src="../assets/images/grid2.png">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-3 col-md-4 leftdiv" [class.collapse-leftcol]="leftsection">
+      <div class="left-section" ngbDropdown #myDrop="ngbDropdown">
+        <div class="filter-section">
+
+          <div class="left-search">
+            <input type="text" placeholder="Search requests..." class="search-filter" (keyup)="onSearch($event)">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <div class="filter-popup" *ngIf="initDone" ngbDropdownMenu aria-labelledby="dropdownManual" (click)="$event.stopPropagation(); myDrop.open();">
+
+              <form [formGroup]="serviceTypeFilterInfoForm" class="form-horizontal">
+
+                <div class="form-group row">
+                  <label class="col-form-label col-6 form-label">Service Type </label>
+                  <div class="col-6">
+                    <input type="text" #ServiceItemTypeName formControlName="ServiceTypeName" placeholder="" class="form-control">
+                  </div>
+                </div>
+
+
+                <div class="form-group row">
+                  <label class="col-form-label col-6 form-label">Service Category</label>
+                  <div class="col-6">
+
+                    <input type="text" formControlName="ServiceCategory" placeholder="" class="form-control">
+
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-12 error">
+                    {{filterMessage}}
+                  </div>
+                </div>
+
+                <div class="form-group row">
+
+                  <div class="col-12" style="text-align: right">
+                    <button type="submit" (click)="filterData()" class="btn btn-save">
+                      <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                    <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                      <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+
+                  </div>
+                </div>
+
+              </form>
+
+
+
+            </div>
+          </div>
+
+          <div class="filter-icon">
+            <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+              <i class="fa fa-filter" aria-hidden="true"></i>
+            </button>
+          </div>
+
+          <div class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+            <i class="fa fa-undo" aria-hidden="true"></i>
+          </div>
+
+          <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="filter-scroll" style="width:100%; float:left;">
+
+            <table class="table">
+              <tr (click)="onItemRecordSelection(record)" *ngFor="let record of serviceTypes">
+                <td>                 
+                    <h5 class="sub-heading">{{ record.Name }}</h5>
+                    <label class="label-text">Description</label> :
+                    <label class="label-value">{{ record.Description | slice:0:22 }}
+                      <span *ngIf="record.Description!= null && record.Description.length>22">...</span>
+                    </label>
+                    <label class="label-text">Service Category</label> :
+                    <label class="label-value">{{ record.ServiceCategoryName }}</label>                  
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="split-line" (click)="split()"></div>
+    </div>
+    <!-- left col end here-->
+
+
+    <div #rightPanel class="rightPanel col-lg-9 col-md-8" [class.expand-rightcol]="rightsection">
+        <div class="fullScreenLabel">    <app-header></app-header> </div>
+      <div *ngIf="isDisplayMode!=null">
+
+        <form [formGroup]="serviceTypeForm" class="form-horizontal">
+          <div class="row fullScreenLabel">
+            <div class="col-12">
+              <h3 class="item-heading" style="float:none;">Service Types</h3>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Name<i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i> </label>
+            <div class="col-xl-4 col-sm-6 col-12">
+              <input type="text" formControlName="Name" [ngClass]="(validateControl(serviceTypeForm.get('Name')))?'form-control ng-touched':'form-control'"
+                placeholder="Name" *ngIf="isDisplayMode==false" class="form-control">
+
+              <label class="col-form-label col-sm-12 form-text" *ngIf="isDisplayMode==true">
+                <b style="color:#01548e">{{ selectedServiceTypeRecord.Name }}</b>
+              </label>
+              <div *ngIf="serviceTypeForm.get('Name').errors!=null && isDisplayMode==false">
+                <span class="errorMessage" *ngIf="serviceTypeForm.get('Name').errors.Duplicate">Duplicate Item Name</span>
+              </div>
+
+
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Category<i class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i> </label>
+            <div class="col-xl-4 col-sm-6 col-12">
+              <select formControlName="ServiceCategoryId" [ngClass]="(validateControl(serviceTypeForm.get('ServiceCategoryId')))?'form-control ng-touched':'form-control'"
+                placeholder="category" *ngIf="isDisplayMode==false" class="form-control">
+                <option *ngFor="let record of serviceCategories" value={{record.ServiceCategoryId}}>
+                  {{record.CategoryName}}
+
+              </select>
+              <label class="col-form-label col-xl-12 col-sm-12 col-12 form-text" *ngIf="isDisplayMode==true"> {{selectedServiceTypeRecord.ServiceCategoryName}} </label>
+            </div>
+          </div>
+
+
+          <h4 class="form-heading">Details</h4>
+          <div class="form-group row">
+            <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Description </label>
+            <div class="col-xl-4 col-sm-6 col-12">
+              <textarea rows="4" cols="50" formControlName="Description" *ngIf="isDisplayMode==false" class="form-control">
+             </textarea>
+              <label *ngIf="isDisplayMode==true"  class="col-form-label descriptionStyle" >{{ selectedServiceTypeRecord.Description }}</label>
+
+            </div>
+          </div>
+
+
+
+
+          <div class="form-group text-right btn-list">
+            <button type="submit" (click)="saveRecord()" class="btn btn-save" *ngIf="isDisplayMode==false">
+              <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+            <button type="submit" (click)="cancelRecord()" class="btn btn-cancel" *ngIf="isDisplayMode==false">
+              <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+            <button type="submit" (click)="editRecord()" class="btn btn-edit" *ngIf="isDisplayMode==true">
+              <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+            <button type="submit" (click)="deleteRecord()" class="btn btn-delete" *ngIf="isDisplayMode==true">
+              <i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+          </div>
+          <p-confirmDialog></p-confirmDialog>
+        </form>
+      </div>
+
+
+
+    </div>
+    <!-- left col end here-->
+
+
+  </div>
+
+</div>

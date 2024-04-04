@@ -1,0 +1,110 @@
+<style>
+:host /deep/ .ui-dialog .ui-dialog-content { overflow: inherit !important; }
+:host /deep/ .ui-dialog {top:100px !important;min-width: 430px !important;}
+ 
+</style>
+<p-dialog (onShow)="onPopUpShow()" (onHide)="onPopUpHide()" [style]="{'width': '450px' }" [modal]="true" [(visible)]="showVoidPopUp">
+    <p-header>
+        <span *ngIf="isVoid && (selectedPODetails==undefined || selectedPODetails.IsMasterPO!=true)">Purchase Order Void Confirmation</span>
+        <span *ngIf="isVoid && selectedPODetails!=undefined && selectedPODetails.IsMasterPO==true">Contract PO Termination Confirmation</span>
+        <span *ngIf="!isVoid">Reasons For Rejection</span>
+    </p-header>
+    <div [style.display]="(voidPopUpTabId==1&&isVoid==true)?'block':'none'">
+        <div>
+            <span *ngIf="selectedPODetails!=undefined && selectedPODetails.IsMasterPO==true">Are you sure you want to Terminate this Contract ?</span>
+            <span *ngIf="(selectedPODetails==undefined || selectedPODetails.IsMasterPO!=true)">Are you sure you want to Void this PO?</span>
+        </div>
+    </div>
+    <div [style.display]="(voidPopUpTabId==3&&isVoid==true)?'block':'none'">
+        <span *ngIf="purchaseOrderTypeId!=purchaseOrderTypes.ProjectPo">Document cannot be "Voided" as there are some poc's are invoiced</span>
+        <span *ngIf="purchaseOrderTypeId==purchaseOrderTypes.ProjectPo">Document cannot be "Voided"</span>
+    </div>
+    <div [style.display]="(voidPopUpTabId==2)?'block':'none'">
+        <form [formGroup]="purchaseOrderVoidForm">
+            <div [style.display]="((purchaseOrderTypeId==purchaseOrderTypes.ContractPoFixed||purchaseOrderTypeId==purchaseOrderTypes.ContractPoVariable)&&selectedPODetails.IsMasterPO==true&&isVoid==true)==true?'block':'none'">
+                <div>                  
+                    <label class="col-form-label form-text">Please Enter the Effective Termination Date :</label>
+                    <div class="input-group">
+                        <input class="form-control" formControlName="TerminationDate"  (dateSelect)="getPocList()"  ngbDatepicker
+                            #terminationDatePicker="ngbDatepicker" style="max-width: 197px;">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" (click)="terminationDatePicker.toggle()" type="button">
+                                <i class="fa fa-calendar" style="cursor: pointer;"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style='margin-top:2%' *ngIf="(voidPopUpTabId==2 && ((selectedPODetails==undefined)|| 
+                        (((TotalRecords==0 && pocList.length ==0)||(TotalRecords > 0 && pocList.length ==0)||(TotalRecords == 0 && pocList.length >0)
+                        ||(isVoid==false && TotalRecords > 0 && pocList.length >0)) 
+                        && (selectedPODetails.IsMasterPO==true || selectedPODetails.IsMasterPO==false))))"  >
+                <div>
+                    <label class="form-label">Reasons</label>
+                    <textarea rows="2" cols="40" class="form-control" formControlName="Reasons">
+                    </textarea>
+                </div>
+                <div *ngIf="purchaseOrderVoidForm.get('Reasons') && purchaseOrderVoidForm.get('Reasons').errors!=null && purchaseOrderVoidForm.get('Reasons').touched==true">
+                    <span class="errorMessage" *ngIf="purchaseOrderVoidForm.get('Reasons').errors.required">Reasons is Required</span>
+                </div>
+            </div>
+            <!-- Invoice data Grid Only  -->
+
+            <div style='margin-top:2%' *ngIf="(purchaseOrderTypeId==purchaseOrderTypes.ContractPoFixed||purchaseOrderTypeId==purchaseOrderTypes.ContractPoVariable)
+                                              &&pocList.length>0&&selectedPODetails.IsMasterPO==true&&isVoid==true">
+                    <div>
+                        <!-- Following POC'S will be voided along with this Contract Master Termination: -->
+                        <p style="color: red" *ngIf="TotalRecords==0">
+                            The following POC's are already INVOICED. Are you Sure,you want to continue termination?
+                                                         <!-- <br> 
+                            Provide options to Continue or Cancel the submission for approval" -->
+                        </p>
+                        <p style="color: red" *ngIf="TotalRecords > 0">
+                            You need to Void the following POC's manually before terminating the contract.
+                        </p>
+                    </div>
+                    <p-table [value]="pocList" [style]="{width: '600px'}">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>POC Number</th>
+                                    <th>PO Date</th>
+                                    <th>Total Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-data>
+                                <tr>
+                                    <td>{{data.CPONumber}}</td>
+                                    <td>{{data.PODate|DisplayDateFormat }}</td>
+                                    <td>{{data.TenureAmount}}</td>
+                                    <td>{{data.WorkFlowStatusText}}</td>
+                                </tr>
+                            </ng-template>
+                    </p-table>               
+                </div> 
+
+        </form>
+    </div>
+    <p-footer>
+        <div *ngIf="isVoid==true">
+            <button type="button" *ngIf="((voidPopUpTabId==2 && (selectedPODetails ==undefined || selectedPODetails==null) )
+                                            ||voidPopUpTabId==2 && ((TotalRecords==0 && pocList.length ==0)||(TotalRecords > 0 && pocList.length ==0)) 
+                                        && (selectedPODetails.IsMasterPO==true || selectedPODetails.IsMasterPO==false ))" class="btn" (click)="voidRecord()">Ok</button>
+            <button type="button" *ngIf="voidPopUpTabId==3" class="btn" (click)="showVoidPopUp=false">Ok</button>
+            <button type="button" *ngIf="voidPopUpTabId==2 && TotalRecords > 0 && pocList.length >0" class="btn" (click)="showVoidPopUp=false">Cancel</button>
+            <button type="button" *ngIf="voidPopUpTabId==2 && TotalRecords==0 && pocList.length >0 && selectedPODetails.IsMasterPO==true" class="btn"
+             (click)="voidRecord()">Yes</button>
+                &nbsp;
+            <button type="button" *ngIf="voidPopUpTabId==2 && TotalRecords==0 && pocList.length >0 && selectedPODetails.IsMasterPO==true" class="btn" 
+            (click)="showVoidPopUp=false">No</button>
+            <button type="button" *ngIf="voidPopUpTabId==1" class="btn" (click)="voidPopUpTabId=2">Yes</button>
+                &nbsp;
+            <button type="button" *ngIf="voidPopUpTabId==1" class="btn" (click)="showVoidPopUp=false">No</button>
+        </div>
+        <div *ngIf="isVoid==false">
+            <button type="button"  class="btn" (click)="rejectRecord()">Ok</button>
+             &nbsp;&nbsp;
+            <button type="button"  class="btn" (click)="showVoidPopUp=false">Cancel</button>
+        </div>
+    </p-footer>
+</p-dialog>

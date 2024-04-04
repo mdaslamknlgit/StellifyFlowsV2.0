@@ -1,0 +1,101 @@
+<div class="container-fluid">
+<div class="row">
+<div class="col-md-6 col-sm-12 padding-null tittlediv">
+<h3 class="item-heading"> <img src="../assets/images/icon1.png"> Item Category </h3>
+</div>
+<div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+    <!-- <img src="../assets/images/add-new.png" (click)="addRecord()" *ngIf="isDisplayMode!=false && newPermission" />  -->
+    <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickBack($event)">
+        <i class="fa fa-arrow-left" ria-hidden="true" aria-hidden="true"></i> Back</button>
+
+</div>
+</div>
+
+<div class="row">
+    <div  #rightPanel class="rightPanel col-lg-9 col-md-8" [class.expand-rightcol]="rightsection">
+        <div *ngIf="isDisplayMode!=null">
+            <form  [formGroup]="itemCategoryForm"  class="form-horizontal">
+                <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="rightcol-scrroll1">
+                        <div class="row fullScreenLabel">
+                            <div class="col-12">
+                                <h3 class="item-heading" style="float:none;">Item Category</h3>
+                            </div>
+                        </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Name <i class="fa fa-star mandatory-icon" *ngIf="isDisplayMode==false" aria-hidden="true"></i>
+                    </label>  
+                    <div class="col-xl-4 col-sm-6 col-12">
+                        <input type="text" formControlName="Name" 
+                                [ngClass]="(validateControl(itemCategoryForm.get('Name')))?'form-control ng-touched':'form-control'"
+                                placeholder="Name" maxlength="200" *ngIf="isDisplayMode==false"  class="form-control" />
+                        <label class="col-form-label form-text" *ngIf="isDisplayMode==true && selectedItemCategoryRecord!=undefined">
+                            <b style="color:#01548e">{{ selectedItemCategoryRecord.Name }}</b> 
+                        </label>
+                        <div *ngIf="itemCategoryForm.get('Name').errors!=null && isDisplayMode==false">
+                            <span class="errorMessage" *ngIf="itemCategoryForm.get('Name').errors.Duplicate">Duplicate Item Category</span>
+                        </div>
+                    </div>
+                </div>
+                <h4 class="form-heading">Details</h4>  
+                <div class="form-group row">
+                    <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Description</label>  
+                    <div class="col-xl-4 col-sm-6 col-12"> 
+                        <textarea rows="4" cols="50"  *ngIf="isDisplayMode==false" formControlName="Description" class="form-control">
+                        </textarea>
+                        <label  class="col-form-label form-text descriptionStyle" *ngIf="isDisplayMode==true  && selectedItemCategoryRecord!=undefined">
+                            {{ selectedItemCategoryRecord.Description }}
+                        </label>
+                    </div>
+                </div>
+                </div>
+                <div class="form-group text-right btn-list">
+                    <button type="submit" (click)="saveRecord()"  class="btn btn-save" *ngIf="isDisplayMode==false"><i class="fa fa-check" aria-hidden="true"></i> Save</button>
+                    <button type="submit" (click)="cancelRecord()"  class="btn btn-cancel" *ngIf="isDisplayMode==false"><i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                    <button type="submit" (click)="editRecord()" class="btn btn-edit" *ngIf="isDisplayMode==true && editPermission"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                    <button type="submit" (click)="deleteRecord()"  class="btn btn-delete" *ngIf="isDisplayMode==true && deletePermission"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                </div>
+                <p-confirmDialog></p-confirmDialog>   
+            </form>
+        </div> 
+    </div><!-- left col end here-->
+ 
+</div>
+ 
+</div>
+
+
+<ng-template #filters>
+   <div class="flter-popover">
+       
+ <form  [formGroup]="signupForm" class="form-horizontal" (ngSubmit)="onSubmit()">
+       
+       <div class="form-group row">
+      <label class="col-form-label col-4 form-label">Name </label>  
+      <div class="col-8">
+          
+ <input type="text" 
+           id="orderlevel" 
+           name="orderlevel" 
+           formControlName="orderlevel" 
+           placeholder="Re-Order Level"   class="form-control">
+     
+      </div>
+       </div>
+   <div class="form-group row">
+      <label class="col-form-label col-4 form-label">Category</label>  
+      <div class="col-8">
+          
+ <input type="text" 
+           id="alertqty" 
+           name="alertqty" 
+           formControlName="alertqty" 
+           placeholder="Low Alert Qty"   class="form-control">
+  
+      </div>
+  </div>
+
+   
+ </form>
+  
+   </div>
+</ng-template>

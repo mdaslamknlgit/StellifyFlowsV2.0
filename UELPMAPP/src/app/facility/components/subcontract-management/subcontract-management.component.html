@@ -1,0 +1,262 @@
+<div class="container-fluid">
+<div class="row">
+<div class="col-md-6 col-sm-12 padding-null tittlediv">
+<h3 class="item-heading"> <img src="../assets/images/icon1.png"> facility > Subcontract/Vendor Management </h3>
+</div>
+<div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+<img src="../assets/images/add-new.png" (click)="editdata();" *ngIf="hidetext">  <img src="../assets/images/grid1.png"> <img src="../assets/images/grid2.png"> 
+</div>
+</div>
+<div class="row">
+ <div class="col-lg-3 col-md-4 leftdiv" [class.collapse-leftcol]="leftsection">   
+<div class="left-section" > 
+
+ <div class="filter-section" >
+<div class="left-search">
+  <input type="text" placeholder="Search requests..." class="search-filter">
+  <i class="fa fa-search" aria-hidden="true"></i>
+  </div>
+  
+
+ <div class="filter-icon"> <i class="fa fa-filter" aria-hidden="true"></i></div>
+ <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="filter-scroll" style="width:100%; float:left;">
+<table class="table">
+<tr><td>
+ <h5 class="sub-heading">Williams</h5>
+  <label class="label-text">Ph No</label> :<label class="label-value">+60-2545-2500</label>
+  <label class="label-text">Vendor ID</label> :<label class="label-value">#31120</label>
+  <label class="label-text">is Active</label> :<label class="label-value">Yes</label>   
+</td></tr>
+<tr><td>
+ <h5 class="sub-heading">Williams</h5>
+  <label class="label-text">Ph No</label> :<label class="label-value">+60-2545-2500</label>
+  <label class="label-text">Vendor ID</label> :<label class="label-value">#31120</label>
+  <label class="label-text">is Active</label> :<label class="label-value">Yes</label>   
+</td></tr>
+ 
+<tr><td>
+ <h5 class="sub-heading">Williams</h5>
+  <label class="label-text">Ph No</label> :<label class="label-value">+60-2545-2500</label>
+  <label class="label-text">Vendor ID</label> :<label class="label-value">#31120</label>
+  <label class="label-text">is Active</label> :<label class="label-value">Yes</label>   
+</td></tr>
+<tr><td>
+ <h5 class="sub-heading">Williams</h5>
+  <label class="label-text">Ph No</label> :<label class="label-value">+60-2545-2500</label>
+  <label class="label-text">Vendor ID</label> :<label class="label-value">#31120</label>
+  <label class="label-text">is Active</label> :<label class="label-value">Yes</label>   
+</td></tr>
+</table>
+
+
+ </div>  
+
+ 
+   </div>
+    </div>
+    <div class="split-line" (click)="splite()"></div> 
+ </div><!-- left col end here-->
+
+<div class="col-lg-9 col-md-8" [class.expand-rightcol]="rightsection">
+
+   <div class="toast-message-view"  [class.slide-down-and-up]="savedsucess">
+       <div style="text-align:right;height:5px;"><i class="fa fa-times-circle" (click)="closewindow()" aria-hidden="true"></i></div>
+       <i class="fa fa-check-circle"  aria-hidden="true"></i> Saved successfully</div> 
+
+
+<form  [formGroup]="signupForm" class="form-horizontal"  >
+ <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="rightcol-scrroll">
+  <div class="form-group row">
+      <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Name </label>  
+      <div class="col-xl-4 col-sm-6 col-6">
+        <label class="col-form-label form-text" *ngIf="hidetext"><b style="color:#01548e">Laptops</b> </label>
+ <input type="text" 
+           id="name" 
+           name="name" 
+           formControlName="name" 
+           placeholder="Name" *ngIf="hideinput" class="form-control">
+     
+      </div>
+  </div>
+  
+  <div class="form-group row">
+      <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Phone Number </label>  
+      <div class="col-xl-4 col-sm-6 col-6">
+          <label class="col-form-label form-text" *ngIf="hidetext">+60-564654564 </label>
+ <input type="text" 
+           id="phno" 
+           name="phno" 
+           formControlName="phno" 
+           placeholder="Phone Number" *ngIf="hideinput" class="form-control">
+         </div>
+       </div>
+
+  <div class="form-group row">
+      <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Fax Number</label>  
+      <div class="col-xl-4 col-sm-6 col-6">
+          <label class="col-form-label form-text" *ngIf="hidetext">+60-56465464 </label>
+ <input type="text" 
+           id="faxno" 
+           name="faxno" 
+           formControlName="faxno" 
+           placeholder="Fax Number" *ngIf="hideinput" class="form-control">
+   
+      </div>     
+  </div>
+
+<div class="form-group row">
+      <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">E-mail </label>  
+      <div class="col-xl-4 col-sm-6 col-6">
+          <label class="col-form-label form-text" *ngIf="hidetext">test@gmail.com </label>
+ <input type="text" 
+           id="email" 
+           name="email" 
+           formControlName="email" 
+           placeholder="test@gmail.com" *ngIf="hideinput" class="form-control">
+   
+      </div>     
+  </div>
+ 
+ <div class="form-group row">
+      <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Business Type</label>  
+      <div class="col-xl-4 col-sm-6 col-6">
+          <label class="col-form-label form-text" *ngIf="hidetext">Plumber </label>
+ <select  id="jobtype" 
+           name="jobtype" 
+           formControlName="jobtype" 
+           placeholder="Job Type" *ngIf="hideinput" class="form-control">
+           <option>a1</option>
+           <option>a2</option>
+ </select>
+   
+      </div>     
+  </div>
+
+<div class="form-group row">
+      <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">is Active</label>  
+      <div class="col-xl-4 col-sm-6 col-6">
+          <label class="col-form-label form-text" *ngIf="hidetext">Active </label>
+     <label class="col-form-label form-text" *ngIf="hideinput"><mat-slide-toggle ></mat-slide-toggle></label>
+      </div>     
+  </div>
+
+  
+
+  <div class="form-group row">
+      <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Contact Valid From </label>  
+      <div class="col-xl-4 col-sm-6 col-6">
+          <label class="col-form-label form-text" *ngIf="hidetext">10-Jun-2018 </label>
+<input type="text" 
+           id="contvalidfrom" 
+           name="contvalidfrom" 
+           formControlName="contvalidfrom" 
+           placeholder="Valid From" *ngIf="hideinput" class="form-control">
+   
+      </div>     
+  </div>
+
+ <div class="form-group row">
+      <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Contact Valid to </label>  
+      <div class="col-xl-4 col-sm-6 col-6">
+          <label class="col-form-label form-text" *ngIf="hidetext">10-Jun-2018 </label>
+<input type="text" 
+           id="contvalidto" 
+           name="contvalidto" 
+           formControlName="contvalidto" 
+           placeholder="Valid From To" *ngIf="hideinput" class="form-control">
+   
+      </div>     
+  </div>
+
+<div class="form-group row">
+      <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Description</label>  
+      <div class="col-xl-4 col-sm-6 col-6">
+          <label class="col-form-label form-text" *ngIf="hidetext">#254-A-25,KUL, </label>
+<textarea 
+           id="contvalidto" 
+           name="contvalidto" 
+           formControlName="contvalidto" 
+           placeholder="Valid From To" *ngIf="hideinput" class="form-control">
+</textarea>
+   
+      </div>     
+  </div>
+
+<div class="form-group row">
+      <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Address</label>  
+      <div class="col-xl-4 col-sm-6 col-6">
+          <label class="col-form-label form-text" *ngIf="hidetext">#254-A-25,KUL, </label>
+<textarea 
+           id="contvalidto" 
+           name="contvalidto" 
+           formControlName="contvalidto" 
+           placeholder="Valid From To" *ngIf="hideinput" class="form-control">
+</textarea>
+   
+      </div>     
+  </div>
+
+ <div class="form-group row">
+      <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">City</label>  
+      <div class="col-xl-4 col-sm-6 col-6">
+          <label class="col-form-label form-text" *ngIf="hidetext">USA </label>
+ <select  id="jobtype" 
+           name="jobtype" 
+           formControlName="jobtype" 
+           placeholder="Job Type" *ngIf="hideinput" class="form-control">
+           <option>a1</option>
+           <option>a2</option>
+ </select>
+   
+      </div>     
+  </div>
+
+  <div class="form-group row">
+      <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">State</label>  
+      <div class="col-xl-4 col-sm-6 col-6">
+          <label class="col-form-label form-text" *ngIf="hidetext">California </label>
+ <input type="text" 
+           id="contvalidto" 
+           name="contvalidto" 
+           formControlName="contvalidto" 
+           placeholder="Valid From To" *ngIf="hideinput" class="form-control">
+   
+      </div>     
+  </div>
+
+ <div class="form-group row">
+      <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Country</label>  
+      <div class="col-xl-4 col-sm-6 col-6">
+          <label class="col-form-label form-text" *ngIf="hidetext">USA </label>
+ <input type="text" 
+           id="contvalidto" 
+           name="contvalidto" 
+           formControlName="contvalidto" 
+           placeholder="Valid From To" *ngIf="hideinput" class="form-control">
+   
+      </div>     
+  </div>
+
+ 
+ </div>
+
+ <div class="form-group text-right btn-list">
+    <button type="submit" (click)="savedata()"  class="btn btn-save" *ngIf="hideinput"><i class="fa fa-check" aria-hidden="true"></i> Save</button>
+    <button type="submit" (click)="cancledata()"  class="btn btn-cancel" *ngIf="hideinput"><i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+
+     <button type="submit" (click)="editdata()" class="btn btn-edit" *ngIf="hidetext"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+    <button type="submit"  class="btn btn-delete" *ngIf="hidetext"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+
+  </div>
+  
+</form>
+
+
+
+</div><!-- left col end here-->
+
+
+</div>
+ 
+</div>
+ 

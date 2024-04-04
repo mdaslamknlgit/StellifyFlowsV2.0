@@ -1,0 +1,15 @@
+<div *ngFor="let permission of permissions; let i = index">
+  <label>
+    <input type="checkbox" [(ngModel)]="permission.read" (change)="handleReadChange(i)" />
+    Read
+  </label>
+  <label>
+    <input type="checkbox" [(ngModel)]="permission.write" (change)="handleWriteChange(i)" />
+    Write
+  </label>
+  <label>
+    <input type="checkbox" [(ngModel)]="permission.delete" (change)="handleDeleteChange(i)" />
+    Delete
+  </label>
+</div>
+<button (click)="handleSubmit()">Submit</button>

@@ -1,0 +1,139 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12 col-sm-12 padding-null tittlediv">
+      <div class="flexrow space-between align-center">
+        <h3 class="item-heading"> Payment Terms Form</h3>
+        <p> {{FormMode}} --- {{PaymentTermId}} </p>
+        <div>
+          <!-- <button class="btn  btn-transparent" (click)="addRecord()" 
+        *ngIf="hideText && newPermission"> New Record</button> -->
+
+        <button class="btn btn-save ng-star-inserted" type="button" (click)="ClickBack($event)">
+          <i class="fa fa-arrow-left" ria-hidden="true" aria-hidden="true"></i> Back</button>
+
+          <!-- <button  class="btn btn-transparent" (clickOutside)="onClickedOutside($event)"    
+        (click)="split()">  {{showfilterstext}}  </button>  -->
+
+          <img style="display: none;" src="../assets/images/grid1.png" (click)="showFullScreen()">
+          <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+            <button class="btn customdropdown btn-transparent" style="background:none;border:none;padding:0px;"
+              id="dropdownBasic1" ngbDropdownToggle>
+              <i class="fa-solid fa-bars"></i>
+            </button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+              <button (click)="onPrintScreen($event)" class="dropdown-item">Print</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+  </div>
+  <div class="row">
+
+    <div class="col-lg-12 col-md-12">
+    
+        <div class="fullScreenLabel"> <app-header></app-header> </div>
+       
+          <form [formGroup]="paymentTermForm" class="form-horizontal">
+            <div class="row fullScreenLabel">
+              <div class="col-12">
+                <h3 class="item-heading" style="float:none;">Payment Terms</h3>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Code<i class="fa fa-star mandatory-icon"
+                  *ngIf="hideInput" aria-hidden="true"></i> </label>
+              <div class="col-xl-4 col-sm-6 col-12">
+                <input type="text" appAutofocus formControlName="Code" maxlength="50" *ngIf="hideInput"
+                  class="form-control" />
+                <label class="col-form-label  form-text" *ngIf="hideText"><b style="color:#01548e">{{
+                    selectedPaymentTerms.Code }}</b></label>
+                <div
+                  *ngIf="hideInput && paymentTermForm.get('Code') && paymentTermForm.get('Code').errors!=null && paymentTermForm.get('Code').touched==true">
+                  <span class="errorMessage" *ngIf="paymentTermForm.get('Code').errors.required">Code is required</span>
+                  <span class="errorMessage" *ngIf="paymentTermForm.get('Code').errors.duplicate">Duplicate Code
+                    Found</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">No of days<i
+                  class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i> </label>
+              <div class="col-xl-4 col-sm-6 col-12">
+                <input type="number" formControlName="NoOfDays" min="0" max="365" *ngIf="hideInput" class="form-control"
+                  oninput="validity.valid||(value='')">
+                <label class="col-form-label  form-text" *ngIf="hideText">{{ selectedPaymentTerms.NoOfDays }}</label>
+                <div
+                  *ngIf="paymentTermForm.get('NoOfDays') && paymentTermForm.get('NoOfDays').errors!=null && paymentTermForm.get('NoOfDays').touched==true">
+                  <span class="errorMessage" *ngIf="paymentTermForm.get('NoOfDays').errors.required">No of Days are
+                    required</span>
+                </div>
+              </div>
+            </div>
+            <h4 class="form-heading">Details</h4>
+            <div class="form-group row">
+              <label class="col-form-label col-xl-2 col-sm-6 col-12 form-label">Description<i
+                  class="fa fa-star mandatory-icon" *ngIf="hideInput" aria-hidden="true"></i> </label>
+              <div class="col-xl-10 col-sm-6 col-12">
+                <textarea rows="4" cols="50" formControlName="Description" *ngIf="hideInput" class="form-control"
+                  (blur)="trimSpaces()"></textarea>
+                <label class="col-form-label descriptionStyle" *ngIf="hideText">{{ selectedPaymentTerms.Description
+                  }}</label>
+                <div
+                  *ngIf="paymentTermForm.get('Description') && paymentTermForm.get('Description').errors!=null && paymentTermForm.get('Description').touched==true">
+                  <span class="errorMessage" *ngIf="paymentTermForm.get('Description').errors.required">Description is
+                    required</span>
+                </div>
+              </div>
+            </div>
+          </form>
+
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group text-right btn-list">
+              <button type="submit" (click)="saveRecord()" class="btn btn-save" *ngIf="hideInput">
+                <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+
+              <button type="submit" (click)="cancelRecord($event)" class="btn btn-cancel" *ngIf="hideInput">
+                <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+
+              <button type="submit" (click)="ClickBack($event)" class="btn btn-cancel" *ngIf="!hideInput">
+                <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+
+              <button type="submit" (click)="editRecord()" class="btn btn-edit"
+                *ngIf="hideText && selectedPaymentTerms.PaymentTermsId > 0 && editPermission">
+                <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+
+              <button type="submit" (click)="deleteRecord()" class="btn btn-delete"
+                *ngIf="hideText && selectedPaymentTerms.PaymentTermsId > 0 && deletePermission">
+                <i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+            </div>
+          </div>
+        </div>
+        <p-confirmDialog></p-confirmDialog>
+     
+    </div><!-- left col end here-->
+  </div>
+</div>
+
+
+<ng-template #filters>
+  <div class="flter-popover">
+    <form [formGroup]="filterForm" class="form-horizontal" (ngSubmit)="onSubmit()">
+      <div class="form-group row">
+        <label class="col-form-label col-4 form-label">Name </label>
+        <div class="col-8">
+          <input type="text" id="orderlevel" name="orderlevel" formControlName="orderlevel" placeholder="Re-Order Level"
+            class="form-control">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-form-label col-4 form-label">Category</label>
+        <div class="col-8">
+          <input type="text" id="alertqty" name="alertqty" formControlName="alertqty" placeholder="Low Alert Qty"
+            class="form-control">
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>

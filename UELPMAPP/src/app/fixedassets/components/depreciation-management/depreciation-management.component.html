@@ -1,0 +1,336 @@
+<div class="container-fluid">
+    <div class="row">
+    <div class="col-md-6 col-sm-12 padding-null tittlediv">
+    <h3 class="item-heading"><img src="../assets/images/icon1.png"> FixedAssets > <span *ngIf="isApprovalPage==false">Asset Depreciation</span><span *ngIf="isApprovalPage==true">Asset Depreciation Approval</span></h3>
+    </div>
+    <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+            <img src="../assets/images/add-new.png" (click)="addRecord()" *ngIf="hideText&&(isApprovalPage==false)">  
+            <img src="../assets/images/grid1.png"  (click)="showFullScreen()">
+    </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3 col-md-4 leftdiv"  [class.collapse-leftcol]="leftSection">   
+    <div class="left-section"> 
+        <div class="filter-section" ngbDropdown #myDrop="ngbDropdown">
+            <div class="left-search">
+                <input type="text" placeholder="Search..." [(ngModel)]="requestSearchKey" (keyup)="onAssetTransferRequestSearch($event)" class="search-filter">
+                <i class="fa fa-search" aria-hidden="true"></i>
+                <div class="filter-popup" *ngIf="showFilterPopUp" ngbDropdownMenu aria-labelledby="dropdownManual" (click)="$event.stopPropagation();">
+                    <form [formGroup]="assetDepFilterForm" class="form-horizontal">
+                        <div *ngIf="isApprovalPage==true" class="form-group row">
+                            <label class="col-form-label col-4 form-label">Requested By</label>  
+                            <div class="col-8">
+                                <input formControlName="RequestedBy" type="text" class="form-control" [inputFormatter]="userInputFormater"
+                                    [ngbTypeahead]="userSearch" [resultTemplate]="userTemplate" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-4 form-label">From Company</label>  
+                            <div class="col-8">
+                                <input formControlName="Company" (selectItem)="onCompanyChange($event)" type="text" class="form-control" [inputFormatter]="companyInputFormater"
+                                [ngbTypeahead]="companySearch" [resultTemplate]="companyTemplate" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-4 form-label">From Location</label>  
+                            <div class="col-8">
+                                <select  appAutofocus formControlName="LocationId" class="form-control">
+                                    <option [ngValue]="undefined">--Select--</option>
+                                    <option *ngFor="let record of filterDepartments" value={{record.LocationID}}>
+                                        {{record.Name}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12 errorMessage">
+                                {{filterMessage}}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12" style="text-align: right">
+                                <button type="submit" (click)="filterData()" class="btn btn-save">
+                                    <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>  
+            <!-- start filter code -->
+            <div class="filter-icon">
+                <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                    <i class="fa fa-filter" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+                <i class="fa fa-undo" aria-hidden="true"></i>
+            </div>                    
+            <!-- end filter code -->
+            <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="filter-scroll" style="width:100%; float:left;">
+                <table class="table">
+                    <tr [class.activerow]="record.AssetDepreciationId==selectedRecordDetails.AssetDepreciationId" (click)="onAssetReqRecordSelection(record.AssetDepreciationId)" *ngFor="let record of assetDefReqList">
+                    <td>
+                        <h5 class="sub-heading">{{ record.AssetDepreciationId  }}</h5>
+                        <span *ngIf="isApprovalPage==true"><label class="label-text" >Requested By</label> :<label *ngIf="isApprovalPage==true" class="label-value">{{ record.RequestedByUserName }}</label></span>
+                        <label class="label-text">Status</label> :<label class="label-value">{{ record.WorkFlowStatus }}</label>
+                    </td>
+                    </tr>
+                </table>
+                <div *ngIf="assetDefReqList.length==0" class="col-12 error listErrorMessage">
+                    {{errorMessage}}
+                </div> 
+                <ngb-pagination [maxSize]="5" *ngIf="assetDefReqList.length>0" (pageChange)="pageChange($event)" [collectionSize]="assetDepReqPagerConfig.TotalRecords" class="d-flex justify-content-center" [pageSize]="assetDepReqPagerConfig.RecordsToFetch" [page]="currentPage" [boundaryLinks]="true"></ngb-pagination>
+            </div>   
+        </div>  
+        </div>
+        <div class="split-line" (click)="split()"></div> 
+    </div><!-- left col end here--> 
+    <div  #rightPanel class="rightPanel col-lg-9 col-md-8"  [class.expand-rightcol]="rightSection">
+        <div [ngClass]="{'hideRightPanel':(assetDefReqList.length==0 && hideText==true)}"  class="form-horizontal" >
+            <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions"  class="rightcol-scrroll">
+            <form  [formGroup]="assetDepForm" class="form-horizontal">
+                <div class="row fullScreenLabel">
+                    <div class="col-12">
+                        <h3 class="item-heading" style="float:none;">{{ isApprovalPage==true?'Asset Depreciation Approval':'Asset Depreciation' }}</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div *ngIf="hideText" class="form-group row">
+                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Posted By</label>
+                            <div class="col-xl-8 col-sm-6 col-6">
+                                <label class="col-form-label form-text">{{ selectedRecordDetails.PostedUserName==undefined?"": selectedRecordDetails.PostedUserName }}</label>                
+                            </div>
+                        </div>   
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Department</label>
+                            <div class="col-xl-8 col-sm-6 col-6">
+                                <label class="col-form-label form-text" *ngIf="hideText">{{ selectedRecordDetails.Location }}</label>
+                                <select (change)="onLocationChange()"  appAutofocus formControlName="LocationId" *ngIf="hideInput" class="form-control">
+                                    <option [ngValue]="undefined">--Select--</option>
+                                    <option *ngFor="let record of departments" value={{record.LocationID}}>
+                                        {{record.Name}}
+                                </select>
+                                <div *ngIf="assetDepForm.get('LocationId') && assetDepForm.get('LocationId').errors!=null &&assetDepForm.get('LocationId').touched==true">
+                                    <span class="errorMessage" *ngIf="assetDepForm.get('LocationId').errors.required">Department is required</span>
+                                </div>
+                            </div>
+                        </div>        
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div *ngIf="hideText" class="form-group row">
+                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Posted Date</label>
+                            <div class="col-xl-8 col-sm-6 col-6">
+                                <label class="col-form-label form-text">{{ selectedRecordDetails.PostedDate|DisplayDateFormat }}</label>                
+                            </div>
+                        </div>  
+                        <div *ngIf="hideText" class="form-group row">
+                            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">WorkFlow Status</label>
+                            <div class="col-xl-8 col-sm-6 col-6">
+                                <label *ngIf="selectedRecordDetails.WorkFlowStatus!=''&&selectedRecordDetails.WorkFlowStatus!=null" class="col-form-label form-text">{{ selectedRecordDetails.WorkFlowStatus }}&nbsp;
+                                    <span *ngIf="selectedRecordDetails.CurrentApproverUserName!=''&&selectedRecordDetails.CurrentApproverUserName!=null">[{{ selectedRecordDetails.CurrentApproverUserName }}]</span>
+                                </label>
+                            </div>
+                        </div>             
+                    </div>
+                </div>
+                <div [style.display]="hideInput==true?'block':'none'" class="row" style="margin-top:2em;">
+                        <div class="col-12">
+                            <h4 class="form-heading">Assets</h4>
+                        </div>
+                        <div class="col-12">
+                            <div class="gridSearch left-search">
+                                <input type="text" formControlName="SearchKey" (keyup)="onAssetSearch($event)" placeholder="Search Assets..." class="search-filter">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </div>   
+                            <div style="text-align: center;">
+                                <span class="errorMessage" *ngIf="showGridErrorMessage &&(selectedRecordDetails.AssetDetails==undefined|| selectedRecordDetails.AssetDetails.length==0)">
+                                    Please select atleast one Asset
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <p-table  [columns]="gridColumns"  sortMode="single" [lazy]="true" (onLazyLoad)="onLazyLoad($event)" [rows]="assetRegisterPagerConfig.RecordsToFetch" [totalRecords]="assetRegisterPagerConfig.TotalRecords" [paginator]="true" [value]="assetsList">
+                                <ng-template pTemplate="emptymessage">
+                                        <tr>
+                                            <td colspan="10" style='text-align: center;'>
+                                                <b>{{ gridNoMessageToDisplay }}</b>
+                                            </td> 
+                                        </tr>
+                                </ng-template>
+                                <ng-template pTemplate="colgroup" let-columns>
+                                    <colgroup>
+                                        <col  *ngFor="let col of columns" [style.width]="col.width">
+                                    </colgroup>
+                                </ng-template>
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                            {{col.header}}
+                                            <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                    <tr [ngClass]="{'selectedRow':rowData.IsSelected}">  
+                                        <td>
+                                            {{ rowData.SerialNumber }}
+                                        </td>
+                                        <td>
+                                            {{ rowData.Asset.AssetName }}
+                                        </td>
+                                        <td>
+                                            {{ rowData.BarCode }}
+                                        </td>
+                                        <td>
+                                            {{ rowData.PurchasedDate|DisplayDateFormat }}
+                                        </td>
+                                        <td>
+                                            {{ rowData.Location==null?"": rowData.Location.Name }}
+                                        </td>
+                                        <td>
+                                            {{ rowData.PurchasedValue }}
+                                        </td>
+                                        <td>
+                                            {{ rowData.CurrentValue }}
+                                        </td>
+                                        <td>
+                                            <button (click)="onAssetClick($event,rowData.AssetDetailsId)">
+                                                <i class="fa fa-check-square"></i>  
+                                            </button>
+                                            &nbsp;&nbsp;
+                                            <i (click)="showAssetPostingDetails(rowData)" class="gridView fa fa-th"></i>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                </div>
+                <div class="row" style="margin-top:2em;">
+                    <div class="col-12">
+                    <h4 class="form-heading">Selected Assets</h4>
+                    </div>
+                    <div class="col-12">
+                    <!-- </fieldset> -->
+                    <p-table [columns]="gridColumns" [customSort]="true" sortMode="single" [value]="selectedRecordDetails.AssetDetails">
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                    <td colspan="9" style='text-align: center;'>
+                                        <b>{{ gridNoMessageToDisplay }}</b>
+                                    </td> 
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="colgroup" let-columns>
+                                    <colgroup>
+                                        <col  *ngFor="let col of columns" [style.width]="col.width">
+                                    </colgroup>
+                            </ng-template>
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <ng-template ngFor let-data [ngForOf]="columns" let-i="index">
+                                        <th  [pSortableColumn]="data.field">
+                                            {{data.header}}    
+                                        </th>
+                                    </ng-template>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                                <tr>  
+                                    <td>
+                                        {{ rowData.SerialNumber }}
+                                    </td>
+                                    <td>
+                                        {{ rowData.Asset.AssetName }}
+                                    </td>
+                                    <td>
+                                        {{ rowData.BarCode }}
+                                    </td>
+                                    <td>
+                                        {{ rowData.PurchasedDate|DisplayDateFormat }}
+                                    </td>
+                                    <td>
+                                        {{ rowData.Location==null?"": rowData.Location.Name }}
+                                    </td>
+                                    <td>
+                                        {{ rowData.PurchasedValue }}
+                                    </td>
+                                    <td>
+                                        {{ rowData.CurrentValue }}
+                                    </td>
+                                    <td>
+                                        <i (click)="showAssetPostingDetails(rowData)" class="gridView fa fa-th"></i>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                    </p-table>
+                    </div>
+                    <div class="col-12" style="margin-top:3em;">
+                    <div class="form-group row" *ngIf="(isApprovalPage==true||(isApprovalPage==false && (selectedRecordDetails.WorkFlowStatusId==2||selectedRecordDetails.WorkFlowStatusId==3)))">
+                        <div class="col-12">
+                            <h4 class="form-heading">Approval Remarks</h4>  
+                        </div>
+                        <div [formGroup]="assetDepForm" class="col-xl-12 col-sm-12 col-12">
+                        <textarea formControlName="Remarks" class="form-control" style="width:70%;display:inline-block ">
+                        </textarea>
+                        <button type="submit" (click)="updateStatus(isApprovalPage==true?workFlowStatus.AskedForClarification:workFlowStatus.WaitingForApproval)" style="float:inherit;vertical-align: top;"  class="btn btn-edit">
+                            <i class="fa fa-envelope" aria-hidden="true"></i> 
+                            <span *ngIf="isApprovalPage==true">
+                                {{  selectedRecordDetails.WorkFlowComments|ApprovalButton }}
+                            </span> 
+                            <span *ngIf="isApprovalPage==false">
+                                Reply
+                            </span> 
+                        </button>
+                        <div *ngIf="assetDepForm.get('Remarks') && assetDepForm.get('Remarks').errors!=null && assetDepForm.get('Remarks').touched==true">
+                            <span class="errorMessage" *ngIf="assetDepForm.get('Remarks').errors.required">Approval Remarks is Required</span>
+                        </div>
+                        </div>
+    
+                        <div  class="col-xl-12 col-sm-12 col-12">
+                        <label class="col-form-label form-label">Previous Comments</label>
+                            <ul>
+                                <li  *ngFor="let record of selectedRecordDetails.WorkFlowComments">
+                                    <span class='remarksUserName'>{{ record.UserName }}</span> - <span class='remarksDate'>{{ record.CreatedDate|date:'dd-MM-yyyy h:mm:ss a' }}</span>:
+                                    <br>
+                                    <span>{{ record.Remarks }}</span>    
+                                </li>
+                            </ul>
+                        </div> 
+                    </div>
+                    </div>
+                </div>
+            </form> 
+            </div>
+            <div *ngIf="requestType=='request'" class="form-group text-right btn-list">
+                <button (click)="saveRecord('save')"  class="btn btn-save" *ngIf="hideInput"><i class="fa fa-check" aria-hidden="true"></i> Save</button>
+                <button type="submit" (click)="saveRecord('send')" class="btn btn-approve" *ngIf="((selectedRecordDetails|DisableButton)==false)">
+                    <i class="fa fa-check" aria-hidden="true"></i> Send for Approval
+                </button>
+                <button (click)="cancelRecord()"  class="btn btn-cancel" *ngIf="hideInput"><i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                <button (click)="editRecord()" class="btn btn-edit" *ngIf="hideText&&((selectedRecordDetails|DisableButton)==false)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                <button (click)="deleteRecord()" class="btn btn-delete" *ngIf="hideText&&((selectedRecordDetails|DisableButton)==false)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+            </div>
+            <div *ngIf="requestType=='approval'" class="form-group text-right btn-list">
+                <button type="submit" (click)="updateStatus(workFlowStatus.Approved)"   class="btn btn-approve"><i class="fa fa-check"  aria-hidden="true"></i>Approve</button>
+                <button type="submit" (click)="updateStatus(workFlowStatus.Rejected)"  class="btn btn-delete"><i class="fa fa-ban" aria-hidden="true"></i> Reject</button>        
+            </div>      
+        </div>
+    </div><!-- right col end here-->
+    </div> 
+</div>
+      
+<ng-template #locationTemplate let-r="result" let-t="term">
+    {{ r.Name }}
+</ng-template>
+<ng-template #companyTemplate let-r="result" let-t="term">
+    {{ r.CompanyName }}
+</ng-template>
+<ng-template #userTemplate let-r="result" let-t="term">
+    {{ r.FirstName }}
+</ng-template>
+
+      
+<asset-posting-details *ngIf="showPopUp" (hideVoidPopUp)="hidePopUp()" [assetRecord]="selectedAsset"></asset-posting-details>
+         

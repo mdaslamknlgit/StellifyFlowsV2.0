@@ -1,0 +1,89 @@
+<!-- <button class="close" mat-button (click)="ContactNoClick($event)">Close</button> -->
+<h1 mat-dialog-title>{{data.HeaderTitle}}</h1>
+<div mat-dialog-content>
+  <div id="divReportingManager" class="ReportingMang">
+    <form [formGroup]="data.ContactForm" (ngSubmit)="OnContactSubmit(data.ContactForm.value,$event)" 
+    #MyLeadQualifyForm style="width: 90%;margin-top: 10px;margin-left:26px !important;">
+    <div class="row">
+      <div class="col-12">
+        <div class="form-group text-right btn-list">
+          <button type="submit" class="btn btn-save">
+            <i class="fa fa-check" aria-hidden="true"></i> Save</button>
+    
+          <button type="button" (click)="ContactNoClick($event)" class="btn btn-cancel">
+            <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12 col-sm12">
+        <div class="form-group row">
+          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">First Name
+            <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+          <div class="autoComplete col-xl-8 col-sm-6 col-6">
+            <input id="FirstName" #FirstName formControlName="FirstName" placeholder="First Name" tabindex="1"
+              class="form-control" required />
+            <div
+              *ngIf="data.ContactForm.get('FirstName') && data.ContactForm.get('FirstName').errors!=null && data.ContactForm.get('FirstName').touched==true">
+              <span class="errorMessage" *ngIf="data.ContactForm.get('FirstName').errors.required">
+                First Name is required</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12 col-sm12">
+        <div class="form-group row">
+          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Last Name
+            <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+          <div class="autoComplete col-xl-8 col-sm-6 col-6">
+            <input id="LastName" #LastName formControlName="LastName" placeholder="Last Name" tabindex="1"
+              class="form-control" required />
+            <div
+              *ngIf="data.ContactForm.get('LastName') && data.ContactForm.get('LastName').errors!=null && data.ContactForm.get('LastName').touched==true">
+              <span class="errorMessage" *ngIf="data.ContactForm.get('LastName').errors.required">
+                Last Name is required</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group row">
+          <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Account
+          <i class="fa fa-star mandatory-icon" aria-hidden="true"></i></label>
+          <div class="autoComplete col-xl-8 col-sm-6 col-6">
+          
+            <select id="AccountId" #AccountId (change)="OnAccountChange($event)" formControlName="AccountId" 
+            class="form-control" tabindex="5" required>
+              <option [ngValue]="0">--None--</option>
+              <option *ngFor="let list of AccountsLists" value={{list.AccountId}}>
+                {{ list.AccountName }}  
+            </select>
+
+            <div
+              *ngIf="data.ContactForm.get('AccountId') && data.ContactForm.get('AccountId').errors!=null && data.ContactForm.get('AccountId').touched==true">
+              <span class="errorMessage" *ngIf="data.ContactForm.get('AccountId').errors.required">
+                Account is required</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    </form>
+   
+  </div>
+  <!--<span>{{selectedRows}}</span>-->
+</div>
+<!-- <div mat-dialog-actions>
+  <button class="btn btn-save" (click)="data.SaveClick='NO';ContactNoClick($event)">No Thanks</button>
+  <button class="btn btn-save" (click)="data.SaveClick='YES';ContactYesClick($event,selectedRows)" *ngIf="data.Type==null" [mat-dialog-close]="MyListID" cdkFocusInitial>Ok</button>
+</div> -->

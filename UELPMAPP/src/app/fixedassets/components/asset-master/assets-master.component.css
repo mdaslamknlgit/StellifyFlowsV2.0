@@ -1,0 +1,9 @@
+.linesToAdd
+{
+    width: 5%;
+    height: 24px;
+    padding: 3px;
+    display:inline-block;
+    font-size: 12px;
+}
+.error{float:left; width:100%;  color:red;}

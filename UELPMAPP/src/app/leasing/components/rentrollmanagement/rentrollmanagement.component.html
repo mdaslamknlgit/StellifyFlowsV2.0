@@ -1,0 +1,80 @@
+  
+  <div class="container-fluid">
+  <div class="row">
+      <div class="col-md-6 col-sm-12 padding-null tittlediv">
+          <h3 class="item-heading"><img src="../assets/images/icon1.png"> Leasing > Rent Roll </h3>
+      </div>
+      <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+          <img src="../assets/images/add-new.png" (click)="editdata();" *ngIf="hidetext">  
+          <img src="../assets/images/grid1.png"> 
+          <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+              <button class="btn btn-outline-primary" style="background:none;border:none;padding:0px;" id="dropdownBasic1" ngbDropdownToggle>
+                  <img src="../assets/images/grid2.png">
+              </button>
+              <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                      <button class="dropdown-item">Export</button>                 
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="col-12" [class.expand-rightcol]="rightsection">
+    <div>
+      <p-table [columns]="gridColumns" [responsive]="true" [value]="customerRetentions" [paginator]="true" [rows]="13">
+        <ng-template pTemplate="emptymessage">
+              <tr>
+                  <td colspan="7" style='text-align: center;'>
+                      <b>{{ gridNoMessageToDisplay }}</b>
+                  </td> 
+              </tr>
+        </ng-template>
+        <ng-template pTemplate="colgroup" let-columns>
+          <colgroup>
+            <col style="width:10%;">
+            <col style="width:12%;">
+            <col style="width:12%;">
+            <col style="width:10%;">
+            <col style="width:10%;">
+            <col style="width:12%;">
+            <col style="width:14%;"> 
+          </colgroup>
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th class="gridStyle" *ngFor="let col of columns" [pSortableColumn]="col.field">
+              {{col.header}}
+              <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+          <tr class="gridStyle">
+            <td>
+              {{ rowData.UnitNo }}
+            </td>
+            <td>
+              {{ rowData.TenantName }}
+            </td>
+            <td style="text-align: right">
+              {{ rowData.MonthlyRent }}
+            </td>
+            <td>
+              {{ rowData.StartDate }}
+            </td>
+            <td>
+              {{ rowData.EndDate }}
+            </td>
+            <td>
+              {{ rowData.LeaseExpires }}
+            </td>
+            <td>
+              {{ rowData.DueDate }}
+            </td>
+          
+          </tr>
+        </ng-template>
+      </p-table>
+
+    </div>
+
+  </div>
+  </div>

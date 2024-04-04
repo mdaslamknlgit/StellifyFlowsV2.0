@@ -1,0 +1,292 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+            <div class="flexrow space-between align-center">
+                <h3 class="item-heading">Item Master List</h3>
+                <p> {{SelectedItems}} </p>
+                <div style="text-align: right;flex:auto;">
+                    <input #file style="visibility: hidden;width:0px" type="file" accept="xlsx/*"
+                        (click)="file.value = null" (change)="uploadFile($event)">
+                    <button class="btn btn-save ng-star-inserted" *ngIf="importPermission" #upload 
+                    (click)="file.click()"><i class="fa-solid fa-file-import"></i>&nbsp;Import Items </button>
+
+                    <button class="btn btn-save ng-star-inserted" style="margin-right: 20px;" type="button" 
+                     (click)="ClickNewItem($event)"  *ngIf="isDisplayMode!=false && newPermission">
+                        <i class="fa fa-plus" ria-hidden="true" aria-hidden="true"></i> New</button>
+
+                    <!-- <img src="../assets/images/grid1.png" style="display: none;" (click)="showFullScreen()">
+                    <button class="btn btn-transparent" (clickOutside)="onClickedOutside($event)"
+                        [exclude]="'.filter-section,.submenu '" (click)="split()"> {{showfilterstext}} </button> -->
+                </div>
+                <hr style="margin-top: 0px;" />
+            </div>
+
+            <div class="row">
+                <div class="filter-section" style="width: 100%;" ngbDropdown #myDrop="ngbDropdown">
+                    <form [formGroup]="itemMasterFilterInfoForm">
+                        <div class="form-group " style="display: flex; flex-wrap:wrap;justify-content: space-between;">
+                            <div class="col-sm-12 col-md-12 col-lg-1 mb-1">
+                                <label for="Name">Item Code</label>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-2 mb-1">
+                                <input type="text" id="ItemCode" #ItemCode class="form-control" formControlName="ItemCode">
+                            </div>
+            
+                            <div class="col-sm-12 col-md-12 col-lg-2 mb-1">
+                                <label class="col-form-label  col form-label">Item Name</label>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-2 mb-1">
+                                <div class="input-group" style="width: auto;">
+                                    <input type="text" id="ItemName" #ItemName formControlName="ItemName" placeholder="" class="form-control">                                    
+                                </div>
+                            </div>
+            
+                            <div class="col-sm-12 col-md-12 col-lg-1 mb-1">
+                                <label class="col-form-label  col form-label"> Type</label>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-2 mb-1">
+                                <div class="input-group" style="width: auto;">
+                                    <input formControlName="ItemType" type="text" class="form-control"
+                                    [inputFormatter]="itemMasterInputFormater"
+                                    [ngbTypeahead]="itemMasterSearch"
+                                    [resultTemplate]="itemMasterTemplate" />
+                                </div>
+                            </div>
+            
+                            <div class="col-sm-12 col-md-12 col-lg-2 mb-1">
+                                <button type="submit" (click)="filterData()" class="btn btn-save">
+                                    <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                    <i class="fa fa-refresh" aria-hidden="true"></i> Reset</button>
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-wrap:wrap;justify-content:end; margin-bottom: 10px;margin-right: 20px;">
+                            <div style="text-align: right; display: flex; align-items: center;">
+                               Total Records : {{TotalRecords}} &nbsp;
+                            </div>         
+                            <button class="btn btn-save ng-star-inserted" mat-button [matMenuTriggerFor]="ExportMenu">
+                                <i class="fa fa-file-export" ria-hidden="true" aria-hidden="true"></i>
+                                Export</button>
+                            <mat-menu #ExportMenu="matMenu">
+                                <button mat-menu-item (click)="ExportToCSV($event)">
+                                    <i class="fa fa-file-excel-o" ria-hidden="true" aria-hidden="true"></i> CSV
+                                </button>
+                                <button mat-menu-item (click)="ExportToExcel($event)">
+                                    <i class="fa fa-file-excel-o" ria-hidden="true" aria-hidden="true"></i>
+                                    Excel </button>
+                
+                                <button mat-menu-item (click)="ExportToPDF($event)">
+                                    <i class="fa fa-file-pdf-o" ria-hidden="true" aria-hidden="true"></i> PDF
+                                </button>
+                            </mat-menu>
+                         </div>
+                    </form>
+                </div>
+
+            </div>
+            <!-- Filter Seciton Starts Here -->
+            <!-- <div class="left-section1" [class.display-filters]="!showfilters" ngbDropdown #myDrop="ngbDropdown">              
+                <div class="filter-section">
+                    <div class="flexrow space-between">
+                        <div class="left-search">
+                            <input type="text" #searchInput placeholder="Search Items..." (keyup)="onSearch($event)"
+                                class="search-filter">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </div>
+
+                        <div>
+                            <div class="filter-popup" *ngIf="initDone" ngbDropdownMenu aria-labelledby="dropdownManual"
+                                (click)="$event.stopPropagation(); myDrop.open();">
+                                <form [formGroup]="itemMasterFilterInfoForm" class="form-horizontal">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-6 form-label">Item Name </label>
+                                        <div class="col-6">
+                                            <input type="text" #ItemName formControlName="ItemName" placeholder=""
+                                                class="form-control">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-6 form-label">Item Type</label>
+                                        <div class="col-6">
+
+                                            <input formControlName="ItemType" type="text" class="form-control"
+                                                [inputFormatter]="itemMasterInputFormater"
+                                                [ngbTypeahead]="itemMasterSearch"
+                                                [resultTemplate]="itemMasterTemplate" />
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-6 form-label">Item Code</label>
+                                        <div class="col-6">
+
+                                            <input type="text" formControlName="ItemCode" placeholder=""
+                                                class="form-control">
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-12 error">
+                                            {{filterMessage}}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+
+                                        <div class="col-12" style="text-align: right">
+                                            <button type="submit" (click)="filterData()" class="btn btn-save">
+                                                <i class="fa fa-check" ria-hidden="true"></i> Apply</button>
+                                            <button type="submit" (click)="resetFilters()" class="btn btn-save">
+                                                <i class="fa fa-check" aria-hidden="true"></i> Reset</button>
+
+                                        </div>
+                                    </div>
+
+                               </form>
+
+                            </div>
+                            <div class="filter-icon">
+                                <button id="dropdownManual" ngbDropdownToggle (click)="openDialog()">
+                                    <i class="fa fa-filter" aria-hidden="true"></i>
+                                </button>
+                            </div>
+
+                            <div class="filter-icon" *ngIf="isFilterApplied" (click)="resetData()">
+                                <i class="fa fa-undo" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+            <!-- Filter Seciton Ends Here -->
+            <div class="row">
+                <div class="respnsive-table tablescroll p-datatable-wrapper">
+                    <p-table #ContactsListTable
+                        [globalFilterFields]="['ItemMasterCode','Name','CreatedDate']"
+                        [columns]="filteredItemMastersCols" selectionMode="single | multiple" [value]="filteredItemMasters"
+                        [rows]="this.itemMasterPagerConfig.RecordsToFetch" [scrollable]="true"
+                        [scrollHeight]="'calc(100vh - 400px)'" scrollWidth="100%" [virtualRowHeight]="30" [virtualScroll]="true"
+                        [(selection)]="selectedItems" (sortFunction)="customSort($event)" [customSort]="true"
+                        responsiveLayout="scroll" [paginator]="false" (onRowSelect)="onRowSelect($event)"
+                        (onRowUnselect)="onRowUnselect($event)" [rowsPerPageOptions]="[5,10,15,25,50,75,100]">
+                        <ng-template pTemplate="header" let-columns>
+                            <tr style="height: 40px;">
+                                <th style="width: 36px;">
+                                    <p-tableHeaderCheckbox (click)="onRowUnselect($event)">
+                                    </p-tableHeaderCheckbox>
+                                </th>
+                                <th style="width: 150px;" pSortableColumn="ItemMasterCode">Item Code <p-sortIcon
+                                    field="ItemMasterCode"></p-sortIcon></th>
+                                <th style="width: 250px;" pSortableColumn="Name">Name <p-sortIcon
+                                        field="Name"></p-sortIcon></th>
+                                <th style="width: 100px;" pSortableColumn="ItemCategoryName">Category <p-sortIcon
+                                        field="ItemCategoryName"></p-sortIcon></th>
+                                <th style="width: 100px;" pSortableColumn="ItemTypeName">Type <p-sortIcon
+                                        field="ItemTypeName"></p-sortIcon></th>
+                                <th style="width: 100px;" pSortableColumn="OpeningStockValue">Qty In Hand <p-sortIcon 
+                                    field="OpeningStockValue"></p-sortIcon>
+                                </th>
+                                <th style="width: 100px;" pSortableColumn="CreatedDate">Created On <p-sortIcon
+                                        field="CreatedDate"></p-sortIcon></th>
+                                <th style="width: 50px;">Action</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-value let-people let-rowData let-columns let-i="rowIndex">
+                            <tr style="height:30px" [pSelectableRow]="filteredItemMasters">
+                                <td style="width: 36px;"><p-tableCheckbox [value]="people"></p-tableCheckbox> </td>
+                                <td style="width: 150px;">{{value.ItemMasterCode }}</td>
+                                <td style="width: 250px;">{{value.Name}}</td>
+                                <td style="width: 100px;">{{value.ItemCategoryName}}</td>
+                                <td style="width: 100px;">{{value.ItemTypeName}}</td>
+                                <td style="width: 100px;">{{value.OpeningStockValue}}</td>
+                                <td style="width: 100px;">{{value.CreatedDate | date: 'yyyy-MM-dd'}}</td>
+                                <td style="width: 50PX;" class="aligncenter">
+                                    <button type="button" class="btn" (click)="EditItem(value.ItemMasterID,$event)">
+                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    </button>
+                                </td>
+                            </tr>
+            
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage" let-columns>
+                            <tr>
+                                <td [attr.colspan]="filteredItemMasters.length">
+                                    No records found
+                                </td>
+                            </tr>
+                        </ng-template>
+            
+                    </p-table>
+                    <div *ngIf="filteredItemMasters.length==0">
+                        <div class="col-12 error errorMessage">
+                            <p class="errorMessage">
+                                {{filterMessage}}
+                            </p>
+                        </div>
+                    </div>
+                    <div style="clear: both;"></div>
+                    <!-- <ngb-pagination *ngIf="ContactsLists.length>0" (pageChange)="pageChange($event)" style="z-index: auto;"
+                        [collectionSize]="ContactsListsPagerConfig.TotalRecords"
+                        class="d-flex justify-content-center" [pageSize]="ContactsListsPagerConfig.RecordsToFetch"
+                        [maxSize]="5" [(page)]="currentPage" [boundaryLinks]="true">
+                        <ng-template ngbPaginationPages let-page let-pages="pages">
+                            10 of 100
+                        </ng-template>
+                    </ngb-pagination> -->
+
+                    <ngb-pagination *ngIf="filteredItemMasters.length>0" (pageChange)="pageChange($event)" style="z-index: auto;"
+                        [collectionSize]="itemMasterPagerConfig.TotalRecords"
+                        
+                        class="d-flex justify-content-center" [pageSize]="itemMasterPagerConfig.RecordsToFetch"
+                        [maxSize]="5" [(page)]="currentPage" [boundaryLinks]="true">
+                        <ng-template ngbPaginationPages let-page let-pages="pages">
+                            10 of 100
+                        </ng-template>
+                    </ngb-pagination>
+
+                    <!-- <ngb-pagination *ngIf="filteredItemMasters.length>0" (pageChange)="pageChange($event)" style="z-index: auto;"
+                        [collectionSize]="itemMasterPagerConfig.TotalRecords" class="d-flex justify-content-center"
+                        [pageSize]="itemMasterPagerConfig.RecordsToFetch" [maxSize]="5" [(page)]="currentPage"
+                        [boundaryLinks]="true">
+                        <ng-template ngbPaginationPages let-page let-pages="pages">
+                            10 of 100
+                        </ng-template> 
+                    </ngb-pagination>-->
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Filter Section Starts Here -->
+<ng-template #filters>
+    <div class="flter-popover">
+        <form [formGroup]="signupForm" class="form-horizontal" (ngSubmit)="onSubmit()">
+            <div class="form-group row">
+                <!-- <label class="col-form-label col-4 form-label">Name </label>   -->
+                <div class="col-8">
+                    <input type="text" formControlName="orderlevel" placeholder="Re-Order Level" class="form-control">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-4 form-label">Category</label>
+                <div class="col-8">
+                    <input type="text" formControlName="alertqty" placeholder="Low Alert Qty" class="form-control">
+                </div>
+            </div>
+        </form>
+    </div>
+</ng-template>
+<!-- Filter Section Ends Here -->
+
+
+
+<ng-template #itemMasterTemplate let-r="result" let-t="term">
+    {{ r.Name }}
+</ng-template>
+
+<ng-template #itemMasterLocationTemplate let-r="result" let-t="term">
+    {{ r.Name }}
+</ng-template>

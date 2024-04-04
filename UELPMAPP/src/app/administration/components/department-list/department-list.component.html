@@ -1,0 +1,203 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 padding-null tittlediv">
+            <div class="flexrow space-between align-center">
+                <h3 class="item-heading">Department </h3>
+
+                <div>
+                    <button class="btn  btn-transparent" (click)="addRecord();" *ngIf="hidetext && newPermission"> New
+                        Record</button>
+                    <button class="btn btn-transparent" (clickOutside)="onClickedOutside($event)" (click)="split()">
+                        {{showfilterstext}} </button>
+
+                    <img style="display: none;" src="../assets/images/grid1.png" (click)="showFullScreen()">
+                </div>
+            </div>
+
+
+            <!-- <div class="left-section" [class.display-filters]="!showfilters"> -->
+            <div class="left-section">
+                <div class="filter-section" ngbDropdown #myDrop="ngbDropdown">
+                    <div class="left-search">
+                        <input type="text" [(ngModel)]="departmentSearchKey" placeholder="Search requests..."
+                            class="search-filter" (keyup)="onSearchInputChange($event)">
+                    </div>
+                    <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="filter-scroll"
+                        style="width:100%; float:left;">
+                        <p-table #ContactsListTable [globalFilterFields]="['FirstName','LastName','Mobile','Email','CreatedDate']"
+                            selectionMode="single | multiple" [value]="departmentManagementList"
+                            [rows]="this.departmentPagerConfig.RecordsToFetch" [scrollable]="true" [scrollHeight]="'calc(100vh - 400px)'"
+                            scrollWidth="100%" [virtualRowHeight]="30" [virtualScroll]="true" [(selection)]="selectedItems"
+                            (sortFunction)="customSort($event)" [customSort]="true" responsiveLayout="scroll" [paginator]="false"
+                            
+                            [rowsPerPageOptions]="[5,10,15,25,50,75,100]">
+                            <ng-template pTemplate="header" let-columns>
+                                <tr style="height: 40px;">
+                                    <th style="width: 100px;" pSortableColumn="FirstName">Code <p-sortIcon
+                                            field="FirstName"></p-sortIcon></th>
+                                    <th style="width: 100px;" pSortableColumn="LastName">Department Name <p-sortIcon
+                                            field="LastName"></p-sortIcon></th>
+                                    <th style="width: 100px;" pSortableColumn="CreatedDate">Created On <p-sortIcon
+                                            field="CreatedDate"></p-sortIcon></th>
+                                    <th style="width: 50px;">Action</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-value let-people let-rowData let-columns let-i="rowIndex">
+                                <tr style="height:30px" [pSelectableRow]="departmentManagementList">
+                                     <td style="width: 100px;">{{value.Code}}</td>
+                                    <td style="width: 100px;">{{value.Name}}</td>
+                                    <td style="width: 100px;">{{value.CreatedDate | date: 'yyyy-MM-dd'}}</td>
+                                    <td style="width: 50PX;" class="aligncenter">
+                                        <button type="button" class="btn" (click)="EditDepartment(value.LocationId)">
+                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                        
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage" let-columns>
+                                <tr>
+                                    <td [attr.colspan]="departmentManagementList.length">
+                                        No records found
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        
+                        </p-table>
+                        <!-- <table class="table">
+                            <tr>
+                                <td (click)="hidefilter()" style="padding: 0px;">
+
+                                    <table class="listtable">
+                                        <tr>
+                                            <th>Record Name </th>
+                                            <th>Code</th>
+
+                                        </tr>
+                                        <tr [class.activerow]="record.LocationId==selectedDepartmentManagementRecord.LocationId"
+                                            (click)="onRecordSelection(record.LocationId)"
+                                            *ngFor="let record of departmentManagementList">
+                                            <td>{{record.Name}}</td>
+                                            <td>{{record.Code}}</td>
+
+                                        </tr>
+                                    </table>
+
+
+                                </td>
+                            </tr>
+                        </table> -->
+                        <div *ngIf="departmentManagementList.length==0" class="col-12 listErrorMessage">
+                            {{errorMessage}}
+                        </div>
+
+                    </div>
+                    <div style="clear: both;"></div>
+                    <ngb-pagination [maxSize]="5" *ngIf="departmentManagementList.length>0"
+                        (pageChange)="pageChange($event)" [collectionSize]="departmentPagerConfig.TotalRecords"
+                        class="d-flex justify-content-center" [pageSize]="departmentPagerConfig.RecordsToFetch"
+                        [page]="1" [boundaryLinks]="true"></ngb-pagination>
+
+                </div>
+            </div>
+
+            <!-- <img src="../assets/images/grid2.png">  -->
+        </div>
+    </div>
+    <!-- <div class="row">
+        <div #rightPanel [CustomSpinner]="showRightPanelLoadingIcon" class="rightPanel col-lg-12 col-md-12"
+            [class.expand-rightcol]="rightsection">
+            <div class="fullScreenLabel"> <app-header></app-header> </div>
+            <div>
+                <form [formGroup]="departmentForm" class="form-horizontal">
+                    <div class="rightcol-scrroll">
+                        <div class="row fullScreenLabel">
+                            <div class="col-12">
+                                <h3 class="item-heading" style="float:none;">Department</h3>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Name <i
+                                    class="fa fa-star mandatory-icon" *ngIf="hideinput" aria-hidden="true"></i></label>
+                            <div class="autoComplete col-xl-4 col-sm-6 col-6">
+                                <label class="col-form-label form-text" *ngIf="hidetext">
+                                    <b style="color:#01548e">{{selectedDepartmentManagementRecord.Name}}</b> </label>
+    
+                                <input formControlName="Name" *ngIf="hideinput" type="text" class="form-control show" />
+                                <div
+                                    *ngIf="departmentForm.get('Name').errors==null&&selectedDepartmentManagementRecord.LocationId==0">
+                                    <span class="errorMessage"
+                                        *ngIf="departmentForm.get('Name').errors.EmptyDepartment">Please Enter
+                                        Department Name</span>
+                                </div>
+                                <div *ngIf="departmentForm.get('Name').errors!=null">
+                                    <span class="errorMessage"
+                                        *ngIf="departmentForm.get('Name').errors.DuplicateDepartment">Duplicate
+                                        Department Name</span>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Code <i
+                                    class="fa fa-star mandatory-icon" *ngIf="hideinput" aria-hidden="true"></i></label>
+                            <div class="col-xl-4 col-sm-6 col-6">
+                                <label class="col-form-label form-text"
+                                    *ngIf="hidetext">{{selectedDepartmentManagementRecord.Code }}</label>
+                                <input formControlName="Code" *ngIf="hideinput" type="text" class="form-control show" />
+                                <div
+                                    *ngIf="departmentForm.get('Code').errors==null&&selectedDepartmentManagementRecord.LocationId==0">
+                                    <span class="errorMessage" *ngIf="departmentForm.get('Code').errors.EmptyCode">Please
+                                        Enter Code</span>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Description </label>
+                            <div class="col-xl-4 col-sm-6 col-6">
+                                <label class="col-form-label form-text"
+                                    *ngIf="hidetext">{{selectedDepartmentManagementRecord.Description }}</label>
+                                <input formControlName="Description" *ngIf="hideinput" type="text"
+                                    class="form-control show" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-xl-3 col-sm-6 col-6 form-label">Is Active </label>
+                            <div class="col-xl-4 col-sm-6 col-6">
+                                <label class="col-form-label form-text"
+                                    *ngIf="hidetext">{{selectedDepartmentManagementRecord.IsDeleted==1?"No":"Yes"}}
+                                </label>
+                                <select formControlName="IsDeleted" *ngIf="hideinput" class="form-control">
+                                    <option value="0">Yes</option>
+                                    <option value="1">No</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="form-group text-right btn-list">
+                        <button type="submit" (click)="saveRecord()" class="btn btn-save" *ngIf="hideinput"><i
+                                class="fa fa-check" aria-hidden="true"></i> Save</button>
+                        <button type="submit" (click)="cancelRecord()" class="btn btn-cancel" *ngIf="hideinput"><i
+                                class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                        <button type="submit" (click)="editRecord()" class="btn btn-edit"
+                            *ngIf="hidetext && editPermission"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                            Edit</button>
+                    </div>
+    
+                </form>
+                <p-confirmDialog></p-confirmDialog>
+            </div>
+    
+    
+        </div>
+    
+    
+    </div> -->
+
+</div>
+
+<ng-template #userTemplate let-r="result" let-t="term">
+    {{ r.UserName }}
+</ng-template>

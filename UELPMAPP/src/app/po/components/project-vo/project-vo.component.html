@@ -1,0 +1,1092 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6 col-sm-12 padding-null tittlediv">
+      <h3 class="item-heading">
+        <img src="../assets/images/icon1.png"> {{ moduleHeading }}
+      </h3>
+    </div>
+    <div class="col-md-6 col-sm-12 align-text-top" style="text-align:right">
+      <div ngbDropdown placement="bottom-right" style="padding:0px;" class="d-inline-block">
+        <button class="btn btn-outline-primary" style="background:none;border:none;padding:0px;" id="dropdownBasic1"
+          ngbDropdownToggle>
+          <img src="../assets/images/grid2.png">
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+          <button class="dropdown-item" *ngIf="printPermission">Print</button>
+          <!-- <button class="dropdown-item">Email</button> -->
+          <button class="dropdown-item" *ngIf="exportPermission">Export</button>
+          <!-- *ngIf="viewLogPermission" -->
+          <button class="dropdown-item" (click)="displayLogPopUp()"> View Log</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div #rightPanel class="rightPanel col-lg-12 col-md-12">
+      <div class="fullScreenLabel">
+        <app-header></app-header>
+      </div>
+      <div>
+        <form [formGroup]="projectPurchaseOrderForm" class="form-horizontal">
+          <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions" class="rightcol-scrroll">
+            <div class="row fullScreenLabel">
+              <div class="col-12">
+                <h3 class="item-heading" style="float:none;">Project Purchase Order</h3>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Contract Name </label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text" style="word-wrap:break-word">
+                      {{ selectedPODetails.ProjectName }}
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Contract Start Date
+                  </label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">{{ selectedPODetails.ContractStartDate|DisplayDateFormat
+                      }}</label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Contract End Date
+                  </label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">
+                      {{ selectedPODetails.ContractEndDate|DisplayDateFormat }}
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Contract Terms
+                  </label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">{{ selectedPODetails.ContractTerms }}</label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                    Currency Type</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text"> {{ selectedPODetails.CurrencyCode }} </label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Payment Terms
+                  </label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text"> {{selectedPODetails.NoOfDays }} </label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                    Original Contract Sum
+                  </label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">{{selectedPODetails.OriginalContractSum |number:'1.2-2'}}
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Total VO Sum
+                  </label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">{{selectedPODetails.TotalVOSum |number:'1.2-2'}}</label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Adjusted Contract Sum
+                  </label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">{{selectedPODetails.AdjustedContractSum
+                      |number:'1.2-2'}}</label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Is Retention Applicable
+                  </label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">{{ selectedPODetails.IsRetentionApplicable==true?'Yes':'No'
+                      }}</label>
+                  </div>
+                </div>
+                <div *ngIf="selectedPODetails.IsRetentionApplicable" class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Retention %</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">{{ selectedPODetails.RetentionPercentage}}</label>
+                  </div>
+                </div>
+                <div *ngIf="selectedPODetails.IsRetentionApplicable" class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                    Retention (Max Limit)
+                  </label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">{{selectedPODetails.RetentionMaxLimit |number:'1.2-2'}}
+                    </label>
+                  </div>
+                </div>
+                <div *ngIf="selectedPODetails.IsRetentionApplicable" class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Retention Type
+                  </label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <div>
+                      <label class="col-form-label">
+                        {{ selectedPODetails.RetentionTypeId==1?"Fixed Retention": "Variable Retention" }}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                    VO Description
+                  </label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text" *ngIf="IsViewMode">{{selectedPODetails.VODescription}}
+                    </label>
+                    <textarea formControlName="VODescription" required *ngIf="!IsViewMode" class="form-control">
+                      </textarea>
+                    <div
+                      *ngIf="projectPurchaseOrderForm.get('VODescription') && projectPurchaseOrderForm.get('VODescription').errors!=null && projectPurchaseOrderForm.get('VODescription').touched==true">
+                      <span class="errorMessage" *ngIf="projectPurchaseOrderForm.get('VODescription').errors.required">
+                        VO Description is required</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Contract ID</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">
+                      {{ selectedPODetails.POPMasterCode }}
+                    </label>
+                  </div>
+                </div>
+                <div *ngIf="voId>0" class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">VO Document ID</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">
+                      {{ selectedPODetails.VODocumentCode }}
+                    </label>
+                  </div>
+                </div>
+                <div *ngIf="voId>0" class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Status</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">
+                      {{ selectedPODetails.VOWorkFlowStatus }}
+                      <span
+                        *ngIf="selectedPODetails.CurrentApproverUserName!=''&&selectedPODetails.CurrentApproverUserName!=null">
+                        [{{ selectedPODetails.CurrentApproverUserName }}]
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Department
+                  </label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">{{ selectedPODetails.Location }}</label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier ID</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">{{
+                      selectedPODetails.Supplier==null?"":selectedPODetails.Supplier.SupplierCode }}</label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier Name
+                  </label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">{{
+                      selectedPODetails.Supplier==null?"":selectedPODetails.Supplier.SupplierName }}
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier Sub Codes
+                  </label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">{{ selectedPODetails.SupplierSubCode!=null ?
+                      selectedPODetails.SupplierSubCode.SubCode
+                      + " ( " + selectedPODetails.SupplierSubCode.SubCodeDescription + " ) " : ""}}
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Supplier Address
+                  </label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text" [innerText]="projectPurchaseOrderForm.get('SupplierAddress').value">
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Type Of Service
+                  </label>
+                  <div class="autoComplete col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">{{ selectedPODetails.ServiceName }}</label>
+                  </div>
+                </div>
+                <div *ngIf="selectedPODetails.IsRetentionApplicable" class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                    Retention Supplier Id
+                  </label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">{{ selectedPODetails.RetentionSupplierCodeName}}
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                    Tax Authority
+                  </label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">{{ selectedPODetails.TaxGroupName }}</label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                    Tax Rate</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">{{ selectedPODetails.TaxName}}</label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                    Expense Type</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">{{selectedPODetails.ExpensesType}}</label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Remarks</label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">{{selectedPODetails.Remarks}}</label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">
+                    Contract Description
+                  </label>
+                  <div class="col-xl-8 col-sm-6 col-6">
+                    <label class="col-form-label form-text">
+                      {{ selectedPODetails.ContractDescription}}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12" style="margin-top:2%;">
+                <h3 class="form-heading" style="float:none;">Type of Cost Category</h3>
+              </div>
+              <div class="col-12 engineers-assigned" style="padding:0px;">
+                <div class="col-12">
+                  <fieldset formArrayName="POPCostCategory">
+                    <p-table [columns]="POPCostCategoryColumns" (sortFunction)="customSort($event)" [customSort]="true"
+                      sortMode="single" [value]="selectedPODetails.POPCostCategory">
+                      <ng-template pTemplate="emptymessage">
+                        <tr>
+                          <td colspan="10" style='text-align: center;'>
+                            <b>{{ gridNoMessageToDisplay }}</b>
+                          </td>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="colgroup" let-columns>
+                        <colgroup>
+                          <ng-template ngFor let-data [ngForOf]="POPCostCategoryColumns">
+                            <col [style.width]="data.width">
+                          </ng-template>
+                        </colgroup>
+                      </ng-template>
+                      <ng-template pTemplate="header" let-columns>
+                        <tr>
+                          <th *ngFor="let col of POPCostCategoryColumns" [pSortableColumn]="col.field">
+                            {{col.header}}
+                            <span *ngIf="(col.field=='ContractValue')&&selectedPODetails.CurrencySymbol!=null">
+                              &nbsp; ( {{ selectedPODetails.CurrencySymbol }} )
+                            </span>
+                            <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
+                              ariaLabelDesc="Activate to sort in descending order"
+                              ariaLabelAsc="Activate to sort in ascending order">
+                            </p-sortIcon>
+                          </th>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                        <tr>
+                          <td> {{ i + 1 }} </td>
+                          <td> {{ rowData.TypeOfCost }} </td>
+                          <td> {{ rowData.CostDescription }} </td>
+                          <td> {{ rowData.GL_Cost }} </td>
+                          <td> {{ rowData.GL_Cost_Description }} </td>
+                          <td> {{ rowData.GST_GroupName }} </td>
+                          <td> {{ rowData.GST_ClassName }} </td>
+                          <td> {{ rowData.GL_Retention }} </td>
+                          <td> {{ rowData.GL_Retention_Description }} </td>
+                          <td> {{ rowData.GL_GroupRetentionName }} </td>
+                          <td> {{ rowData.GL_ClassRetentionName }} </td>
+                          <td> {{ rowData.Prefix }} </td>
+                        </tr>
+                      </ng-template>
+                    </p-table>
+                  </fieldset>
+                </div>
+              </div>
+              <div class="col-12" style="margin-top:2%;">
+                <h3 class="form-heading" style="float:none;">Basis of apportionment</h3>
+              </div>
+              <div class="col-12 engineers-assigned" style="padding:0px;">
+                <div class="col-12">
+                  <fieldset formArrayName="POPApportionment">
+                    <div style="text-align: center;">
+                      <span class="errorMessage" *ngIf="showGridErrorMessage2">
+                        Please Enter Apportionments
+                      </span>
+                    </div>
+                    <p-table [columns]="POPApportionmentColumns" (sortFunction)="customSort($event)" [customSort]="true"
+                      sortMode="single" [value]="selectedPODetails.POPApportionment">
+                      <ng-template pTemplate="emptymessage">
+                        <tr>
+                          <td colspan="4" style='text-align: center;'>
+                            <b>{{ gridNoMessageToDisplay }}</b>
+                          </td>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="colgroup" let-columns>
+                        <colgroup>
+                          <col colspan="1" style="width:5%;">
+                          <col colspan="1" style="width:15%;">
+                          <ng-template ngFor let-data let-count
+                            [ngForOf]="hideText?selectedPODetails.POPCostCategory:projectPurchaseOrderForm.get('POPCostCategory')['controls']">
+                            <col colspan="2" [ngStyle]="{ 'width':(70/(count*2))+'%' }">
+                          </ng-template>
+                          <col colspan="1" style="width:10%;">
+                          <col colspan="1" style="width:10%;">
+                        </colgroup>
+                      </ng-template>
+                      <ng-template pTemplate="header" let-rowData let-columns>
+                        <tr>
+                          <th colspan="1" style="text-align: center;" pSortableColumn="Sno"> S.no </th>
+                          <th colspan="1" style="text-align: center;" pSortableColumn="Method"> Method </th>
+                          <ng-template ngFor let-data let-count [ngForOf]="selectedPODetails.POPCostCategory">
+                            <th colspan="2" style="text-align: center;">
+                              {{ data.TypeOfCost }}
+                              <p-sortIcon [field]="data.field" ariaLabel="Activate to sort"
+                                ariaLabelDesc="Activate to sort in descending order"
+                                ariaLabelAsc="Activate to sort in ascending order">
+                              </p-sortIcon>
+                            </th>
+                          </ng-template>
+                          <th colspan="1" style="text-align: center;" pSortableColumn="Total"> Total </th>
+                          <th colspan="1" style="text-align: center;" pSortableColumn="Remrks"> Remarks </th>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                        <tr>
+                          <td> {{ i + 1 }} </td>
+                          <td> {{ rowData.Method }} </td>
+                          <ng-template ngFor let-j="index" let-data [ngForOf]="rowData.ApportionmentDetails">
+                            <td style="text-align: right"> {{ data.Amount | number:'1.8-8' }} </td>
+                            <td style="text-align: right"> {{ ((data.Amount)/( rowData.Total))|percent:'2.8-8' }} </td>
+                          </ng-template>
+                          <td style="text-align: right"> {{ rowData.Total|percent:'2.8-8' }} </td>
+                          <td> {{ rowData.Remarks }} </td>
+                        </tr>
+                      </ng-template>
+                    </p-table>
+                  </fieldset>
+                </div>
+              </div>
+              <div class="col-12" style="margin-top:2%;">
+                <h3 class="form-heading" style="float:none;">Distribution Summary</h3>
+              </div>
+              <div class="col-12">
+                <fieldset formArrayName="POPDistributionSummaryItems">
+                  <p-table [columns]="POPDistributionSummaryColumns" (sortFunction)="customSort($event)"
+                    [customSort]="true" sortMode="single" [value]="selectedPODetails.POPDistributionSummaryItems">
+                    <ng-template pTemplate="emptymessage">
+                      <tr>
+                        <td colspan="5" style='text-align: center;'>
+                          <b>{{ gridNoMessageToDisplay }}</b>
+                        </td>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="colgroup" let-columns>
+                      <colgroup>
+                        <ng-template ngFor let-data [ngForOf]="POPDistributionSummaryColumns">
+                          <col colspan="1" [style.width]="data.width">
+                        </ng-template>
+                      </colgroup>
+                    </ng-template>
+                    <ng-template pTemplate="header" let-columns>
+                      <tr>
+                        <ng-template ngFor let-data [ngForOf]="POPDistributionSummaryColumns">
+                          <th style="text-align: center;" [pSortableColumn]="data.field">
+                            {{data.header}}
+                            <p-sortIcon [field]="data.field" ariaLabel="Activate to sort"
+                              ariaLabelDesc="Activate to sort in descending order"
+                              ariaLabelAsc="Activate to sort in ascending order">
+                            </p-sortIcon>
+                          </th>
+                        </ng-template>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                      <tr>
+                        <td> {{ i + 1 }} </td>
+                        <td> {{ rowData.LocationName }} </td>
+                        <td> {{ rowData.DistributionPercentage }} </td>
+                        <td> {{ rowData.ContractAmount }} </td>
+                        <td> {{rowData.RetentionCode}} </td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                </fieldset>
+              </div>
+              <div class="col-12" style="margin-top:2%;">
+                <h3 class="form-heading" style="float:none;">Line Items</h3>
+              </div>
+              <div class="col-12 engineers-assigned" style="padding:0px;">
+                <div class="col-12">
+                  <fieldset>
+                    <div style="text-align: center;">
+                      <span class="errorMessage" *ngIf="showGridErrorMessage1">
+                        Please Enter Line Items
+                      </span>
+                    </div>{{projectPurchaseOrderForm.get('ProjectMasterContractItems')['controls'].value|json}}
+                    <div formArrayName="ProjectMasterContractItems">
+                      <p-table [columns]="projectMasterContractItemColumns" (sortFunction)="customSort($event)"
+                        [customSort]="true" sortMode="single"
+                        [value]="projectPurchaseOrderForm.get('ProjectMasterContractItems')['controls']">
+                        <ng-template pTemplate="emptymessage">
+                          <tr>
+                            <td colspan="projectMasterContractItemColumns.length" style='text-align: center;'>
+                              <b>{{ gridNoMessageToDisplay }}</b>
+                            </td>
+                          </tr>
+                        </ng-template>
+                        <ng-template pTemplate="colgroup" let-columns>
+                          <colgroup>
+                            <ng-template ngFor let-data [ngForOf]="projectMasterContractItemColumns">
+                              <col [style.width]="data.width">
+                            </ng-template>
+                          </colgroup>
+                        </ng-template>
+                        <ng-template pTemplate="header" let-columns>
+                          <tr>
+                            <th *ngFor="let col of projectMasterContractItemColumns" [pSortableColumn]="col.field">
+                              {{col.header}}
+                              <span *ngIf="(col.field=='ContractValue')&&selectedPODetails.CurrencySymbol!=null">
+                                &nbsp; ( {{ selectedPODetails.CurrencySymbol }} )
+                              </span>
+                              <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
+                                ariaLabelDesc="Activate to sort in descending order"
+                                ariaLabelAsc="Activate to sort in ascending order">
+                              </p-sortIcon>
+                            </th>
+                          </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                          <tr [formGroupName]="i">
+                            <td> {{ i + 1 }} </td>
+                            <td>
+                              <ng-container
+                                *ngIf="rowData.get('ProjectMasterContractItemId').value==0 && !IsViewMode; then ItemDescriptionText; else ItemDescriptionLabel">
+                              </ng-container>
+                              <ng-template #ItemDescriptionText>
+                                <textarea formControlName="ItemDescription" autoresize type="text"
+                                  class="form-control"> </textarea>
+                              </ng-template>
+                              <ng-template #ItemDescriptionLabel>
+                                {{rowData.get('ItemDescription').value}}
+                                <div *ngIf="rowData&&rowData.get('ItemDescription').errors!=null ">
+                                  <span class="errorMessage" *ngIf="rowData.get('ItemDescription').errors.required">
+                                    Item Description Is Required
+                                  </span>
+                                </div>
+                              </ng-template>
+                            </td>
+                            <!-- <td>
+                              <ng-container
+                                *ngIf="rowData.get('ProjectMasterContractItemId').value==0 && !IsViewMode; then AccountCodeNameText; else AccountCodeNameLabel">
+                              </ng-container>
+                              <ng-template #AccountCodeNameText>
+                                <select class="form-control" formControlName="AccountCodeCategoryId"
+                                  (change)="onCategoryChange($event.target.value,i)">
+                                  <option value="0">--Select--</option>
+                                  <option *ngFor="let category of expenseAccountCodeCategories"
+                                    value="{{category.AccountCodeCategoryId}}">
+                                    {{category.AccountCodeName}}
+                                  </option>
+                                </select>
+                              </ng-template>
+                              <ng-template #AccountCodeNameLabel>
+                                {{rowData.get('Expense').value.AccountCodeName}}
+                              </ng-template>
+                            </td> -->
+                            <!-- <td>
+                              <ng-container
+                                *ngIf="rowData.get('ProjectMasterContractItemId').value==0 && !IsViewMode; then ExpenseText; else ExpenseLabel">
+                              </ng-container>
+                              <ng-template #ExpenseText>
+                                <input formControlName="Expense" type="text" (click)="itemClick(i)" class="form-control"
+                                  [inputFormatter]="ExpenseInputFormater" (selectItem)="onExpenseChange($event,i)"
+                                  [ngbTypeahead]="ExpenseitemMasterSearch" [resultTemplate]="AccountCodeTemplate" />
+                              </ng-template>
+                              <ng-template #ExpenseLabel>
+                                {{rowData.get('Expense').value.Code}}
+                              </ng-template>
+                            </td> -->
+                            <!-- <td>
+                              <ng-container
+                                *ngIf="rowData.get('ProjectMasterContractItemId').value==0 && !IsViewMode; then TypeOfCostNameText; else TypeOfCostNameLabel">
+                              </ng-container>
+                              <ng-template #TypeOfCostNameText>
+                                <select formControlName="TypeOfCostName" class="form-control">
+                                  <option [ngValue]="undefined">--Select--</option>
+                                  <option *ngFor="let costcategory of typeofCostCategaries" value={{costcategory}}>
+                                    {{ costcategory }}
+                                </select>
+                              </ng-template>
+                              <ng-template #TypeOfCostNameLabel>
+                                {{rowData.get('TypeOfCostName').value}}
+                              </ng-template>
+                              <div
+                                *ngIf="projectPurchaseOrderForm.get('ProjectMasterContractItems').controls[i].get('TypeOfCostName').errors!=null && projectPurchaseOrderForm.get('ProjectMasterContractItems').controls[i].get('TypeOfCostName').touched==true">
+                                <span class="errorMessage"
+                                  *ngIf="projectPurchaseOrderForm.get('ProjectMasterContractItems').controls[i].get('TypeOfCostName').errors.required">
+                                </span>
+                              </div>
+                            </td> -->
+                            <td>
+                              <ng-container
+                                *ngIf="rowData.get('ProjectMasterContractItemId').value==0 && !IsViewMode; then ApportionmentMethodText; else ApportionmentMethodLabel">
+                              </ng-container>
+                              <ng-template #ApportionmentMethodText>
+                                <select formControlName="ApportionmentMethod" class="form-control">
+                                  <option [ngValue]="undefined">--Select--</option>
+                                  <option *ngFor="let apportionmentMethod of typeofApportionmentMethods"
+                                    value={{apportionmentMethod}}>
+                                    {{ apportionmentMethod }}
+                                </select>
+                              </ng-template>
+                              <ng-template #ApportionmentMethodLabel>
+                                {{rowData.get('ApportionmentMethod').value}}
+                                <div *ngIf="rowData&&rowData.get('ApportionmentMethod').errors!=null ">
+                                  <span class="errorMessage" *ngIf="rowData.get('ApportionmentMethod').errors.required">
+                                    Method Is Required
+                                  </span>
+                                </div>
+                              </ng-template>
+                            </td>
+                            <td style="text-align: right">
+                              {{rowData.get('ContractValue').value | number:'1.2-2' | negativeInParenthesis}}
+                            </td>
+                            <td style="text-align: right;">
+                              {{rowData.get('PreviousVOSum').value | number:'1.2-2' | negativeInParenthesis}}
+                            </td>
+                            <td style="text-align: right">
+                              <ng-container *ngIf="IsViewMode; then VOLabel; else VOText">
+                              </ng-container>
+                              <ng-template #VOLabel>
+                                {{rowData.get('VOSum').value | number:'1.2-2' | negativeInParenthesis}}
+                              </ng-template>
+                              <ng-template #VOText>
+                                <input currencyMask [options]="options2precision"
+                                  style="float:left;text-align: right;width:80%;" (blur)="calculateRevisedSum()"
+                                  class="form-control" formControlName="VOSum" />
+                              </ng-template>
+                            </td>
+                            <td style="text-align: right">
+                              {{rowData.get('RevisedContractValue').value | number:'1.2-2' | negativeInParenthesis}}
+                              &nbsp;
+                              <span *ngIf="rowData.get('ProjectMasterContractItemId').value==0 && !IsViewMode"
+                                class="gridIconsStyle">
+                                <i class="fa fa-trash gridRemoveIcon"
+                                  (click)="removeGridItem(i,'ProjectMasterContractItems')" aria-hidden="true"></i>
+                              </span>
+                            </td>
+                          </tr>
+                        </ng-template>
+                        <ng-template pTemplate="footer" let-columns>
+                          <tr *ngIf="!IsViewMode" class="footercolor" style="font-weight: bold;">
+                            <td colspan="7">
+                              <input type="number" (keydown)="restrictMinusValue($event)" min="0"
+                                [(ngModel)]="linesToAdd" [ngModelOptions]="{standalone: true}"
+                                class="form-control linesToAdd">
+                              <button type="submit" (click)="addGridItem(linesToAdd,'ProjectMasterContractItems')"
+                                class="addLine">
+                                <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Line
+                              </button>
+                            </td>
+                          </tr>
+                          <tr style="font-weight: bold;">
+                            <td></td>
+                            <td>Sub Total</td>
+                            <!-- <td></td>
+                            <td></td>
+                            <td></td> -->
+                            <td></td>
+                            <td style="text-align: right">
+                              {{ selectedPODetails.CurrencySymbol }}
+                              {{ ( selectedPODetails.SubTotal )|number:'1.2-2' | negativeInParenthesis}}</td>
+                            <td style="text-align: right">{{cumVOSumSubTotal |number:'1.2-2' | negativeInParenthesis}}
+                            </td>
+                            <td style="text-align: right"> {{totalVOSumSubTotal |number:'1.2-2' |
+                              negativeInParenthesis}}</td>
+                            <td style="text-align: right">{{rcvSubTotal|number:'1.2-2' | negativeInParenthesis}}
+                            </td>
+                          </tr>
+                        </ng-template>
+                      </p-table>
+                    </div>
+                    <div formArrayName="DiscountLineItems">
+                      <p-table [columns]="projectMasterContractItemColumns" (sortFunction)="customSort($event)"
+                        [customSort]="true" sortMode="single"
+                        [value]="projectPurchaseOrderForm.get('DiscountLineItems')['controls']">
+                        <!-- <ng-template pTemplate="emptymessage">
+                          <tr>
+                            <td colspan="projectMasterContractItemColumns.length" style='text-align: center;'>
+                              <b>{{ gridNoMessageToDisplay }}</b>
+                            </td>
+                          </tr>
+                        </ng-template> -->
+                        <ng-template pTemplate="colgroup" let-columns>
+                          <colgroup>
+                            <ng-template ngFor let-data [ngForOf]="projectMasterContractItemColumns">
+                              <col [style.width]="data.width">
+                            </ng-template>
+                          </colgroup>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
+                          <tr [formGroupName]="i">
+                            <td> {{ i + 1 }} </td>
+                            <td>
+                              <ng-container
+                                *ngIf="rowData.get('ProjectMasterContractItemId').value==0 && !IsViewMode; then ItemDescriptionText; else ItemDescriptionLabel">
+                              </ng-container>
+                              <ng-template #ItemDescriptionText>
+                                <textarea formControlName="DisItemDescription" autoresize type="text"
+                                  class="form-control"> </textarea>
+                              </ng-template>
+                              <ng-template #ItemDescriptionLabel>
+                                {{rowData.get('DisItemDescription').value}}
+                                <div *ngIf="rowData&&rowData.get('DisItemDescription').errors!=null ">
+                                  <span class="errorMessage" *ngIf="rowData.get('DisItemDescription').errors.required">
+                                    Item Description Is Required
+                                  </span>
+                                </div>
+                              </ng-template>
+                            </td>
+                            <!-- <td> {{ rowData.Expense.AccountCodeName}} </td>
+                            <td> {{ rowData.AccountCode }} </td>
+                            <td> {{ rowData.DisTypeOfCostName }} </td> -->
+                            <td>
+                              <ng-container
+                                *ngIf="rowData.get('ProjectMasterContractItemId').value==0 && !IsViewMode; then ApportionmentMethodText; else ApportionmentMethodLabel">
+                              </ng-container>
+                              <ng-template #ApportionmentMethodText>
+                                <select formControlName="DisApportionmentMethod" class="form-control">
+                                  <option [ngValue]="undefined">--Select--</option>
+                                  <option *ngFor="let apportionmentMethod of typeofApportionmentMethods"
+                                    value={{apportionmentMethod}}>
+                                    {{ apportionmentMethod }}
+                                  </option>
+                                </select>
+                              </ng-template>
+                              <ng-template #ApportionmentMethodLabel>
+                                {{rowData.get('DisApportionmentMethod').value}}
+                                <div *ngIf="rowData&&rowData.get('DisApportionmentMethod').errors!=null ">
+                                  <span class="errorMessage"
+                                    *ngIf="rowData.get('DisApportionmentMethod').errors.required">
+                                    Method Is Required
+                                  </span>
+                                </div>
+                              </ng-template>
+                            </td>
+                            <td style="text-align: right">
+                              {{rowData.get('DiscountValue').value | number:'1.2-2' | negativeInParenthesis}}
+                            </td>
+                            <td style="text-align: right;">
+                              {{rowData.get('PreviousVOSum').value | number:'1.2-2' | setParenthesis}}
+                            </td>
+                            <td style="text-align: right">
+                              <ng-container *ngIf="IsViewMode; then VOLabel; else VOText">
+                              </ng-container>
+                              <ng-template #VOLabel>
+                                {{rowData.get('VOSum').value | number:'1.2-2' | setParenthesis}}
+                              </ng-template>
+                              <ng-template #VOText>
+                                <input currencyMask [options]="options2precision"
+                                  style="float:left;text-align: right;width:80%;" (blur)="calculateRevisedSum()"
+                                  class="form-control" formControlName="VOSum" />
+                                <div *ngIf="rowData&&rowData.get('VOSum').errors!=null ">
+                                  <br><br>
+                                  <span class="errorMessage" *ngIf="rowData.get('VOSum').errors.discountcrossed">
+                                    Enter Valid Discount Amount
+                                  </span>
+                                </div>
+                              </ng-template>
+                            </td>
+                            <td style="text-align: right">
+                              {{rowData.get('RevisedContractValue').value | number:'1.2-2' | negativeInParenthesis}}
+                              &nbsp;
+                              <span *ngIf="rowData.get('ProjectMasterContractItemId').value==0 && !IsViewMode"
+                                class="gridIconsStyle">
+                                <i class="fa fa-trash gridRemoveIcon" (click)="removeGridItem(i,'DiscountLineItems')"
+                                  aria-hidden="true"></i>
+                              </span>
+                            </td>
+                          </tr>
+                        </ng-template>
+                        <ng-template pTemplate="footer" let-rowData let-i="rowIndex" let-columns>
+                          <tr *ngIf="!IsViewMode" class="footercolor" style="font-weight: bold;">
+                            <td colspan="7">
+                              <input type="number" (keydown)="restrictMinusValue($event)" min="0"
+                                [(ngModel)]="linesToAdd1" [ngModelOptions]="{standalone: true}"
+                                class="form-control linesToAdd">
+                              <button type="submit" (click)="addGridItem(linesToAdd1,'DiscountLineItems')"
+                                class="addLine">
+                                <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Discount
+                              </button>
+                            </td>
+                          </tr>
+                          <tr style="font-weight: bold;">
+                            <td></td>
+                            <td>Total Before Tax</td>
+                            <!-- <td></td>
+                            <td></td>
+                            <td></td> -->
+                            <td></td>
+                            <td style="text-align: right">
+                              {{ selectedPODetails.CurrencySymbol }}
+                              {{ ( selectedPODetails.TotalBefTax )|number:'1.2-2' | negativeInParenthesis }}</td>
+                            <td style="text-align: right">{{cumVoSumTotalBeforeTax | number:'1.2-2' |
+                              negativeInParenthesis}} </td>
+                            <td style="text-align: right">{{VSTotalBeforeTax | number:'1.2-2' | negativeInParenthesis}}
+                            </td>
+                            <td style="text-align: right"> {{rcvTotalBefTax | number:'1.2-2' | negativeInParenthesis}}
+                            </td>
+                          </tr>
+                          <tr class="footercolor">
+                            <td></td>
+                            <td>Tax</td>
+                            <!-- <td></td>
+                            <td></td>
+                            <td></td> -->
+                            <td></td>
+                            <td style="text-align: right">
+                              {{ selectedPODetails.CurrencySymbol }}
+                              {{( selectedPODetails.TotalTax )|number:'1.2-2' | negativeInParenthesis }}
+                            </td>
+                            <td style="text-align: right"> {{cvsTax |number:'1.2-2' | negativeInParenthesis}}</td>
+                            <td style="text-align: right"> {{vsTax |number:'1.2-2' | negativeInParenthesis}}</td>
+                            <td style="text-align: right"> {{rcvTax |number:'1.2-2' | negativeInParenthesis}}</td>
+                          </tr>
+                          <tr style="font-weight: bold;">
+                            <td></td>
+                            <td>Total</td>
+                            <!-- <td></td>
+                            <td></td>
+                            <td></td> -->
+                            <td></td>
+                            <td style="text-align: right">
+                              {{ selectedPODetails.CurrencySymbol }}
+                              {{( selectedPODetails.TotalAmount )|number:'1.2-2' | negativeInParenthesis}}
+                            </td>
+                            <td style="text-align: right"> {{cvsTotal | number:'1.2-2' | negativeInParenthesis}}</td>
+                            <td style="text-align: right"> {{vsTotal | number:'1.2-2' | negativeInParenthesis}}</td>
+                            <td style="text-align: right"> {{rcvTotal | number:'1.2-2' | negativeInParenthesis}}</td>
+                          </tr>
+                        </ng-template>
+                      </p-table>
+                    </div>
+                  </fieldset>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="row" style="margin-top:3em;">
+                <div class="col-12">
+                  <h4 class="form-heading">Attachments</h4>
+                </div>
+                <div class="col-12 attachments" *ngIf="selectedPODetails!=undefined">
+                  <ul>
+                    <ng-template ngFor let-data [ngForOf]="selectedPODetails.Attachments" let-i="index">
+                      <li *ngIf="data.IsDelete!=true||data.IsDelete==undefined">
+                        <span class="attcmnts">
+                          <span class="displayFileName" style="word-wrap:break-word">
+                            {{ data.FileName }}
+                          </span>
+                          <a style="color:black;" target="_blank"
+                            href="{{apiEndPoint}}/DownloadAttachedFiles?AttachmentId={{ data.AttachmentId }}&AttachmentTypeId={{ data.AttachmentTypeId }}&FileName={{data.FileName|encodeURIComponent}}&RecordId={{data.RecordId}}">
+                            <i class="fa fa-download"></i>
+                          </a>
+                          &nbsp;&nbsp;
+                          <i *ngIf="hideInput" (click)="attachmentDelete(i)" class="fa fa-trash">
+                          </i>
+                        </span>
+                      </li>
+                    </ng-template>
+                  </ul>
+                </div>
+                <div class="col-12" *ngIf="!IsViewMode">
+                  <div class="col-12">
+                    <input style="height: 30px" type="file" multiple (change)="onFileUploadChange($event)" name="file">
+                  </div>
+                  <div class="col-12">
+                    <ul class="fileList">
+                      <li *ngFor="let data of uploadedFiles;let i = index">
+                        <span>
+                          <span class="fileName" style="word-wrap:break-word">
+                            {{ data.name }}
+                          </span>
+                          <i class="fa fa-close" (click)="onFileClose(i)"></i>
+                        </span>
+                        <br>
+                        <span class="fileSize">{{ data.size/1024 }} KB</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="form-group row">
+              <div class="col-xl-12 col-sm-12 col-12"
+                *ngIf="(selectedPODetails.WorkFlowStatusId == workFlowStatus.Rejected)&& hideText==true">
+                <h4 class="form-heading">Reasons To Reject</h4>
+                <div class="col-12">
+                  <span class="descriptionStyle" showmore [value]="selectedPODetails.ReasonsToReject"></span>
+                </div>
+              </div>
+              <div class="col-xl-12 col-sm-12 col-12"
+                *ngIf="(isApprovalPage==true||(isApprovalPage==false && hideText==true && (selectedPODetails.WorkFlowStatusId==workFlowStatus.AskedForClarification||selectedPODetails.WorkFlowStatusId==workFlowStatus.WaitingForApproval)))">
+                <h4 class="form-heading">Approval Remarks</h4>
+                <div>
+                  <textarea formControlName="ApprovalRemarks" class="form-control"
+                    style="width:70%;display:inline-block ">
+                  </textarea>
+                  <button type="submit"
+                    (click)="updateStatus(isApprovalPage==true?workFlowStatus.AskedForClarification:workFlowStatus.WaitingForApproval)"
+                    style="float:inherit;vertical-align: top;" class="btn btn-edit">
+                    <i class="fa fa-envelope" aria-hidden="true"></i>
+                    <span *ngIf="isApprovalPage==true">
+                      {{ selectedPODetails.WorkFlowComments|ApprovalButton }}
+                    </span>
+                    <span *ngIf="isApprovalPage==false">
+                      Reply
+                    </span>
+                  </button>
+                </div>
+                <div
+                  *ngIf="projectPurchaseOrderForm.get('ApprovalRemarks') && projectPurchaseOrderForm.get('ApprovalRemarks').errors!=null && projectPurchaseOrderForm.get('ApprovalRemarks').touched==true">
+                  <span class="errorMessage"
+                    *ngIf="projectPurchaseOrderForm.get('ApprovalRemarks').errors.required">Approval
+                    Remarks is Required</span>
+                </div>
+              </div>
+              <div *ngIf="selectedPODetails.ReasonsToCancel!=undefined && selectedPODetails.ReasonsToCancel.length >0"
+                class="col-xl-12 col-sm-12 col-12">
+                <h4 class="form-heading">Reason for Cancel approval</h4>
+                <ul>
+                  <li *ngFor="let record of selectedPODetails.ReasonsToCancel">
+                    <span>{{ record }}</span>
+                  </li>
+                </ul>
+              </div>
+              <div *ngIf="selectedPODetails.WorkFlowComments!=undefined && selectedPODetails.WorkFlowComments.length >0"
+                class="col-xl-12 col-sm-12 col-12">
+                <!-- <label class="col-form-label form-label">Previous Comments</label> -->
+                <h4 class="form-heading">Previous Comments</h4>
+                <ul>
+                  <li *ngFor="let record of selectedPODetails.WorkFlowComments">
+                    <span class='remarksUserName'>{{ record.UserName }}</span> -
+                    <span class='remarksDate'>{{ record.CreatedDate|date:'dd-MM-yyyy h:mm:ss a' }}</span>:
+                    <br>
+                    <span>{{ record.Remarks }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div *ngIf="!isApprovalPage" class="form-group text-right btn-list">
+                <button type="submit" *ngIf="!IsViewMode" (click)="saveRecord('save')" class="btn btn-save">
+                  <i class="fa fa-check" aria-hidden="true"></i>
+                  {{voId==0? 'Save':'Update'}}
+                </button>
+                <button type="submit"
+                  *ngIf="isSameUSer && sendForApprovalPermission && (selectedPODetails.WorkFlowStatusId==0||selectedPODetails.WorkFlowStatusId==21||selectedPODetails.WorkFlowStatusId==workFlowStatus.Draft)"
+                  (click)="saveRecord('send')" class="btn btn-approve">
+                  <i class="fa fa-check" aria-hidden="true"></i> Send for Approval</button>
+                <button type="submit"
+                  *ngIf="isSameUSer && IsViewMode && editPermission && (selectedPODetails.WorkFlowStatusId==workFlowStatus.Draft || selectedPODetails.WorkFlowStatusId==21)"
+                  (click)="editRecord()" class="btn btn-edit">
+                  <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                <button type="submit"
+                  *ngIf="(selectedPODetails.WorkFlowStatusId==workFlowStatus.WaitingForApproval||selectedPODetails.WorkFlowStatusId==workFlowStatus.AskedForClarification) && isSameUSer"
+                  (click)="onRejectClick(workFlowStatus.CancelledApproval)" class="btn btn-cancel">
+                  <i class="fa fa-times-circle" aria-hidden="true"></i> Cancel Approval</button>
+                <button type="submit" (click)="cancelRecord()" class="btn btn-cancel">
+                  <i class="fa fa-window-close" aria-hidden="true"></i> Close</button>
+              </div>
+              <div *ngIf="isApprovalPage && selectedPODetails.WorkFlowStatusId!=21"
+                class="form-group text-right btn-list">
+                <button type="submit" (click)="onVerify()" class="btn btn-save"
+                  *ngIf="verifyPermission && isApproverUser &&!doUpdate && (selectedPODetails.WorkFlowStatusId!=18 && selectedPODetails.WorkFlowStatusId!=20)">
+                  <i class="fa fa-check" aria-hidden="true"></i> Verify</button>
+                <button type="submit" *ngIf="doUpdate && isApproverUser" (click)="saveRecord('verify')"
+                  class="btn btn-save">
+                  <i class="fa fa-check" aria-hidden="true"></i>Update</button>
+                <button type="submit" (click)="onApproveClick('approve')" *ngIf="approvePermission && isApproverUser"
+                  class="btn btn-approve">
+                  <i class="fa fa-check" aria-hidden="true"></i>Approve</button>
+                <button type="submit" (click)="onRejectClick(workFlowStatus.Rejected)"
+                  *ngIf="approvePermission && isApproverUser" class="btn btn-delete">
+                  <i class="fa fa-ban" aria-hidden="true"></i> Reject</button>
+                <button type="submit" (click)="cancelRecord()" class="btn btn-cancel">
+                  <i class="fa fa-ban" aria-hidden="true"></i> Close</button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <p-confirmDialog></p-confirmDialog>
+        <void-purchase-order-popup *ngIf="showVoidPopUp" [isVoid]="isVoid" (voidApproval)="saveRecord($event)"
+          (reject)="reject($event)" [purchaseOrderTypeId]="poTypeId"
+          [purchaseOrderId]="selectedPODetails.ProjectMasterContractId" (onStatusUpdate)="onStatusUpdate($event)"
+          (hideVoidPopUp)="hideVoidPopUp($event)" [showVoidPopUp]="showVoidPopUp"></void-purchase-order-popup>
+      </div>
+      <p-dialog header="Account Code Information" class="modalheightauto" width="500" height="300"
+        [(visible)]="showGlCodeDialog">
+        <form [formGroup]="AccountCodeInfoForm" class="form-horizontal">
+          <div class="form-group row">
+            <label class="col-form-label col-xl-4 col-sm-6 col-6 form-label">Account Type</label>
+            <div class="col-xl-8 col-sm-6 col-6">
+              <select class="form-control" #AccountType (change)="onTypeSelection($event.target.value)"
+                formControlName="AccountTypeId">
+                <option [ngValue]="null">--Select--</option>
+                <option [value]="record.AccountTypeId" *ngFor="let record of accountTypes">
+                  {{record.AccountTypeName}}
+                </option>
+              </select>
+              <!-- <div
+                                *ngIf="AccountCodeInfoForm.get('AccountTypeId') && AccountCodeInfoForm.get('AccountTypeId').errors!=null && AccountCodeInfoForm.get('AccountTypeId').touched==true">
+                              <span class="errorMessage"
+                                *ngIf=" errmesagevisible && AccountCodeInfoForm.get('AccountTypeId').errors.required">Please Select Account Type</span>
+                               </div> -->
+              <span class="error" *ngIf="errmesagevisible">Please Select Account Type</span>
+            </div>
+
+          </div>
+
+          <div class="form-group row">
+            <label class="col-form-label col-6  col-xl-4 col-sm-6 form-label">SubCategory</label>
+            <div class="col-xl-8 col-sm-6 col-6">
+              <select class="form-control" #SubCategory (change)="GetAccountCodesBySubCat()"
+                formControlName="AccountCodeCategoryId">
+                <option [ngValue]="null">--Select--</option>
+                <option *ngFor="let category of accountCodeCategories" [value]="category.AccountCodeCategoryId">
+                  {{category.AccountCodeCategoryName}}
+                </option>
+              </select>
+              <span class="error" *ngIf="errmesagevisible">Please Select SubCategory</span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-form-label col-6  col-xl-4 col-sm-6 form-label">Account Code</label>
+            <div class="col-xl-8 col-sm-6 col-6">
+              <select formControlName="Item" class="form-control">
+                <option value="null">--Select--</option>
+                <option *ngFor="let record of accountCodes" value={{record.AccountCodeId}}>
+                  {{record.Code}}
+                </option>
+              </select>
+              <span class="error" *ngIf="errmesagevisible">Please Select Account Code</span>
+
+            </div>
+            <!-- <div class="col-6  col-xl-8 col-sm-6 autoComplete autocompletewidth">
+                          <input  formControlName="Item" type="text" 
+                            class="form-control" [inputFormatter]="itemInputFormater" (selectItem)="itemMasterSelectionGlCode($event)"
+                           [ngbTypeahead]="itemMasterSearchGlCode" [resultTemplate]="itemMasterTemplategl" />
+                           <span class="error" *ngIf="errmesagevisible">Please Select the GL Code</span>
+                     </div> -->
+          </div>
+
+          <div class="form-group" style="text-align: right">
+            <button (click)="SaveAccountcode('save')" class="btn btn-save">
+              OK
+            </button>
+          </div>
+        </form>
+      </p-dialog>
+    </div>
+  </div>
+</div>
+
+<ng-template #itemMasterTemplate let-r="result" let-t="term">
+  {{ r.ItemName }}
+</ng-template>
+
+<ng-template #supplierTemplate let-r="result" let-t="term">
+  {{ r.SupplierName }}
+</ng-template>
+
+<ng-template #companyTemplate let-r="result" let-t="term">
+  {{ r.CompanyName }}
+</ng-template>
+
+<ng-template #serviceMasterTemplate let-r="result" let-t="term">
+  <div style="max-height: 100px; overflow: auto">
+    {{ r.AccountCodeName }}
+  </div>
+</ng-template>
+<ng-template #AccountCodeTemplate let-r="result" let-t="term">
+  <div style="max-height: 100px; overflow: auto">
+    {{ r.AccountCodeName}}
+  </div>
+</ng-template>
+<app-auditlog *ngIf="showLogPopUp" (hideLogPopUp)="hideLogPopUp($event)" [DocumentId]="voId"
+  [DocumentNumber]="selectedPODetails.VODocumentCode" [PageName]="'ProjectContractVariationOrder'" [DocType]="'PVO'"
+  [showLogPopUp]="showLogPopUp">
+</app-auditlog>
+<p-dialog [header]="VoidOrRejectHeader" width="500" modal='true' [(visible)]="showVoidOrRejectPopup">
+  <div class="form-group row">
+    <div class="col-xl-12 col-sm-12 col-12">
+      <textarea class="form-control" #reason></textarea>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-xl-12 col-sm-12 col-12">
+      <button style="float: left;" (click)="onVoidOrRejectClick(reason,StatusId)" class="btn btn-save">
+        Ok
+      </button>
+      <button style="float: left;" (click)="closeValidationPopUp()" class="btn btn-cancel">
+        Cancel
+      </button>
+    </div>
+  </div>
+</p-dialog>
+<p-dialog header="Validations" width="400" modal='true' [(visible)]="showValidationPopup">
+  <div class="form-group row">
+    <div class="col-xl-8 col-sm-6 col-6">
+      {{ValidationMessage}}
+    </div>
+  </div>
+  <div class="form-group row">
+    <button style='left:84%;position: relative;' (click)="closeValidationPopUp();calculateRevisedSum();"
+      class="btn btn-save">
+      Ok
+    </button>
+  </div>
+</p-dialog>
